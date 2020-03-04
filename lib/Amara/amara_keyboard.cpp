@@ -42,6 +42,13 @@ namespace Amara {
                 }
             }
 
+            Amara::Key* get(string key) {
+                if (keys.find(key) != keys.end()) {
+                    return keys[key];
+                }
+                return nullptr;
+            }
+
             void manage() {
                 unordered_map<string, Amara::Key*>::iterator it;
                 Amara::Key* key;

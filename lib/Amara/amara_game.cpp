@@ -6,6 +6,9 @@
 namespace Amara {
 	class Game {
 		public:
+			SDL_version compiledVersion;
+            SDL_version linkedVersion;
+
 			string name;
 			bool quitted = false;
 			bool dragged = false;
@@ -24,6 +27,8 @@ namespace Amara {
 			bool lagging = false;
 			int lagCounter = 0;
 
+			Amara::Loader* load = nullptr;
+
 			Amara::Keyboard* keyboard = nullptr;
 
 			bool controllerEnabled = true;
@@ -37,6 +42,15 @@ namespace Amara {
 			bool init(int startWidth, int startHeight) {
 				width = startWidth;
 				height = startHeight;
+
+				// Getting version of SDL2
+				SDL_VERSION(&compiledVersion);
+           		SDL_GetVersion(&linkedVersion);
+
+				printf("Compiled against SDL version %d.%d.%d ...\n",
+                compiledVersion.major, compiledVersion.minor, compiledVersion.patch);
+            	printf("Linking against SDL version %d.%d.%d.\n",
+                linkedVersion.major, linkedVersion.minor, linkedVersion.patch);
 
 				// Creating the video context
 				if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -55,7 +69,7 @@ namespace Amara {
 					printf("Game Error: Failed to initialize Game Controller.");
 					return false;
 				}
-
+				
 				// Creating the window
 				gWindow = SDL_CreateWindow(this->name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 				if (gWindow == NULL) {
@@ -66,9 +80,9 @@ namespace Amara {
 				// Get window surface
 				gSurface = SDL_GetWindowSurface(gWindow);
 
-				// Fill the surface white
+				// Fill the surface black
 				// Background color
-				SDL_FillRect(gSurface, NULL, SDL_MapRGB(gSurface->format, 0x00, 0x00, 0x00));
+				SDL_FillRect(gSurface, NULL, SDL_MapRGB(gSurface->format, 0, 0, 0));
 
 				//Update the surface
 				SDL_UpdateWindowSurface(gWindow);
@@ -95,6 +109,22 @@ namespace Amara {
 					return false;
 				}
 
+				SDL_DisplayMode dm;
+				if (SDL_GetCurrentDisplayMode(0, &dm) != 0) {
+					printf("Game Error: Unable to detect display. Error: %s\n", SDL_GetError());
+					return false;
+				}
+				display = new Amara::IntRect(0, 0, dm.w, dm.h);
+				resolution = new Amara::IntRect(0, 0, width, height);
+				window = new Amara::IntRect(0, 0, width, height);
+				SDL_GetWindowPosition(gWindow, &window->x, &window->y);
+				// printf("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
+
+				load = new Amara::Loader(this);
+				load->init(gWindow, gSurface, gRenderer);
+
+				scenes = new Amara::SceneManager(this, load);
+
 				keyboard = new Amara::Keyboard();
 
 				resizeWindow(width, height);
@@ -120,13 +150,10 @@ namespace Amara {
 				SDL_Quit();
 			}
 
-			void start(string startKey) {
-				// Game loop
-				// sceneManager->start(startKey);
-
+			void start() {
+				// Game Loop
 				while (!quitted) {
 					manageFPSStart();
-					
 					// Draw Screen
 					draw();
 
@@ -134,6 +161,73 @@ namespace Amara {
 					manageFPSEnd();
 				}
 				close();
+			}
+
+			void start(string startKey) {
+				// Start a specific scene
+				scenes->start(startKey);
+				start();
+			}
+
+			void setFPS(int newFps, bool lockLogicSpeed) {
+				fps = newFps;
+				tps = 1000 / fps;
+				if (!lockLogicSpeed) {
+					lps = newFps;
+				}
+			}
+
+			void setFPS(int newFps) {
+				setFPS(newFps, false);
+			}
+
+			void setFPS(int newFps, int newLps) {
+				fps = newFps;
+				lps = newLps;
+				tps = 1000 / fps;
+			}
+
+			void setLogicTickRate(int newRate) {
+				lps = newRate;
+			}
+
+			void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+				SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
+			}
+
+			void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b) {
+				SDL_SetRenderDrawColor(gRenderer, r, g, b, 255);
+			}
+
+			void resizeWindow(int neww, int newh) {
+				if (gWindow != NULL) {
+					SDL_SetWindowSize(gWindow, neww, newh);
+					window->width = neww;
+					window->height = newh;
+					width = neww;
+					height = newh;
+				}
+			}
+
+			void setWindowPosition(int newx, int newy) {
+				if (gWindow != NULL) {
+					SDL_SetWindowPosition(gWindow, newx, newy);
+					window->x = newx;
+					window->y = newy;
+				}
+			}
+
+			void setResolution(int neww, int newh) {
+				if (gRenderer != NULL) {
+					SDL_RenderSetLogicalSize(gRenderer, neww, newh);
+				}
+				resolution->width = neww;
+				resolution->height = newh;
+			}
+
+			void windowedFullScreen() {
+				resizeWindow(display->width, display->height);
+				setWindowPosition(0, 0);
 			}
 
 		protected:
@@ -150,9 +244,11 @@ namespace Amara {
 			SDL_Event e;
 
 			void draw() {
+				// Clear the Renderer
 				SDL_RenderClear(gRenderer);
+
 				if (frameCounter >= logicDelay) {
-					// sceneManager->run();
+					scenes->run();
 					handleEvents();
 					frameCounter = 0;
 				}
@@ -160,6 +256,13 @@ namespace Amara {
 
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
+
+				// // Fill the surface black
+				// // Background color
+				// SDL_FillRect(gSurface, NULL, SDL_MapRGB(gSurface->format, 0, 0, 0));
+
+				// //Update the surface
+				// SDL_UpdateWindowSurface(gWindow);
 			}
 
 			void manageFPSStart() {
@@ -175,7 +278,7 @@ namespace Amara {
 				
 				if (fps < lps) {
 					for (int i = 1; i < lps/fps; i++) {
-						// sceneManager->run();
+						scenes->run();
 					}
 				}
 				else if (fps > lps) {
@@ -190,20 +293,18 @@ namespace Amara {
 				else if (frameTicks > tps) {
 					if (dragged) {
 						dragged = false;
-						// properties->dragged = false;
 					}
 					else {
 						// Checking for lag
 						if (tps < (float)frameTicks * 0.5) {
 							lagging = true;
-							// properties->lagging = true;
 							lagCounter += 1;
 						}
 
 						// Framerate catch up.
 						for (int i = 0; i < (frameTicks - tps); i++) {
 							if (frameCounter >= logicDelay) {
-								// sceneManager->run();
+								scenes->run();
 								handleEvents();
 								frameCounter = 0;
 								if (quitted) return;
@@ -221,7 +322,7 @@ namespace Amara {
 
 			void handleEvents() {
 				// Handle events on queue
-				keyboard->manage();
+				// keyboard->manage();
 				// mouse->manage();
 
 				// manageControllers();
@@ -231,10 +332,10 @@ namespace Amara {
 						quitted = true;
 					}
 					else if (e.type == SDL_KEYDOWN) {
-						keyboard->press(e.key.keysym.sym);
+						// keyboard->press(e.key.keysym.sym);
 					}
 					else if (e.type == SDL_KEYUP) {
-						keyboard->release(e.key.keysym.sym);
+						// keyboard->release(e.key.keysym.sym);
 					}
 					// else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
 					// 	int mx, my;
@@ -287,67 +388,8 @@ namespace Amara {
 					// 	getController(controller)->release(e.cbutton.button);
 					// }
 				}
-			}
 
-			void setFPS(int newFps, bool lockLogicSpeed) {
-				fps = newFps;
-				tps = 1000 / fps;
-				if (!lockLogicSpeed) {
-					lps = newFps;
-				}
-			}
-
-			void setFPS(int newFps) {
-				setFPS(newFps, false);
-			}
-
-			void setFPS(int newFps, int newLps) {
-				fps = newFps;
-				lps = newLps;
-				tps = 1000 / fps;
-			}
-
-			void setLogicTickRate(int newRate) {
-				lps = newRate;
-			}
-
-			void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-				SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
-			}
-
-			void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b) {
-				SDL_SetRenderDrawColor(gRenderer, r, g, b, 255);
-			}
-
-			void resizeWindow(int neww, int newh) {
-				if (gWindow != NULL) {
-					SDL_SetWindowSize(gWindow, neww, newh);
-					window->width = neww;
-					window->height = newh;
-					width = window->width;
-					height = window->height;
-				}
-			}
-
-			void setWindowPosition(int newx, int newy) {
-				if (gWindow != NULL) {
-					SDL_SetWindowPosition(gWindow, newx, newy);
-					window->x = newx;
-					window->y = newy;
-				}
-			}
-
-			void setResolution(int neww, int newh) {
-				if (gRenderer != NULL) {
-					SDL_RenderSetLogicalSize(gRenderer, neww, newh);
-				}
-				resolution->width = neww;
-				resolution->height = newh;
-			}
-
-			void windowedFullScreen() {
-				resizeWindow(display->width, display->height);
-				setWindowPosition(0, 0);
+				scenes->manageTasks();
 			}
 	};
 }
