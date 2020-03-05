@@ -18,6 +18,7 @@ namespace Amara {
     class ScenePlugin {
         public:
             Amara::Game* game = nullptr;
+            Amara::GameProperties* properties = nullptr;
             Amara::Scene* scene = nullptr;
 
             string key;
@@ -31,10 +32,12 @@ namespace Amara {
             bool isPaused = false;
             bool isSleeping = false;
 
-            ScenePlugin(string givenKey, Amara::Game* givenGame, Amara::Scene* givenScene, unordered_map<string, Amara::Scene*>* givenSceneMap, vector<Amara::Scene*>* givenSceneList) {
+            ScenePlugin(string givenKey, Amara::GameProperties* gameProperties, Amara::Scene* givenScene, unordered_map<string, Amara::Scene*>* givenSceneMap, vector<Amara::Scene*>* givenSceneList) {
                 key = givenKey;
 
-                game = givenGame;
+                properties = gameProperties;
+                game = properties->game;
+
                 scene = givenScene;
 
                 sceneMap = givenSceneMap;

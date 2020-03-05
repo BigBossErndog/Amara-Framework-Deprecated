@@ -20,6 +20,7 @@ namespace Amara {
 	
 	class Entity : public Amara::SortedEntity  {
 		public:
+			Amara::GameProperties* properties;
 			Amara::Scene* scene = nullptr;
 			vector<Amara::Entity*> entities;
 
@@ -27,7 +28,8 @@ namespace Amara {
 				
 			}
 
-			virtual void init(Amara::Scene* givenScene) {
+			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene) {
+				properties = gameProperties;
 				scene = givenScene;
 				create();
 			}

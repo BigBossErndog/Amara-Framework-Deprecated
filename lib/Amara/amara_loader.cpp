@@ -222,6 +222,7 @@ namespace Amara {
 				return sound(key, path, false);
 			}
 
+
 			bool music(string key, string path, bool replace) {
 				if (get(key) != nullptr && !replace) {
 					printf("Loader Error: Key %s has already been used.\n", key);
@@ -241,6 +242,10 @@ namespace Amara {
 				}
 
 				return success;
+			}
+
+            bool music(string key, string path) {
+				return music(key, path, false);
 			}
     };
 }

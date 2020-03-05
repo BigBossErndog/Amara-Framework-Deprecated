@@ -10,22 +10,26 @@ namespace Amara {
     class Scene {
         public:
             Amara::Game* game = nullptr;
+            Amara::GameProperties* properties = nullptr;
             Amara::Loader* load = nullptr;
             Amara::ScenePlugin* scene;
 
             Amara::Camera* mainCamera = nullptr;
             vector<Amara::Camera*> cameras;
-
+            
             vector<Amara::Entity*> entities;
 
             Scene() {
                 
             }
 
-            virtual void setup(Amara::Game* givenGame, Amara::Loader* givenLoad, Amara::ScenePlugin* scenePlugin) final {
-                game = givenGame;
+            virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* scenePlugin) final {
+                properties = gameProperties;
+
+                game = properties->game;
+                load = properties->load;
+
                 scene = scenePlugin;
-                load = givenLoad;
             }
 
             void init() {
@@ -53,7 +57,7 @@ namespace Amara {
 
             Amara::Entity* add(Amara::Entity* entity) {
                 entities.push_back(entity);
-                entity->init(this);
+                entity->init(properties, this);
             }
 
             void run() {

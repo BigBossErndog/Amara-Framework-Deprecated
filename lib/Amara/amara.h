@@ -41,3 +41,6 @@ using namespace std;
 
 #include "amara_geometry.cpp"
 #include "amara_stateManager.cpp"
+
+#include "amara_gameProperties.cpp"
+#include "amara_inputManager.cpp"

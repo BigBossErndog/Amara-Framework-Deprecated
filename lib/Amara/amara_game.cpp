@@ -9,6 +9,8 @@ namespace Amara {
 			SDL_version compiledVersion;
             SDL_version linkedVersion;
 
+			Amara::GameProperties* properties;
+
 			string name;
 			bool quitted = false;
 			bool dragged = false;
@@ -28,12 +30,10 @@ namespace Amara {
 			int lagCounter = 0;
 
 			Amara::Loader* load = nullptr;
+			Amara::SceneManager* scenes = nullptr;;
 
-			Amara::Keyboard* keyboard = nullptr;
-
+			Amara::InputManager* input = nullptr;
 			bool controllerEnabled = true;
-
-			Amara::SceneManager* scenes = NULL;
 
 			Game(string givenName) {
 				name = givenName;
@@ -119,13 +119,22 @@ namespace Amara {
 				window = new Amara::IntRect(0, 0, width, height);
 				SDL_GetWindowPosition(gWindow, &window->x, &window->y);
 				// printf("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
+				
+				properties = new Amara::GameProperties();
+				properties->game = this;
 
 				load = new Amara::Loader(this);
 				load->init(gWindow, gSurface, gRenderer);
+				properties->load = load;
 
-				scenes = new Amara::SceneManager(this, load);
+				input = new Amara::InputManager();
+				input->keyboard = new Amara::Keyboard();
+				properties->input = input;
 
-				keyboard = new Amara::Keyboard();
+				scenes = new Amara::SceneManager(properties);
+				properties->scenes = scenes;
+
+				writeProperties();
 
 				resizeWindow(width, height);
 			}
@@ -230,6 +239,24 @@ namespace Amara {
 				setWindowPosition(0, 0);
 			}
 
+			void writeProperties() {
+				properties->gWindow = gWindow;
+				properties->gSurface = gSurface;
+				properties->gRenderer = gRenderer;
+
+				properties->width = width;
+				properties->height = height;
+
+				properties->display = display;
+				properties->resolution = resolution;
+				properties->window = window;
+
+				properties->load = load;
+				properties->scenes = scenes;
+
+				properties->input = input;
+			}
+
 		protected:
 			bool vsync = false;
 			int fps = 60;
@@ -322,8 +349,8 @@ namespace Amara {
 
 			void handleEvents() {
 				// Handle events on queue
-				// keyboard->manage();
-				// mouse->manage();
+				input->keyboard->manage();
+				// input->mouse->manage();
 
 				// manageControllers();
 
@@ -332,16 +359,16 @@ namespace Amara {
 						quitted = true;
 					}
 					else if (e.type == SDL_KEYDOWN) {
-						// keyboard->press(e.key.keysym.sym);
+						input->keyboard->press(e.key.keysym.sym);
 					}
 					else if (e.type == SDL_KEYUP) {
-						// keyboard->release(e.key.keysym.sym);
+						input->keyboard->release(e.key.keysym.sym);
 					}
 					// else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
 					// 	int mx, my;
 					// 	SDL_GetMouseState(&mx, &my);
-					// 	mouse->x = (mx * resolution->width/properties->width);
-					// 	mouse->y = (my * resolution->height/properties->height);
+					// 	input->mouse->x = (mx * resolution->width/properties->width);
+					// 	input->mouse->y = (my * resolution->height/properties->height);
 
 					// 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 					// 		if (e.button.button == SDL_BUTTON_LEFT) {
@@ -353,10 +380,10 @@ namespace Amara {
 					// 	}
 					// 	else if (e.type == SDL_MOUSEBUTTONUP) {
 					// 		if (e.button.button == SDL_BUTTON_LEFT) {
-					// 			mouse->leftButton->release();
+					// 			input->mouse->leftButton->release();
 					// 		}
 					// 		else {
-					// 			mouse->rightButton->release();
+					// 			input->mouse->rightButton->release();
 					// 		}
 					// 	}
 					// }

@@ -9,19 +9,21 @@ namespace Amara {
 	class SceneManager {
 		public:
 			Amara::Game* game = nullptr;
+			Amara::GameProperties* properties = nullptr;
 			Amara::Loader* load = nullptr;
 			unordered_map<string, Amara::Scene*> sceneMap;
 			vector<Amara::Scene*> sceneList;
 
-			SceneManager(Amara::Game* givenGame, Amara::Loader* givenLoad) {
-				game = givenGame;
-				load = givenLoad;
+			SceneManager(Amara::GameProperties* gameProperties) {
+				properties = gameProperties;
+				game = properties->game;
+				load = properties->load;
 			}
 
 			Amara::Scene* add(string key, Amara::Scene* scene) {
 				sceneMap[key] = scene;
 				sceneList.push_back(scene);
-				scene->setup(game, load, new ScenePlugin(key, game, scene, &sceneMap, &sceneList));
+				scene->setup(properties, new ScenePlugin(key, properties, scene, &sceneMap, &sceneList));
 				return scene;
 			}
 
