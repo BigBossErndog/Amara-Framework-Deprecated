@@ -29,7 +29,8 @@ namespace Amara {
 			bool lagging = false;
 			int lagCounter = 0;
 
-			Amara::Loader* load = nullptr;
+			Amara::LoadManager* loadManager = nullptr;
+			Amara::Loader* loader = nullptr;
 			Amara::SceneManager* scenes = nullptr;;
 
 			Amara::InputManager* input = nullptr;
@@ -130,9 +131,10 @@ namespace Amara {
 				properties = new Amara::GameProperties();
 				properties->game = this;
 
-				load = new Amara::Loader(this);
-				load->init(gWindow, gSurface, gRenderer);
-				properties->load = load;
+				loader = new Amara::Loader(properties);
+				properties->loader = loader;
+
+				loadManager = new Amara::LoadManager(properties);
 
 				input = new Amara::InputManager();
 				input->keyboard = new Amara::Keyboard();
@@ -261,7 +263,8 @@ namespace Amara {
 				properties->resolution = resolution;
 				properties->window = window;
 
-				properties->load = load;
+				properties->loadManager = loadManager;
+				properties->loader = loader;
 				properties->scenes = scenes;
 
 				properties->input = input;

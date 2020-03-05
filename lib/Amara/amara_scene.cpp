@@ -11,12 +11,12 @@ namespace Amara {
         public:
             Amara::Game* game = nullptr;
             Amara::GameProperties* properties = nullptr;
-            Amara::Loader* load = nullptr;
+            Amara::LoadManager* load = nullptr;
             Amara::ScenePlugin* scene;
 
             Amara::Camera* mainCamera = nullptr;
             vector<Amara::Camera*> cameras;
-            
+
             vector<Amara::Entity*> entities;
 
             Scene() {
@@ -27,7 +27,7 @@ namespace Amara {
                 properties = gameProperties;
 
                 game = properties->game;
-                load = properties->load;
+                load = properties->loadManager;
 
                 scene = scenePlugin;
             }
@@ -60,18 +60,27 @@ namespace Amara {
                 entity->init(properties, this);
             }
 
+            Amara::Camera* add(Amara::Camera* cam) {
+                cameras.push_back(cam);
+                cam->init(this, &entities);
+            }
+
             void run() {
+                properties->currentScene = this;
+
                 update();
             }
 
             void draw() {
-                sort(cameras.begin(), cameras.end(), sortEntities());
-                sort(entities.begin(), entities.end(), sortEntities());
+                properties->currentScene = this;
+
+                stable_sort(cameras.begin(), cameras.end(), sortEntities());
+                stable_sort(entities.begin(), entities.end(), sortEntities());
 
                 Amara::Camera* cam;
                 for (size_t i = 0; i < cameras.size(); i++) {
                     cam = cameras.at(i);
-                    cam->draw();
+                    cam->draw(0, 0, properties->width, properties->height);
                 }
             }
 

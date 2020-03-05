@@ -5,9 +5,12 @@
 
 namespace Amara {
     class Game;
+    class LoadManager;
     class Loader;
     class Keyboard;
     class SceneManager;
+    class Scene;
+    class Camera;
 
     class GameProperties {
         public:
@@ -24,8 +27,12 @@ namespace Amara {
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;
 
-            Amara::Loader* load = nullptr;
+            Amara::LoadManager* loadManager = nullptr;
+            Amara::Loader* loader = nullptr;
             Amara::SceneManager* scenes = nullptr;
+
+            Amara::Scene* currentScene = nullptr;
+            Amara::Camera* currentCamera = nullptr;
 
             Amara::InputManager* input = nullptr;
 

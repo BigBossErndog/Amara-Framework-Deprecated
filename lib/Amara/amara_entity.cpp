@@ -34,17 +34,13 @@ namespace Amara {
 				create();
 			}
 
-			virtual void drawSelf() = 0;
-
-			virtual void draw() {
-				drawSelf();
-
-				sort(entities.begin(), entities.end(), sortEntities());
+			virtual void draw(int vx, int vy, int vw, int vh) {
+				stable_sort(entities.begin(), entities.end(), sortEntities());
 
 				Amara::Entity* entity;
 				for (size_t i = 0; i < entities.size(); i++) {
 					entity = entities.at(i);
-					entity->draw();
+					entity->draw(vx, vy, vw, vh);
 				}
 			}
 

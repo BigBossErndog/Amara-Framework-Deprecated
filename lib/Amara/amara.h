@@ -33,9 +33,12 @@ using namespace std;
 
 #include "amara_scene.cpp"
 
+#include "amara_image.cpp"
+
 #include "amara_camera.cpp"
 #include "amara_entity.cpp"
 
+#include "amara_loadManager.cpp"
 #include "amara_loader.cpp"
 #include "amara_asset.cpp"
 

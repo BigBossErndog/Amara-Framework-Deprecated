@@ -10,14 +10,12 @@ namespace Amara {
 		public:
 			Amara::Game* game = nullptr;
 			Amara::GameProperties* properties = nullptr;
-			Amara::Loader* load = nullptr;
 			unordered_map<string, Amara::Scene*> sceneMap;
 			vector<Amara::Scene*> sceneList;
 
 			SceneManager(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
 				game = properties->game;
-				load = properties->load;
 			}
 
 			Amara::Scene* add(string key, Amara::Scene* scene) {

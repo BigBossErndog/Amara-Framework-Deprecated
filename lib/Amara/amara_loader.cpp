@@ -8,21 +8,20 @@ namespace Amara {
     
     class Loader {
         public:
-            Amara::Game* game;
+            Amara::Game* game = nullptr;
+			Amara::GameProperties* properties = nullptr;
             SDL_Window* gWindow = nullptr;
 			SDL_Surface* gSurface = nullptr;
 			SDL_Renderer* gRenderer = nullptr;
 
             unordered_map<string, Amara::Asset*> assets;
 
-            Loader(Amara::Game* givenGame) {
-                game = givenGame;
-            }
-
-            void init(SDL_Window* givenWindow, SDL_Surface* givenSurface, SDL_Renderer* givenRenderer) {
-                gWindow = givenWindow;
-                gSurface = givenSurface;
-                gRenderer = givenRenderer;
+            Loader(Amara::GameProperties* gameProperties) {
+				properties = gameProperties;
+                game = properties->game;
+				gWindow = properties->gWindow;
+                gSurface = properties->gSurface;
+                gRenderer = properties->gRenderer;
                 assets.clear();
             }
 
