@@ -87,6 +87,13 @@ namespace Amara {
 				//Update the surface
 				SDL_UpdateWindowSurface(gWindow);
 
+				// Setting up the Renderer
+				gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+				if (gRenderer == NULL) {
+					printf("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
+					return false;
+				}
+
 				// Initialize renderer color
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
 
@@ -168,6 +175,9 @@ namespace Amara {
 
 					// Manage frame catch up and slow down
 					manageFPSEnd();
+
+					/// Draw to renderer
+					SDL_RenderPresent(gRenderer);
 				}
 				close();
 			}
@@ -280,16 +290,6 @@ namespace Amara {
 					frameCounter = 0;
 				}
 				frameCounter += 1;
-
-				/// Draw to renderer
-				SDL_RenderPresent(gRenderer);
-
-				// // Fill the surface black
-				// // Background color
-				// SDL_FillRect(gSurface, NULL, SDL_MapRGB(gSurface->format, 0, 0, 0));
-
-				// //Update the surface
-				// SDL_UpdateWindowSurface(gWindow);
 			}
 
 			void manageFPSStart() {

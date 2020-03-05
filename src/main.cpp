@@ -8,6 +8,7 @@ class TestScene : public Scene {
         }
         void create() {
             cout << "HELLO TEST SCENE" << endl;
+            game->resizeWindow(960, 720);
         }
         void update() {
             cout << "TEST SCENE IS WORKING" << endl;
