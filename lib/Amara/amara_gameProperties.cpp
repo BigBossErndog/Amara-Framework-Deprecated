@@ -26,8 +26,7 @@ namespace Amara {
             Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;
-
-            Amara::LoadManager* loadManager = nullptr;
+            
             Amara::Loader* loader = nullptr;
             Amara::SceneManager* scenes = nullptr;
 

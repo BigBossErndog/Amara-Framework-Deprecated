@@ -60,7 +60,6 @@ namespace Amara {
 
 					if (!scenePlugin->isActive) continue;
 					if (scenePlugin->isSleeping) continue;
-
 					scene->draw();
 				}
 			}

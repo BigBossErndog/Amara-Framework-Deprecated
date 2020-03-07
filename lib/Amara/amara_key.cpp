@@ -26,7 +26,7 @@ namespace Amara {
             Key(string keyname): Key() {
 				key = keyname;
 			}
-            
+
             Key(string givenKey, SDL_Keycode givenKeyCode) {
                 key = givenKey;
                 keyCode = givenKeyCode;

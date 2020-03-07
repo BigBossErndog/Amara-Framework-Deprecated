@@ -3,16 +3,26 @@ using namespace Amara;
 
 class TestScene : public Scene {
     public:
+        Image* gnik;
+
         TestScene() {
 
         }
+
+        void preload() {
+            // cout << "PRELOADING" << endl;
+            load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
+        }
         void create() {
-            cout << "HELLO TEST SCENE" << endl;
+            game->setResolution(240, 180);
             game->resizeWindow(960, 720);
+            
+            gnik = new Image("teenGnikolas");
+            Entity* thing = add(gnik);
         }
         void update() {
-            cout << "TEST SCENE IS WORKING" << endl;
-            scene->stop();
+            // scene->stop();
+            gnik->frame += 1;
         }
 };
 
@@ -21,7 +31,6 @@ int main(int argc, char** args) {
     game->init(480, 360);
 
     game->scenes->add("test", new TestScene());
-
     game->start("test");
 
     return 0;

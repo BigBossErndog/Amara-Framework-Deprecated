@@ -29,15 +29,29 @@ namespace Amara {
 			bool lagging = false;
 			int lagCounter = 0;
 
-			Amara::LoadManager* loadManager = nullptr;
-			Amara::Loader* loader = nullptr;
+			Amara::Loader* load = nullptr;
 			Amara::SceneManager* scenes = nullptr;;
 
 			Amara::InputManager* input = nullptr;
 			bool controllerEnabled = true;
 
+			bool vsync = false;
+			int fps = 60;
+			int tps = 1000 / fps;
+			int lps = 60;
+			LTimer fpsTimer;
+			LTimer capTimer;
+
+			int frameCounter = 0;
+			int logicDelay = 0;
+
+			SDL_Event e;
+
 			Game(string givenName) {
 				name = givenName;
+
+				properties = new Amara::GameProperties();
+				properties->game = this;
 			}
 
 			bool init(int startWidth, int startHeight) {
@@ -70,16 +84,18 @@ namespace Amara {
 					printf("Game Error: Failed to initialize Game Controller.");
 					return false;
 				}
-				
+
 				// Creating the window
 				gWindow = SDL_CreateWindow(this->name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 				if (gWindow == NULL) {
 					printf("Window could not be created. Game Error: %s\n", SDL_GetError());
 					return false;
 				}
+				properties->gWindow = gWindow;
 
 				// Get window surface
 				gSurface = SDL_GetWindowSurface(gWindow);
+				properties->gSurface = gSurface;
 
 				// Fill the surface black
 				// Background color
@@ -94,6 +110,7 @@ namespace Amara {
 					printf("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
 					return false;
 				}
+				properties->gRenderer = gRenderer;
 
 				// Initialize renderer color
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
@@ -122,19 +139,18 @@ namespace Amara {
 					printf("Game Error: Unable to detect display. Error: %s\n", SDL_GetError());
 					return false;
 				}
+
+				// Setting game logical size
+				SDL_RenderSetLogicalSize(gRenderer, width, height);
+
 				display = new Amara::IntRect(0, 0, dm.w, dm.h);
 				resolution = new Amara::IntRect(0, 0, width, height);
 				window = new Amara::IntRect(0, 0, width, height);
 				SDL_GetWindowPosition(gWindow, &window->x, &window->y);
 				// printf("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
-				
-				properties = new Amara::GameProperties();
-				properties->game = this;
 
-				loader = new Amara::Loader(properties);
-				properties->loader = loader;
-
-				loadManager = new Amara::LoadManager(properties);
+				load = new Amara::Loader(properties);
+				properties->loader = load;
 
 				input = new Amara::InputManager();
 				input->keyboard = new Amara::Keyboard();
@@ -172,14 +188,14 @@ namespace Amara {
 				// Game Loop
 				while (!quitted) {
 					manageFPSStart();
+
+					writeProperties();
+
 					// Draw Screen
 					draw();
 
 					// Manage frame catch up and slow down
 					manageFPSEnd();
-
-					/// Draw to renderer
-					SDL_RenderPresent(gRenderer);
 				}
 				close();
 			}
@@ -246,10 +262,17 @@ namespace Amara {
 				resolution->height = newh;
 			}
 
+			void resizeWindowAndResolution(int neww, int newh) {
+				resizeWindow(neww, newh);
+				setResolution(neww, newh);
+			}
+
 			void windowedFullScreen() {
 				resizeWindow(display->width, display->height);
 				setWindowPosition(0, 0);
 			}
+
+		protected:
 
 			void writeProperties() {
 				properties->gWindow = gWindow;
@@ -262,37 +285,28 @@ namespace Amara {
 				properties->display = display;
 				properties->resolution = resolution;
 				properties->window = window;
-
-				properties->loadManager = loadManager;
-				properties->loader = loader;
+				
+				properties->loader = load;
 				properties->scenes = scenes;
 
 				properties->input = input;
 			}
-
-		protected:
-			bool vsync = false;
-			int fps = 60;
-			int tps = 1000 / fps;
-			int lps = 60;
-			LTimer fpsTimer;
-			LTimer capTimer;
-
-			int frameCounter = 0;
-			int logicDelay = 0;
-
-			SDL_Event e;
 
 			void draw() {
 				// Clear the Renderer
 				SDL_RenderClear(gRenderer);
 
 				if (frameCounter >= logicDelay) {
-					scenes->run();
 					handleEvents();
+					scenes->run();
 					frameCounter = 0;
 				}
 				frameCounter += 1;
+
+				scenes->draw();
+				
+				/// Draw to renderer
+				SDL_RenderPresent(gRenderer);
 			}
 
 			void manageFPSStart() {
@@ -305,9 +319,10 @@ namespace Amara {
 				int totalWait = 0;
 				logicDelay = 0;
 				lagging = false;
-				
+
 				if (fps < lps) {
 					for (int i = 1; i < lps/fps; i++) {
+						handleEvents();
 						scenes->run();
 					}
 				}
@@ -334,8 +349,8 @@ namespace Amara {
 						// Framerate catch up.
 						for (int i = 0; i < (frameTicks - tps); i++) {
 							if (frameCounter >= logicDelay) {
-								scenes->run();
 								handleEvents();
+								scenes->run();
 								frameCounter = 0;
 								if (quitted) return;
 							}
@@ -343,7 +358,7 @@ namespace Amara {
 						}
 					}
 				}
-				
+
 				// Delay if game has not caught up
 				if (totalWait > 0) {
 					SDL_Delay(totalWait);

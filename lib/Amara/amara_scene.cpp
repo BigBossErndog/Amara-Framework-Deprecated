@@ -18,21 +18,24 @@ namespace Amara {
             vector<Amara::Camera*> cameras;
 
             vector<Amara::Entity*> entities;
+            bool initialLoaded = false;
 
             Scene() {
-                
+
             }
 
             virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* scenePlugin) final {
                 properties = gameProperties;
 
                 game = properties->game;
-                load = properties->loadManager;
+                load = new Amara::LoadManager(properties);
 
                 scene = scenePlugin;
             }
 
             void init() {
+                load->reset();
+				
                 Amara::Camera* cam;
                 for (size_t i = 0; i < cameras.size(); i++) {
                     cam = cameras.at(i);
@@ -50,25 +53,43 @@ namespace Amara {
 
                 mainCamera = new Amara::Camera();
                 cameras.push_back(mainCamera);
-                mainCamera->init(this, &entities);
+                mainCamera->init(properties, this, &entities);
 
-                create();
+                preload();
+                cout << "START LOADING TASKS: " << load->tasks.size() << " loading tasks." << endl;
             }
 
             Amara::Entity* add(Amara::Entity* entity) {
                 entities.push_back(entity);
                 entity->init(properties, this);
+                return entity;
             }
 
             Amara::Camera* add(Amara::Camera* cam) {
                 cameras.push_back(cam);
-                cam->init(this, &entities);
+                cam->init(properties, this, &entities);
+                return cam;
             }
 
             void run() {
                 properties->currentScene = this;
 
-                update();
+                if (!initialLoaded) {
+                    load->run();
+                    if (!load->stillLoading) {
+                        initialLoaded = true;
+                        create();
+                    }
+                }
+                else {
+                    update();
+
+                    Amara::Entity* entity;
+                    for (size_t i = 0; i < entities.size(); i++) {
+                        entity = entities.at(i);
+                        entity->run();
+                    }
+                }
             }
 
             void draw() {

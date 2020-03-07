@@ -5,24 +5,26 @@
 
 namespace Amara {
     class Game;
-    
+
     class Loader {
         public:
             Amara::Game* game = nullptr;
 			Amara::GameProperties* properties = nullptr;
-            SDL_Window* gWindow = nullptr;
-			SDL_Surface* gSurface = nullptr;
-			SDL_Renderer* gRenderer = nullptr;
+            SDL_Window* gWindow = NULL;
+			SDL_Surface* gSurface = NULL;
+			SDL_Renderer* gRenderer = NULL;
 
             unordered_map<string, Amara::Asset*> assets;
+			string selfkey;
 
             Loader(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
-                game = properties->game;
+				game = properties->game;
 				gWindow = properties->gWindow;
                 gSurface = properties->gSurface;
                 gRenderer = properties->gRenderer;
                 assets.clear();
+				assets["control"] = new Amara::Asset("control", IMAGE, nullptr);
             }
 
             Amara::Asset* get(string key) {
@@ -38,7 +40,7 @@ namespace Amara {
 			 */
 			bool surface(string key, string path, bool replace) {
 				if (get(key) != nullptr && !replace) {
-					printf("Loader Error: Key %s has already been used.\n", key);
+					cout << "Loader Error: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -48,7 +50,7 @@ namespace Amara {
 				//Load image at specified path.
 				SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 				if (loadedSurface == NULL) {
-					printf("Unable to load image %s! Error: %s\n", path.c_str(), IMG_GetError());
+					cout << "Unable to load image %s! Error: %s\n" << path << IMG_GetError() << endl;
 					success = false;
 				}
 				else {
@@ -56,7 +58,7 @@ namespace Amara {
 					optimizedSurface = SDL_ConvertSurface(loadedSurface, gSurface->format, NULL);
 
 					if (optimizedSurface == NULL) {
-						printf("Unable to optimize image %s. SDL Error: %s\n", path.c_str(), SDL_GetError());
+						cout << "Unable to optimize image %s. SDL Error: %s\n" << path << SDL_GetError() << endl;
 						success = false;
 					}
 
@@ -65,8 +67,8 @@ namespace Amara {
 				}
 
 				if (success) {
-					printf("Loaded: %s\n", key);
-					Amara::Asset* newAsset = new Amara::Asset(SURFACE, optimizedSurface);
+					cout << "Loaded: " << key << endl;
+					Amara::Asset* newAsset = new Amara::Asset(key, SURFACE, optimizedSurface);
 					assets[key] = newAsset;
 				}
 
@@ -80,43 +82,46 @@ namespace Amara {
             /*
 			 * Fast texture image.
 			 */
-			bool texture(string key, string path, bool replace) {
+			bool image(string key, string path, bool replace) {
 				if (get(key) != nullptr && !replace) {
-					printf("Loader Error: Key %s has already been used.\n", key);
+					cout << "Loader Error: Key " << key << " has already been used.\n" << endl;
 					return false;
 				}
 				bool success = true;
 
 				SDL_Texture* newTexture = NULL;
-
 				// Load image
 				SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+
+
+
 				if (loadedSurface == NULL && !replace) {
-					printf("Unable to load image %s. Error: %s\n", path.c_str(), IMG_GetError());
+					cout << "Unable to load image " << path << ". Error: " << IMG_GetError() << endl;
 					success = false;
 				}
 				else {
 					// Create texture from surface pixels
 					newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
 					if (newTexture == NULL) {
-						printf("Unable to create texture from %s. SDL Error: %s\n", path.c_str(), SDL_GetError());
+						cout << "Unable to create texture from " << path << ". SDL Error: \n" << SDL_GetError() << endl;
 					}
 
 					//Get rid of old loaded surface
 					SDL_FreeSurface(loadedSurface);
 				}
 
+
 				if (success) {
-					printf("Loaded: %s\n", key);
-					Amara::Asset* newAsset = new Amara::Asset(TEXTURE, newTexture);
+					cout << "Loaded: " << key << endl;
+					Amara::Asset* newAsset = new Amara::ImageTexture(key, IMAGE, newTexture);
 					assets[key] = newAsset;
 				}
 
 				return success;
 			}
 
-			bool texture(string key, string path) {
-				return texture(key, path, false);
+			bool image(string key, string path) {
+				return image(key, path, false);
 			}
 
             /*
@@ -124,7 +129,7 @@ namespace Amara {
 			 */
 			bool spritesheet(string key, string path, int frwidth, int frheight, bool replace) {
 				if (get(key) != nullptr && !replace) {
-					printf("Loader Error: Key %s has already been used.\n", key);
+					cout << "Loader Error: Key " << key << " has already been used." << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -134,14 +139,14 @@ namespace Amara {
 				// Load image
 				SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 				if (loadedSurface == NULL) {
-					printf("Unable to load image %s. Error: %s\n", path.c_str(), IMG_GetError());
+					cout << "Unable to load image " << path << ". Error: " << IMG_GetError() << endl;
 					success = false;
 				}
 				else {
 					// Create texture from surface pixels
 					newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
 					if (newTexture == NULL) {
-						printf("Unable to create texture from %s. SDL Error: %s\n", path.c_str(), SDL_GetError());
+						cout << "Unable to create texture from " << path << ". SDL Error: " << SDL_GetError() << endl;
 					}
 
 					//Get rid of old loaded surface
@@ -149,8 +154,9 @@ namespace Amara {
 				}
 
 				if (success) {
-					printf("Loaded: %s\n", key);
-					Amara::Spritesheet* newAsset = new Amara::Spritesheet(newTexture, frwidth, frheight);
+					cout << "Loaded: " << key << endl;
+					Amara::Spritesheet* newAsset = new Amara::Spritesheet(key, SPRITESHEET, newTexture, frwidth, frheight);
+					if (newAsset->type == SPRITESHEET) Amara::log("IT IS A SPRITESHEET");
 					assets[key] = newAsset;
 				}
 
@@ -176,8 +182,8 @@ namespace Amara {
 				FC_LoadFont(gFont, gRenderer, path.c_str(), size, color, style);
 
 				if (success) {
-					printf("Loaded: %s\n", key);
-					Amara::Asset* newAsset = new Amara::Asset(TTF, gFont);
+					cout << "Loaded: " << key << endl;
+					Amara::Asset* newAsset = new Amara::Asset(key, TTF, gFont);
 					assets[key] = newAsset;
 				}
 
@@ -198,19 +204,19 @@ namespace Amara {
 
             bool sound(string key, string path, bool replace) {
 				if (get(key) != nullptr && !replace) {
-					printf("Loader Error: Key %s has already been used.\n", key);
+					cout << "Loader Error: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
 
 				Mix_Chunk* sound = Mix_LoadWAV(path.c_str());
 				if (sound == NULL) {
-					printf("Failed to load sound effect. SDL_mixer Error: %s\n", Mix_GetError());
+					cout << "Failed to load sound effect. SDL_mixer Error: %s\n" <<  Mix_GetError() << endl;
 					success = false;
 				}
 				else {
-					printf("Loaded: %s\n", key);
-					Amara::Asset* newAsset = new Amara::Asset(SOUND, sound);
+					cout << "Loaded: " << key << endl;
+					Amara::Asset* newAsset = new Amara::Asset(key, SOUND, sound);
 					assets[key] = newAsset;
 				}
 
@@ -224,19 +230,19 @@ namespace Amara {
 
 			bool music(string key, string path, bool replace) {
 				if (get(key) != nullptr && !replace) {
-					printf("Loader Error: Key %s has already been used.\n", key);
+					cout << "Loader Error: Key " << key << " has already been used." << key << endl;
 					return false;
 				}
 				bool success = true;
 
 				Mix_Music* music = Mix_LoadMUS(path.c_str());
 				if (music == NULL) {
-					printf("Failed to load music. SDL_mixer Error: %s\n", Mix_GetError());
+					cout << "Failed to load music. SDL_mixer Error: %s\n" << Mix_GetError() << endl;
 					success = false;
 				}
 				else {
-					printf("Loaded: %s\n", key);
-					Amara::Asset* newAsset = new Amara::Asset(MUSIC, music);
+					cout << "Loaded: " << key << endl;
+					Amara::Asset* newAsset = new Amara::Asset(key, MUSIC, music);
 					assets[key] = newAsset;
 				}
 

@@ -14,7 +14,7 @@ namespace Amara {
         SLEEP,
         WAKE
     };
-    
+
     class ScenePlugin {
         public:
             Amara::Game* game = nullptr;

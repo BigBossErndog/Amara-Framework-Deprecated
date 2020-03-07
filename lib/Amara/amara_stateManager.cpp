@@ -1,7 +1,7 @@
 #ifndef AMARA_STATEMANAGER
 #define AMARA_STATEMANAGER
 
-#include <string>
+#include <amara.h>
 
 namespace Amara {
     class StateManager {
@@ -45,7 +45,7 @@ namespace Amara {
             bool evt() {
                 eventLooker += 1;
                 if (currentEvent == eventLooker) {
-                    
+
                     if (skipEvent) {
                         skipEvent = false;
                         return false;

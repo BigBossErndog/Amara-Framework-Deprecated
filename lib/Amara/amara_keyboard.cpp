@@ -7,7 +7,7 @@ namespace Amara {
     class Key;
 
     class Keyboard {
-        public: 
+        public:
             unordered_map<string, Amara::Key*> keys;
 
             Keyboard() {
@@ -18,7 +18,7 @@ namespace Amara {
                 Amara::Key* newKey = new Amara::Key(key, keyCode);
                 keys[key] = newKey;
                 return newKey;
-            }  
+            }
 
             void press(SDL_Keycode keyCode) {
                 unordered_map<string, Amara::Key*>::iterator it;

@@ -8,7 +8,12 @@
 #include <map>
 #include <unordered_map>
 #include <vector>
+#include <deque>
 #include <algorithm>
+#include <functional>
+#include <math.h>
+
+using namespace std;
 
 #ifndef AMARA_SDL
 #define AMARA_SDL
@@ -18,10 +23,6 @@
     #include <SDL_mixer.h>
     #include <SDL_FontCache.c>
 #endif
-
-#include <math.h>
-
-using namespace std;
 
 #include "amara_game.cpp"
 #include "amara_sceneManager.cpp"
@@ -47,3 +48,4 @@ using namespace std;
 
 #include "amara_gameProperties.cpp"
 #include "amara_inputManager.cpp"
+#include "amara_debugging.cpp"

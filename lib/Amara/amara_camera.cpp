@@ -19,7 +19,7 @@ namespace Amara {
             int scrollY = 0;
 
             Camera() {
-                
+
             }
 
             Camera(int gw, int gh) {
@@ -34,13 +34,14 @@ namespace Amara {
                 height = gh;
             }
 
-            virtual void init(Amara::Scene* givenScene, vector<Amara::Entity*>* givenEntities) {
+            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, vector<Amara::Entity*>* givenEntities) {
+                properties = gameProperties;
                 sceneEntities = givenEntities;
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 properties->currentCamera = this;
-                
+
                 int dx, dy, dw, dh = 0;
                 dx = vx + x;
                 dy = vy + y;
@@ -48,9 +49,15 @@ namespace Amara {
                 dh = (y + height > vh) ? (vh - y) : vh;
 
                 Amara::Entity* entity;
+
+                for (size_t i = 0; i < sceneEntities->size(); i++) {
+                    entity = sceneEntities->at(i);
+                    entity->draw(dx, dy, dw, dh);
+                }
+
                 for (size_t i = 0; i < entities.size(); i++) {
                     entity = entities.at(i);
-                    entity->draw(dx, dy, dw, dh);
+                    entity->draw(vx, vy, vw, vh);
                 }
             }
 
