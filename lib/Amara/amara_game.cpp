@@ -33,6 +33,7 @@ namespace Amara {
 			Amara::SceneManager* scenes = nullptr;;
 
 			Amara::InputManager* input = nullptr;
+			Amara::ControlScheme* controls = nullptr;
 			bool controllerEnabled = true;
 
 			Amara::TaskManager* taskManager = nullptr;
@@ -157,6 +158,9 @@ namespace Amara {
 				input = new Amara::InputManager();
 				input->keyboard = new Amara::Keyboard();
 				properties->input = input;
+
+				controls = new Amara::ControlScheme(properties);
+				properties->controls = controls;
 
 				scenes = new Amara::SceneManager(properties);
 				properties->scenes = scenes;
@@ -295,6 +299,7 @@ namespace Amara {
 				properties->scenes = scenes;
 
 				properties->input = input;
+				properties->controls = controls;
 				properties->taskManager = taskManager;
 			}
 
@@ -439,7 +444,8 @@ namespace Amara {
 					// 	getController(controller)->release(e.cbutton.button);
 					// }
 				}
-
+				
+				controls->run();
 				scenes->manageTasks();
 			}
 	};

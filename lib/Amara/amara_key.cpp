@@ -6,8 +6,7 @@
 namespace Amara {
     class Key {
         public:
-            string key;
-            SDL_Keycode keyCode;
+            Amara::Keycode keyCode;
 
             bool isDown = false;
             bool justDown = false;
@@ -23,12 +22,7 @@ namespace Amara {
                 downCounter = 0;
             }
 
-            Key(string keyname): Key() {
-				key = keyname;
-			}
-
-            Key(string givenKey, SDL_Keycode givenKeyCode) {
-                key = givenKey;
+            Key(SDL_Keycode givenKeyCode) {
                 keyCode = givenKeyCode;
             }
 
@@ -63,13 +57,6 @@ namespace Amara {
 					}
 				}
                 activated = false;
-            }
-
-            bool is(string keyCheck) {
-                if (key.compare(keyCheck) == 0) {
-                    return true;
-                }
-                return false;
             }
     };
 }

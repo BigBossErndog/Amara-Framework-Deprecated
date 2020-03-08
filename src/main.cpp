@@ -10,11 +10,12 @@ class TestScript: public Script {
         }
 
         void script(Amara::Entity& scene) {
-            gnik->x += 1;
+            // gnik->x += 1;
 
-            if (gnik->x > 50) {
-                finish();
-            }
+            // if (gnik->x > 50) {
+            //     finish();
+            // }
+            finish();
         }
 };
 
@@ -22,6 +23,8 @@ class TestScene : public Scene {
     public:
         Image* gnik;
         int c = 0;
+
+        Amara::Control* rightControl;
 
         TestScene() {
 
@@ -43,6 +46,10 @@ class TestScene : public Scene {
             cout << properties->resolution->height << endl;
 
             recite(new TestScript());
+
+            rightControl = controls->newControl("right");
+            controls->addKey("right", K_RIGHT);
+            controls->addKey("right", K_D);
         }
         void update() {
             // scene->stop();
@@ -52,6 +59,10 @@ class TestScene : public Scene {
                 c = 0;
                 // mainCamera->zoomX += 0.05;
                 // mainCamera->zoomY += 0.05;
+            }
+
+            if (rightControl->isDown) {
+                gnik->x += 1;
             }
         }
 };

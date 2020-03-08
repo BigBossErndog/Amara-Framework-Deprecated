@@ -21,6 +21,11 @@ namespace Amara {
         Amara::Error* e = nullptr;
         e->breakGame();
     }
+
+    void breakGame() {
+        Amara::Error* e = nullptr;
+        e->breakGame();
+    }
 }
 
 #endif

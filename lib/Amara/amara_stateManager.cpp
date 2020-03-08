@@ -37,6 +37,14 @@ namespace Amara {
                 return false;
             }
 
+            bool start() {
+                if (currentState.empty()) {
+                    eventLooker = 0;
+                    return true;
+                }
+                return false;
+            }
+
             void switchState(string key) {
                 currentState = key;
                 currentEvent = 1;

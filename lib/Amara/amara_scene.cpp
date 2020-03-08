@@ -12,7 +12,9 @@ namespace Amara {
             Amara::Game* game = nullptr;
             Amara::GameProperties* properties = nullptr;
             Amara::LoadManager* load = nullptr;
-            Amara::ScenePlugin* scene;
+            Amara::ScenePlugin* scene = nullptr;
+            Amara::InputManager* input = nullptr;
+            Amara::ControlScheme* controls = nullptr;
 
             Amara::Camera* mainCamera = nullptr;
             vector<Amara::Camera*> cameras;
@@ -27,6 +29,12 @@ namespace Amara {
                 properties = gameProperties;
 
                 game = properties->game;
+                input = properties->input;
+                controls = properties->controls;
+
+                if (load != nullptr) {
+                    delete load;
+                }
                 load = new Amara::LoadManager(properties);
 
                 scene = scenePlugin;
@@ -114,6 +122,10 @@ namespace Amara {
             virtual void preload() {}
             virtual void create() {}
             virtual void update() {}
+
+            ~Scene() {
+                delete load;
+            }
     };
 }
 

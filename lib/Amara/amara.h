@@ -30,8 +30,13 @@ using namespace std;
 #include "amara_scenePlugin.cpp"
 #include "amara_scene.cpp"
 #include "amara_ltimer.cpp"
+
+#include "amara_controlScheme.cpp"
+#include "amara_control.cpp"
+
 #include "amara_keyboard.cpp"
 #include "amara_key.cpp"
+#include "amara_keyCodes.cpp"
 
 #include "amara_scene.cpp"
 

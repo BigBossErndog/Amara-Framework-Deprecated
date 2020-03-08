@@ -4,14 +4,32 @@
 #include "amara.h"
 
 namespace Amara {
+    class Game;
+    class Scene;
+
     class Script: Amara::StateManager {
         public:
-            Script(): Amara::StateManager() {
+            Amara::GameProperties* properties = nullptr;
+            Amara::Entity* parent = nullptr;
+            Amara::Scene* scene = nullptr;
+            Amara::Game* game = nullptr;
+            Amara::InputManager* input = nullptr;
 
+            bool deleteOnFinish = true;
+
+            Script(bool deleteWhenDone): Amara::StateManager() {
+                deleteOnFinish = deleteWhenDone;
             }
 
-            Script(bool willDelete): Script() {
-                Script();
+            Script(): Script(true) {}
+
+            void init(Amara::GameProperties* gameProperties, Amara::Entity* parentActor) {
+                properties = gameProperties;
+                game = properties->game;
+                scene = properties->currentScene;
+                input = properties->input;
+
+                parent = parentActor;
             }
 
             bool finished = false;

@@ -24,6 +24,9 @@ namespace Amara {
                     script->script(*this);
                     if (script->finished) {
                         scripts.erase(it--);
+                        if (script->deleteOnFinish) {
+                            delete script;
+                        }
                     }
                 }
             }

@@ -5,7 +5,8 @@
 
 namespace Amara {
 	class Scene;
-	class Entity;
+	class InputManager;
+	class ControlScheme;
 
 	class SortedEntity {
 		public:
@@ -23,6 +24,10 @@ namespace Amara {
 			Amara::GameProperties* properties;
 			Amara::Scene* scene = nullptr;
 			Amara::Entity* parent = nullptr;
+
+			Amara::InputManager* input = nullptr;
+			Amara::ControlScheme* controls = nullptr;
+
 			vector<Amara::Entity*> entities;
 
 			string id;
@@ -41,6 +46,10 @@ namespace Amara {
 				properties = gameProperties;
 				scene = givenScene;
 				parent = givenParent;
+
+				input = properties->input;
+				controls = properties->controls;
+
 				isActive = true;
 				create();
 			}
