@@ -50,6 +50,7 @@ class TestScene : public Scene {
             rightControl = controls->newControl("right");
             controls->addKey("right", K_RIGHT);
             controls->addKey("right", K_D);
+            controls->setKey("right", K_UP);
         }
         void update() {
             // scene->stop();
@@ -62,7 +63,7 @@ class TestScene : public Scene {
             }
 
             if (rightControl->isDown) {
-                gnik->x += 1;
+                mainCamera->changeZoom(0.1);
             }
         }
 };

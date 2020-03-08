@@ -42,7 +42,7 @@ namespace Amara {
             Amara::Control* addKey(string id, Amara::Key* key) {
                 Amara::Control* control = get(id);
                 if (get(id) != nullptr) {
-                    control->add(key);
+                    control->addKey(key);
                     return control;
                 }
                 
@@ -55,10 +55,32 @@ namespace Amara {
                 if (key != nullptr) {
                     return addKey(id, key);
                 }
-                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" has not been created." << endl;
-                cout << "Don't worry, I'll create it for you. Key with KeyCode \"" << ((char)keyCode) << "\" now exists." << endl;
+                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" has not yet been created." << endl;
+                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" now exists." << endl;
                 key = input->keyboard->addKey(keyCode);
                 return addKey(id, key);
+            }
+
+            Amara::Control* setKey(string id, Amara::Key* key) {
+                Amara::Control* control = get(id);
+                if (get(id) != nullptr) {
+                    control->setKey(key);
+                    return control;
+                }
+                
+                cout << "Key \"" << id << "\" has not been initialized!" << endl;
+                Amara::breakGame();
+            }
+
+            Amara::Control* setKey(string id, Amara::Keycode keyCode) {
+                Amara::Key* key = input->keyboard->get(keyCode);
+                if (key != nullptr) {
+                    return setKey(id, key);
+                }
+                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" has not yet been created." << endl;
+                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" now exists." << endl;
+                key = input->keyboard->addKey(keyCode);
+                return setKey(id, key);
             }
 
             void run() {

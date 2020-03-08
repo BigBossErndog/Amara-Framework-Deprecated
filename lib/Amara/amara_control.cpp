@@ -24,8 +24,13 @@ namespace Amara {
                 keys.clear();
             }
 
-            void add(Amara::Key* nKey) {
+            void addKey(Amara::Key* nKey) {
                 keys.push_back(nKey);
+            }
+
+            void setKey(Amara::Key* nKey) {
+                keys.clear();
+                addKey(nKey);
             }
 
             Amara::Key* remove(Amara::Keycode keyCode) {

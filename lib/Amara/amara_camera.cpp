@@ -65,6 +65,10 @@ namespace Amara {
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 properties->currentCamera = this;
+                properties->scrollX = scrollX;
+                properties->scrollY = scrollY;
+                properties->zoomX = zoomX;
+                properties->zoomY = zoomY;
 
                 int dx, dy, dw, dh, ow, oh = 0;
 
@@ -117,6 +121,45 @@ namespace Amara {
             void centerOn(Amara::Entity* entity) {
                 scrollX = entity->x - width/2;
                 scrollY = entity->y - height/2;
+            }
+            void centerOn(float gx, float gy) {
+                scrollX = x - width/2;
+                scrollY = y - height/2;
+            }
+            void centerOn(float gi) {
+                centerOn(gi, gi);
+            }
+
+            void setScroll(float gx, float gy) {
+                scrollX = gx;
+                scrollY = gy;
+            }
+            void setScroll(float gi) {
+                setScroll(gi, gi);
+            }
+
+            void changeScroll(float gx, float gy) {
+                scrollX += gx;
+                scrollY += gy;
+            }
+            void changeScroll(float gi) {
+                changeScroll(gi, gi);
+            }
+
+            void setZoom(float gx, float gy) {
+                zoomX = gx;
+                zoomY = gy;
+            }  
+            void setZoom(float gi) {
+                setZoom(gi, gi);
+            }
+
+            void changeZoom(float gx, float gy) {
+                zoomX += gx;
+                zoomY += gy;
+            }
+            void changeZoom(float gi) {
+                changeZoom(gi, gi);
             }
 
             ~Camera() {

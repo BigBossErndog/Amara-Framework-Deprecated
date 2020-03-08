@@ -68,10 +68,10 @@ namespace Amara {
 
                 Amara::Camera* cam = properties->currentCamera;
 
-                destRect.x = (floor(x) - cam->scrollX - (originX * imageWidth)) * cam->zoomX;
-                destRect.y = (floor(y) - cam->scrollY - (originY * imageHeight)) * cam->zoomY;
-                destRect.w = ceil(imageWidth * scaleX * cam->zoomX);
-                destRect.h = ceil(imageHeight * scaleY * cam->zoomY);
+                destRect.x = (floor(x) - properties->scrollX - (originX * imageWidth)) * properties->zoomX;
+                destRect.y = (floor(y) - properties->scrollY - (originY * imageHeight)) * properties->zoomY;
+                destRect.w = ceil(imageWidth * scaleX * properties->zoomX);
+                destRect.h = ceil(imageHeight * scaleY * properties->zoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;

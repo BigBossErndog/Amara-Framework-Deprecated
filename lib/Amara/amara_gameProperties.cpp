@@ -26,6 +26,12 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
+            float scrollX = 0;
+            float scrollY = 0;
+
+            float zoomX = 0;
+            float zoomY = 0;
+
             Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;
