@@ -7,7 +7,7 @@ namespace Amara {
     class Game;
     class ScenePlugin;
 
-    class Scene {
+    class Scene: public Amara::Actor {
         public:
             Amara::Game* game = nullptr;
             Amara::GameProperties* properties = nullptr;
@@ -17,10 +17,9 @@ namespace Amara {
             Amara::Camera* mainCamera = nullptr;
             vector<Amara::Camera*> cameras;
 
-            vector<Amara::Entity*> entities;
             bool initialLoaded = false;
 
-            Scene() {
+            Scene(): Actor() {
 
             }
 
@@ -35,7 +34,7 @@ namespace Amara {
 
             void init() {
                 load->reset();
-				
+
                 Amara::Camera* cam;
                 for (size_t i = 0; i < cameras.size(); i++) {
                     cam = cameras.at(i);
@@ -82,12 +81,19 @@ namespace Amara {
                     }
                 }
                 else {
+                    reciteScripts();
                     update();
 
                     Amara::Entity* entity;
                     for (size_t i = 0; i < entities.size(); i++) {
                         entity = entities.at(i);
                         entity->run();
+                    }
+
+                    Amara::Camera* cam;
+                    for (size_t i = 0; i < cameras.size(); i++) {
+                        cam = cameras.at(i);
+                        cam->run();
                     }
                 }
             }
@@ -101,7 +107,7 @@ namespace Amara {
                 Amara::Camera* cam;
                 for (size_t i = 0; i < cameras.size(); i++) {
                     cam = cameras.at(i);
-                    cam->draw(0, 0, properties->width, properties->height);
+                    cam->draw(0, 0, properties->resolution->width, properties->resolution->height);
                 }
             }
 

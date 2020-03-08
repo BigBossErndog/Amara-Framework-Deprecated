@@ -35,6 +35,8 @@ namespace Amara {
 			Amara::InputManager* input = nullptr;
 			bool controllerEnabled = true;
 
+			Amara::TaskManager* taskManager = nullptr;
+
 			bool vsync = false;
 			int fps = 60;
 			int tps = 1000 / fps;
@@ -158,6 +160,9 @@ namespace Amara {
 
 				scenes = new Amara::SceneManager(properties);
 				properties->scenes = scenes;
+
+				taskManager = new Amara::TaskManager(properties);
+				properties->taskManager = taskManager;
 
 				writeProperties();
 
@@ -290,6 +295,7 @@ namespace Amara {
 				properties->scenes = scenes;
 
 				properties->input = input;
+				properties->taskManager = taskManager;
 			}
 
 			void draw() {

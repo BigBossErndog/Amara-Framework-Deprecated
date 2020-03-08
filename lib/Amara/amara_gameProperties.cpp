@@ -11,6 +11,8 @@ namespace Amara {
     class SceneManager;
     class Scene;
     class Camera;
+    class InputManager;
+    class TaskManager;
 
     class GameProperties {
         public:
@@ -34,6 +36,7 @@ namespace Amara {
             Amara::Camera* currentCamera = nullptr;
 
             Amara::InputManager* input = nullptr;
+            Amara::TaskManager* taskManager = nullptr;
 
             GameProperties() {
                 

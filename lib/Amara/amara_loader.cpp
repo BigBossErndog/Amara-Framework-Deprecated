@@ -156,7 +156,6 @@ namespace Amara {
 				if (success) {
 					cout << "Loaded: " << key << endl;
 					Amara::Spritesheet* newAsset = new Amara::Spritesheet(key, SPRITESHEET, newTexture, frwidth, frheight);
-					if (newAsset->type == SPRITESHEET) Amara::log("IT IS A SPRITESHEET");
 					assets[key] = newAsset;
 				}
 

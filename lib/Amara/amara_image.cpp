@@ -4,7 +4,7 @@
 #include "amara.h"
 
 namespace Amara {
-    class Image : public Amara::Entity {
+    class Image: public Amara::Actor {
         public:
             SDL_Renderer* gRenderer = nullptr;
 
@@ -15,9 +15,6 @@ namespace Amara {
             SDL_Rect srcRect;
             SDL_Rect destRect;
             SDL_Point origin;
-
-            int x = 0;
-            int y = 0;
 
             int width = 0;
             int height = 0;
@@ -34,7 +31,7 @@ namespace Amara {
 
             float angle = 0;
 
-            Image() {
+            Image(): Actor() {
                 textureKey.clear();
             }
 
@@ -42,7 +39,7 @@ namespace Amara {
                 textureKey = givenKey;
             }
 
-            Image(int gx, int gy, string givenKey): Image(givenKey) {
+            Image(float gx, float gy, string givenKey): Image(givenKey) {
                 x = gx;
                 y = gy;
             }
@@ -71,10 +68,10 @@ namespace Amara {
 
                 Amara::Camera* cam = properties->currentCamera;
 
-                destRect.x = x;
-                destRect.y = y;
-                destRect.w = imageWidth * scaleX;
-                destRect.h = imageHeight * scaleY;
+                destRect.x = (floor(x) - cam->scrollX - (originX * imageWidth)) * cam->zoomX;
+                destRect.y = (floor(y) - cam->scrollY - (originY * imageHeight)) * cam->zoomY;
+                destRect.w = ceil(imageWidth * scaleX * cam->zoomX);
+                destRect.h = ceil(imageHeight * scaleY * cam->zoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
