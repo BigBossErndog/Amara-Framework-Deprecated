@@ -60,53 +60,58 @@ namespace Amara {
 			}
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
+                bool skipDrawing = false;
+
                 viewport.x = vx;
                 viewport.y = vy;
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
-                Amara::Camera* cam = properties->currentCamera;
-
-                destRect.x = (floor(x) - properties->scrollX - (originX * imageWidth)) * properties->zoomX;
-                destRect.y = (floor(y) - properties->scrollY - (originY * imageHeight)) * properties->zoomY;
+                destRect.x = floor((round(x) - properties->scrollX - (originX * imageWidth)) * properties->zoomX);
+                destRect.y = floor((round(y) - properties->scrollY - (originY * imageHeight)) * properties->zoomY);
                 destRect.w = ceil(imageWidth * scaleX * properties->zoomX);
                 destRect.h = ceil(imageHeight * scaleY * properties->zoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
+
+                if (destRect.w <= 0) skipDrawing = true;
+                if (destRect.h <= 0) skipDrawing = true;
                 
-                if (texture != nullptr) {
-                    SDL_Texture* tx = (SDL_Texture*)texture->asset;
-                    switch (texture->type) {
-                        case IMAGE:
-                            frame = 0;
-                            srcRect.x = 0;
-                            srcRect.y = 0;
-                            srcRect.w = imageWidth;
-                            srcRect.h = imageHeight;
-                            break;
-                        case SPRITESHEET:
-                            Amara::Spritesheet* spr = (Amara::Spritesheet*)texture;
-                            int maxFrame = ((texture->width / spr->frameWidth) * (texture->height / spr->frameHeight));
-                            frame = frame % maxFrame;
+                if (!skipDrawing) {
+                    if (texture != nullptr) {
+                        SDL_Texture* tx = (SDL_Texture*)texture->asset;
+                        switch (texture->type) {
+                            case IMAGE:
+                                frame = 0;
+                                srcRect.x = 0;
+                                srcRect.y = 0;
+                                srcRect.w = imageWidth;
+                                srcRect.h = imageHeight;
+                                break;
+                            case SPRITESHEET:
+                                Amara::Spritesheet* spr = (Amara::Spritesheet*)texture;
+                                int maxFrame = ((texture->width / spr->frameWidth) * (texture->height / spr->frameHeight));
+                                frame = frame % maxFrame;
 
-                            srcRect.x = (frame % (texture->width / spr->frameWidth)) * spr->frameWidth; 
-                            srcRect.y = floor(frame / (texture->width / spr->frameWidth)) * spr->frameHeight;
-                            srcRect.w = spr->frameWidth;
-                            srcRect.h = spr->frameHeight;
-                            break;
+                                srcRect.x = (frame % (texture->width / spr->frameWidth)) * spr->frameWidth; 
+                                srcRect.y = floor(frame / (texture->width / spr->frameWidth)) * spr->frameHeight;
+                                srcRect.w = spr->frameWidth;
+                                srcRect.h = spr->frameHeight;
+                                break;
+                        }
+
+                        SDL_RenderCopyEx(
+                            gRenderer,
+                            (SDL_Texture*)(texture->asset),
+                            &srcRect,
+                            &destRect,
+                            angle,
+                            &origin,
+                            SDL_FLIP_NONE
+                        );
                     }
-
-                    SDL_RenderCopyEx(
-                        gRenderer,
-                        (SDL_Texture*)(texture->asset),
-                        &srcRect,
-                        &destRect,
-                        angle,
-                        &origin,
-                        SDL_FLIP_NONE
-                    );
                 }
 
                 Amara::Entity::draw(vx, vy, vw, vh);

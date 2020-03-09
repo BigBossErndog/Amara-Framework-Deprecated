@@ -14,14 +14,15 @@ namespace Amara {
 
             void recite(Amara::Script* script) {
                 scripts.push_back(script);
-                script->prepare(*this);
+                
+                script->prepare(this);
             }
 
             void reciteScripts() {
                 Amara::Script* script;
                 for (auto it = scripts.begin(); it != scripts.end(); it++) {
                     script = *it;
-                    script->script(*this);
+                    script->script(this);
                     if (script->finished) {
                         scripts.erase(it--);
                         if (script->deleteOnFinish) {

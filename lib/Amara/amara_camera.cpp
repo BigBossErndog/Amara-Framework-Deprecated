@@ -13,15 +13,24 @@ namespace Amara {
             float width = 0;
             float height = 0;
 
+            float oldScrollX = 0;
+            float oldScrollY = 0;
             float scrollX = 0;
             float scrollY = 0;
 
+            float oldZoomX = 0;
+            float oldZoomY = 0;
             float zoomX = 1;
             float zoomY = 1;
 
+            float oldCenterX = 0;
+            float oldCenterY = 0;
+            float centerX = 0;
+            float centerY = 0;
+
             Amara::Entity* followTarget = nullptr;
-            float lerpX = 0;
-            float lerpY = 0; 
+            float lerpX = 1;
+            float lerpY = 1; 
 
             Camera() {
 
@@ -44,16 +53,11 @@ namespace Amara {
                 sceneEntities = givenEntities;
                 width = properties->resolution->width;
                 height = properties->resolution->height;
+                
+                recordValues();
             }
 
             virtual void run() {
-                if (followTarget != nullptr) {
-                    float tx = followTarget->x - width/2;
-                    float ty = followTarget->y - height/2;
-                    scrollX = (scrollX - tx) * lerpX + tx;
-                    scrollY = (scrollY - ty) * lerpY + ty;
-                }
-
 				update();
 
 				Amara::Entity* entity;
@@ -61,7 +65,47 @@ namespace Amara {
 					entity = entities.at(i);
 					entity->run();
 				}
+
+                updateValues();
+
+                if (followTarget != nullptr) {
+                    float tx = followTarget->x;
+                    float ty = followTarget->y;
+
+                    float cx = (width/zoomX)/2 - (width/oldZoomX)/2;
+                    float cy = (height/zoomY)/2 - (height/oldZoomY)/2;
+
+                    float nx = (oldCenterX - tx) * (1 - lerpX) + tx;
+                    float ny = (oldCenterY - ty) * (1 - lerpY) + ty;
+
+                    centerOn(nx, ny);
+                }
+                
+                updateValues();
+                recordValues();
 			}
+
+            void updateValues() {
+                fixValues();
+                centerX = scrollX + (width/zoomX)/2;
+                centerY = scrollY + (height/zoomY)/2;
+            }
+
+            void recordValues() {
+                oldScrollX = scrollX;
+                oldScrollY = scrollY;
+
+                oldZoomX = zoomX;
+                oldZoomY = zoomY;
+
+                oldCenterX = centerX;
+                oldCenterY = centerY;
+            }
+
+            void fixValues() {
+                if (zoomX < 0) zoomX = 0.00001;
+                if (zoomY < 0) zoomY = 0.00001;
+            }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 properties->currentCamera = this;
@@ -111,7 +155,7 @@ namespace Amara {
                 startFollow(entity, l, l);
             }
             void startFollow(Amara::Entity* entity) {
-                startFollow(entity, 0, 0);
+                startFollow(entity, 1, 1);
             }
 
             void stopFollow() {
@@ -119,12 +163,14 @@ namespace Amara {
             }
 
             void centerOn(Amara::Entity* entity) {
-                scrollX = entity->x - width/2;
-                scrollY = entity->y - height/2;
+                scrollX = entity->x - (width/zoomX)/2;
+                scrollY = entity->y - (height/zoomY)/2;
+                updateValues();
             }
             void centerOn(float gx, float gy) {
-                scrollX = x - width/2;
-                scrollY = y - height/2;
+                scrollX = gx - (width/zoomX)/2;
+                scrollY = gy - (height/zoomY)/2;
+                updateValues();
             }
             void centerOn(float gi) {
                 centerOn(gi, gi);
@@ -133,6 +179,7 @@ namespace Amara {
             void setScroll(float gx, float gy) {
                 scrollX = gx;
                 scrollY = gy;
+                updateValues();
             }
             void setScroll(float gi) {
                 setScroll(gi, gi);
@@ -141,6 +188,7 @@ namespace Amara {
             void changeScroll(float gx, float gy) {
                 scrollX += gx;
                 scrollY += gy;
+                updateValues();
             }
             void changeScroll(float gi) {
                 changeScroll(gi, gi);
@@ -149,6 +197,7 @@ namespace Amara {
             void setZoom(float gx, float gy) {
                 zoomX = gx;
                 zoomY = gy;
+                updateValues();
             }  
             void setZoom(float gi) {
                 setZoom(gi, gi);
@@ -157,6 +206,7 @@ namespace Amara {
             void changeZoom(float gx, float gy) {
                 zoomX += gx;
                 zoomY += gy;
+                updateValues();
             }
             void changeZoom(float gi) {
                 changeZoom(gi, gi);

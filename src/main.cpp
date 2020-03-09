@@ -5,11 +5,11 @@ class TestScript: public Script {
     public:
         Amara::Entity* gnik;
 
-        void prepare(Amara::Entity& scene) {
-            gnik = scene.get("teenGnik");
+        void prepare(Amara::Entity* scene) {
+            gnik = scene->get("teenGnik");
         }
 
-        void script(Amara::Entity& scene) {
+        void script(Amara::Entity* scene) {
             // gnik->x += 1;
 
             // if (gnik->x > 50) {
@@ -24,8 +24,6 @@ class TestScene : public Scene {
         Image* gnik;
         int c = 0;
 
-        Amara::Control* rightControl;
-
         TestScene() {
 
         }
@@ -35,22 +33,22 @@ class TestScene : public Scene {
             load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
         }
         void create() {
-            gnik = new Image(0, 0, "teenGnikolas");
+            gnik = new Image(40, 40, "teenGnikolas");
             gnik->setOrigin(0.5);
             gnik->id = "teenGnik";
             Entity* thing = add(gnik);
-
-            mainCamera->centerOn(gnik);
 
             cout << properties->resolution->width << endl;
             cout << properties->resolution->height << endl;
 
             recite(new TestScript());
 
-            rightControl = controls->newControl("right");
-            controls->addKey("right", K_RIGHT);
-            controls->addKey("right", K_D);
-            controls->setKey("right", K_UP);
+            controls->setKey("up", K_UP);
+            controls->setKey("down", K_DOWN);
+            controls->setKey("left", K_LEFT);
+            controls->setKey("right", K_RIGHT);
+
+            mainCamera->startFollow(gnik, 0.5, 0.5);
         }
         void update() {
             // scene->stop();
@@ -62,8 +60,25 @@ class TestScene : public Scene {
                 // mainCamera->zoomY += 0.05;
             }
 
-            if (rightControl->isDown) {
-                mainCamera->changeZoom(0.1);
+            if (controls->isDown("left")) {
+                gnik->x -= 1;
+            }
+            else if (controls->isDown("right")) {
+                gnik->x += 1;
+            }
+
+            if (controls->isDown("up")) {
+                gnik->y -= 1;
+            }
+            else if (controls->isDown("down")) {
+                gnik->y += 1;
+            }
+
+            if (input->mouse->left->justDown) {
+                mainCamera->changeZoom(0.2);
+            }
+            else if (input->mouse->right->justDown) {
+                mainCamera->changeZoom(-0.2);
             }
         }
 };

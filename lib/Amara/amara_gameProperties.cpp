@@ -35,6 +35,10 @@ namespace Amara {
             Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;
+
+            bool lagging = false;
+            bool dragged = false;
+            bool windowFocused = false;
             
             Amara::Loader* loader = nullptr;
             Amara::SceneManager* scenes = nullptr;
@@ -46,9 +50,7 @@ namespace Amara {
             Amara::ControlScheme* controls = nullptr;
             Amara::TaskManager* taskManager = nullptr;
 
-            GameProperties() {
-                
-            }
+            GameProperties() {}
     };
 }
 

@@ -22,7 +22,7 @@ namespace Amara {
                 downCounter = 0;
             }
 
-            Key(SDL_Keycode givenKeyCode) {
+            Key(SDL_Keycode givenKeyCode): Key() {
                 keyCode = givenKeyCode;
             }
 

@@ -43,8 +43,8 @@ namespace Amara {
                 }
             }
 
-            virtual void prepare(Amara::Entity& entity) {}
-            virtual void script(Amara::Entity& entity) {}
+            virtual void prepare(Amara::Entity* entity) {}
+            virtual void script(Amara::Entity* entity) {}
     };
 }
 

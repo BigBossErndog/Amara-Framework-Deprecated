@@ -34,6 +34,8 @@ using namespace std;
 #include "amara_controlScheme.cpp"
 #include "amara_control.cpp"
 
+#include "amara_mouse.cpp"
+
 #include "amara_keyboard.cpp"
 #include "amara_key.cpp"
 #include "amara_keyCodes.cpp"

@@ -29,12 +29,15 @@ namespace Amara {
 			bool lagging = false;
 			int lagCounter = 0;
 
+			bool windowFocused = false;
+
 			Amara::Loader* load = nullptr;
 			Amara::SceneManager* scenes = nullptr;;
 
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
 			bool controllerEnabled = true;
+			
 
 			Amara::TaskManager* taskManager = nullptr;
 
@@ -156,7 +159,8 @@ namespace Amara {
 				properties->loader = load;
 
 				input = new Amara::InputManager();
-				input->keyboard = new Amara::Keyboard();
+				input->keyboard = new Amara::Keyboard(properties);
+				input->mouse = new Amara::Mouse(properties);
 				properties->input = input;
 
 				controls = new Amara::ControlScheme(properties);
@@ -301,6 +305,9 @@ namespace Amara {
 				properties->input = input;
 				properties->controls = controls;
 				properties->taskManager = taskManager;
+
+				properties->lagging = lagging;
+				properties->dragged = dragged;
 			}
 
 			void draw() {
@@ -349,6 +356,7 @@ namespace Amara {
 				else if (frameTicks > tps) {
 					if (dragged) {
 						dragged = false;
+						properties->dragged = false;
 					}
 					else {
 						// Checking for lag
@@ -379,7 +387,7 @@ namespace Amara {
 			void handleEvents() {
 				// Handle events on queue
 				input->keyboard->manage();
-				// input->mouse->manage();
+				input->mouse->manage();
 
 				// manageControllers();
 
@@ -393,41 +401,41 @@ namespace Amara {
 					else if (e.type == SDL_KEYUP) {
 						input->keyboard->release(e.key.keysym.sym);
 					}
-					// else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
-					// 	int mx, my;
-					// 	SDL_GetMouseState(&mx, &my);
-					// 	input->mouse->x = (mx * resolution->width/properties->width);
-					// 	input->mouse->y = (my * resolution->height/properties->height);
+					else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
+						int mx, my;
+						SDL_GetMouseState(&mx, &my);
+						input->mouse->x = (mx * resolution->width/properties->width);
+						input->mouse->y = (my * resolution->height/properties->height);
 
-					// 	if (e.type == SDL_MOUSEBUTTONDOWN) {
-					// 		if (e.button.button == SDL_BUTTON_LEFT) {
-					// 			mouse->leftButton->press();
-					// 		}
-					// 		else if (e.button.button == SDL_BUTTON_RIGHT) {
-					// 			mouse->rightButton->press();
-					// 		}
-					// 	}
-					// 	else if (e.type == SDL_MOUSEBUTTONUP) {
-					// 		if (e.button.button == SDL_BUTTON_LEFT) {
-					// 			input->mouse->leftButton->release();
-					// 		}
-					// 		else {
-					// 			input->mouse->rightButton->release();
-					// 		}
-					// 	}
-					// }
-					// else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_MOVED)) {
-					// 	dragged = true;
-					// 	properties->dragged = true;
-					// }
-					// else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_LEAVE)) {
-					// 	windowFocused = false;
-					// 	properties->windowFocused = false;
-					// }
-					// else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_ENTER)) {
-					// 	windowFocused = true;
-					// 	properties->windowFocused = true;
-					// }
+						if (e.type == SDL_MOUSEBUTTONDOWN) {
+							if (e.button.button == SDL_BUTTON_LEFT) {
+								input->mouse->left->press();
+							}
+							else if (e.button.button == SDL_BUTTON_RIGHT) {
+								input->mouse->right->press();
+							}
+						}
+						else if (e.type == SDL_MOUSEBUTTONUP) {
+							if (e.button.button == SDL_BUTTON_LEFT) {
+								input->mouse->left->release();
+							}
+							else {
+								input->mouse->right->release();
+							}
+						}
+					}
+					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_MOVED)) {
+						dragged = true;
+						properties->dragged = true;
+					}
+					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_LEAVE)) {
+						windowFocused = false;
+						properties->windowFocused = false;
+					}
+					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_ENTER)) {
+						windowFocused = true;
+						properties->windowFocused = true;
+					}
 					// else if (e.type == SDL_CONTROLLERDEVICEADDED) {
 					// 	SDL_GameController* nsdlc = SDL_GameControllerOpen(e.cdevice.which);
 

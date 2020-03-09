@@ -41,13 +41,15 @@ namespace Amara {
 
             Amara::Control* addKey(string id, Amara::Key* key) {
                 Amara::Control* control = get(id);
-                if (get(id) != nullptr) {
+                if (control != nullptr) {
                     control->addKey(key);
                     return control;
                 }
                 
-                cout << "Key \"" << id << "\" has not been initialized!" << endl;
-                Amara::breakGame();
+                cout << "Key \"" << id << "\" has not been initialized." << endl;
+                control = newControl(id);
+                cout << "Key \"" << id << "\" now exists." << endl;
+                return addKey(id, key);
             }
 
             Amara::Control* addKey(string id, Amara::Keycode keyCode) {
@@ -55,21 +57,23 @@ namespace Amara {
                 if (key != nullptr) {
                     return addKey(id, key);
                 }
-                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" has not yet been created." << endl;
-                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" now exists." << endl;
+                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << endl;
+                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << endl;
                 key = input->keyboard->addKey(keyCode);
                 return addKey(id, key);
             }
 
             Amara::Control* setKey(string id, Amara::Key* key) {
                 Amara::Control* control = get(id);
-                if (get(id) != nullptr) {
+                if (control != nullptr) {
                     control->setKey(key);
                     return control;
                 }
                 
-                cout << "Key \"" << id << "\" has not been initialized!" << endl;
-                Amara::breakGame();
+                cout << "Key \"" << id << "\" has not been initialized." << endl;
+                control = newControl(id);
+                cout << "Key \"" << id << "\" now exists." << endl;
+                return setKey(id, key);
             }
 
             Amara::Control* setKey(string id, Amara::Keycode keyCode) {
@@ -77,8 +81,8 @@ namespace Amara {
                 if (key != nullptr) {
                     return setKey(id, key);
                 }
-                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" has not yet been created." << endl;
-                cout << "Key with KeyCode \"" << ((char)keyCode) << "\" now exists." << endl;
+                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << endl;
+                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << endl;
                 key = input->keyboard->addKey(keyCode);
                 return setKey(id, key);
             }
@@ -89,6 +93,54 @@ namespace Amara {
                     control = controlList.at(i);
                     control->run();
                 }
+            }
+
+            bool isDown(string id) {
+                Amara::Control* control = get(id);
+                if (control != nullptr) {
+                   return control->isDown;
+                }
+                return false;
+            }
+
+            bool justDown(string id) {
+                Amara::Control* control = get(id);
+                if (control != nullptr) {
+                   return control->justDown;
+                }
+                return false;
+            }
+
+            bool justUp(string id) {
+                Amara::Control* control = get(id);
+                if (control != nullptr) {
+                   return control->justUp;
+                }
+                return false;
+            }
+
+            bool tapped(string id) {
+                Amara::Control* control = get(id);
+                if (control != nullptr) {
+                   return control->tapped;
+                }
+                return false;
+            }
+
+            bool held(string id) {
+                Amara::Control* control = get(id);
+                if (control != nullptr) {
+                   return control->held;
+                }
+                return false;
+            }
+
+            bool activated(string id) {
+                Amara::Control* control = get(id);
+                if (control != nullptr) {
+                   return control->activated;
+                }
+                return false;
             }
     };
 }

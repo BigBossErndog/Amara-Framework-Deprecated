@@ -5,10 +5,12 @@
 
 namespace Amara {
     class Keyboard;
+    class Mouse;
     
     class InputManager {
         public:
             Amara::Keyboard* keyboard = nullptr;
+            Amara::Mouse* mouse = nullptr;
 
             InputManager() {
 
