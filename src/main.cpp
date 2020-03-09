@@ -22,6 +22,7 @@ class TestScript: public Script {
 class TestScene : public Scene {
     public:
         Image* gnik;
+        bool gnikDestroyed = false;
         int c = 0;
 
         TestScene() {
@@ -38,13 +39,13 @@ class TestScene : public Scene {
             gnik->id = "teenGnik";
             Entity* thing = add(gnik);
             
-            Amara::Image* obj;
-            for (int j = 0; j < 100; j++) {
-                for (int i = 0; i < 100; i++) {
-                    add(obj = new Image(i*8,j*8,"teenGnikolas"));
-                    obj->setOrigin(0.5);
-                }
-            }
+            // Amara::Image* obj;
+            // for (int j = 0; j < 100; j++) {
+            //     for (int i = 0; i < 100; i++) {
+            //         add(obj = new Image(i*8,j*8,"teenGnikolas"));
+            //         obj->setOrigin(0.5);
+            //     }
+            // }
 
             recite(new TestScript());
 
@@ -54,6 +55,7 @@ class TestScene : public Scene {
             controls->setKey("right", K_RIGHT);
 			controls->setKey("d", K_D);
 			controls->setKey("a", K_A);
+            controls->setKey("space", K_SPACE);
 
 			controls->setKey("esc", K_ESCAPE);
 
@@ -73,18 +75,25 @@ class TestScene : public Scene {
                 // mainCamera->zoomY += 0.05;
             }
 
-            if (controls->isDown("left")) {
-                gnik->x -= 1;
-            }
-            else if (controls->isDown("right")) {
-                gnik->x += 1;
-            }
+            if (!gnikDestroyed) {
+                if (controls->isDown("left")) {
+                    gnik->x -= 1;
+                }
+                else if (controls->isDown("right")) {
+                    gnik->x += 1;
+                }
 
-            if (controls->isDown("up")) {
-                gnik->y -= 1;
-            }
-            else if (controls->isDown("down")) {
-                gnik->y += 1;
+                if (controls->isDown("up")) {
+                    gnik->y -= 1;
+                }
+                else if (controls->isDown("down")) {
+                    gnik->y += 1;
+                }
+
+                if (controls->justDown("space")) {
+                    gnik->destroy();
+                    gnikDestroyed = true;
+                }
             }
 
             // if (input->mouse->left->justDown) {
@@ -102,6 +111,7 @@ class TestScene : public Scene {
 					game->startFullscreen();
 				}
 			}
+            
         }
 };
 

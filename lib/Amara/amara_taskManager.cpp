@@ -19,7 +19,11 @@ namespace Amara {
 
             void run() {
                 void* obj;
-                for (size_t i = 0; i < deleteQueue.size(); i++) {
+                int size = deleteQueue.size();
+                if (size > 0) {
+                    cout << "TaskManager: Deleting " << size << " objects." << endl;
+                }
+                for (size_t i = 0; i < size; i++) {
                     obj = deleteQueue.at(i);
                     delete obj;
                 }

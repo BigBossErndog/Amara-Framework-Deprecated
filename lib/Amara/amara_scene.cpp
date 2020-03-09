@@ -68,7 +68,7 @@ namespace Amara {
 
             Amara::Entity* add(Amara::Entity* entity) {
                 entities.push_back(entity);
-                entity->init(properties, this);
+                entity->init(properties, this, this);
                 return entity;
             }
 

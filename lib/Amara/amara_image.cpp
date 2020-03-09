@@ -44,12 +44,11 @@ namespace Amara {
                 y = gy;
             }
 
-            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene) override {
+            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
 				properties = gameProperties;
 				scene = givenScene;
+                parent = givenParent;
                 gRenderer = properties->gRenderer;
-
-
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);

@@ -54,6 +54,11 @@ namespace Amara {
 				create();
 			}
 
+			Amara::Entity* setId(string newId) {
+				id = newId;
+				return this;
+			}
+
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene) {
 				init(gameProperties, givenScene, nullptr);
 			}
@@ -137,6 +142,8 @@ namespace Amara {
 
 				destroyed = true;
 				isActive = false;
+
+				properties->taskManager->queueDeletion(this);
 			}
 
 			void destroy() {

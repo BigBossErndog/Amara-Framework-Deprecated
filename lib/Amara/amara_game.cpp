@@ -339,6 +339,8 @@ namespace Amara {
 
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
+
+				taskManager->run();
 			}
 
 			void manageFPSStart() {

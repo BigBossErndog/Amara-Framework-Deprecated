@@ -25,7 +25,6 @@ using namespace std;
 #endif
 
 #include "amara_game.cpp"
-#include "amara_taskManager.cpp"
 #include "amara_sceneManager.cpp"
 #include "amara_scenePlugin.cpp"
 #include "amara_scene.cpp"
@@ -59,4 +58,5 @@ using namespace std;
 #include "amara_inputManager.cpp"
 
 #include "amara_debugging.cpp"
+#include "amara_taskManager.cpp"
 #include "amara_gameProperties.cpp"

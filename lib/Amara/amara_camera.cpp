@@ -78,16 +78,21 @@ namespace Amara {
                 updateValues();
 
                 if (followTarget != nullptr) {
-                    float tx = followTarget->x;
-                    float ty = followTarget->y;
+                    if (followTarget->destroyed) {
+                        stopFollow();
+                    }
+                    else {
+                        float tx = followTarget->x;
+                        float ty = followTarget->y;
 
-                    float cx = (width/zoomX)/2 - (width/oldZoomX)/2;
-                    float cy = (height/zoomY)/2 - (height/oldZoomY)/2;
+                        float cx = (width/zoomX)/2 - (width/oldZoomX)/2;
+                        float cy = (height/zoomY)/2 - (height/oldZoomY)/2;
 
-                    float nx = (oldCenterX - tx) * (1 - lerpX) + tx;
-                    float ny = (oldCenterY - ty) * (1 - lerpY) + ty;
+                        float nx = (oldCenterX - tx) * (1 - lerpX) + tx;
+                        float ny = (oldCenterY - ty) * (1 - lerpY) + ty;
 
-                    centerOn(nx, ny);
+                        centerOn(nx, ny);
+                    }
                 }
 
                 updateValues();
@@ -147,7 +152,7 @@ namespace Amara {
                 for (size_t i = 0; i < entities.size(); i++) {
                     properties->scrollX = 0;
                     properties->scrollY = 0;
-                    
+
                     entity = entities.at(i);
                     entity->draw(vx, vy, vw, vh);
                 }
