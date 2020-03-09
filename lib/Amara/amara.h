@@ -41,6 +41,10 @@ using namespace std;
 
 #include "amara_scene.cpp"
 
+#include "amara_tilemap.cpp"
+
+#include "amara_sprite.cpp"
+#include "amara_animationManager.cpp"
 #include "amara_image.cpp"
 
 #include "amara_camera.cpp"
@@ -48,9 +52,12 @@ using namespace std;
 #include "amara_script.cpp"
 #include "amara_entity.cpp"
 
+#include "amara_assetManager.cpp"
+
 #include "amara_loadManager.cpp"
 #include "amara_loader.cpp"
 #include "amara_asset.cpp"
+#include "amara_animation.cpp"
 
 #include "amara_geometry.cpp"
 #include "amara_stateManager.cpp"

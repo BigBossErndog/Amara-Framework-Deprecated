@@ -6,6 +6,7 @@
 namespace Amara {
     class Game;
     class ScenePlugin;
+    class AssetManager;
 
     class Scene: public Amara::Actor {
         public:
@@ -15,6 +16,7 @@ namespace Amara {
             Amara::ScenePlugin* scene = nullptr;
             Amara::InputManager* input = nullptr;
             Amara::ControlScheme* controls = nullptr;
+            Amara::AssetManager* assets = nullptr;
 
             Amara::Camera* mainCamera = nullptr;
             vector<Amara::Camera*> cameras;
@@ -31,6 +33,7 @@ namespace Amara {
                 game = properties->game;
                 input = properties->input;
                 controls = properties->controls;
+                assets = properties->assets;
 
                 if (load != nullptr) {
                     delete load;

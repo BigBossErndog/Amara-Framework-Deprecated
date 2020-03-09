@@ -3,25 +3,14 @@ using namespace Amara;
 
 class TestScript: public Script {
     public:
-        Amara::Entity* gnik;
-
-        void prepare(Amara::Entity* scene) {
-            gnik = scene->get("teenGnik");
-        }
-
-        void script(Amara::Entity* scene) {
-            // gnik->x += 1;
-
-            // if (gnik->x > 50) {
-            //     finish();
-            // }
-            finish();
+        void script(Amara::Entity* gnik) {
+            ((Image*)gnik)->angle += 2;
         }
 };
 
 class TestScene : public Scene {
     public:
-        Image* gnik;
+        Sprite* gnik;
         bool gnikDestroyed = false;
         int c = 0;
 
@@ -34,20 +23,22 @@ class TestScene : public Scene {
             load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
         }
         void create() {
-            gnik = new Image(0, 0, "teenGnikolas");
+            assets->addAnim("teenGnikolas", "walk", {2,3,2,4}, 6, true);
+            assets->addAnim("teenGnikolas", "downStance", 5);
+
+            add(gnik = new Sprite(0, 0, "teenGnikolas"));
             gnik->setOrigin(0.5);
             gnik->id = "teenGnik";
-            Entity* thing = add(gnik);
+            gnik->play("walk");
             
-            // Amara::Image* obj;
+            // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
             //     for (int i = 0; i < 100; i++) {
-            //         add(obj = new Image(i*8,j*8,"teenGnikolas"));
+            //         add(obj = new Sprite(i*32,j*32,"teenGnikolas"));
             //         obj->setOrigin(0.5);
+            //         obj->play("walk");
             //     }
             // }
-
-            recite(new TestScript());
 
             controls->setKey("up", K_UP);
             controls->setKey("down", K_DOWN);
@@ -59,10 +50,18 @@ class TestScene : public Scene {
 
 			controls->setKey("esc", K_ESCAPE);
 
-            mainCamera->startFollow(gnik, 0.1, 0.1);
-            mainCamera->setZoom(0.5);
+            mainCamera->startFollow(gnik);
+            mainCamera->setZoom(4);
+            // mainCamera->centerOn(100*32/2, 100*32/2);;
 
-            add(new Camera(20, 20, 100, 100));
+            // Amara::Camera* cam;
+            // add(cam = new Camera(10, 10, 160, 160));
+            // add(cam = new Camera(480-170, 360-170, 160, 160));
+            // cam->setZoom(2);
+            // add(cam = new Camera(480-170, 10, 160, 160));
+            // cam->setZoom(4);
+            // add(cam = new Camera(10, 360-170, 160, 160));
+            // cam->setZoom(8);
         }
         
         void update() {
@@ -91,8 +90,9 @@ class TestScene : public Scene {
                 }
 
                 if (controls->justDown("space")) {
-                    gnik->destroy();
-                    gnikDestroyed = true;
+                    // gnik->destroy();
+                    // gnikDestroyed = true;
+                    gnik->play("downStance");
                 }
             }
 
@@ -118,7 +118,7 @@ class TestScene : public Scene {
 int main(int argc, char** args) {
     Game* game = new Game("Amara Test Build");
     game->init(480, 360);
-    game->setResolution(240, 180);
+    game->setResolution(480, 360);
     game->resizeWindow(960, 720);
     // game->setFPS(30, 60);
 

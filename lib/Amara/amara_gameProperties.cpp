@@ -5,6 +5,7 @@
 
 namespace Amara {
     class Game;
+    class AssetManager;
     class LoadManager;
     class Loader;
     class Keyboard;
@@ -41,7 +42,10 @@ namespace Amara {
             bool windowFocused = false;
 			bool isFullscreen = false;
 
+            int fps = 60;
+
             Amara::Loader* loader = nullptr;
+            Amara::AssetManager* assets = nullptr;
             Amara::SceneManager* scenes = nullptr;
 
             Amara::Scene* currentScene = nullptr;

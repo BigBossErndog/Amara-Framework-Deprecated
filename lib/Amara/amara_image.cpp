@@ -154,6 +154,14 @@ namespace Amara {
                 setScale(g, g);
             }
 
+            void changeScale(float gx, float gy) {
+                scaleX += gx;
+                scaleY += gy;
+            }
+            void changeScale(float gi) {
+                changeScale(gi, gi);
+            }
+
             void setFrame(int fr) {
                 frame = fr;
             }

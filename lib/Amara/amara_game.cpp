@@ -33,6 +33,7 @@ namespace Amara {
 			bool isFullscreen = false;
 
 			Amara::Loader* load = nullptr;
+			Amara::AssetManager* assets = nullptr;
 			Amara::SceneManager* scenes = nullptr;;
 
 			Amara::InputManager* input = nullptr;
@@ -159,6 +160,9 @@ namespace Amara {
 				load = new Amara::Loader(properties);
 				properties->loader = load;
 
+				assets = new Amara::AssetManager(properties);
+				properties->assets = assets;
+
 				input = new Amara::InputManager();
 				input->keyboard = new Amara::Keyboard(properties);
 				input->mouse = new Amara::Mouse(properties);
@@ -222,6 +226,7 @@ namespace Amara {
 
 			void setFPS(int newFps, bool lockLogicSpeed) {
 				fps = newFps;
+				properties->fps = fps;
 				tps = 1000 / fps;
 				if (!lockLogicSpeed) {
 					lps = newFps;
@@ -314,6 +319,7 @@ namespace Amara {
 				properties->isFullscreen = isFullscreen;
 
 				properties->loader = load;
+				properties->assets = assets;
 				properties->scenes = scenes;
 
 				properties->input = input;
@@ -322,6 +328,8 @@ namespace Amara {
 
 				properties->lagging = lagging;
 				properties->dragged = dragged;
+
+				properties->fps = fps;
 			}
 
 			void draw() {
