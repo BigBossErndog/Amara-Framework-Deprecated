@@ -39,7 +39,8 @@ namespace Amara {
             bool lagging = false;
             bool dragged = false;
             bool windowFocused = false;
-            
+			bool isFullscreen = false;
+
             Amara::Loader* loader = nullptr;
             Amara::SceneManager* scenes = nullptr;
 

@@ -18,7 +18,7 @@ namespace Amara {
 
             Amara::Key* lastDown = nullptr;
 
-            
+
             Control(string givenId) {
                 id = givenId;
                 keys.clear();
@@ -59,6 +59,10 @@ namespace Amara {
                 return nullptr;
             }
 
+			void clearKeys() {
+				keys.clear();
+			}
+
             void run() {
                 isDown = false;
                 justDown = false;
@@ -76,7 +80,7 @@ namespace Amara {
                     justUp = justUp || key->justUp;
                     held = held || key->held;
                     activated = activated || key->activated;
-                    
+
                     if (justDown) {
                         lastDown = key;
                     }

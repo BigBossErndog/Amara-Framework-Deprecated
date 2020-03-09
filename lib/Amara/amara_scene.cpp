@@ -108,6 +108,8 @@ namespace Amara {
 
             void draw() {
                 properties->currentScene = this;
+				properties->scrollX = 0;
+				properties->scrollY = 0;
 
                 stable_sort(cameras.begin(), cameras.end(), sortEntities());
                 stable_sort(entities.begin(), entities.end(), sortEntities());

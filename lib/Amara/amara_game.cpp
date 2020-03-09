@@ -30,6 +30,7 @@ namespace Amara {
 			int lagCounter = 0;
 
 			bool windowFocused = false;
+			bool isFullscreen = false;
 
 			Amara::Loader* load = nullptr;
 			Amara::SceneManager* scenes = nullptr;;
@@ -37,7 +38,7 @@ namespace Amara {
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
 			bool controllerEnabled = true;
-			
+
 
 			Amara::TaskManager* taskManager = nullptr;
 
@@ -254,8 +255,6 @@ namespace Amara {
 					SDL_SetWindowSize(gWindow, neww, newh);
 					window->width = neww;
 					window->height = newh;
-					width = neww;
-					height = newh;
 				}
 			}
 
@@ -273,6 +272,9 @@ namespace Amara {
 				}
 				resolution->width = neww;
 				resolution->height = newh;
+				width = neww;
+				height = newh;
+				writeProperties();
 			}
 
 			void resizeWindowAndResolution(int neww, int newh) {
@@ -280,9 +282,19 @@ namespace Amara {
 				setResolution(neww, newh);
 			}
 
-			void windowedFullScreen() {
-				resizeWindow(display->width, display->height);
-				setWindowPosition(0, 0);
+			void startFullscreen() {
+				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN);
+				isFullscreen = true;
+			}
+
+			void startWindowedFullscreen() {
+				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+				isFullscreen = true;
+			}
+
+			void exitFullscreen() {
+				SDL_SetWindowFullscreen(gWindow, 0);
+				isFullscreen = false;
 			}
 
 		protected:
@@ -298,7 +310,9 @@ namespace Amara {
 				properties->display = display;
 				properties->resolution = resolution;
 				properties->window = window;
-				
+
+				properties->isFullscreen = isFullscreen;
+
 				properties->loader = load;
 				properties->scenes = scenes;
 
@@ -322,7 +336,7 @@ namespace Amara {
 				frameCounter += 1;
 
 				scenes->draw();
-				
+
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
 			}
@@ -353,30 +367,30 @@ namespace Amara {
 					// Wait remaining time
 					totalWait += (tps - frameTicks);
 				}
-				else if (frameTicks > tps) {
-					if (dragged) {
-						dragged = false;
-						properties->dragged = false;
-					}
-					else {
-						// Checking for lag
-						if (tps < (float)frameTicks * 0.5) {
-							lagging = true;
-							lagCounter += 1;
-						}
+				// else if (frameTicks > tps) {
+				// 	if (dragged) {
+				// 		dragged = false;
+				// 		properties->dragged = false;
+				// 	}
+				// 	else {
+				// 		// Checking for lag
+				// 		if (tps < (float)frameTicks * 0.5) {
+				// 			lagging = true;
+				// 			lagCounter += 1;
+				// 		}
 
-						// Framerate catch up.
-						for (int i = 0; i < (frameTicks - tps); i++) {
-							if (frameCounter >= logicDelay) {
-								handleEvents();
-								scenes->run();
-								frameCounter = 0;
-								if (quitted) return;
-							}
-							frameCounter += 1;
-						}
-					}
-				}
+				// 		// Framerate catch up.
+				// 		for (int i = 0; i < (frameTicks - tps); i++) {
+				// 			if (frameCounter >= logicDelay) {
+				// 				handleEvents();
+				// 				scenes->run();
+				// 				frameCounter = 0;
+				// 				if (quitted) return;
+				// 			}
+				// 			frameCounter += 1;
+				// 		}
+				// 	}
+				// }
 
 				// Delay if game has not caught up
 				if (totalWait > 0) {
@@ -452,7 +466,7 @@ namespace Amara {
 					// 	getController(controller)->release(e.cbutton.button);
 					// }
 				}
-				
+
 				controls->run();
 				scenes->manageTasks();
 			}

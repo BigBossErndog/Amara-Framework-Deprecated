@@ -33,13 +33,18 @@ class TestScene : public Scene {
             load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
         }
         void create() {
-            gnik = new Image(40, 40, "teenGnikolas");
+            gnik = new Image(0, 0, "teenGnikolas");
             gnik->setOrigin(0.5);
             gnik->id = "teenGnik";
             Entity* thing = add(gnik);
-
-            cout << properties->resolution->width << endl;
-            cout << properties->resolution->height << endl;
+            
+            Amara::Image* obj;
+            for (int j = 0; j < 100; j++) {
+                for (int i = 0; i < 100; i++) {
+                    add(obj = new Image(i*8,j*8,"teenGnikolas"));
+                    obj->setOrigin(0.5);
+                }
+            }
 
             recite(new TestScript());
 
@@ -47,9 +52,17 @@ class TestScene : public Scene {
             controls->setKey("down", K_DOWN);
             controls->setKey("left", K_LEFT);
             controls->setKey("right", K_RIGHT);
+			controls->setKey("d", K_D);
+			controls->setKey("a", K_A);
 
-            mainCamera->startFollow(gnik, 0.5, 0.5);
+			controls->setKey("esc", K_ESCAPE);
+
+            mainCamera->startFollow(gnik, 0.1, 0.1);
+            mainCamera->setZoom(0.5);
+
+            add(new Camera(20, 20, 100, 100));
         }
+        
         void update() {
             // scene->stop();
             c += 1;
@@ -74,12 +87,21 @@ class TestScene : public Scene {
                 gnik->y += 1;
             }
 
-            if (input->mouse->left->justDown) {
-                mainCamera->changeZoom(0.2);
-            }
-            else if (input->mouse->right->justDown) {
-                mainCamera->changeZoom(-0.2);
-            }
+            // if (input->mouse->left->justDown) {
+            //     mainCamera->changeZoom(0.2);
+            // }
+            // else if (input->mouse->right->justDown) {
+            //     mainCamera->changeZoom(-0.2);
+            // }
+
+			if (controls->justDown("esc")) {
+				if (game->isFullscreen) {
+					game->exitFullscreen();
+				}
+				else {
+					game->startFullscreen();
+				}
+			}
         }
 };
 
@@ -88,6 +110,7 @@ int main(int argc, char** args) {
     game->init(480, 360);
     game->setResolution(240, 180);
     game->resizeWindow(960, 720);
+    // game->setFPS(30, 60);
 
     game->scenes->add("test", new TestScene());
     game->start("test");

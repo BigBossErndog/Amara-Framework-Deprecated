@@ -10,6 +10,8 @@ namespace Amara {
         public:
             vector<Amara::Entity*>* sceneEntities = nullptr;
 
+            bool definedDimensions = false;
+
             float width = 0;
             float height = 0;
 
@@ -30,34 +32,41 @@ namespace Amara {
 
             Amara::Entity* followTarget = nullptr;
             float lerpX = 1;
-            float lerpY = 1; 
+            float lerpY = 1;
 
             Camera() {
-
+                definedDimensions = false;
             }
 
-            Camera(float gw, float gh) {
+            Camera(float gw, float gh) : Camera() {
+                definedDimensions = true;
                 width = gw;
                 height = gh;
             }
 
-            Camera(float gx, float gy, int gw, int gh) {
+            Camera(float gx, float gy, int gw, int gh): Camera(gw, gh) {
                 x = gx;
                 y = gy;
-                width = gw;
-                height = gh;
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, vector<Amara::Entity*>* givenEntities) {
                 properties = gameProperties;
                 sceneEntities = givenEntities;
-                width = properties->resolution->width;
-                height = properties->resolution->height;
-                
+
+                if (!definedDimensions) {
+                    width = properties->resolution->width;
+                    height = properties->resolution->height;
+                }
+
                 recordValues();
             }
 
             virtual void run() {
+				if (!definedDimensions) {
+                    width = properties->resolution->width;
+                    height = properties->resolution->height;
+                }
+
 				update();
 
 				Amara::Entity* entity;
@@ -80,7 +89,7 @@ namespace Amara {
 
                     centerOn(nx, ny);
                 }
-                
+
                 updateValues();
                 recordValues();
 			}
@@ -108,12 +117,6 @@ namespace Amara {
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
-                properties->currentCamera = this;
-                properties->scrollX = scrollX;
-                properties->scrollY = scrollY;
-                properties->zoomX = zoomX;
-                properties->zoomY = zoomY;
-
                 int dx, dy, dw, dh, ow, oh = 0;
 
                 dx = vx + floor(x);
@@ -136,14 +139,26 @@ namespace Amara {
                 Amara::Entity* entity;
 
                 for (size_t i = 0; i < sceneEntities->size(); i++) {
+                    assignAttributes();
                     entity = sceneEntities->at(i);
                     entity->draw(dx, dy, dw, dh);
                 }
 
                 for (size_t i = 0; i < entities.size(); i++) {
+                    properties->scrollX = 0;
+                    properties->scrollY = 0;
+                    
                     entity = entities.at(i);
                     entity->draw(vx, vy, vw, vh);
                 }
+            }
+
+            assignAttributes() {
+                properties->currentCamera = this;
+                properties->scrollX = scrollX;
+                properties->scrollY = scrollY;
+                properties->zoomX = zoomX;
+                properties->zoomY = zoomY;
             }
 
             void startFollow(Amara::Entity* entity, float lx, float ly) {
@@ -198,7 +213,7 @@ namespace Amara {
                 zoomX = gx;
                 zoomY = gy;
                 updateValues();
-            }  
+            }
             void setZoom(float gi) {
                 setZoom(gi, gi);
             }
