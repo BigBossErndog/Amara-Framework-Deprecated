@@ -10,12 +10,9 @@ namespace Amara {
             MouseButton(): Amara::Key() {}
     };
 
-    class Mouse {
+    class Mouse: public Pointer {
         public:
             Amara::GameProperties* properties = nullptr;
-
-            int x = 0;
-            int y = 0;
 
             Amara::MouseButton* left = nullptr;
 			Amara::MouseButton* right = nullptr;
@@ -33,6 +30,9 @@ namespace Amara {
 				left->manage();
 				right->manage();
                 middle->manage();
+
+                isDown = left->isDown || right->isDown || middle->isDown;
+                justDown = left->justDown || right->justDown || middle->justDown;
 			}
     };
 }

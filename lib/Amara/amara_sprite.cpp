@@ -4,9 +4,8 @@
 #include "amara.h"
 
 namespace Amara {
-    class Sprite: public Amara::Image {
+    class Sprite: public Amara::Image, public Amara::Animated {
         public:
-            Amara::AnimationManager anims;
             Sprite(int gx, int gy, string tx): Amara::Image(gx, gy, tx) {}
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
@@ -14,9 +13,8 @@ namespace Amara {
 				scene = givenScene;
                 parent = givenParent;
                 gRenderer = properties->gRenderer;
-
-                anims.properties = properties;
-                anims.parent = this;
+                
+                anims = new Amara::AnimationManager(properties, this);
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);
@@ -27,12 +25,12 @@ namespace Amara {
 			}
 
             virtual void play(string animKey) {
-                anims.play(texture, animKey);
+                anims->play(texture, animKey);
             }
 
             virtual void run() {
-                anims.run();
-                Amara::Entity::run();
+                Amara::Image::run();
+                anims->run();
             }
     };
 }

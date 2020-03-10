@@ -15,6 +15,7 @@ namespace Amara {
     class InputManager;
     class TaskManager;
     class ControlScheme;
+    class EventManager;
 
     class GameProperties {
         public:
@@ -54,6 +55,7 @@ namespace Amara {
             Amara::InputManager* input = nullptr;
             Amara::ControlScheme* controls = nullptr;
             Amara::TaskManager* taskManager = nullptr;
+            Amara::EventManager* events = nullptr;
 
             GameProperties() {}
     };

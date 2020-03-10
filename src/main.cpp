@@ -8,6 +8,32 @@ class TestScript: public Script {
         }
 };
 
+class DelayedAnim: public Script {
+	public:
+		Sprite* gnik2;
+		Sprite* mainGnik;
+		int counter = 0;
+
+		DelayedAnim(Sprite* givenGnik): Script() {
+			mainGnik = givenGnik;
+		}
+
+		void prepare(Entity* gnik) {
+			gnik2 = (Sprite*)gnik;
+		}
+
+		void script(Entity* gnik) {
+			if (counter < 60) {
+				counter += 1;
+			}
+			else if (counter == 60) {
+				gnik2->play("downWalk");
+				counter += 1;
+                gnik2->anims->syncWith(mainGnik);
+			}
+		}
+};
+
 class TestScene : public Scene {
     public:
         Sprite* gnik;
@@ -23,30 +49,48 @@ class TestScene : public Scene {
             load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
         }
         void create() {
-            assets->addAnim("teenGnikolas", "walk", {2,3,2,4}, 6, true);
-            assets->addAnim("teenGnikolas", "downStance", 5);
+			// controls->setKey("up", K_UP);
+            // controls->setKey("down", K_DOWN);
+            // controls->setKey("left", K_LEFT);
+            // controls->setKey("right", K_RIGHT);
+			// controls->setKey("d", K_D);
+			// controls->setKey("a", K_A);
+            controls->setKey("space", K_SPACE);
+
+            Spritesheet* teenGnik = (Spritesheet*)assets->get("teenGnikolas");
+
+            teenGnik->addAnim("downWalk", {2,3,2,4}, 6, true);
+            teenGnik->addAnim("upWalk", {12,13,12,14}, 6, true);
+            teenGnik->addAnim("leftWalk", {22,23,22,24}, 6, true);
+            teenGnik->addAnim("rightWalk", {32,33,32,34}, 6, true);
+
+            teenGnik->addAnim("downStand", {0,1}, 2, true);
+            teenGnik->addAnim("upStand", {10,11}, 2, true);
+            teenGnik->addAnim("leftStand", {20,21}, 2, true);
+            teenGnik->addAnim("rightStand", {30,31}, 2, true);
+
+            teenGnik->addAnim("downStance", 5);
 
             add(gnik = new Sprite(0, 0, "teenGnikolas"));
             gnik->setOrigin(0.5);
             gnik->id = "teenGnik";
-            gnik->play("walk");
-            
+            gnik->play("downWalk");
+			// gnik->recite(new TestScript());
+
+			Sprite* gnik2;
+			add(gnik2 = new Sprite(20, 0, "teenGnikolas"));
+			gnik2->setOrigin(0.5);
+			gnik2->recite(new DelayedAnim(gnik));
+            gnik2->play("downStand");
+
             // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
             //     for (int i = 0; i < 100; i++) {
             //         add(obj = new Sprite(i*32,j*32,"teenGnikolas"));
             //         obj->setOrigin(0.5);
-            //         obj->play("walk");
+            //         obj->recite(new TestScript());
             //     }
             // }
-
-            controls->setKey("up", K_UP);
-            controls->setKey("down", K_DOWN);
-            controls->setKey("left", K_LEFT);
-            controls->setKey("right", K_RIGHT);
-			controls->setKey("d", K_D);
-			controls->setKey("a", K_A);
-            controls->setKey("space", K_SPACE);
 
 			controls->setKey("esc", K_ESCAPE);
 
@@ -63,38 +107,36 @@ class TestScene : public Scene {
             // add(cam = new Camera(10, 360-170, 160, 160));
             // cam->setZoom(8);
         }
-        
+
         void update() {
+
             // scene->stop();
-            c += 1;
-            if (c >= 20) {
-                // gnik->frame += 1;
-                c = 0;
-                // mainCamera->zoomX += 0.05;
-                // mainCamera->zoomY += 0.05;
-            }
 
-            if (!gnikDestroyed) {
-                if (controls->isDown("left")) {
-                    gnik->x -= 1;
-                }
-                else if (controls->isDown("right")) {
-                    gnik->x += 1;
-                }
-
-                if (controls->isDown("up")) {
-                    gnik->y -= 1;
-                }
-                else if (controls->isDown("down")) {
-                    gnik->y += 1;
-                }
-
-                if (controls->justDown("space")) {
-                    // gnik->destroy();
-                    // gnikDestroyed = true;
-                    gnik->play("downStance");
-                }
-            }
+            // if (!gnikDestroyed) {
+            //     if (controls->isDown("left")) {
+            //         gnik->x -= 1;
+            //         gnik->play("leftWalk");
+            //     }
+            //     else if (controls->isDown("right")) {
+            //         gnik->x += 1;
+            //         gnik->play("rightWalk");
+            //     }
+			//
+            //     if (controls->isDown("up")) {
+            //         gnik->y -= 1;
+            //         gnik->play("upWalk");
+            //     }
+            //     else if (controls->isDown("down")) {
+            //         gnik->y += 1;
+            //         gnik->play("downWalk");
+            //     }
+			//
+            //     if (controls->justDown("space")) {
+            //         // gnik->destroy();
+            //         // gnikDestroyed = true;
+            //         gnik->play("downStance");
+            //     }
+            // }
 
             // if (input->mouse->left->justDown) {
             //     mainCamera->changeZoom(0.2);
@@ -111,7 +153,7 @@ class TestScene : public Scene {
 					game->startFullscreen();
 				}
 			}
-            
+
         }
 };
 
@@ -120,7 +162,7 @@ int main(int argc, char** args) {
     game->init(480, 360);
     game->setResolution(480, 360);
     game->resizeWindow(960, 720);
-    // game->setFPS(30, 60);
+    game->setFPS(60);
 
     game->scenes->add("test", new TestScene());
     game->start("test");

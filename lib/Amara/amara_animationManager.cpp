@@ -18,13 +18,18 @@ namespace Amara {
 
             int frameCounter = 0;
 
+            AnimationManager(Amara::GameProperties* gameProperties, Amara::Image* givenParent) {
+                properties = gameProperties;
+                parent = givenParent;
+            }
+
             void play(Amara::ImageTexture* texture, string animKey) {
                 if (texture == nullptr || texture->type != SPRITESHEET) {
                     return;
                 }
                 Amara::Animation* anim = ((Amara::Spritesheet*)texture)->getAnim(animKey);
                 if (anim == nullptr) {
-                    cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << endl; 
+                    cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << endl;
                 }
                 if (anim != currentAnim) {
                     currentAnim = anim;
@@ -51,7 +56,29 @@ namespace Amara {
                     return 1;
                 }
                 float frameDelay = properties->fps/currentAnim->frameRate;
-                return (currentIndex/currentAnim->length()) + (frameCounter/frameDelay); 
+                float p = ((float)currentIndex)/((float)currentAnim->length());
+                float e = (1/((float)currentAnim->length()));
+                float f = (((float)frameCounter)/frameDelay);
+
+                return p + e*f;
+			}
+
+
+			void setProgress(float p) {
+				if (currentAnim == nullptr) {
+					return;
+				}
+				float frameDelay = properties->fps/currentAnim->frameRate;
+				currentIndex = floor(p*currentAnim->length());
+                float oldP = ((float)currentIndex)/((float)currentAnim->length());
+                float e = 1/((float)currentAnim->length());
+				frameCounter = floor(((p - oldP)/e)*frameDelay);
+				currentFrame = currentAnim->frameAt(currentIndex);
+				parent->frame = currentFrame;
+			}
+
+            void syncWith(Amara::Animated* other) {
+                setProgress(other->anims->getProgress());
             }
 
             void pause() {
@@ -69,6 +96,7 @@ namespace Amara {
                 isActive = true;
 
                 float frameDelay = properties->fps/currentAnim->frameRate;
+                frameCounter += 1;
                 if (frameCounter >= frameDelay) {
                     currentIndex += 1;
                     if (currentIndex >= currentAnim->length()) {
@@ -85,9 +113,6 @@ namespace Amara {
                     }
                     parent->frame = currentFrame;
                     frameCounter = 0;
-                }
-                else {
-                    frameCounter += 1;
                 }
             }
     };

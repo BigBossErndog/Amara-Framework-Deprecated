@@ -32,6 +32,18 @@ namespace Amara {
             Amara::Animation* addAnim(string textureKey, string animKey, int frame) {
                 return addAnim(textureKey, animKey, {frame}, 1, false);
             }
+
+            void addAnim(vector<string> textureKeys, string animKey, vector<int> frames, int frameRate, bool loop) {
+                string tKey;
+                for (size_t i = 0; i < textureKeys.size(); i++) {
+                    tKey = textureKeys.at(i);
+                    addAnim(tKey, animKey, frames, frameRate, loop);
+                }
+            }
+
+            void addAnim(vector<string> textureKeys, string animKey, int frame) {
+                addAnim(textureKeys, animKey, frame);
+            }
     };
 }
 

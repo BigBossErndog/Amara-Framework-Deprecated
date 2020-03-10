@@ -33,12 +33,6 @@ using namespace std;
 #include "amara_controlScheme.cpp"
 #include "amara_control.cpp"
 
-#include "amara_mouse.cpp"
-
-#include "amara_keyboard.cpp"
-#include "amara_key.cpp"
-#include "amara_keyCodes.cpp"
-
 #include "amara_scene.cpp"
 
 #include "amara_tilemap.cpp"
@@ -52,6 +46,15 @@ using namespace std;
 #include "amara_script.cpp"
 #include "amara_entity.cpp"
 
+#include "amara_interactable.cpp"
+
+#include "amara_mouse.cpp"
+#include "amara_pointer.cpp"
+
+#include "amara_keyboard.cpp"
+#include "amara_key.cpp"
+#include "amara_keyCodes.cpp"
+
 #include "amara_assetManager.cpp"
 
 #include "amara_loadManager.cpp"
@@ -62,6 +65,7 @@ using namespace std;
 #include "amara_geometry.cpp"
 #include "amara_stateManager.cpp"
 
+#include "amara_events.cpp"
 #include "amara_inputManager.cpp"
 
 #include "amara_debugging.cpp"

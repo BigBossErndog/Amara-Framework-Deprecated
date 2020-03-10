@@ -12,9 +12,7 @@ namespace Amara {
             Amara::Keyboard* keyboard = nullptr;
             Amara::Mouse* mouse = nullptr;
 
-            InputManager() {
-
-            }
+            InputManager() {}
     };
 }
 

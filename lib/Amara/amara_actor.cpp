@@ -8,13 +8,12 @@ namespace Amara {
         public:
             vector<Amara::Script*> scripts;
 
-            Actor() {
-                
+            Actor(): Amara::Entity() {
+
             }
 
             void recite(Amara::Script* script) {
                 scripts.push_back(script);
-                
                 script->prepare(this);
             }
 

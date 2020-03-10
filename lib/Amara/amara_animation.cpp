@@ -4,6 +4,8 @@
 #include "amara.h"
 
 namespace Amara {
+    class AnimationManager;
+
     class Animation {
         public:
             string texture;
@@ -31,6 +33,14 @@ namespace Amara {
             int length() {
                 return frames.size();
             }
+    };
+
+    class Animated {
+        public:
+            Amara::AnimationManager* anims = nullptr;
+            int frame = 0;
+
+            virtual void play() {}
     };
 }
 

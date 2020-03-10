@@ -34,11 +34,13 @@ namespace Amara {
 
 			Amara::Loader* load = nullptr;
 			Amara::AssetManager* assets = nullptr;
-			Amara::SceneManager* scenes = nullptr;;
+			Amara::SceneManager* scenes = nullptr;
 
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
 			bool controllerEnabled = true;
+
+			Amara::EventManager* events = nullptr;
 
 
 			Amara::TaskManager* taskManager = nullptr;
@@ -176,6 +178,9 @@ namespace Amara {
 
 				taskManager = new Amara::TaskManager(properties);
 				properties->taskManager = taskManager;
+
+				events = new Amara::EventManager(properties);
+				properties->events = events;
 
 				writeProperties();
 
@@ -326,6 +331,8 @@ namespace Amara {
 				properties->controls = controls;
 				properties->taskManager = taskManager;
 
+				properties->events = events;
+
 				properties->lagging = lagging;
 				properties->dragged = dragged;
 
@@ -434,17 +441,25 @@ namespace Amara {
 						if (e.type == SDL_MOUSEBUTTONDOWN) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
 								input->mouse->left->press();
+								events->addEvent(SCENELEFTCLICK);
+								events->addEvent(OBJECTLEFTCLICK);
 							}
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
 								input->mouse->right->press();
+								events->addEvent(SCENERIGHTCLICK);
+								events->addEvent(OBJECTRIGHTCLICK);
 							}
 						}
 						else if (e.type == SDL_MOUSEBUTTONUP) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
 								input->mouse->left->release();
+								events->addEvent(SCENELEFTRELEASE);
+								events->addEvent(OBJECTLEFTRELEASE);
 							}
-							else {
+							else if (e.button.button == SDL_BUTTON_RIGHT) {
 								input->mouse->right->release();
+								events->addEvent(SCENERIGHTRELEASE);
+								events->addEvent(OBJECTRIGHTRELEASE);
 							}
 						}
 					}

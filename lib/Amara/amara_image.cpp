@@ -35,7 +35,7 @@ namespace Amara {
                 textureKey.clear();
             }
 
-            Image(string givenKey) {
+            Image(string givenKey): Amara::Actor() {
                 textureKey = givenKey;
             }
 
@@ -45,6 +45,8 @@ namespace Amara {
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
+                Amara::Interactable::init(gameProperties);
+                
 				properties = gameProperties;
 				scene = givenScene;
                 parent = givenParent;
@@ -75,9 +77,31 @@ namespace Amara {
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
 
+                int hx, hy, hw, hh = 0;
+                hw = destRect.w;
+                hh = destRect.h;
+
+                if (destRect.x >= 0) {
+                    hx = destRect.x + vx;
+                }
+                else {
+                    hw -= -(destRect.x);
+                    hx = vx;
+                }
+                if (destRect.y >= 0) {
+                    hy = destRect.y + vy;
+                }
+                else {
+                    hh -= -(destRect.h);
+                    hy = vy;
+                }
+                if (hx + hw > vx + vw) hw = (vx - hx);
+                if (hy + hh > vy + vh) hh = (vy - hy);
+
+
                 if (destRect.w <= 0) skipDrawing = true;
                 if (destRect.h <= 0) skipDrawing = true;
-                
+
                 if (!skipDrawing) {
                     if (texture != nullptr) {
                         SDL_Texture* tx = (SDL_Texture*)texture->asset;
@@ -94,7 +118,7 @@ namespace Amara {
                                 int maxFrame = ((texture->width / spr->frameWidth) * (texture->height / spr->frameHeight));
                                 frame = frame % maxFrame;
 
-                                srcRect.x = (frame % (texture->width / spr->frameWidth)) * spr->frameWidth; 
+                                srcRect.x = (frame % (texture->width / spr->frameWidth)) * spr->frameWidth;
                                 srcRect.y = floor(frame / (texture->width / spr->frameWidth)) * spr->frameHeight;
                                 srcRect.w = spr->frameWidth;
                                 srcRect.h = spr->frameHeight;
