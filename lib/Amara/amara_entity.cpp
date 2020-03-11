@@ -43,6 +43,7 @@ namespace Amara {
 			}
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
+				Amara::Interactable::init(gameProperties);
 				properties = gameProperties;
 				scene = givenScene;
 				parent = givenParent;
@@ -54,13 +55,13 @@ namespace Amara {
 				create();
 			}
 
+			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene) {
+				init(gameProperties, givenScene, nullptr);
+			}
+
 			Amara::Entity* setId(string newId) {
 				id = newId;
 				return this;
-			}
-
-			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene) {
-				init(gameProperties, givenScene, nullptr);
 			}
 
 			virtual void draw(int vx, int vy, int vw, int vh) {

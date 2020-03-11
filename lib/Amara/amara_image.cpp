@@ -98,6 +98,7 @@ namespace Amara {
                 if (hx + hw > vx + vw) hw = (vx - hx);
                 if (hy + hh > vy + vh) hh = (vy - hy);
 
+                checkForHover(hx, hy, hw, hh);
 
                 if (destRect.w <= 0) skipDrawing = true;
                 if (destRect.h <= 0) skipDrawing = true;

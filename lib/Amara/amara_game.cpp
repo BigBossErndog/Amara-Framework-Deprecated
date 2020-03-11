@@ -339,13 +339,19 @@ namespace Amara {
 				properties->fps = fps;
 			}
 
+			void update() {
+				handleEvents();
+				events->manage();
+				scenes->run();
+				scenes->manageTasks();
+			}
+
 			void draw() {
 				// Clear the Renderer
 				SDL_RenderClear(gRenderer);
 
 				if (frameCounter >= logicDelay) {
-					handleEvents();
-					scenes->run();
+					update();
 					frameCounter = 0;
 				}
 				frameCounter += 1;
@@ -372,7 +378,7 @@ namespace Amara {
 				if (fps < lps) {
 					for (int i = 1; i < lps/fps; i++) {
 						handleEvents();
-						scenes->run();
+						update();
 					}
 				}
 				else if (fps > lps) {
@@ -435,31 +441,23 @@ namespace Amara {
 					else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
-						input->mouse->x = (mx * resolution->width/properties->width);
-						input->mouse->y = (my * resolution->height/properties->height);
+						input->mouse->x = (mx * resolution->width/window->width);
+						input->mouse->y = (my * resolution->height/window->height);
 
 						if (e.type == SDL_MOUSEBUTTONDOWN) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
 								input->mouse->left->press();
-								events->addEvent(SCENELEFTCLICK);
-								events->addEvent(OBJECTLEFTCLICK);
 							}
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
 								input->mouse->right->press();
-								events->addEvent(SCENERIGHTCLICK);
-								events->addEvent(OBJECTRIGHTCLICK);
 							}
 						}
 						else if (e.type == SDL_MOUSEBUTTONUP) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
 								input->mouse->left->release();
-								events->addEvent(SCENELEFTRELEASE);
-								events->addEvent(OBJECTLEFTRELEASE);
 							}
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
 								input->mouse->right->release();
-								events->addEvent(SCENERIGHTRELEASE);
-								events->addEvent(OBJECTRIGHTRELEASE);
 							}
 						}
 					}
@@ -491,9 +489,8 @@ namespace Amara {
 					// 	getController(controller)->release(e.cbutton.button);
 					// }
 				}
-
+				
 				controls->run();
-				scenes->manageTasks();
 			}
 	};
 }

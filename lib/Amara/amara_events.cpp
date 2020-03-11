@@ -34,11 +34,13 @@ namespace Amara {
     class EventManager {
         public:
             Amara::GameProperties* properties = nullptr;
+            Amara::InputManager* input = nullptr;
 
             vector<Amara::Event*> eventList;
 
             EventManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
+                input = properties->input;
             }
             
             void addEvent(Amara::EventType type) {
@@ -54,6 +56,20 @@ namespace Amara {
                     delete evt;
                 }
                 eventList.clear();
+
+                Amara::Mouse* mouse = input->mouse;
+                if (mouse->left->justDown) {
+                    addEvent(SCENELEFTCLICK);
+                    addEvent(OBJECTLEFTCLICK);
+                }
+                if (mouse->right->justDown) {
+                    addEvent(SCENERIGHTCLICK);
+                    addEvent(OBJECTRIGHTCLICK);
+                }
+                if (mouse->middle->justDown) {
+                    addEvent(SCENEMIDDLECLICK);
+                    addEvent(OBJECTMIDDLECLICK);
+                }
             }
     };
 }

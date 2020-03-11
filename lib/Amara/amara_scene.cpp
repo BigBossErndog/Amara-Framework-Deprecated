@@ -22,6 +22,7 @@ namespace Amara {
             vector<Amara::Camera*> cameras;
 
             bool initialLoaded = false;
+            bool initialCreated = false;
 
             Scene(): Actor() {
 

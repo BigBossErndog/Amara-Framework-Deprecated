@@ -8,40 +8,51 @@ namespace Amara {
         public:
             Amara::GameProperties* properties = nullptr;
             Amara::EventManager* events = nullptr;
+            Amara::InputManager* input = nullptr;
 
-            bool interactable = false;
+            bool isInteractable = false;
             bool clicked = false;
+            bool leftClicked = false;
+            bool rightClicked = false;
+            bool middleClicked = false;
 
             bool hovered = false;
             bool justHovered = false;
 
-            bool draggable = false;
+            bool isDraggable = false;
             bool dragged = false;
 
             virtual void init(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 events = properties->events;
+                input = properties->input;
             }
 
             void setInteractable(bool g) {
-                interactable = g;
+                isInteractable = g;
             }
             void setInteractable() {
                 setInteractable(true);
             }
 
             void setDraggable(bool g) {
-                draggable = g;
+                isDraggable = g;
             }
             void setDraggable() {
                 setDraggable(true);
             }
 
-            void checkHover(int bx, int by, int bw, int bh) {
+            void checkForHover(int bx, int by, int bw, int bh) {
                 int mx = properties->input->mouse->x;
                 int my = properties->input->mouse->y;
 
                 justHovered = false;
+                hovered = false;
+
+                if (!isInteractable) {
+                    return;
+                }
+
                 if (mx > bx && my > by) {
                     if (mx < bx + bw && my < by + bh) {
                         if (!hovered) {
@@ -52,42 +63,50 @@ namespace Amara {
                         return;
                     }
                 }
-                hovered = false;
             }
 
             virtual void run() {
                 Amara::Event* event;
                 clicked = false;
+                leftClicked = false;
+                rightClicked = false;
+                middleClicked = false;
 
-                for (size_t i = 0; i < events->eventList.size(); i++) {
-                    event = events->eventList.at(i);
-                    if (event->disabled) continue;
-                    switch (event->type) {
-                        case OBJECTLEFTCLICK:
-                            if (hovered) {
-                                onClick();
-                                onPointerDown();
-                                event->disabled = true;
-                            }
-                            break;
-                        case OBJECTRIGHTCLICK:
-                            if (hovered) {
-                                onRightClick();
-                                event->disabled = true;
-                            }
-                            break;
-                        case OBJECTMIDDLERELEASE:
-                            if (hovered) {
-                                onMiddleClick();
-                                event->disabled = true;
-                            }
-                            break;
-                        case OBJECTLEFTRELEASE:
-                            if (hovered) {
-                                onRelease();
-                                event->disabled = true;
-                            }
-                            break;
+                if (isInteractable) {
+                    for (size_t i = 0; i < events->eventList.size(); i++) {
+                        event = events->eventList.at(i);
+                        if (event->disabled) continue;
+                        switch (event->type) {
+                            case OBJECTLEFTCLICK:
+                                if (hovered) {
+                                    onClick();
+                                    onPointerDown();
+                                    event->disabled = true;
+                                    clicked = true;
+                                    leftClicked = true;
+                                }
+                                break;
+                            case OBJECTRIGHTCLICK:
+                                if (hovered) {
+                                    onRightClick();
+                                    event->disabled = true;
+                                    rightClicked = true;
+                                }
+                                break;
+                            case OBJECTMIDDLERELEASE:
+                                if (hovered) {
+                                    onMiddleClick();
+                                    event->disabled = true;
+                                    middleClicked = true;
+                                }
+                                break;
+                            case OBJECTLEFTRELEASE:
+                                if (hovered) {
+                                    onRelease();
+                                    event->disabled = true;
+                                }
+                                break;
+                        }
                     }
                 }
             }

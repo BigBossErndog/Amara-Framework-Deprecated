@@ -9,6 +9,8 @@ namespace Amara {
             Sprite(int gx, int gy, string tx): Amara::Image(gx, gy, tx) {}
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
+                Amara::Interactable::init(gameProperties);
+                
 				properties = gameProperties;
 				scene = givenScene;
                 parent = givenParent;

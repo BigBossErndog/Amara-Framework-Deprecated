@@ -14,6 +14,7 @@ namespace Amara {
             Amara::Scene* scene = nullptr;
             Amara::Game* game = nullptr;
             Amara::InputManager* input = nullptr;
+            Amara::ControlScheme* controls = nullptr;
 
             bool deleteOnFinish = true;
 
@@ -28,6 +29,7 @@ namespace Amara {
                 game = properties->game;
                 scene = properties->currentScene;
                 input = properties->input;
+                controls = properties->controls;
 
                 parent = parentActor;
             }

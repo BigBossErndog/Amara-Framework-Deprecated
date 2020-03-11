@@ -23,14 +23,27 @@ class DelayedAnim: public Script {
 		}
 
 		void script(Entity* gnik) {
-			if (counter < 60) {
+			if (counter < 20) {
 				counter += 1;
 			}
-			else if (counter == 60) {
+			else if (counter == 20) {
 				gnik2->play("downWalk");
 				counter += 1;
                 gnik2->anims->syncWith(mainGnik);
+                gnik2->setInteractable();
 			}
+            else if (counter == 21) {
+                if (gnik2->clicked) {
+                    gnik2->destroy();
+                    counter += 1;
+                }
+                else {
+                    string isHover = (gnik2->hovered) ? "HOVERED" : "NOTHOVERED";
+                    if (input->mouse->left->justDown) {
+                        cout << "HELLO CLICK: " << isHover << endl;
+                    }
+                }
+            }
 		}
 };
 
