@@ -49,9 +49,14 @@ using namespace std;
 #include "amara_interactable.cpp"
 
 #include "amara_assetManager.cpp"
+#include "amara_audioGroup.cpp"
 
 #include "amara_loadManager.cpp"
 #include "amara_loader.cpp"
+
+#include "amara_music.cpp"
+#include "amara_sound.cpp"
+#include "amara_audioBase.cpp"
 #include "amara_asset.cpp"
 #include "amara_animation.cpp"
 

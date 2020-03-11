@@ -40,6 +40,8 @@ namespace Amara {
 			Amara::ControlScheme* controls = nullptr;
 			bool controllerEnabled = true;
 
+			Amara::AudioGroup* audio = nullptr;
+
 			Amara::EventManager* events = nullptr;
 
 
@@ -344,6 +346,7 @@ namespace Amara {
 				events->manage();
 				scenes->run();
 				scenes->manageTasks();
+				audio->run(1);
 			}
 
 			void draw() {

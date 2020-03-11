@@ -16,6 +16,7 @@ namespace Amara {
     class TaskManager;
     class ControlScheme;
     class EventManager;
+    class Music;
 
     class GameProperties {
         public:
@@ -48,6 +49,8 @@ namespace Amara {
             Amara::Loader* loader = nullptr;
             Amara::AssetManager* assets = nullptr;
             Amara::SceneManager* scenes = nullptr;
+
+            Amara::Music* music;
 
             Amara::Scene* currentScene = nullptr;
             Amara::Camera* currentCamera = nullptr;

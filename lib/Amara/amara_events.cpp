@@ -7,7 +7,6 @@ namespace Amara {
     class Interactable;
 
     enum EventType {
-        NONE,
         SCENELEFTCLICK,
         SCENERIGHTCLICK,
         SCENEMIDDLECLICK,

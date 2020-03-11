@@ -19,6 +19,8 @@ namespace Amara {
             void* asset;
             string key;
 
+            Asset() {}
+
             Asset(string givenKey, AssetType givenType, void* givenAsset) {
                 key = givenKey;
                 type = givenType;

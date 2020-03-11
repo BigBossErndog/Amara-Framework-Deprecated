@@ -215,7 +215,7 @@ namespace Amara {
 				}
 				else {
 					cout << "Loaded: " << key << endl;
-					Amara::Asset* newAsset = new Amara::Asset(key, SOUND, sound);
+					Amara::Asset* newAsset = new Amara::Sound(key, SOUND, sound);
 					assets[key] = newAsset;
 				}
 
@@ -241,7 +241,7 @@ namespace Amara {
 				}
 				else {
 					cout << "Loaded: " << key << endl;
-					Amara::Asset* newAsset = new Amara::Asset(key, MUSIC, music);
+					Amara::Asset* newAsset = new Amara::Music(key, MUSIC, music, properties);
 					assets[key] = newAsset;
 				}
 
