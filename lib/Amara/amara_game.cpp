@@ -184,6 +184,9 @@ namespace Amara {
 				events = new Amara::EventManager(properties);
 				properties->events = events;
 
+				audio = new Amara::AudioGroup(properties, "root");
+				properties->audio = audio;
+
 				writeProperties();
 
 				resizeWindow(width, height);

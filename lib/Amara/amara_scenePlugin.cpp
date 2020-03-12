@@ -62,14 +62,14 @@ namespace Amara {
                 unordered_map<string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
                     stop(key);
-                    got->second->scene->start();
+                    got->second->scenePlugin->start();
                 }
             }
 
             void stop(string key) {
                 unordered_map<string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
-                    got->second->scene->stop();
+                    got->second->scenePlugin->stop();
                 }
             }
 

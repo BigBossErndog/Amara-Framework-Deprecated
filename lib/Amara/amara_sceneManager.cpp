@@ -22,6 +22,7 @@ namespace Amara {
 				sceneMap[key] = scene;
 				sceneList.push_back(scene);
 				scene->setup(properties, new ScenePlugin(key, properties, scene, &sceneMap, &sceneList));
+				cout << "ADDED SCENE: " << scene->scenePlugin->key << endl;
 				return scene;
 			}
 
@@ -40,7 +41,7 @@ namespace Amara {
 
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
-					scenePlugin = scene->scene;
+					scenePlugin = scene->scenePlugin;
 
 					if (!scenePlugin->isActive) continue;
 					if (scenePlugin->isPaused) continue;
@@ -56,7 +57,7 @@ namespace Amara {
 
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
-					scenePlugin = scene->scene;
+					scenePlugin = scene->scenePlugin;
 
 					if (!scenePlugin->isActive) continue;
 					if (scenePlugin->isSleeping) continue;
@@ -68,7 +69,7 @@ namespace Amara {
 				unordered_map<string, Amara::Scene*>::iterator got = sceneMap.find(key);
 				if (got != sceneMap.end()) {
 					Amara::Scene* scene = sceneMap[key];
-					scene->scene->start();
+					scene->scenePlugin->start();
 					return scene;
 				}
 
@@ -81,7 +82,7 @@ namespace Amara {
 
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
-					scenePlugin = scene->scene;
+					scenePlugin = scene->scenePlugin;
 
 					scenePlugin->manageTasks();
 				}

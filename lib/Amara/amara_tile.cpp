@@ -3,12 +3,13 @@
 
 namespace Amara {
     struct Tile {
-        int x;
-        int y;
-        float tileWidth;
-        float tileHeight;
-        int widthInPixels;
-        int heightInPixels;
+        int index = 0;
+        int x = 0;
+        int y = 0;
+        float tileWidth = 0;
+        float tileHeight = 0;
+        int widthInPixels = 0;
+        int heightInPixels = 0;
     };
 }
 

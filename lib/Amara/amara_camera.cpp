@@ -34,6 +34,12 @@ namespace Amara {
             float lerpX = 1;
             float lerpY = 1;
 
+            bool lockedToBounds = false;
+            float boundX = 0;
+            float boundY = 0;
+            float boundW = 0;
+            float boundH = 0;
+
             Camera() {
                 definedDimensions = false;
             }
@@ -119,6 +125,35 @@ namespace Amara {
             void fixValues() {
                 if (zoomX < 0) zoomX = 0.00001;
                 if (zoomY < 0) zoomY = 0.00001;
+
+                if (width/zoomX > boundX + boundW) {
+                    scrollX = boundX - ((width/zoomX) - (boundX + boundW))/2;
+                }
+                else if (scrollX < boundX) {
+                    scrollX = boundX;
+                }
+                else if (scrollX + width/zoomX > boundX + boundW) {
+                    scrollX = (boundX + boundW) - (width/zoomX);
+                }
+
+                
+                if (height/zoomY > boundY + boundH) {
+                    scrollY = boundY - ((height/zoomY) - (boundY + boundH))/2;
+                }
+                else if (scrollY < boundY) {
+                    scrollY = boundY;
+                }
+                else if (scrollY + height/zoomY > boundY + boundH) {
+                    scrollY = (boundY + boundH) - (height/zoomY);
+                }
+            }
+
+            setBound(float gx, float gy, float gw, float gh) {
+                lockedToBounds = true;
+                boundX = gx;
+                boundY = gy;
+                boundW = gw;
+                boundH = gh;
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
@@ -150,8 +185,8 @@ namespace Amara {
                 }
 
                 for (size_t i = 0; i < entities.size(); i++) {
-                    properties->scrollX = 0;
-                    properties->scrollY = 0;
+                    properties->scrollX = x;
+                    properties->scrollY = y;
 
                     entity = entities.at(i);
                     entity->draw(vx, vy, vw, vh);

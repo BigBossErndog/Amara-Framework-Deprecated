@@ -50,23 +50,27 @@ namespace Amara {
                 stillLoading = false;
                 Amara::LoadTask* task;
                 int count = 0;
+                bool success;
                 while (tasks.size() > 0 && count < assetsPerFrame) {
                     task = tasks.front();
+                    success = false;
                     stillLoading  = true;
 
                     switch (task->type) {
                         case IMAGE:
-                            load->image(task->key, task->path, task->replace);
+                            success = load->image(task->key, task->path, task->replace);
                             break;
                         case SPRITESHEET:
-                            load->spritesheet(task->key, task->path, task->frameWidth, task->frameHeight, task->replace);
+                            success = load->spritesheet(task->key, task->path, task->frameWidth, task->frameHeight, task->replace);
                             break;
                     }
 
                     delete task;
                     tasks.pop_front();
 
-                    count += 1;
+                    if (success) {
+                        count += 1;
+                    }
                 }
             }
 

@@ -10,10 +10,10 @@ namespace Amara {
 
     class Scene: public Amara::Actor {
         public:
+            string key;
             Amara::Game* game = nullptr;
-            Amara::GameProperties* properties = nullptr;
             Amara::LoadManager* load = nullptr;
-            Amara::ScenePlugin* scene = nullptr;
+            Amara::ScenePlugin* scenePlugin = nullptr;
             Amara::InputManager* input = nullptr;
             Amara::ControlScheme* controls = nullptr;
             Amara::AssetManager* assets = nullptr;
@@ -28,7 +28,7 @@ namespace Amara {
 
             }
 
-            virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* scenePlugin) final {
+            virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* gScenePlugin) final {
                 properties = gameProperties;
 
                 game = properties->game;
@@ -41,10 +41,12 @@ namespace Amara {
                 }
                 load = new Amara::LoadManager(properties);
 
-                scene = scenePlugin;
+                scenePlugin = gScenePlugin;
             }
 
             void init() {
+                initialLoaded = false;
+                
                 load->reset();
 
                 Amara::Camera* cam;
@@ -93,9 +95,9 @@ namespace Amara {
                     }
                 }
                 else {
-                    reciteScripts();
                     update();
-
+                    reciteScripts();
+                    
                     Amara::Entity* entity;
                     for (size_t i = 0; i < entities.size(); i++) {
                         entity = entities.at(i);

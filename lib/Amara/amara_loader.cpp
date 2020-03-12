@@ -39,8 +39,9 @@ namespace Amara {
 			 * Slow image.
 			 */
 			bool surface(string key, string path, bool replace) {
-				if (get(key) != nullptr && !replace) {
-					cout << "Loader Error: Key %s has already been used.\n" << key << endl;
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					cout << "Loader: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -70,6 +71,9 @@ namespace Amara {
 					cout << "Loaded: " << key << endl;
 					Amara::Asset* newAsset = new Amara::Asset(key, SURFACE, optimizedSurface);
 					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
 				}
 
 				return success;
@@ -83,8 +87,9 @@ namespace Amara {
 			 * Fast texture image.
 			 */
 			bool image(string key, string path, bool replace) {
-				if (get(key) != nullptr && !replace) {
-					cout << "Loader Error: Key " << key << " has already been used.\n" << endl;
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					cout << "Loader: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -115,6 +120,9 @@ namespace Amara {
 					cout << "Loaded: " << key << endl;
 					Amara::Asset* newAsset = new Amara::ImageTexture(key, IMAGE, newTexture);
 					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
 				}
 
 				return success;
@@ -128,8 +136,9 @@ namespace Amara {
 			 *  Spritesheet handles frame width and height.
 			 */
 			bool spritesheet(string key, string path, int frwidth, int frheight, bool replace) {
-				if (get(key) != nullptr && !replace) {
-					cout << "Loader Error: Key " << key << " has already been used." << key << endl;
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					cout << "Loader: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -157,6 +166,9 @@ namespace Amara {
 					cout << "Loaded: " << key << endl;
 					Amara::Spritesheet* newAsset = new Amara::Spritesheet(key, SPRITESHEET, newTexture, frwidth, frheight);
 					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
 				}
 
 				return success;
@@ -170,8 +182,9 @@ namespace Amara {
 			 * Loads a TrueTypeFont.
 			 */
 			bool ttf(string key, string path, int size, SDL_Color color, int style, bool replace) {
-				if (get(key) != nullptr && !replace) {
-					printf("Loader Error: Key %s has already been used.\n", key);
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					cout << "Loader: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -184,6 +197,9 @@ namespace Amara {
 					cout << "Loaded: " << key << endl;
 					Amara::Asset* newAsset = new Amara::Asset(key, TTF, gFont);
 					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
 				}
 
 				return success;
@@ -202,8 +218,9 @@ namespace Amara {
 			}
 
             bool sound(string key, string path, bool replace) {
-				if (get(key) != nullptr && !replace) {
-					cout << "Loader Error: Key %s has already been used.\n" << key << endl;
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					cout << "Loader: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -217,6 +234,9 @@ namespace Amara {
 					cout << "Loaded: " << key << endl;
 					Amara::Asset* newAsset = new Amara::Sound(key, SOUND, sound);
 					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
 				}
 
 				return success;
@@ -228,8 +248,9 @@ namespace Amara {
 
 
 			bool music(string key, string path, bool replace) {
-				if (get(key) != nullptr && !replace) {
-					cout << "Loader Error: Key " << key << " has already been used." << key << endl;
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					cout << "Loader: Key %s has already been used.\n" << key << endl;
 					return false;
 				}
 				bool success = true;
@@ -243,6 +264,9 @@ namespace Amara {
 					cout << "Loaded: " << key << endl;
 					Amara::Asset* newAsset = new Amara::Music(key, MUSIC, music, properties);
 					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
 				}
 
 				return success;

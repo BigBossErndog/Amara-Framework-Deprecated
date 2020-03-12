@@ -10,7 +10,8 @@ namespace Amara {
         SPRITESHEET,
         TTF,
         SOUND,
-        MUSIC
+        MUSIC,
+        JSON
     };
 
     class Asset {
@@ -33,8 +34,11 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
+            SDL_Texture* asset = nullptr;
+
             ImageTexture(string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType, givenAsset) {
                 SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
+                asset = givenAsset;
             }
     };
 
@@ -67,7 +71,7 @@ namespace Amara {
                     anim->loop = loop;
                     return anim;
                 }
-                
+
                 anim = new Amara::Animation(key, animKey, frames, frameRate, loop);
                 anims[animKey] = anim;
                 cout << "Added animation \"" << animKey << "\" to spritesheet \"" << key << "." << endl;
@@ -85,6 +89,18 @@ namespace Amara {
                 return nullptr;
             }
     };
+
+	class JsonAsset: public Amara::Asset {
+		public:
+            json jsonObj;
+			JsonAsset(string givenKey, AssetType givenType, json gJson): Amara::Asset(givenKey, JSON, nullptr) {
+                jsonObj = gJson;
+            }
+
+            json& getJSON() {
+                return jsonObj;
+            }
+	};
 }
 
 #endif

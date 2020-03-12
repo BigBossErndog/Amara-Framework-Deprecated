@@ -65,13 +65,15 @@ namespace Amara {
 			}
 
 			virtual void draw(int vx, int vy, int vw, int vh) {
-				properties->scrollX += x;
-				properties->scrollY += y;
+				float recScrollX = properties->scrollX;
+				float recScrollY = properties->scrollY;
 				
 				stable_sort(entities.begin(), entities.end(), sortEntities());
 
 				Amara::Entity* entity;
 				for (size_t i = 0; i < entities.size(); i++) {
+					properties->scrollX = recScrollX + x;
+					properties->scrollY = recScrollY + y;
 					entity = entities.at(i);
 					entity->draw(vx, vy, vw, vh);
 				}

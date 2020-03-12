@@ -34,6 +34,10 @@ namespace Amara {
                 reciteScripts();
                 Amara::Entity::run();
             }
+
+            Amara::Entity* add(Amara::Entity* entity) {
+                return Amara::Entity::add(entity);
+            }
     };
 }
 
