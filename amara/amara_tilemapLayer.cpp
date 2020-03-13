@@ -4,6 +4,12 @@
 #include "amara.h"
 
 namespace Amara {
+    enum TILEDFLAG {
+        FlippedHorizontally = 0x80000000,
+        FlippedVertically = 0x400000000,
+        FlippedAntiDiagonally = 0x20000000
+    };
+    
     class TilemapLayer: public Amara::Actor {
         public:
             Amara::ImageTexture* texture = nullptr;
