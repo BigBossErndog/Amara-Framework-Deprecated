@@ -3,8 +3,11 @@
 #include <string.h>
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <streambuf>
 #include <time.h>
 #include <limits>
+#include <bitset>
 #include <map>
 #include <unordered_map>
 #include <vector>

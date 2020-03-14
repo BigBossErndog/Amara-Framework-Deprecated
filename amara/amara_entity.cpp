@@ -15,7 +15,7 @@ namespace Amara {
 
 	struct sortEntities {
 		inline bool operator() (Amara::SortedEntity* entity1, Amara::SortedEntity* entity2) {
-			return (entity2->depth - entity1->depth);
+			return (entity1->depth < entity2->depth);
 		}
 	};
 	
@@ -27,6 +27,7 @@ namespace Amara {
 
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
+			Amara::Loader* load = nullptr;
 
 			vector<Amara::Entity*> entities;
 
@@ -34,6 +35,8 @@ namespace Amara {
 
 			float x = 0;
 			float y = 0;
+			
+			float alpha = 1;
 
 			bool isActive = false;
 			bool destroyed = false;
@@ -50,6 +53,7 @@ namespace Amara {
 
 				input = properties->input;
 				controls = properties->controls;
+				load = properties->loader;
 
 				isActive = true;
 				create();

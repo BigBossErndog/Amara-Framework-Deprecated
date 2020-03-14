@@ -50,6 +50,7 @@ namespace Amara {
 				properties = gameProperties;
 				scene = givenScene;
                 parent = givenParent;
+                load = properties->loader;
                 gRenderer = properties->gRenderer;
 
                 if (!textureKey.empty()) {
@@ -141,11 +142,10 @@ namespace Amara {
                 Amara::Entity::draw(vx, vy, vw, vh);
             }
 
-            bool setTexture(string textureKey) {
-                Amara::Loader* load = properties->loader;
-                texture = (Amara::ImageTexture*)(load->get(textureKey));
+            bool setTexture(string gTextureKey) {
+                texture = (Amara::ImageTexture*)(load->get(gTextureKey));
                 if (texture != nullptr) {
-                    textureKey = texture->key;
+                   textureKey = texture->key;
 
                     if (texture->type == SPRITESHEET) {
                         width = ((Amara::Spritesheet*)texture)->frameWidth;

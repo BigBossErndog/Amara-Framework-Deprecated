@@ -63,6 +63,9 @@ namespace Amara {
                         case SPRITESHEET:
                             success = load->spritesheet(task->key, task->path, task->frameWidth, task->frameHeight, task->replace);
                             break;
+                        case JSON:
+                            success = load->json(task->key, task->path, task->replace);
+                            break;
                     }
 
                     delete task;
@@ -75,6 +78,9 @@ namespace Amara {
             }
 
             Amara::Asset* get(string key) {
+                cout << "LOADING" << endl;
+                Amara::Asset* got = load->get("mikaelHouse_upper");
+                cout << "GOT IT" << endl;
                 return load->get(key);
             }
 
@@ -109,6 +115,17 @@ namespace Amara {
             }
             void spritesheet(string key, string path, int frameWH) {
                 spritesheet(key, path, frameWH, frameWH);
+            }
+
+            void json(string key, string path, bool replace) {
+                Amara::LoadTask* t  = new Amara::LoadTask();
+                t->type = JSON;
+                t->path = path;
+                t->replace = replace;
+                pushTask(key, t);
+            }
+            void json(string key, string path) {
+                json(key, path, false);
             }
     };
 }

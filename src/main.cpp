@@ -60,6 +60,8 @@ class TestScene : public Scene {
         void preload() {
             // cout << "PRELOADING" << endl;
             load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
+            load->image("tiles", "assets/tiles.png");
+            load->json("mikaelHouse_upper", "assets/mikaelHouse/mikaelHouse_upper.json");
         }
         void create() {
 			// controls->setKey("up", K_UP);
@@ -88,6 +90,7 @@ class TestScene : public Scene {
             gnik->setOrigin(0.5);
             gnik->id = "teenGnik";
             gnik->play("downWalk");
+            gnik->depth = 0;
 			// gnik->recite(new TestScript());
 
 			Sprite* gnik2;
@@ -95,6 +98,12 @@ class TestScene : public Scene {
 			gnik2->setOrigin(0.5);
 			gnik2->recite(new DelayedAnim(gnik));
             gnik2->play("downStand");
+            
+
+            // add(new TilemapLayer("tiles", "mikaelHouse_upper"));
+            Tilemap* tilemap;
+            add(tilemap = new Tilemap("tiles", "mikaelHouse_upper"));
+            tilemap->createAllLayers();
 
             // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
@@ -108,7 +117,7 @@ class TestScene : public Scene {
 			controls->setKey("esc", K_ESCAPE);
 
             mainCamera->startFollow(gnik);
-            mainCamera->setZoom(4);
+            // mainCamera->setZoom(1);
             // mainCamera->centerOn(100*32/2, 100*32/2);;
 
             // Amara::Camera* cam;

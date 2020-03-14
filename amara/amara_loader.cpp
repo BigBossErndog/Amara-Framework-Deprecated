@@ -275,6 +275,48 @@ namespace Amara {
             bool music(string key, string path) {
 				return music(key, path, false);
 			}
+
+			bool remove(string key) {
+				Amara::Asset* asset = get(key);
+				if (asset != nullptr) {
+					assets.erase(key);
+					delete asset;
+					return true;
+				}
+				return false;
+			}
+
+			bool json(string key, string path, bool replace) {
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					cout << "Loader: Key %s has already been used.\n" << key << endl;
+					return false;
+				}
+				bool success = true;
+				
+				std::ifstream in(path, std::ios::in | std::ios::binary);
+				if (in)
+				{
+					std::string contents;
+					in.seekg(0, std::ios::end);
+					contents.resize(in.tellg());
+					in.seekg(0, std::ios::beg);
+					in.read(&contents[0], contents.size());
+					in.close();
+					
+					cout << "Loaded: " << key << endl;
+					Amara::Asset* newAsset = new Amara::JsonAsset(key, JSON, json::parse(contents));
+					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
+				}
+				else {
+					cout << "Loader: Failed to read file \"" << path << "\"" << endl;
+					success = false;
+				}
+				return success;
+			}
     };
 }
 

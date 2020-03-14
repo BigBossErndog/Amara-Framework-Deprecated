@@ -90,6 +90,11 @@ namespace Amara {
             }
     };
 
+    class FileAsset: public Amara::Asset {
+        public:
+            string contents;
+    };
+
 	class JsonAsset: public Amara::Asset {
 		public:
             json jsonObj;
