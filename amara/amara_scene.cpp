@@ -112,8 +112,24 @@ namespace Amara {
                 stable_sort(cameras.begin(), cameras.end(), sortEntities());
                 stable_sort(entities.begin(), entities.end(), sortEntities());
 
+                float offset, upScale;
+                int vx, vy = 0;
+                float ratioRes = ((float)properties->resolution->width / (float)properties->resolution->height);
+                float ratioWin = ((float)properties->window->width / (float)properties->window->height);
+                
+                if (ratioRes < ratioWin) {
+                    upScale = ((float)properties->window->height/(float)properties->resolution->height);
+                    offset = ((float)properties->window->width - ((float)properties->resolution->width * upScale))/2;
+                    vx += offset/upScale;
+                }
+                else if (ratioRes > ratioWin) {
+                    upScale = ((float)properties->window->width/(float)properties->resolution->width);
+                    offset = ((float)properties->window->height - ((float)properties->resolution->height * upScale))/2;
+                    vy += offset/upScale;
+                }
+                
                 for (Amara::Camera* cam : cameras) {
-                    cam->draw(0, 0, properties->resolution->width, properties->resolution->height);
+                    cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
             }
 

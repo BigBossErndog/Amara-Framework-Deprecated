@@ -52,6 +52,7 @@ namespace Amara {
                 parent = givenParent;
                 load = properties->loader;
                 gRenderer = properties->gRenderer;
+                input = properties->input;
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);
@@ -93,11 +94,11 @@ namespace Amara {
                     hy = destRect.y + vy;
                 }
                 else {
-                    hh -= -(destRect.h);
+                    hh -= -(destRect.y);
                     hy = vy;
                 }
-                if (hx + hw > vx + vw) hw = (vx - hx);
-                if (hy + hh > vy + vh) hh = (vy - hy);
+                if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
+                if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
 
                 checkForHover(hx, hy, hw, hh);
 

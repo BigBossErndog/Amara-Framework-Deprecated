@@ -16,6 +16,7 @@ namespace Amara {
             bool rightClicked = false;
             bool middleClicked = false;
 
+            bool isHovered = false;
             bool hovered = false;
             bool justHovered = false;
 
@@ -46,20 +47,20 @@ namespace Amara {
                 int mx = properties->input->mouse->x;
                 int my = properties->input->mouse->y;
 
-                justHovered = false;
-                hovered = false;
-
                 if (!isInteractable) {
                     return;
                 }
 
+                hovered = false;
+
                 if (mx > bx && my > by) {
                     if (mx < bx + bw && my < by + bh) {
-                        if (!hovered) {
+                        if (!isHovered) {
                             justHovered = true;
                             onHover();
                         }
                         hovered = true;
+                        isHovered = true;
                         return;
                     }
                 }
@@ -76,7 +77,7 @@ namespace Amara {
                         if (event->disabled) continue;
                         switch (event->type) {
                             case OBJECTLEFTCLICK:
-                                if (hovered) {
+                                if (isHovered) {
                                     onClick();
                                     onPointerDown();
                                     event->disabled = true;
@@ -85,21 +86,21 @@ namespace Amara {
                                 }
                                 break;
                             case OBJECTRIGHTCLICK:
-                                if (hovered) {
+                                if (isHovered) {
                                     onRightClick();
                                     event->disabled = true;
                                     rightClicked = true;
                                 }
                                 break;
                             case OBJECTMIDDLERELEASE:
-                                if (hovered) {
+                                if (isHovered) {
                                     onMiddleClick();
                                     event->disabled = true;
                                     middleClicked = true;
                                 }
                                 break;
                             case OBJECTLEFTRELEASE:
-                                if (hovered) {
+                                if (isHovered) {
                                     onRelease();
                                     event->disabled = true;
                                 }
@@ -107,6 +108,9 @@ namespace Amara {
                         }
                     }
                 }
+
+                isHovered = false;
+                justHovered = false;
             }
 
             virtual void onHover() {}

@@ -300,16 +300,19 @@ namespace Amara {
 			void startFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN);
 				isFullscreen = true;
+				SDL_GetWindowSize(gWindow, &window->width, &window->height);
 			}
 
 			void startWindowedFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 				isFullscreen = true;
+				SDL_GetWindowSize(gWindow, &window->width, &window->height);
 			}
 
 			void exitFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, 0);
 				isFullscreen = false;
+				SDL_GetWindowSize(gWindow, &window->width, &window->height);
 			}
 
 		protected:
@@ -447,8 +450,22 @@ namespace Amara {
 					else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
-						input->mouse->x = (mx * resolution->width/window->width);
-						input->mouse->y = (my * resolution->height/window->height);
+						input->mouse->x = (mx * (float)resolution->width/(float)window->width);
+						input->mouse->y = (my * (float)resolution->height/(float)window->height);
+
+						float offsetX, upScale;
+						int vx, vy = 0;
+						float ratioRes = ((float)properties->resolution->width / (float)properties->resolution->height);
+						float ratioWin = ((float)properties->window->width / (float)properties->window->height);
+						
+						if (ratioRes < ratioWin) {
+							upScale = ((float)properties->window->height/(float)properties->resolution->height);
+							input->mouse->x = mx/upScale;
+						}
+						else if (ratioRes > ratioWin) {
+							upScale = ((float)properties->window->width/(float)properties->resolution->width);
+							input->mouse->y = my/upScale;
+						}
 
 						if (e.type == SDL_MOUSEBUTTONDOWN) {
 							if (e.button.button == SDL_BUTTON_LEFT) {

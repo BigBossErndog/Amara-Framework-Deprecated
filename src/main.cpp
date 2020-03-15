@@ -38,13 +38,22 @@ class DelayedAnim: public Script {
                     counter += 1;
                 }
                 else {
-                    string isHover = (gnik2->hovered) ? "HOVERED" : "NOTHOVERED";
-                    if (input->mouse->left->justDown) {
-                        cout << "HELLO CLICK: " << isHover << endl;
+                    string isHover = (gnik2->isHovered) ? "HOVERED" : "NOTHOVERED";
+                    if (true) {
+                        // cout << "HELLO CLICK: " << isHover << endl;
                     }
                 }
             }
 		}
+};
+
+class TurnWhenClicked: public Script {
+    public:
+        void script(Entity* entity) {
+            if (((Sprite*)entity)->clicked) {
+                ((Sprite*) entity)->angle += 90;
+            }
+        }
 };
 
 class TestScene : public Scene {
@@ -91,13 +100,15 @@ class TestScene : public Scene {
             gnik->id = "teenGnik";
             gnik->play("downWalk");
             gnik->depth = 0;
+            gnik->setInteractable();
+            gnik->recite(new TurnWhenClicked());
 			// gnik->recite(new TestScript());
 
-			Sprite* gnik2;
-			add(gnik2 = new Sprite(20, 0, "teenGnikolas"));
-			gnik2->setOrigin(0.5);
-			gnik2->recite(new DelayedAnim(gnik));
-            gnik2->play("downStand");
+			// Sprite* gnik2;
+			// add(gnik2 = new Sprite(20, 0, "teenGnikolas"));
+			// gnik2->setOrigin(0.5);
+			// gnik2->recite(new DelayedAnim(gnik));
+            // gnik2->play("downStand");
             
 
             // add(new TilemapLayer("tiles", "mikaelHouse_upper"));
@@ -117,17 +128,18 @@ class TestScene : public Scene {
 			controls->setKey("esc", K_ESCAPE);
 
             mainCamera->startFollow(gnik);
+            // mainCamera->setZoom(4);
             // mainCamera->setZoom(1);
             // mainCamera->centerOn(100*32/2, 100*32/2);;
 
-            // Amara::Camera* cam;
-            // add(cam = new Camera(10, 10, 160, 160));
-            // add(cam = new Camera(480-170, 360-170, 160, 160));
-            // cam->setZoom(2);
-            // add(cam = new Camera(480-170, 10, 160, 160));
-            // cam->setZoom(4);
-            // add(cam = new Camera(10, 360-170, 160, 160));
-            // cam->setZoom(8);
+            Amara::Camera* cam;
+            add(cam = new Camera(10, 10, 160, 160));
+            add(cam = new Camera(480-170, 360-170, 160, 160));
+            cam->setZoom(2);
+            add(cam = new Camera(480-170, 10, 160, 160));
+            cam->setZoom(4);
+            add(cam = new Camera(10, 360-170, 160, 160));
+            cam->setZoom(8);
         }
 
         void update() {
@@ -172,19 +184,18 @@ class TestScene : public Scene {
 					game->exitFullscreen();
 				}
 				else {
-					game->startFullscreen();
+					game->startWindowedFullscreen();
 				}
 			}
-
         }
 };
 
 int main(int argc, char** args) {
     Game* game = new Game("Amara Test Build");
     game->init(480, 360);
-    game->setResolution(480, 360);
+    game->setResolution(480, 270);
     game->resizeWindow(960, 720);
-    game->setFPS(60);
+    game->setFPS(30);
 
     game->scenes->add("test", new TestScene());
     game->start("test");
