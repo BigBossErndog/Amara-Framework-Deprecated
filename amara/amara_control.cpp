@@ -71,9 +71,7 @@ namespace Amara {
                 held = false;
                 activated = false;
 
-                Amara::Key* key;
-                for (size_t i = 0; i < keys.size(); i++) {
-                    key = keys.at(i);
+                for (Amara::Key* key : keys) {
                     isDown = isDown || key->isDown;
                     justDown = justDown || key->justDown;
                     tapped = tapped || key->tapped;

@@ -120,7 +120,8 @@ namespace Amara {
                 bool fvertical;
                 bool fdiagonal;
 
-                for (size_t l = 0; l < layers.size(); l++) {
+                int numLayers = layers.size();
+                for (size_t l = 0; l < numLayers; l++) {
                     if (tiledLayerKey.compare(layers[l]["name"]) != 0) continue;
 
                     for (size_t t = 0; t < layers[l]["data"].size(); t++) {
@@ -180,8 +181,7 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
-                for (size_t t = 0; t < tiles.size(); t++) {
-                    tile = tiles.at(t);
+                for (Amara::Tile tile : tiles) {
                     frame = tile.id;
 
                     tileAngle = 0;

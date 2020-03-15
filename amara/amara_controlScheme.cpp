@@ -88,9 +88,7 @@ namespace Amara {
             }
 
             void run() {
-                Amara::Control* control;
-                for (size_t i = 0; i < controlList.size(); i++) {
-                    control = controlList.at(i);
+               for (Amara::Control* control : controlList) {
                     control->run();
                 }
             }

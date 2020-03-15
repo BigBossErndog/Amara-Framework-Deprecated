@@ -43,15 +43,12 @@ namespace Amara {
             }
 
             Amara::AudioGroup* getGroup(string fKey) {
-                Amara::AudioGroup* group;
-                for (size_t i = 0; i < groups.size(); i++) {
-                    group = groups.at(i);
+                for (Amara::AudioGroup* group : groups) {
                     if (group->key.compare(fKey) == 0) {
                         return group;
                     }
                 }
-                for (size_t i = 0; i < groups.size(); i++) {
-                    group = groups.at(i);
+                for (Amara::AudioGroup* group : groups) {
                     group = group->getGroup(fKey);
                     if (group != nullptr) {
                         return group;
@@ -62,15 +59,12 @@ namespace Amara {
 
             Amara::AudioBase* getSound(string fKey) {
                 Amara::AudioBase* sound;
-                for (size_t i = 0; i < sounds.size(); i++) {
-                    sound = sounds.at(i);
+                for (Amara::AudioBase* audio : sounds) {
                     if (sound->key.compare(fKey) == 0) {
                         return sound;
                     }
                 }
-                Amara::AudioGroup* group;
-                for (size_t i = 0; i < groups.size(); i++) {
-                    group = groups.at(i);
+                for (Amara::AudioGroup* group : groups) {
                     sound = group->getSound(fKey);
                     if (sound != nullptr) {
                         return sound;
@@ -97,15 +91,12 @@ namespace Amara {
 
             void run(float parentVolume) {
                 Amara::AudioBase::run(parentVolume);
-                Amara::AudioBase* audio;
 
-                for (size_t i = 0; i < sounds.size(); i++) {
-                    audio = sounds.at(i);
+                for (Amara::AudioBase* audio : sounds) {
                     audio->run(volume * masterVolume * parentVolume);
                 }
 
-                for (size_t i = 0; i < groups.size(); i++) {
-                    audio = groups.at(i);
+                for (Amara::AudioGroup* audio : groups) {
                     audio->run(volume * masterVolume * parentVolume);
                 }
             } 

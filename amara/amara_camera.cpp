@@ -75,9 +75,7 @@ namespace Amara {
 
 				update();
 
-				Amara::Entity* entity;
-				for (size_t i = 0; i < entities.size(); i++) {
-					entity = entities.at(i);
+				for (Amara::Entity* entity : entities) {
 					entity->run();
 				}
 
@@ -176,19 +174,16 @@ namespace Amara {
                 dh = (y + height > vh) ? ceil(vh - y) : height;
                 dh -= oh;
 
-                Amara::Entity* entity;
-
-                for (size_t i = 0; i < sceneEntities->size(); i++) {
+                vector<Amara::Entity*>& rSceneEntities = *sceneEntities;
+                for (Amara::Entity* entity : rSceneEntities) {
                     assignAttributes();
-                    entity = sceneEntities->at(i);
                     entity->draw(dx, dy, dw, dh);
                 }
 
-                for (size_t i = 0; i < entities.size(); i++) {
+                for (Amara::Entity* entity : entities) {
                     properties->scrollX = x;
                     properties->scrollY = y;
 
-                    entity = entities.at(i);
                     entity->draw(vx, vy, vw, vh);
                 }
             }

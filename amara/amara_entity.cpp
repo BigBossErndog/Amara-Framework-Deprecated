@@ -74,11 +74,9 @@ namespace Amara {
 				
 				stable_sort(entities.begin(), entities.end(), sortEntities());
 
-				Amara::Entity* entity;
-				for (size_t i = 0; i < entities.size(); i++) {
+				for (Amara::Entity* entity : entities) {
 					properties->scrollX = recScrollX + x;
 					properties->scrollY = recScrollY + y;
-					entity = entities.at(i);
 					entity->draw(vx, vy, vw, vh);
 				}
 			}
@@ -87,17 +85,13 @@ namespace Amara {
 				Amara::Interactable::run();
 				update();
 
-				Amara::Entity* entity;
-				for (size_t i = 0; i < entities.size(); i++) {
-					entity = entities.at(i);
+				for (Amara::Entity* entity : entities) {
 					entity->run();
 				}
 			}
 
 			Amara::Entity* get(string find) {
-				Amara::Entity* entity;
-				for (size_t i = 0; i < entities.size(); i++) {
-					entity = entities.at(i);
+				for (Amara::Entity* entity : entities) {
 					if (entity->id.compare(find) == 0) {
 						return entity;
 					} 
@@ -120,7 +114,8 @@ namespace Amara {
 
 			Amara::Entity* remove(Amara::Entity* entity) {
 				Amara::Entity* child;
-				for (size_t i = 0; i < entities.size(); i++) {
+				int numChildren = entities.size();
+				for (size_t i = 0; i < numChildren; i++) {
 					child = entities.at(i);
 					if (child == entity) {
 						return remove(i);
@@ -135,7 +130,8 @@ namespace Amara {
 				}
 
 				Amara::Entity* child;
-				for (size_t i = 0; i < entities.size(); i++) {
+				int numChildren = entities.size();
+				for (size_t i = 0; i < numChildren; i++) {
 					child = entities.at(i);
 					if (recursiveDestroy) {
 						child->destroy();

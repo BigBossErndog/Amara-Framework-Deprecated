@@ -66,15 +66,13 @@ namespace Amara {
             }
 
             virtual void run() {
-                Amara::Event* event;
                 clicked = false;
                 leftClicked = false;
                 rightClicked = false;
                 middleClicked = false;
 
                 if (isInteractable) {
-                    for (size_t i = 0; i < events->eventList.size(); i++) {
-                        event = events->eventList.at(i);
+                    for (Amara::Event* event : events->eventList) {
                         if (event->disabled) continue;
                         switch (event->type) {
                             case OBJECTLEFTCLICK:

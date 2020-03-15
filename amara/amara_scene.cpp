@@ -49,17 +49,13 @@ namespace Amara {
                 
                 load->reset();
 
-                Amara::Camera* cam;
-                for (size_t i = 0; i < cameras.size(); i++) {
-                    cam = cameras.at(i);
+                for (Amara::Camera* cam : cameras) {
                     delete cam;
                 }
                 cameras.clear();
                 mainCamera = nullptr;
 
-                Amara::Entity* entity;
-                for (size_t i = 0; i < entities.size(); i++) {
-                    entity = entities.at(i);
+                for (Amara::Entity* entity : entities) {
                     delete entity;
                 }
                 entities.clear();
@@ -98,15 +94,11 @@ namespace Amara {
                     update();
                     reciteScripts();
                     
-                    Amara::Entity* entity;
-                    for (size_t i = 0; i < entities.size(); i++) {
-                        entity = entities.at(i);
+                    for (Amara::Entity* entity : entities) {
                         entity->run();
                     }
 
-                    Amara::Camera* cam;
-                    for (size_t i = 0; i < cameras.size(); i++) {
-                        cam = cameras.at(i);
+                    for (Amara::Camera* cam : cameras) {
                         cam->run();
                     }
                 }
@@ -120,9 +112,7 @@ namespace Amara {
                 stable_sort(cameras.begin(), cameras.end(), sortEntities());
                 stable_sort(entities.begin(), entities.end(), sortEntities());
 
-                Amara::Camera* cam;
-                for (size_t i = 0; i < cameras.size(); i++) {
-                    cam = cameras.at(i);
+                for (Amara::Camera* cam : cameras) {
                     cam->draw(0, 0, properties->resolution->width, properties->resolution->height);
                 }
             }

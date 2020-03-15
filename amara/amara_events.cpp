@@ -49,9 +49,7 @@ namespace Amara {
             }
 
             void manage() {
-                Amara::Event* evt;
-                for (size_t i = 0; i < eventList.size(); i++) {
-                    evt = eventList.at(i);
+                for (Amara::Event* evt : eventList) {
                     delete evt;
                 }
                 eventList.clear();

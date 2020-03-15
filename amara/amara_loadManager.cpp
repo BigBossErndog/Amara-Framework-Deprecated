@@ -38,9 +38,7 @@ namespace Amara {
             }
 
             void reset() {
-                Amara::LoadTask* task;
-                for (size_t i = 0; i < tasks.size(); i++) {
-                    task = tasks.at(i);
+                for (Amara::LoadTask* task : tasks) {
                     delete task;
                 }
                 tasks.clear();

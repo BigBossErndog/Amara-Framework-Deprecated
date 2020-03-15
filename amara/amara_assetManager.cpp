@@ -34,9 +34,7 @@ namespace Amara {
             }
 
             void addAnim(vector<string> textureKeys, string animKey, vector<int> frames, int frameRate, bool loop) {
-                string tKey;
-                for (size_t i = 0; i < textureKeys.size(); i++) {
-                    tKey = textureKeys.at(i);
+                for (string tKey : textureKeys) {
                     addAnim(tKey, animKey, frames, frameRate, loop);
                 }
             }

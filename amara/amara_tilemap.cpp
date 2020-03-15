@@ -79,7 +79,8 @@ namespace Amara {
 
             void createAllLayers() {
                 if (tiledJsonKey.empty()) return;
-                for (size_t l = 0; l < tiledJson["layers"].size(); l++) {
+                int numLayers = tiledJson["layers"].size();
+                for (size_t l = 0; l < numLayers; l++) {
                     createLayer(tiledJson["layers"][l]["name"]);
                 }
             }
