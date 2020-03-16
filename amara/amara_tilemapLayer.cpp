@@ -50,6 +50,9 @@ namespace Amara {
                 tileWidth = tw;
                 tileHeight = th;
 
+                widthInPixels = width * tileWidth;
+                heightInPixels = height * tileHeight;
+
                 Amara::Tile tile;
                 tiles.resize(width*height, tile);
             }
@@ -113,7 +116,7 @@ namespace Amara {
                 if (!givenTiledJson) return; 
                 json layers = tiledJson["layers"];
 
-                unsigned int tileId;
+                unsigned long tileId;
                 int firstgid = tiledJson["tilesets"][0]["firstgid"];
 
                 bool fhorizontal;
@@ -125,11 +128,11 @@ namespace Amara {
                     if (tiledLayerKey.compare(layers[l]["name"]) != 0) continue;
 
                     for (size_t t = 0; t < layers[l]["data"].size(); t++) {
-                        tileId = (unsigned int)layers[l]["data"][t];
+                        tileId = (unsigned long)layers[l]["data"][t];
 
-                        fhorizontal = (tileId & Amara::TILED_FLIPPEDHORIZONTALLY) != 0;
-                        fvertical = (tileId & Amara::TILED_FLIPPEDVERTICALLY) != 0;
-                        fdiagonal = (tileId & Amara::TILED_FLIPPEDANTIDIAGONALLY) != 0;
+                        bool fhorizontal = (tileId & Amara::TILED_FLIPPEDHORIZONTALLY) != 0;
+                        bool fvertical = (tileId & Amara::TILED_FLIPPEDVERTICALLY) != 0;
+                        bool fdiagonal = (tileId & Amara::TILED_FLIPPEDANTIDIAGONALLY) != 0;
                         
                         tileId = tileId & ~(Amara::TILED_FLIPPEDHORIZONTALLY | Amara::TILED_FLIPPEDVERTICALLY | Amara::TILED_FLIPPEDANTIDIAGONALLY);
                         tiles.at(t).id = (int)(tileId - firstgid);
@@ -171,7 +174,6 @@ namespace Amara {
             }
 
             void draw(int vx, int vy, int vw, int vh) {
-                Amara::Tile tile;
                 int tx, ty, frame, maxFrame = 0;
                 float tileAngle = 0;
 
@@ -181,10 +183,13 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
-                for (Amara::Tile tile : tiles) {
+                Amara::Tile tile;
+                for (int t = 0; t < tiles.size(); t++) {
+                    tile = tiles.at(t);
                     frame = tile.id;
 
                     tileAngle = 0;
+                    flip = SDL_FLIP_NONE;
                     if (tile.fhorizontal) {
                         if (tile.fvertical) {
                             tileAngle = 180;
@@ -241,6 +246,10 @@ namespace Amara {
 
                     checkForHover(hx, hy, hw, hh);
 
+                    if (destRect.x + destRect.w <= 0) skipDrawing = true;
+                    if (destRect.y + destRect.h <= 0) skipDrawing = true;
+                    if (destRect.x >= vw) skipDrawing = true;
+                    if (destRect.y >= vh) skipDrawing = true;
                     if (destRect.w <= 0) skipDrawing = true;
                     if (destRect.h <= 0) skipDrawing = true;
 
@@ -267,8 +276,13 @@ namespace Amara {
                         }
                     }
                 }
-
+                
+                // Amara::breakGame();
                 Amara::Actor::draw(vx, vy, vw, vh);
+            }
+
+            void setCameraBounds(Amara::Camera* cam) {
+                cam->setBounds(x, y, widthInPixels, heightInPixels);
             }
     };
 }

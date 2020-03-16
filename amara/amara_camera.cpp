@@ -152,14 +152,6 @@ namespace Amara {
                 }
             }
 
-            setBound(float gx, float gy, float gw, float gh) {
-                lockedToBounds = true;
-                boundX = gx;
-                boundY = gy;
-                boundW = gw;
-                boundH = gh;
-            }
-
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 int dx, dy, dw, dh, ow, oh = 0;
 
@@ -270,6 +262,18 @@ namespace Amara {
             }
             void changeZoom(float gi) {
                 changeZoom(gi, gi);
+            }
+
+            void setBounds(float gx, float gy, float gw, float gh) {
+                lockedToBounds = true;
+                boundX = gx;
+                boundY = gy;
+                boundW = gw;
+                boundH = gh;
+            }
+
+            void removeBounds() {
+                lockedToBounds = false;
             }
 
             ~Camera() {

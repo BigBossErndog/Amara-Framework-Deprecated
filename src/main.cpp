@@ -19,10 +19,10 @@ class TurnWhenClicked: public Script {
                 entity->destroy();
             }
 
-            if (controls->isDown("up")) entity->y -= 1;
-            if (controls->isDown("down")) entity->y += 1;
-            if (controls->isDown("left")) entity->x -= 1;
-            if (controls->isDown("right")) entity->x += 1;
+            if (controls->isDown("up")) entity->y -= 5;
+            if (controls->isDown("down")) entity->y += 5;
+            if (controls->isDown("left")) entity->x -= 5;
+            if (controls->isDown("right")) entity->x += 5;
         }
 };
 
@@ -41,6 +41,8 @@ class TestScene : public Scene {
             load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
             load->image("tiles", "assets/tiles.png");
             load->json("mikaelHouse_upper", "assets/mikaelHouse/mikaelHouse_upper.json");
+            load->json("reeds_home", "assets/reeds_home.json");
+            load->json("mikaelHouse_ground", "assets/mikaelHouse/mikaelHouse_ground.json");
         }
         void create() {
 			controls->setKey("up", K_UP);
@@ -64,14 +66,6 @@ class TestScene : public Scene {
             teenGnik->addAnim("rightStand", {30,31}, 2, true);
 
             teenGnik->addAnim("downStance", 5);
-
-            add(gnik = new Sprite(0, 0, "teenGnikolas"));
-            gnik->setOrigin(0.5);
-            gnik->id = "teenGnik";
-            gnik->play("downWalk");
-            gnik->depth = 0;
-            gnik->setInteractable();
-            gnik->recite(new TurnWhenClicked());
 			// gnik->recite(new TestScript());
 
 			// Sprite* gnik2;
@@ -83,8 +77,17 @@ class TestScene : public Scene {
 
             // add(new TilemapLayer("tiles", "mikaelHouse_upper"));
             Tilemap* tilemap;
-            add(tilemap = new Tilemap("tiles", "mikaelHouse_upper"));
+            add(tilemap = new Tilemap("tiles", "reeds_home"));
             tilemap->createAllLayers();
+            tilemap->getLayer("floor")->setCameraBounds(mainCamera);
+
+            add(gnik = new Sprite(0, 0, "teenGnikolas"));
+            gnik->setOrigin(0.5);
+            gnik->id = "teenGnik";
+            gnik->play("downWalk");
+            gnik->depth = 0;
+            gnik->setInteractable();
+            gnik->recite(new TurnWhenClicked());
 
             // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
@@ -99,7 +102,7 @@ class TestScene : public Scene {
 
             mainCamera->startFollow(gnik);
             // mainCamera->centerOn(100, 100);
-            mainCamera->setZoom(4);
+            // mainCamera->setZoom(4);
             // mainCamera->setZoom(4);
             // mainCamera->setZoom(1);
             // mainCamera->centerOn(100*32/2, 100*32/2);;
@@ -169,7 +172,7 @@ int main(int argc, char** args) {
     game->init(480, 360);
     game->setResolution(480, 360);
     game->resizeWindow(960, 720);
-    game->setFPS(30);
+    game->setFPS(60);
 
     game->scenes->add("what", new WhatScene());
     game->scenes->add("test", new TestScene());

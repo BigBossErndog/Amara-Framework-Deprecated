@@ -3,9 +3,9 @@
 
 namespace Amara {
 
-    const unsigned int TILED_FLIPPEDHORIZONTALLY = 0x80000000;
-    const unsigned int TILED_FLIPPEDVERTICALLY = 0x40000000;
-    const unsigned int TILED_FLIPPEDANTIDIAGONALLY = 0x20000000;
+    const unsigned long TILED_FLIPPEDHORIZONTALLY = 0x80000000;
+    const unsigned long TILED_FLIPPEDVERTICALLY = 0x40000000;
+    const unsigned long TILED_FLIPPEDANTIDIAGONALLY = 0x20000000;
 
     struct Tile {
         int id = 0;

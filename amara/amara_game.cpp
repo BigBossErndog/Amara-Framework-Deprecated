@@ -51,6 +51,7 @@ namespace Amara {
 			int fps = 60;
 			int tps = 1000 / fps;
 			int lps = 60;
+			int realFPS = fps;
 			LTimer fpsTimer;
 			LTimer capTimer;
 
@@ -399,6 +400,7 @@ namespace Amara {
 					// Wait remaining time
 					totalWait += (tps - frameTicks);
 				}
+				realFPS = 60 / (frameTicks / 1000.f);
 				// else if (frameTicks > tps) {
 				// 	if (dragged) {
 				// 		dragged = false;
