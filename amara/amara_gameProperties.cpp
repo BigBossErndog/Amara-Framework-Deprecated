@@ -46,6 +46,8 @@ namespace Amara {
 			bool isFullscreen = false;
 
             int fps = 60;
+            int lps = fps;
+            int realFPS = fps;
 
             Amara::Loader* loader = nullptr;
             Amara::AssetManager* assets = nullptr;

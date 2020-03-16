@@ -50,7 +50,7 @@ namespace Amara {
 			bool vsync = false;
 			int fps = 60;
 			int tps = 1000 / fps;
-			int lps = 60;
+			int lps = fps;
 			int realFPS = fps;
 			LTimer fpsTimer;
 			LTimer capTimer;
@@ -241,6 +241,7 @@ namespace Amara {
 				tps = 1000 / fps;
 				if (!lockLogicSpeed) {
 					lps = newFps;
+					properties->lps = lps;
 				}
 			}
 
@@ -252,6 +253,8 @@ namespace Amara {
 				fps = newFps;
 				lps = newLps;
 				tps = 1000 / fps;
+				properties->fps = fps;
+				properties->lps = lps;
 			}
 
 			void setLogicTickRate(int newRate) {
@@ -346,6 +349,8 @@ namespace Amara {
 				properties->dragged = dragged;
 
 				properties->fps = fps;
+				properties->lps = lps;
+				properties->realFPS = realFPS;
 			}
 
 			void update() {
@@ -387,7 +392,6 @@ namespace Amara {
 
 				if (fps < lps) {
 					for (int i = 1; i < lps/fps; i++) {
-						handleEvents();
 						update();
 					}
 				}
@@ -400,31 +404,30 @@ namespace Amara {
 					// Wait remaining time
 					totalWait += (tps - frameTicks);
 				}
-				realFPS = 60 / (frameTicks / 1000.f);
-				// else if (frameTicks > tps) {
-				// 	if (dragged) {
-				// 		dragged = false;
-				// 		properties->dragged = false;
-				// 	}
-				// 	else {
-				// 		// Checking for lag
-				// 		if (tps < (float)frameTicks * 0.5) {
-				// 			lagging = true;
-				// 			lagCounter += 1;
-				// 		}
+				else if (frameTicks > tps) {
+					if (dragged) {
+						dragged = false;
+						properties->dragged = false;
+					}
+					else {
+						// Checking for lag
+						if (tps < (float)frameTicks * 0.5) {
+							lagging = true;
+							lagCounter += 1;
+						}
 
-				// 		// Framerate catch up.
-				// 		for (int i = 0; i < (frameTicks - tps); i++) {
-				// 			if (frameCounter >= logicDelay) {
-				// 				handleEvents();
-				// 				scenes->run();
-				// 				frameCounter = 0;
-				// 				if (quitted) return;
-				// 			}
-				// 			frameCounter += 1;
-				// 		}
-				// 	}
-				// }
+						// Framerate catch up.
+						for (int i = 0; i < (frameTicks - tps); i++) {
+							if (frameCounter >= logicDelay) {
+								update();
+								frameCounter = 0;
+								if (quitted) return;
+							}
+							frameCounter += 1;
+						}
+					}
+				}
+				realFPS = fps / (frameTicks / 1000.f);
 
 				// Delay if game has not caught up
 				if (totalWait > 0) {

@@ -55,7 +55,7 @@ namespace Amara {
                 if (currentAnim == nullptr) {
                     return 1;
                 }
-                float frameDelay = properties->fps/currentAnim->frameRate;
+                float frameDelay = properties->lps/currentAnim->frameRate;
                 float p = ((float)currentIndex)/((float)currentAnim->length());
                 float e = (1/((float)currentAnim->length()));
                 float f = (((float)frameCounter)/frameDelay);
@@ -68,7 +68,7 @@ namespace Amara {
 				if (currentAnim == nullptr) {
 					return;
 				}
-				float frameDelay = properties->fps/currentAnim->frameRate;
+				float frameDelay = properties->lps/currentAnim->frameRate;
 				currentIndex = floor(p*currentAnim->length());
                 float oldP = ((float)currentIndex)/((float)currentAnim->length());
                 float e = 1/((float)currentAnim->length());
@@ -95,7 +95,7 @@ namespace Amara {
                 }
                 isActive = true;
 
-                float frameDelay = properties->fps/currentAnim->frameRate;
+                float frameDelay = properties->lps/currentAnim->frameRate;
                 frameCounter += 1;
                 if (frameCounter >= frameDelay) {
                     currentIndex += 1;
