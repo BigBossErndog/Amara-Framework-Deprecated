@@ -90,7 +90,7 @@ namespace Amara {
 
             void setTiledJson(string tiledJsonKey) {
                 if (!tiledJsonKey.empty()) {
-                    tiledJson = ((Amara::JsonAsset*) load->get(tiledJsonKey))->jsonObj;
+                    tiledJson = ((Amara::JsonFile*) load->get(tiledJsonKey))->jsonObj;
                     if (tiledJson != nullptr) {
                         tiledJsonKey.clear();
                         givenTiledJson = true;

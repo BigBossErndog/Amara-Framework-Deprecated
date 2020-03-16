@@ -1,58 +1,28 @@
 #include <amara.h>
+#include "what.cpp"
 using namespace Amara;
 
-class TestScript: public Script {
+class ScriptRotation: public Script {
     public:
         void script(Amara::Entity* gnik) {
             ((Image*)gnik)->angle += 2;
         }
 };
 
-class DelayedAnim: public Script {
-	public:
-		Sprite* gnik2;
-		Sprite* mainGnik;
-		int counter = 0;
-
-		DelayedAnim(Sprite* givenGnik): Script() {
-			mainGnik = givenGnik;
-		}
-
-		void prepare(Entity* gnik) {
-			gnik2 = (Sprite*)gnik;
-		}
-
-		void script(Entity* gnik) {
-			if (counter < 20) {
-				counter += 1;
-			}
-			else if (counter == 20) {
-				gnik2->play("downWalk");
-				counter += 1;
-                gnik2->anims->syncWith(mainGnik);
-                gnik2->setInteractable();
-			}
-            else if (counter == 21) {
-                if (gnik2->clicked) {
-                    gnik2->destroy();
-                    counter += 1;
-                }
-                else {
-                    string isHover = (gnik2->isHovered) ? "HOVERED" : "NOTHOVERED";
-                    if (true) {
-                        // cout << "HELLO CLICK: " << isHover << endl;
-                    }
-                }
-            }
-		}
-};
-
 class TurnWhenClicked: public Script {
     public:
         void script(Entity* entity) {
-            if (((Sprite*)entity)->clicked) {
-                ((Sprite*) entity)->angle += 90;
+            if (((Sprite*)entity)->isHovered) {
+                ((Sprite*) entity)->angle += 2;
             }
+            if (((Sprite*)entity)->justClicked) {
+                entity->destroy();
+            }
+
+            if (controls->isDown("up")) entity->y -= 1;
+            if (controls->isDown("down")) entity->y += 1;
+            if (controls->isDown("left")) entity->x -= 1;
+            if (controls->isDown("right")) entity->x += 1;
         }
 };
 
@@ -73,10 +43,10 @@ class TestScene : public Scene {
             load->json("mikaelHouse_upper", "assets/mikaelHouse/mikaelHouse_upper.json");
         }
         void create() {
-			// controls->setKey("up", K_UP);
-            // controls->setKey("down", K_DOWN);
-            // controls->setKey("left", K_LEFT);
-            // controls->setKey("right", K_RIGHT);
+			controls->setKey("up", K_UP);
+            controls->setKey("down", K_DOWN);
+            controls->setKey("left", K_LEFT);
+            controls->setKey("right", K_RIGHT);
 			// controls->setKey("d", K_D);
 			// controls->setKey("a", K_A);
             controls->setKey("space", K_SPACE);
@@ -128,18 +98,22 @@ class TestScene : public Scene {
 			controls->setKey("esc", K_ESCAPE);
 
             mainCamera->startFollow(gnik);
+            // mainCamera->centerOn(100, 100);
+            mainCamera->setZoom(4);
             // mainCamera->setZoom(4);
             // mainCamera->setZoom(1);
             // mainCamera->centerOn(100*32/2, 100*32/2);;
 
             Amara::Camera* cam;
-            add(cam = new Camera(10, 10, 160, 160));
-            add(cam = new Camera(480-170, 360-170, 160, 160));
-            cam->setZoom(2);
-            add(cam = new Camera(480-170, 10, 160, 160));
-            cam->setZoom(4);
-            add(cam = new Camera(10, 360-170, 160, 160));
-            cam->setZoom(8);
+            // add(cam = new Camera(10, 10, 160, 160));
+            // add(cam = new Camera(480-170, 360-170, 160, 160));
+            // cam->setZoom(2);
+            // add(cam = new Camera(480-170, 10, 160, 160));
+            // cam->setZoom(4);
+            // add(cam = new Camera(10, 360-170, 160, 160));
+            // cam->setZoom(8);
+
+            scenePlugin->start("what");
         }
 
         void update() {
@@ -193,10 +167,11 @@ class TestScene : public Scene {
 int main(int argc, char** args) {
     Game* game = new Game("Amara Test Build");
     game->init(480, 360);
-    game->setResolution(480, 270);
+    game->setResolution(480, 360);
     game->resizeWindow(960, 720);
     game->setFPS(30);
 
+    game->scenes->add("what", new WhatScene());
     game->scenes->add("test", new TestScene());
     game->start("test");
 

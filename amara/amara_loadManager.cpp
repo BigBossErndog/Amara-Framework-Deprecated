@@ -61,7 +61,7 @@ namespace Amara {
                         case SPRITESHEET:
                             success = load->spritesheet(task->key, task->path, task->frameWidth, task->frameHeight, task->replace);
                             break;
-                        case JSON:
+                        case JSONFILE:
                             success = load->json(task->key, task->path, task->replace);
                             break;
                     }
@@ -117,7 +117,7 @@ namespace Amara {
 
             void json(string key, string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = JSON;
+                t->type = JSONFILE;
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);

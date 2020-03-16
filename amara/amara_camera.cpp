@@ -55,9 +55,10 @@ namespace Amara {
                 y = gy;
             }
 
-            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, vector<Amara::Entity*>* givenEntities) {
+            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* gParent, vector<Amara::Entity*>* givenEntities) {
                 properties = gameProperties;
                 sceneEntities = givenEntities;
+                parent = gParent;
 
                 if (!definedDimensions) {
                     width = properties->resolution->width;
@@ -69,6 +70,8 @@ namespace Amara {
 
             virtual void run() {
 				if (!definedDimensions) {
+                    x = 0;
+                    y = 0;
                     width = properties->resolution->width;
                     height = properties->resolution->height;
                 }
@@ -76,25 +79,26 @@ namespace Amara {
 				update();
 
 				for (Amara::Entity* entity : entities) {
+                    if (entity->isDestroyed || entity->parent != this) continue;
 					entity->run();
 				}
 
                 updateValues();
 
                 if (followTarget != nullptr) {
-                    if (followTarget->destroyed) {
+                    if (followTarget->isDestroyed) {
                         stopFollow();
                     }
                     else {
-                        float tx = followTarget->x;
-                        float ty = followTarget->y;
+                        float tx = (float)followTarget->x;
+                        float ty = (float)followTarget->y;
 
                         float cx = (width/zoomX)/2 - (width/oldZoomX)/2;
                         float cy = (height/zoomY)/2 - (height/oldZoomY)/2;
 
                         float nx = (oldCenterX - tx) * (1 - lerpX) + tx;
                         float ny = (oldCenterY - ty) * (1 - lerpY) + ty;
-
+                        
                         centerOn(nx, ny);
                     }
                 }
@@ -124,25 +128,27 @@ namespace Amara {
                 if (zoomX < 0) zoomX = 0.00001;
                 if (zoomY < 0) zoomY = 0.00001;
 
-                if (width/zoomX > boundX + boundW) {
-                    scrollX = boundX - ((width/zoomX) - (boundX + boundW))/2;
-                }
-                else if (scrollX < boundX) {
-                    scrollX = boundX;
-                }
-                else if (scrollX + width/zoomX > boundX + boundW) {
-                    scrollX = (boundX + boundW) - (width/zoomX);
-                }
+                if (lockedToBounds) {
+                    if (width/zoomX > boundX + boundW) {
+                        scrollX = boundX - ((width/zoomX) - (boundX + boundW))/2;
+                    }
+                    else if (scrollX < boundX) {
+                        scrollX = boundX;
+                    }
+                    else if (scrollX + width/zoomX > boundX + boundW) {
+                        scrollX = (boundX + boundW) - (width/zoomX);
+                    }
 
-                
-                if (height/zoomY > boundY + boundH) {
-                    scrollY = boundY - ((height/zoomY) - (boundY + boundH))/2;
-                }
-                else if (scrollY < boundY) {
-                    scrollY = boundY;
-                }
-                else if (scrollY + height/zoomY > boundY + boundH) {
-                    scrollY = (boundY + boundH) - (height/zoomY);
+                    
+                    if (height/zoomY > boundY + boundH) {
+                        scrollY = boundY - ((height/zoomY) - (boundY + boundH))/2;
+                    }
+                    else if (scrollY < boundY) {
+                        scrollY = boundY;
+                    }
+                    else if (scrollY + height/zoomY > boundY + boundH) {
+                        scrollY = (boundY + boundH) - (height/zoomY);
+                    }
                 }
             }
 
@@ -174,15 +180,19 @@ namespace Amara {
                 dh = (y + height > vh) ? ceil(vh - y) : height;
                 dh -= oh;
 
-                vector<Amara::Entity*>& rSceneEntities = *sceneEntities;
-                for (Amara::Entity* entity : rSceneEntities) {
-                    assignAttributes();
-                    entity->draw(dx, dy, dw, dh);
+                if (sceneEntities != nullptr) {
+                    vector<Amara::Entity*>& rSceneEntities = *sceneEntities;
+                    for (Amara::Entity* entity : rSceneEntities) {
+                        assignAttributes();
+                        if (entity->isDestroyed) continue;
+                        entity->draw(dx, dy, dw, dh);
+                    }
                 }
 
                 for (Amara::Entity* entity : entities) {
                     properties->scrollX = x;
                     properties->scrollY = y;
+                    if (entity->isDestroyed || entity->parent != this) continue;
 
                     entity->draw(vx, vy, vw, vh);
                 }

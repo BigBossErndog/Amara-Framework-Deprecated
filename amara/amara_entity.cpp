@@ -39,7 +39,7 @@ namespace Amara {
 			float alpha = 1;
 
 			bool isActive = false;
-			bool destroyed = false;
+			bool isDestroyed = false;
 
 			Entity() {
 				
@@ -77,6 +77,7 @@ namespace Amara {
 				for (Amara::Entity* entity : entities) {
 					properties->scrollX = recScrollX + x;
 					properties->scrollY = recScrollY + y;
+					if (entity->isDestroyed || entity->parent != this) continue;
 					entity->draw(vx, vy, vw, vh);
 				}
 			}
@@ -86,6 +87,7 @@ namespace Amara {
 				update();
 
 				for (Amara::Entity* entity : entities) {
+					if (entity->isDestroyed || entity->parent != this) continue;
 					entity->run();
 				}
 			}
@@ -144,7 +146,7 @@ namespace Amara {
 					entities.clear();
 				}
 
-				destroyed = true;
+				isDestroyed = true;
 				isActive = false;
 
 				properties->taskManager->queueDeletion(this);

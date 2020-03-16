@@ -11,7 +11,8 @@ namespace Amara {
         TTF,
         SOUND,
         MUSIC,
-        JSON
+        JSONFILE,
+        STRINGFILE
     };
 
     class Asset {
@@ -95,10 +96,11 @@ namespace Amara {
             string contents;
     };
 
-	class JsonAsset: public Amara::Asset {
+	class JsonFile: public Amara::Asset {
 		public:
             json jsonObj;
-			JsonAsset(string givenKey, AssetType givenType, json gJson): Amara::Asset(givenKey, JSON, nullptr) {
+
+			JsonFile(string givenKey, AssetType givenType, json gJson): Amara::Asset(givenKey, JSONFILE, nullptr) {
                 jsonObj = gJson;
             }
 
@@ -106,6 +108,15 @@ namespace Amara {
                 return jsonObj;
             }
 	};
+
+    class StringFile: public Amara::Asset {
+        public:
+            string contents;
+
+            StringFile(string givenKey, AssetType givenType, string gContents): Amara::Asset(givenKey, STRINGFILE, nullptr) {
+                contents = gContents;
+            }
+    };
 }
 
 #endif

@@ -35,6 +35,16 @@ namespace Amara {
                 return nullptr;
             }
 
+			bool remove(string key) {
+				Amara::Asset* asset = get(key);
+				if (asset != nullptr) {
+					assets.erase(key);
+					delete asset;
+					return true;
+				}
+				return false;
+			}
+
             /*
 			 * Slow image.
 			 */
@@ -276,16 +286,6 @@ namespace Amara {
 				return music(key, path, false);
 			}
 
-			bool remove(string key) {
-				Amara::Asset* asset = get(key);
-				if (asset != nullptr) {
-					assets.erase(key);
-					delete asset;
-					return true;
-				}
-				return false;
-			}
-
 			bool json(string key, string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
@@ -305,7 +305,7 @@ namespace Amara {
 					in.close();
 					
 					cout << "Loaded: " << key << endl;
-					Amara::Asset* newAsset = new Amara::JsonAsset(key, JSON, json::parse(contents));
+					Amara::Asset* newAsset = new Amara::JsonFile(key, JSONFILE, json::parse(contents));
 					assets[key] = newAsset;
 					if (got != nullptr) {
 						delete got;

@@ -62,7 +62,7 @@ namespace Amara {
 
                 mainCamera = new Amara::Camera();
                 cameras.push_back(mainCamera);
-                mainCamera->init(properties, this, &entities);
+                mainCamera->init(properties, this, this, &entities);
 
                 preload();
                 cout << "START LOADING TASKS: " << load->tasks.size() << " loading tasks." << endl;
@@ -76,7 +76,7 @@ namespace Amara {
 
             Amara::Camera* add(Amara::Camera* cam) {
                 cameras.push_back(cam);
-                cam->init(properties, this, &entities);
+                cam->init(properties, this, this, &entities);
                 return cam;
             }
 
@@ -95,10 +95,12 @@ namespace Amara {
                     reciteScripts();
                     
                     for (Amara::Entity* entity : entities) {
+                        if (entity->isDestroyed || entity->parent != this) continue;
                         entity->run();
                     }
 
                     for (Amara::Camera* cam : cameras) {
+                        if (cam->isDestroyed || cam->parent != this) continue;
                         cam->run();
                     }
                 }
@@ -129,6 +131,7 @@ namespace Amara {
                 }
                 
                 for (Amara::Camera* cam : cameras) {
+                    if (cam->isDestroyed || cam->parent != this) continue;
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
             }

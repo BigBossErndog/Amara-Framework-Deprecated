@@ -5,19 +5,20 @@
 
 namespace Amara {
     class Interactable {
+        private:
+            bool recHovered = false;
         public:
             Amara::GameProperties* properties = nullptr;
             Amara::EventManager* events = nullptr;
             Amara::InputManager* input = nullptr;
 
             bool isInteractable = false;
-            bool clicked = false;
+            bool justClicked = false;
             bool leftClicked = false;
             bool rightClicked = false;
             bool middleClicked = false;
 
             bool isHovered = false;
-            bool hovered = false;
             bool justHovered = false;
 
             bool isDraggable = false;
@@ -51,15 +52,13 @@ namespace Amara {
                     return;
                 }
 
-                hovered = false;
-
                 if (mx > bx && my > by) {
                     if (mx < bx + bw && my < by + bh) {
-                        if (!isHovered) {
+                        if (!recHovered) {
+                            recHovered = true;
                             justHovered = true;
                             onHover();
                         }
-                        hovered = true;
                         isHovered = true;
                         return;
                     }
@@ -67,7 +66,7 @@ namespace Amara {
             }
 
             virtual void run() {
-                clicked = false;
+                justClicked = false;
                 leftClicked = false;
                 rightClicked = false;
                 middleClicked = false;
@@ -81,7 +80,7 @@ namespace Amara {
                                     onClick();
                                     onPointerDown();
                                     event->disabled = true;
-                                    clicked = true;
+                                    justClicked = true;
                                     leftClicked = true;
                                 }
                                 break;
@@ -108,7 +107,8 @@ namespace Amara {
                         }
                     }
                 }
-
+                
+                recHovered = isHovered;
                 isHovered = false;
                 justHovered = false;
             }

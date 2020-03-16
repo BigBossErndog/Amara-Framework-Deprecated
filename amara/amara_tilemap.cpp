@@ -38,7 +38,7 @@ namespace Amara {
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
                 if (!tiledJsonKey.empty()) {
-                    tiledJson = ((Amara::JsonAsset*)load->get(tiledJsonKey))->jsonObj;
+                    tiledJson = ((Amara::JsonFile*)load->get(tiledJsonKey))->jsonObj;
 
                     if (tiledJson != nullptr) {
                         width = tiledJson["width"];
