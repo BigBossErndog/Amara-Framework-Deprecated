@@ -27,13 +27,13 @@ namespace Amara {
             float scaleX = 1;
             float scaleY = 1;
 
-            float angle = 0;
-
             SDL_Rect viewport;
             SDL_Rect srcRect;
             SDL_Rect destRect;
             SDL_Point origin;
             SDL_RendererFlip flip;
+
+            SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
             
             int tileWidth = 0;
             int tileHeight = 0;
@@ -174,6 +174,9 @@ namespace Amara {
             }
 
             void draw(int vx, int vy, int vw, int vh) {
+                if (alpha < 0) alpha = 0;
+                if (alpha > 1) alpha = 1;
+
                 int tx, ty, frame, maxFrame = 0;
                 float tileAngle = 0;
 
@@ -182,6 +185,10 @@ namespace Amara {
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
+
+                SDL_Texture* tex = (SDL_Texture*)texture->asset;
+                SDL_SetTextureBlendMode(tex, blendMode);
+				SDL_SetTextureAlphaMod(tex, alpha * 255);
 
                 Amara::Tile tile;
                 for (int t = 0; t < tiles.size(); t++) {
@@ -255,7 +262,7 @@ namespace Amara {
 
                     if (!skipDrawing) {
                         if (texture != nullptr) {
-                            SDL_Texture* tx = (SDL_Texture*)texture->asset;
+                            SDL_Texture* tex = (SDL_Texture*)texture->asset;
                             maxFrame = ((texture->width / tileWidth) * (texture->height / tileHeight));
                             frame = frame % maxFrame;
 
@@ -266,7 +273,7 @@ namespace Amara {
 
                             SDL_RenderCopyEx(
                                 gRenderer,
-                                (SDL_Texture*)(texture->asset),
+                                tex,
                                 &srcRect,
                                 &destRect,
                                 angle + tileAngle,

@@ -36,6 +36,7 @@ namespace Amara {
 			float x = 0;
 			float y = 0;
 			
+			float angle = 0;
 			float alpha = 1;
 
 			bool isActive = false;
@@ -71,6 +72,9 @@ namespace Amara {
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				float recScrollX = properties->scrollX;
 				float recScrollY = properties->scrollY;
+
+				if (alpha < 0) alpha = 0;
+                if (alpha > 1) alpha = 1;
 				
 				stable_sort(entities.begin(), entities.end(), sortEntities());
 

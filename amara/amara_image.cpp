@@ -16,6 +16,8 @@ namespace Amara {
             SDL_Rect destRect;
             SDL_Point origin;
 
+            SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
+
             int width = 0;
             int height = 0;
             int imageWidth = 0;
@@ -28,8 +30,6 @@ namespace Amara {
 
             float scaleX = 1;
             float scaleY = 1;
-
-            float angle = 0;
 
             Image(): Actor() {
                 textureKey.clear();
@@ -64,6 +64,9 @@ namespace Amara {
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 bool skipDrawing = false;
+
+                if (alpha < 0) alpha = 0;
+                if (alpha > 1) alpha = 1;
 
                 viewport.x = vx;
                 viewport.y = vy;
@@ -131,6 +134,9 @@ namespace Amara {
                                 srcRect.h = spr->frameHeight;
                                 break;
                         }
+
+                        SDL_SetTextureBlendMode(tx, blendMode);
+				        SDL_SetTextureAlphaMod(tx, alpha * 255);
 
                         SDL_RenderCopyEx(
                             gRenderer,

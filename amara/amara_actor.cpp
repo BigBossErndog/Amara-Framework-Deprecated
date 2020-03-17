@@ -13,6 +13,7 @@ namespace Amara {
             void recite(Amara::Script* script) {
                 scripts.push_back(script);
                 script->init(properties, this);
+                script->prepare();
                 script->prepare(this);
             }
 
@@ -20,6 +21,7 @@ namespace Amara {
                 Amara::Script* script;
                 for (auto it = scripts.begin(); it != scripts.end(); it++) {
                     script = *it;
+                    script->script();
                     script->script(this);
                     if (script->finished) {
                         scripts.erase(it--);

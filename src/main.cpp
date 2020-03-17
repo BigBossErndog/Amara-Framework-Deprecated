@@ -11,11 +11,12 @@ class ScriptRotation: public Script {
 
 class TurnWhenClicked: public Script {
     public:
-        void script(Entity* entity) {
-            if (((Sprite*)entity)->isHovered) {
-                ((Sprite*) entity)->angle += 2;
+        void script(Actor* entity) {
+            if (entity->isHovered) {
+                entity->angle += 2;
+                entity->alpha -= 0.01;
             }
-            if (((Sprite*)entity)->justClicked) {
+            if (entity->justClicked) {
                 entity->destroy();
             }
 
@@ -23,6 +24,8 @@ class TurnWhenClicked: public Script {
             if (controls->isDown("down")) entity->y += 5;
             if (controls->isDown("left")) entity->x -= 5;
             if (controls->isDown("right")) entity->x += 5;
+
+            if (controls->justDown("space")) entity->alpha = 1;
         }
 };
 
@@ -45,13 +48,17 @@ class TestScene : public Scene {
             load->json("mikaelHouse_ground", "assets/mikaelHouse/mikaelHouse_ground.json");
         }
         void create() {
-			controls->setKey("up", K_UP);
-            controls->setKey("down", K_DOWN);
-            controls->setKey("left", K_LEFT);
-            controls->setKey("right", K_RIGHT);
-			// controls->setKey("d", K_D);
-			// controls->setKey("a", K_A);
-            controls->setKey("space", K_SPACE);
+			controls->addKey("up", K_UP);
+            controls->addKey("down", K_DOWN);
+            controls->addKey("left", K_LEFT);
+            controls->addKey("right", K_RIGHT);
+
+            controls->addKey("up", K_W);
+            controls->addKey("down", K_S);
+			controls->addKey("left", K_A);
+			controls->addKey("right", K_D);
+
+            controls->addKey("space", K_SPACE);
 
             Spritesheet* teenGnik = (Spritesheet*)assets->get("teenGnikolas");
 
@@ -98,7 +105,7 @@ class TestScene : public Scene {
             //     }
             // }
 
-			controls->setKey("esc", K_ESCAPE);
+			controls->addKey("esc", K_ESCAPE);
 
             mainCamera->startFollow(gnik);
             // mainCamera->centerOn(100, 100);

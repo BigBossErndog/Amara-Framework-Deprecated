@@ -6,11 +6,12 @@
 namespace Amara {
     class Game;
     class Scene;
+    class Actor;
 
     class Script: Amara::StateManager {
         public:
             Amara::GameProperties* properties = nullptr;
-            Amara::Entity* parent = nullptr;
+            Amara::Actor* parent = nullptr;
             Amara::Scene* scene = nullptr;
             Amara::Game* game = nullptr;
             Amara::InputManager* input = nullptr;
@@ -24,7 +25,7 @@ namespace Amara {
 
             Script(): Script(true) {}
 
-            void init(Amara::GameProperties* gameProperties, Amara::Entity* parentActor) {
+            void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
                 properties = gameProperties;
                 game = properties->game;
                 scene = properties->currentScene;
@@ -33,7 +34,7 @@ namespace Amara {
 
                 parent = parentActor;
             }
-
+            
             bool finished = false;
             
             virtual void finish() {
@@ -45,8 +46,11 @@ namespace Amara {
                 }
             }
 
-            virtual void prepare(Amara::Entity* entity) {}
-            virtual void script(Amara::Entity* entity) {}
+            virtual void prepare() {}
+            virtual void prepare(Amara::Actor* entity) {}
+
+            virtual void script() {}
+            virtual void script(Amara::Actor* entity) {}
     };
 }
 

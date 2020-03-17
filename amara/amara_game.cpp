@@ -404,29 +404,6 @@ namespace Amara {
 					// Wait remaining time
 					totalWait += (tps - frameTicks);
 				}
-				else if (frameTicks > tps) {
-					if (dragged) {
-						dragged = false;
-						properties->dragged = false;
-					}
-					else {
-						// Checking for lag
-						if (tps < (float)frameTicks * 0.5) {
-							lagging = true;
-							lagCounter += 1;
-						}
-
-						// Framerate catch up.
-						for (int i = 0; i < (frameTicks - tps); i++) {
-							if (frameCounter >= logicDelay) {
-								update();
-								frameCounter = 0;
-								if (quitted) return;
-							}
-							frameCounter += 1;
-						}
-					}
-				}
 				realFPS = fps / (frameTicks / 1000.f);
 
 				// Delay if game has not caught up
