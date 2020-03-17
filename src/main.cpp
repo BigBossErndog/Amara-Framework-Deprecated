@@ -170,7 +170,7 @@ class TestScene : public Scene {
 int main(int argc, char** args) {
     Game* game = new Game("Amara Test Build");
     game->init(480, 360);
-    game->setResolution(480, 360);
+    game->setResolution(480, 270);
     game->resizeWindow(960, 720);
     game->setFPS(60);
 

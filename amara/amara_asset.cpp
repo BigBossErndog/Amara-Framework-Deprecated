@@ -91,9 +91,21 @@ namespace Amara {
             }
     };
 
-    class FileAsset: public Amara::Asset {
+    class StringFile: public Amara::Asset {
         public:
             string contents;
+
+            StringFile(string givenKey, AssetType givenType, string gContents): Amara::Asset(givenKey, STRINGFILE, nullptr) {
+                contents = gContents;
+            }
+
+            string getString() {
+                return contents;
+            }
+
+            string toString() {
+                return getString();
+            }
     };
 
 	class JsonFile: public Amara::Asset {
@@ -109,13 +121,9 @@ namespace Amara {
             }
 	};
 
-    class StringFile: public Amara::Asset {
+    class TTFAsset: public Amara::Asset {
         public:
-            string contents;
-
-            StringFile(string givenKey, AssetType givenType, string gContents): Amara::Asset(givenKey, STRINGFILE, nullptr) {
-                contents = gContents;
-            }
+            
     };
 }
 

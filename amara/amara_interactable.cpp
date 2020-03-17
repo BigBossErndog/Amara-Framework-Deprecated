@@ -45,8 +45,8 @@ namespace Amara {
             }
 
             void checkForHover(int bx, int by, int bw, int bh) {
-                int mx = properties->input->mouse->x;
-                int my = properties->input->mouse->y;
+                int mx = properties->input->mouse->dx;
+                int my = properties->input->mouse->dy;
 
                 if (!isInteractable) {
                     return;

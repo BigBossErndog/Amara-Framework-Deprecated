@@ -18,6 +18,9 @@ namespace Amara {
 			Amara::MouseButton* right = nullptr;
             Amara::MouseButton* middle = nullptr;
 
+            int dx = 0;
+            int dy = 0;
+
 			Mouse(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
 

@@ -455,21 +455,28 @@ namespace Amara {
 					else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
-						input->mouse->x = (mx * (float)resolution->width/(float)window->width);
-						input->mouse->y = (my * (float)resolution->height/(float)window->height);
+						input->mouse->dx = (mx * (float)resolution->width/(float)window->width);
+						input->mouse->dy = (my * (float)resolution->height/(float)window->height);
 
-						float offsetX, upScale;
+						input->mouse->x = input->mouse->dx;
+						input->mouse->y = input->mouse->dy;
+
+						float offset, upScale;
 						int vx, vy = 0;
 						float ratioRes = ((float)properties->resolution->width / (float)properties->resolution->height);
 						float ratioWin = ((float)properties->window->width / (float)properties->window->height);
 						
 						if (ratioRes < ratioWin) {
 							upScale = ((float)properties->window->height/(float)properties->resolution->height);
-							input->mouse->x = mx/upScale;
+							offset = ((float)properties->window->width - ((float)properties->resolution->width * upScale))/2;
+							input->mouse->dx = mx/upScale;
+							input->mouse->x = (mx - offset)/upScale;
 						}
 						else if (ratioRes > ratioWin) {
 							upScale = ((float)properties->window->width/(float)properties->resolution->width);
-							input->mouse->y = my/upScale;
+							offset = ((float)properties->window->height - ((float)properties->resolution->height * upScale))/2;
+							input->mouse->dy = my/upScale;
+							input->mouse->y = (my - offset)/upScale;
 						}
 
 						if (e.type == SDL_MOUSEBUTTONDOWN) {

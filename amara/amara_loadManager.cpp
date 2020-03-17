@@ -61,6 +61,9 @@ namespace Amara {
                         case SPRITESHEET:
                             success = load->spritesheet(task->key, task->path, task->frameWidth, task->frameHeight, task->replace);
                             break;
+                        case STRINGFILE:   
+                            success = load->json(task->key, task->path, task->replace);
+                            break;
                         case JSONFILE:
                             success = load->json(task->key, task->path, task->replace);
                             break;
@@ -113,6 +116,17 @@ namespace Amara {
             }
             void spritesheet(string key, string path, int frameWH) {
                 spritesheet(key, path, frameWH, frameWH);
+            }
+
+            void stringFile(string key, string path, bool replace) {
+                Amara::LoadTask* t  = new Amara::LoadTask();
+                t->type = STRINGFILE;
+                t->path = path;
+                t->replace = replace;
+                pushTask(key, t);
+            }
+            void stringFile(string key, string path) {
+                stringFile(key, path, false);
             }
 
             void json(string key, string path, bool replace) {
