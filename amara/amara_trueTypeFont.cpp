@@ -137,12 +137,21 @@ namespace Amara {
                     }
 
                     if (wordWrap) {
-                        width = wordWrapWidth;
-                        height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt);
+                        width = wordWrapWidth * scaleX;
+                        height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt) * scaleY;
+
+                        int offsetX = 0;
+                        if (alignment == FC_ALIGN_CENTER) {
+                            offsetX = width * 0.5;
+                        }
+                        else if (alignment == FC_ALIGN_RIGHT) {
+                            offsetX = -width;
+                        }
+                        
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX - (width * originX)) * properties->zoomX),
+                            floor(floor(x - properties->scrollX - (width * originX) + offsetX) * properties->zoomX),
                             floor(floor(y - properties->scrollY - (height * originY)) * properties->zoomY),
                             wordWrapWidth,
                             effect,
@@ -152,10 +161,17 @@ namespace Amara {
                     else {
                         width = FC_GetWidth(fontAsset->font, txt);
                         height = FC_GetHeight(fontAsset->font, txt);
+                        int offsetX = 0;
+                        if (alignment == FC_ALIGN_CENTER) {
+                            offsetX = width * 0.5;
+                        }
+                        else if (alignment == FC_ALIGN_RIGHT) {
+                            offsetX = width;
+                        }
                         FC_DrawEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX - (width * originX)) * properties->zoomX),
+                            floor(floor(x - properties->scrollX - (width * originX) + offsetX) * properties->zoomX),
                             floor(floor(y - properties->scrollY - (height * originY)) * properties->zoomY),
                             effect,
                             txt

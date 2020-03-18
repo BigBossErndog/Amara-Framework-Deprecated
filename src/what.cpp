@@ -3,6 +3,6 @@
 class WhatScene: public Amara::Scene {
     public:
         void create() {
-            cout << "HELLO WHAT" << endl;
+            cout << "HELLO WHAT SCENE" << endl;
         }
 };

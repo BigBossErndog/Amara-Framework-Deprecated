@@ -100,9 +100,9 @@ class TestScene : public Scene {
 
             add(txt = new TrueTypeFont(32*4, 32* 4, "pressStart", "Hello\nWorld"));
             txt->setColor(255, 255, 255);
-            txt->setOrigin(0.5);
-            txt->setText("Your momma once told me the world revolves around me, I ain't the sharpest tool in the shed. She was lookin kinda dum with her finger and her thumb in the shape of an L on her forehead.");
-            txt->setWordWrap(200);
+            txt->setOrigin(1);
+            txt->setText("Hello World\nUr Momma once told me the world revolved around me.");
+            txt->alignment = FC_ALIGN_RIGHT;
 
             // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
@@ -118,22 +118,21 @@ class TestScene : public Scene {
             mainCamera->startFollow(gnik);
             // mainCamera->centerOn(100, 100);
             // mainCamera->setZoom(4);
-            // mainCamera->setZoom(4);
             // mainCamera->setZoom(1);
             // mainCamera->centerOn(100*32/2, 100*32/2);;
 
             Amara::Camera* cam;
-            add(cam = new Camera(10, 10, 160, 160));
-            cam->startFollow(gnik);
-            add(cam = new Camera(480-170, 360-170, 160, 160));
-            cam->setZoom(2);
-            cam->startFollow(gnik);
-            add(cam = new Camera(480-170, 10, 160, 160));
-            cam->setZoom(4);
-            cam->startFollow(gnik);
-            add(cam = new Camera(10, 360-170, 160, 160));
-            cam->setZoom(8);
-            cam->startFollow(gnik);
+            // add(cam = new Camera(10, 10, 160, 160));
+            // cam->startFollow(gnik);
+            // add(cam = new Camera(480-170, 360-170, 160, 160));
+            // cam->setZoom(2);
+            // cam->startFollow(gnik);
+            // add(cam = new Camera(480-170, 10, 160, 160));
+            // cam->setZoom(4);
+            // cam->startFollow(gnik);
+            // add(cam = new Camera(10, 360-170, 160, 160));
+            // cam->setZoom(8);
+            // cam->startFollow(gnik);
 
             scenePlugin->start("what");
         }
