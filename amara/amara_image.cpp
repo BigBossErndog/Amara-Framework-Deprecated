@@ -56,7 +56,6 @@ namespace Amara {
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);
-                    textureKey.clear();
                 }
 
 				create();

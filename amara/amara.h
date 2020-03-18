@@ -48,6 +48,8 @@ using namespace std;
 #include "amara_tilemapLayer.cpp"
 #include "amara_tile.cpp"
 
+#include "amara_trueTypeFont.cpp"
+
 #include "amara_camera.cpp"
 #include "amara_actor.cpp"
 #include "amara_script.cpp"

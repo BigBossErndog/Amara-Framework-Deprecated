@@ -202,10 +202,19 @@ namespace Amara {
 				// Creating the font
 				FC_Font* gFont = FC_CreateFont();
 				FC_LoadFont(gFont, gRenderer, path.c_str(), size, color, style);
+				if (gFont == nullptr) {
+					success = false;
+				}
 
 				if (success) {
 					cout << "Loaded: " << key << endl;
-					Amara::Asset* newAsset = new Amara::Asset(key, TTF, gFont);
+					Amara::TTFAsset* newAsset = new Amara::TTFAsset(key, TTF, gFont);
+					
+					newAsset->path = path;
+					newAsset->size = size;
+					newAsset->color = color;
+					newAsset->style = style;
+
 					assets[key] = newAsset;
 					if (got != nullptr) {
 						delete got;

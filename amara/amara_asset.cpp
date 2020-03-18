@@ -123,7 +123,22 @@ namespace Amara {
 
     class TTFAsset: public Amara::Asset {
         public:
-            
+            FC_Font* font = nullptr;
+            string path;
+            int size;
+            SDL_Color color;
+            int style;
+
+            bool recFullscreen = false;
+
+            TTFAsset(string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF, gFont) {
+                font = gFont;
+            }
+
+            reloadFontCache(SDL_Renderer* gRenderer) {
+                FC_ClearFont(font);
+                FC_LoadFont(font, gRenderer, path.c_str(), size, color, style);
+            }
     };
 }
 

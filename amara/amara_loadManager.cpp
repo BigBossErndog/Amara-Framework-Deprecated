@@ -67,6 +67,9 @@ namespace Amara {
                         case JSONFILE:
                             success = load->json(task->key, task->path, task->replace);
                             break;
+                        case TTF:
+                            success = load->ttf(task->key, task->path, task->size, task->color, task->style, task->replace);
+                            break;
                     }
 
                     delete task;
@@ -139,6 +142,29 @@ namespace Amara {
             void json(string key, string path) {
                 json(key, path, false);
             }
+
+            void ttf(string key, string path, int size, SDL_Color color, int style, bool replace) {
+                Amara::LoadTask* t = new Amara::LoadTask();
+                t->type = TTF;
+                t->path = path;
+                t->replace = replace;
+                t->size = size;
+                t->color = color;
+                t->style = style;
+                pushTask(key, t);
+            }
+
+            void ttf(string key, string path, int size, SDL_Color color, int style) {
+				ttf(key, path, size, color, style, false);
+			}
+
+			void ttf(string key, string path, int size, SDL_Color color) {
+				ttf(key, path, size, color, TTF_STYLE_NORMAL);
+			}
+
+			void ttf(string key, string path, int size) {
+				ttf(key, path, size, FC_MakeColor(0,0,0,255));
+			}
     };
 }
 

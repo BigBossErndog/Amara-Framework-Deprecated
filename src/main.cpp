@@ -14,7 +14,6 @@ class TurnWhenClicked: public Script {
         void script(Actor* entity) {
             if (entity->isHovered) {
                 entity->angle += 2;
-                entity->alpha -= 0.01;
             }
             if (entity->justClicked) {
                 entity->destroy();
@@ -32,6 +31,7 @@ class TurnWhenClicked: public Script {
 class TestScene : public Scene {
     public:
         Sprite* gnik;
+        TrueTypeFont* txt;
         bool gnikDestroyed = false;
         int c = 0;
 
@@ -46,6 +46,8 @@ class TestScene : public Scene {
             load->json("mikaelHouse_upper", "assets/mikaelHouse/mikaelHouse_upper.json");
             load->json("reeds_home", "assets/reeds_home.json");
             load->json("mikaelHouse_ground", "assets/mikaelHouse/mikaelHouse_ground.json");
+
+            load->ttf("pressStart", "assets/press-start.regular.ttf", 14);
         }
         void create() {
 			controls->addKey("up", K_UP);
@@ -96,6 +98,10 @@ class TestScene : public Scene {
             gnik->setInteractable();
             gnik->recite(new TurnWhenClicked());
 
+            add(txt = new TrueTypeFont(32*4, 32* 4, "pressStart", "Hello World"));
+            txt->setColor(255, 255, 255);
+            txt->setOrigin(0.5);
+
             // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
             //     for (int i = 0; i < 100; i++) {
@@ -115,13 +121,17 @@ class TestScene : public Scene {
             // mainCamera->centerOn(100*32/2, 100*32/2);;
 
             Amara::Camera* cam;
-            // add(cam = new Camera(10, 10, 160, 160));
-            // add(cam = new Camera(480-170, 360-170, 160, 160));
-            // cam->setZoom(2);
-            // add(cam = new Camera(480-170, 10, 160, 160));
-            // cam->setZoom(4);
-            // add(cam = new Camera(10, 360-170, 160, 160));
-            // cam->setZoom(8);
+            add(cam = new Camera(10, 10, 160, 160));
+            cam->startFollow(gnik);
+            add(cam = new Camera(480-170, 360-170, 160, 160));
+            cam->setZoom(2);
+            cam->startFollow(gnik);
+            add(cam = new Camera(480-170, 10, 160, 160));
+            cam->setZoom(4);
+            cam->startFollow(gnik);
+            add(cam = new Camera(10, 360-170, 160, 160));
+            cam->setZoom(8);
+            cam->startFollow(gnik);
 
             scenePlugin->start("what");
         }
@@ -171,13 +181,16 @@ class TestScene : public Scene {
 					game->startWindowedFullscreen();
 				}
 			}
+
+            txt->x = gnik->x;
+            txt->y = gnik->y;
         }
 };
 
 int main(int argc, char** args) {
     Game* game = new Game("Amara Test Build");
     game->init(480, 360);
-    game->setResolution(480, 270);
+    game->setResolution(480, 360);
     game->resizeWindow(960, 720);
     game->setFPS(60);
 
