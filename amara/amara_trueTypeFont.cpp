@@ -25,6 +25,9 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
+            bool wordWrap = false;
+            Uint16 wordWrapWidth = 0;
+
             TrueTypeFont(): Amara::Actor() {}
 
             TrueTypeFont(float gx, float gy): TrueTypeFont() {
@@ -101,6 +104,17 @@ namespace Amara {
                 changeScale(gi, gi);
             }
 
+            void setWordWrap() {
+                wordWrap = true;
+            }
+            void setWordWrap(int w) {
+                setWordWrap();
+                wordWrapWidth = w;
+            }  
+            void removeWordWrap() {
+                wordWrap = false;
+            }
+
             void draw(int vx, int vy, int vw, int vh) {
                 viewport.x = vx;
                 viewport.y = vy;
@@ -121,18 +135,32 @@ namespace Amara {
                         fontAsset->recFullscreen = properties->isFullscreen;
                         fontAsset->reloadFontCache(gRenderer);
                     }
-                
-                    width = FC_GetWidth(fontAsset->font, txt);
-                    height = FC_GetHeight(fontAsset->font, txt);
 
-                    FC_DrawEffect(
-                        fontAsset->font,
-                        gRenderer,
-                        floor(floor(x - properties->scrollX - (width * originX)) * properties->zoomX),
-                        floor(floor(y - properties->scrollY - (height * originY)) * properties->zoomY),
-                        effect,
-                        txt
-                    );
+                    if (wordWrap) {
+                        width = wordWrapWidth;
+                        height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt);
+                        FC_DrawColumnEffect(
+                            fontAsset->font,
+                            gRenderer,
+                            floor(floor(x - properties->scrollX - (width * originX)) * properties->zoomX),
+                            floor(floor(y - properties->scrollY - (height * originY)) * properties->zoomY),
+                            wordWrapWidth,
+                            effect,
+                            txt
+                        );
+                    }
+                    else {
+                        width = FC_GetWidth(fontAsset->font, txt);
+                        height = FC_GetHeight(fontAsset->font, txt);
+                        FC_DrawEffect(
+                            fontAsset->font,
+                            gRenderer,
+                            floor(floor(x - properties->scrollX - (width * originX)) * properties->zoomX),
+                            floor(floor(y - properties->scrollY - (height * originY)) * properties->zoomY),
+                            effect,
+                            txt
+                        );
+                    }
                 }
 
                 Amara::Entity::draw(vx, vy, vw, vh);

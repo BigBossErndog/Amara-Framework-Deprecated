@@ -47,7 +47,7 @@ class TestScene : public Scene {
             load->json("reeds_home", "assets/reeds_home.json");
             load->json("mikaelHouse_ground", "assets/mikaelHouse/mikaelHouse_ground.json");
 
-            load->ttf("pressStart", "assets/press-start.regular.ttf", 14);
+            load->ttf("pressStart", "assets/press-start.regular.ttf", 8);
         }
         void create() {
 			controls->addKey("up", K_UP);
@@ -98,9 +98,11 @@ class TestScene : public Scene {
             gnik->setInteractable();
             gnik->recite(new TurnWhenClicked());
 
-            add(txt = new TrueTypeFont(32*4, 32* 4, "pressStart", "Hello World"));
+            add(txt = new TrueTypeFont(32*4, 32* 4, "pressStart", "Hello\nWorld"));
             txt->setColor(255, 255, 255);
             txt->setOrigin(0.5);
+            txt->setText("Your momma once told me the world revolves around me, I ain't the sharpest tool in the shed. She was lookin kinda dum with her finger and her thumb in the shape of an L on her forehead.");
+            txt->setWordWrap(200);
 
             // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
