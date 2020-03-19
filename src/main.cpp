@@ -24,7 +24,19 @@ class TurnWhenClicked: public Script {
             if (controls->isDown("left")) entity->x -= 5;
             if (controls->isDown("right")) entity->x += 5;
 
-            if (controls->justDown("space")) entity->alpha = 1;
+            if (controls->justDown("space")) {
+                entity->alpha = 1;
+                cout << "HIT SPACE ";
+                Amara::AudioBase* sound = audio->get("vanquisher");
+                if (sound->isPlaying) {
+                    sound->pause();
+                    cout << "HELLO" << endl;
+                }
+                else {
+                    cout << "WHAT" << endl;
+                    sound->resume();
+                }
+            }
         }
 };
 
@@ -48,8 +60,13 @@ class TestScene : public Scene {
             load->json("mikaelHouse_ground", "assets/mikaelHouse/mikaelHouse_ground.json");
 
             load->ttf("pressStart", "assets/press-start.regular.ttf", 8);
+            
+            load->music("vanquisher", "assets/vanquisher.wav");
         }
         void create() {
+            audio->add("vanquisher");
+            audio->play("vanquisher");
+
 			controls->addKey("up", K_UP);
             controls->addKey("down", K_DOWN);
             controls->addKey("left", K_LEFT);

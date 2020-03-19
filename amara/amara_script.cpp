@@ -16,6 +16,7 @@ namespace Amara {
             Amara::Game* game = nullptr;
             Amara::InputManager* input = nullptr;
             Amara::ControlScheme* controls = nullptr;
+            Amara::AudioGroup* audio = nullptr;
 
             bool deleteOnFinish = true;
 
@@ -31,6 +32,7 @@ namespace Amara {
                 scene = properties->currentScene;
                 input = properties->input;
                 controls = properties->controls;
+                audio = properties->audio;
 
                 parent = parentActor;
             }

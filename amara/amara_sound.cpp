@@ -9,8 +9,6 @@ namespace Amara {
             Mix_Chunk* sound = nullptr;
 			int channel = -1;
 
-            bool paused = false;
-
             Sound(string givenKey, AssetType givenType, Mix_Chunk* givenAsset): Amara::AudioBase(givenKey, givenType, givenAsset) {
 				sound = givenAsset;
             }
@@ -22,7 +20,8 @@ namespace Amara {
 					return;
 				}
 				Mix_Volume(channel, floor(volume * masterVolume * 128));
-				paused = false;
+				isPaused = false;
+				isPlaying = true;
 			}
 
 			virtual void play() {
@@ -36,6 +35,7 @@ namespace Amara {
 					Mix_Volume(channel, floor(volume * masterVolume * parentVolume * 128));
 				}
 				else {
+					isPlaying = false;
 					channel = -1;
 				}
 			}

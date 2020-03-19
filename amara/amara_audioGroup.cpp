@@ -58,12 +58,13 @@ namespace Amara {
             }
 
             Amara::AudioBase* getSound(string fKey) {
-                Amara::AudioBase* sound;
-                for (Amara::AudioBase* audio : sounds) {
+                for (Amara::AudioBase* sound : sounds) {
                     if (sound->key.compare(fKey) == 0) {
                         return sound;
                     }
                 }
+
+                Amara::AudioBase* sound;
                 for (Amara::AudioGroup* group : groups) {
                     sound = group->getSound(fKey);
                     if (sound != nullptr) {
@@ -87,6 +88,15 @@ namespace Amara {
                 }
 
                 return nullptr;
+            }
+
+            Amara::AudioBase* play(string fKey) {
+                Amara::AudioBase* audio = get(fKey);
+                if (audio != nullptr) {
+                    audio->play();
+                }
+
+                return audio;
             }
 
             void run(float parentVolume) {

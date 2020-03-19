@@ -70,6 +70,12 @@ namespace Amara {
                         case TTF:
                             success = load->ttf(task->key, task->path, task->size, task->color, task->style, task->replace);
                             break;
+                        case SOUND:
+                            success = load->sound(task->key, task->path, task->replace);
+                            break;
+                        case MUSIC:
+                            success = load->music(task->key, task->path, task->replace);
+                            break;
                     }
 
                     delete task;
@@ -120,6 +126,30 @@ namespace Amara {
             void spritesheet(string key, string path, int frameWH) {
                 spritesheet(key, path, frameWH, frameWH);
             }
+
+            bool sound(string key, string path, bool replace) {
+				Amara::LoadTask* t = new Amara::LoadTask();
+                t->type = SOUND;
+                t->path = path;
+                t->replace = replace;
+                pushTask(key, t);
+			}
+
+			bool sound(string key, string path) {
+				return sound(key, path, false);
+			}
+
+            bool music(string key, string path, bool replace) {
+				Amara::LoadTask* t = new Amara::LoadTask();
+                t->type = MUSIC;
+                t->path = path;
+                t->replace = replace;
+                pushTask(key, t);
+			}
+
+            bool music(string key, string path) {
+				return music(key, path, false);
+			}
 
             void stringFile(string key, string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();

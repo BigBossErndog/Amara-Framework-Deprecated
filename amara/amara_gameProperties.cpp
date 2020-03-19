@@ -53,7 +53,7 @@ namespace Amara {
             Amara::AssetManager* assets = nullptr;
             Amara::SceneManager* scenes = nullptr;
 
-            Amara::Music* music;
+            Amara::Music* music = nullptr;
 
             Amara::Scene* currentScene = nullptr;
             Amara::Camera* currentCamera = nullptr;

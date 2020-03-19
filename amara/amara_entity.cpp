@@ -27,6 +27,7 @@ namespace Amara {
 
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
+			Amara::AudioGroup* audio = nullptr;
 			Amara::Loader* load = nullptr;
 
 			vector<Amara::Entity*> entities;
@@ -54,6 +55,7 @@ namespace Amara {
 
 				input = properties->input;
 				controls = properties->controls;
+				audio = properties->audio;
 				load = properties->loader;
 
 				isActive = true;

@@ -28,6 +28,9 @@ namespace Amara {
             void setVolume(float vol) {
                 volume = vol;
             }
+            void changeVolume(float c) {
+                volume += c;
+            }
 
             void fade(Amara::AudioFade fadeDir, float speed, float end) {
                 fadeDirection = fadeDir;
@@ -50,6 +53,8 @@ namespace Amara {
 
             virtual void play() {}
             virtual void pause() {}
+            virtual void resume() {}
+            virtual void stop() {}
             virtual void run(float parentVolume) {
                 switch (fadeDirection) {
                     case FADEIN:
@@ -66,6 +71,12 @@ namespace Amara {
                             fadeDirection = NOFADE;
                         }
                         break;
+                }
+                if (volume < 0) {
+                    volume = 0;
+                }
+                if (volume > 1) {
+                    volume = 1;
                 }
             }
     };

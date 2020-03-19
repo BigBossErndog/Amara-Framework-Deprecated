@@ -341,6 +341,7 @@ namespace Amara {
 
 				properties->input = input;
 				properties->controls = controls;
+				properties->audio = audio;
 				properties->taskManager = taskManager;
 
 				properties->events = events;

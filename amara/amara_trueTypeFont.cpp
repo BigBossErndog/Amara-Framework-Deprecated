@@ -64,14 +64,14 @@ namespace Amara {
                 fontAsset = (Amara::TTFAsset*)(load->get(gFontKey));
                 if (fontAsset != nullptr) {
                     fontKey = gFontKey;
+                    findDimensions();
                 }
             }
 
             void setText(string newTxt) {
                 text = newTxt;
                 const char* txt = text.c_str();
-                width = FC_GetWidth(fontAsset->font, txt);
-                height = FC_GetHeight(fontAsset->font, txt);
+                findDimensions();
             }
 
             void setColor(int r, int g, int b) {
@@ -83,6 +83,7 @@ namespace Amara {
             void setOrigin(float gx, float gy) {
                 originX = gx;
                 originY = gy;
+                findDimensions();
             }
             void setOrigin(float g) {
                 setOrigin(g, g);
@@ -91,6 +92,7 @@ namespace Amara {
             void setScale(float gx, float gy) {
                 scaleX = gx;
                 scaleY = gy;
+                findDimensions();
             }
             void setScale(float g) {
                 setScale(g, g);
@@ -99,6 +101,7 @@ namespace Amara {
             void changeScale(float gx, float gy) {
                 scaleX += gx;
                 scaleY += gy;
+                findDimensions();
             }
             void changeScale(float gi) {
                 changeScale(gi, gi);
@@ -106,13 +109,27 @@ namespace Amara {
 
             void setWordWrap() {
                 wordWrap = true;
+                findDimensions();
             }
             void setWordWrap(int w) {
-                setWordWrap();
                 wordWrapWidth = w;
+                setWordWrap();
             }  
             void removeWordWrap() {
                 wordWrap = false;
+                findDimensions();
+            }
+
+            void findDimensions() {
+                const char* txt = text.c_str();
+                if (wordWrap) {
+                    width = wordWrapWidth * scaleX;
+                    height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt) * scaleY;
+                }
+                else {
+                    width = FC_GetWidth(fontAsset->font, txt) * scaleX;
+                    height = FC_GetHeight(fontAsset->font, txt) * scaleY;
+                }
             }
 
             void draw(int vx, int vy, int vw, int vh) {
@@ -137,9 +154,6 @@ namespace Amara {
                     }
 
                     if (wordWrap) {
-                        width = wordWrapWidth * scaleX;
-                        height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt) * scaleY;
-
                         int offsetX = 0;
                         if (alignment == FC_ALIGN_CENTER) {
                             offsetX = width * 0.5;
@@ -159,8 +173,6 @@ namespace Amara {
                         );
                     }
                     else {
-                        width = FC_GetWidth(fontAsset->font, txt);
-                        height = FC_GetHeight(fontAsset->font, txt);
                         int offsetX = 0;
                         if (alignment == FC_ALIGN_CENTER) {
                             offsetX = width * 0.5;

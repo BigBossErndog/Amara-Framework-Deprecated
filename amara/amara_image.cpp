@@ -53,6 +53,7 @@ namespace Amara {
                 load = properties->loader;
                 gRenderer = properties->gRenderer;
                 input = properties->input;
+                audio = properties->audio;
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);

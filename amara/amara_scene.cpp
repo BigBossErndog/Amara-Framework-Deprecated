@@ -35,6 +35,7 @@ namespace Amara {
                 input = properties->input;
                 controls = properties->controls;
                 assets = properties->assets;
+                audio = properties->audio;
 
                 if (load != nullptr) {
                     delete load;
