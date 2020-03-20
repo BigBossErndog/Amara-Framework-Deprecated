@@ -1,0 +1,178 @@
+#ifndef AMARA_CANVAS
+#define AMARA_CANVAS
+
+#include "amara.h"
+
+namespace Amara {
+    class Canvas: public Actor {
+        public:
+            SDL_Texture* canvas = nullptr;
+
+            float width = 0;
+            float height = 0;
+            int imageWidth = 0;
+            int imageHeight = 0;
+            bool getLogicalDimensions = false;
+
+            SDL_Color recColor;
+            SDL_Rect drawnRect;
+            SDL_Rect destRect;
+            SDL_Rect viewport;
+            SDL_Point origin;
+            SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
+            SDL_BlendMode drawnBlendMode = SDL_BLENDMODE_BLEND;
+
+            float originX = 0;
+            float originY = 0;
+
+            Canvas(): Actor() {
+                getLogicalDimensions = true;
+            }
+
+            Canvas(float gx, float gy, float gw, float gh): Actor() {
+                x = gx;
+                y = gy;
+                width = gw;
+                height = gh;
+            }
+
+            void init(Amara::GameProperties* gameProperties, Amara::Scene* gScene, Amara::Entity* gParent) {
+                Amara::Actor::init(gameProperties, gScene, gParent);
+                if (getLogicalDimensions) {
+                    width = properties->resolution->width;
+                    height = properties->resolution->height;
+                }
+
+                if (canvas == nullptr) {
+                    canvas = SDL_CreateTexture(
+                        properties->gRenderer,
+                        SDL_GetWindowPixelFormat(properties->gWindow),
+                        SDL_TEXTUREACCESS_TARGET,
+                        floor(width),
+                        floor(height)
+                    );
+                    SDL_QueryTexture(canvas, NULL, NULL, &imageWidth, &imageHeight);
+                }
+            }
+
+            void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+                SDL_SetRenderTarget(properties->gRenderer, canvas);
+                SDL_GetRenderDrawColor(properties->gRenderer, &recColor.r, &recColor.g, &recColor.b, &recColor.a);
+                SDL_SetRenderDrawColor(properties->gRenderer, r, g, b, a);
+                drawnBlendMode = SDL_BLENDMODE_BLEND;
+            }
+            void beginFill(Uint8 r, Uint8 g, Uint8 b) {
+                beginFill(r, g, b, 255);
+            }
+            void beginFill() {
+                beginFill(0, 0, 0);
+            }
+
+            void endFill() {
+                SDL_SetRenderDrawColor(properties->gRenderer, recColor.r, recColor.g, recColor.b, recColor.a);
+                SDL_SetRenderTarget(properties->gRenderer, NULL);
+            }
+
+            void clear() {
+                beginFill(0, 0, 0, 0);
+
+                drawnRect.x = 0;
+                drawnRect.y = 0;
+                drawnRect.w = ceil(width);
+                drawnRect.h = ceil(height);
+                
+                SDL_SetRenderDrawBlendMode(properties->gRenderer, SDL_BLENDMODE_NONE);
+                SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_NONE);
+                SDL_RenderFillRect(properties->gRenderer, &drawnRect);
+
+                endFill();
+            }
+
+            void fillBlendMode(SDL_BlendMode mode) {
+                drawnBlendMode = mode;
+            }
+
+            void fillRect(int rx, int ry, int rw, int rh) {
+                drawnRect.x = rx;
+                drawnRect.y = ry;
+                drawnRect.w = rw;
+                drawnRect.h = rh;
+                
+                SDL_SetRenderTarget(properties->gRenderer, canvas);
+                SDL_SetRenderDrawBlendMode(properties->gRenderer, drawnBlendMode);
+                SDL_RenderFillRect(properties->gRenderer, &drawnRect);
+            }
+
+            virtual void draw(int vx, int vy, int vw, int vh) override {
+                bool skipDrawing = false;
+
+                if (alpha < 0) alpha = 0;
+                if (alpha > 1) alpha = 1;
+
+                viewport.x = vx;
+                viewport.y = vy;
+                viewport.w = vw;
+                viewport.h = vh;
+                SDL_RenderSetViewport(properties->gRenderer, &viewport);
+
+                destRect.x = floor(floor(x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * properties->zoomX);
+                destRect.y = floor(floor(y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * properties->zoomY);
+                destRect.w = ceil(ceil(imageWidth * scaleX) * properties->zoomX);
+                destRect.h = ceil(ceil(imageHeight * scaleY) * properties->zoomY);
+
+                origin.x = destRect.w * originX;
+                origin.y = destRect.h * originY;
+
+                int hx, hy, hw, hh = 0;
+                hw = destRect.w;
+                hh = destRect.h;
+
+                if (destRect.x >= 0) {
+                    hx = destRect.x + vx;
+                }
+                else {
+                    hw -= -(destRect.x);
+                    hx = vx;
+                }
+                if (destRect.y >= 0) {
+                    hy = destRect.y + vy;
+                }
+                else {
+                    hh -= -(destRect.y);
+                    hy = vy;
+                }
+                if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
+                if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
+
+                checkForHover(hx, hy, hw, hh);
+
+                if (destRect.x + destRect.w <= 0) skipDrawing = true;
+                if (destRect.y + destRect.h <= 0) skipDrawing = true;
+                if (destRect.x >= vw) skipDrawing = true;
+                if (destRect.y >= vh) skipDrawing = true;
+                if (destRect.w <= 0) skipDrawing = true;
+                if (destRect.h <= 0) skipDrawing = true;
+
+                if (!skipDrawing) {
+                    if (canvas != nullptr) {
+                        SDL_SetTextureBlendMode(canvas, blendMode);
+				        SDL_SetTextureAlphaMod(canvas, alpha * 255);
+
+                        SDL_RenderCopyEx(
+                            properties->gRenderer,
+                            canvas,
+                            NULL,
+                            &destRect,
+                            angle + properties->angle,
+                            &origin,
+                            SDL_FLIP_NONE
+                        );
+                    }
+                }
+
+                Amara::Entity::draw(vx, vy, vw, vh);
+            }
+    };
+}
+
+#endif

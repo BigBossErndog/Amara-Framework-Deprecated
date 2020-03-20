@@ -36,12 +36,19 @@ namespace Amara {
 
 			float x = 0;
 			float y = 0;
+
+			float scaleX = 1;
+			float scaleY = 1;
+
+			float scrollFactorX = 1;
+			float scrollFactorY = 1;
 			
 			float angle = 0;
 			float alpha = 1;
 
 			bool isActive = false;
 			bool isDestroyed = false;
+			bool isVisible = true;
 
 			Entity() {
 				
@@ -72,8 +79,13 @@ namespace Amara {
 			}
 
 			virtual void draw(int vx, int vy, int vw, int vh) {
-				float recScrollX = properties->scrollX;
-				float recScrollY = properties->scrollY;
+				if (!isVisible) return;
+
+				float recOffsetX = properties->offsetX + x;
+				float recOffsetY = properties->offsetY + y;
+				float recZoomX = properties->zoomX * scaleX;
+				float recZoomY = properties->zoomY * scaleY;
+				float recAngle = properties->angle + angle;
 
 				if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
@@ -81,8 +93,11 @@ namespace Amara {
 				stable_sort(entities.begin(), entities.end(), sortEntities());
 
 				for (Amara::Entity* entity : entities) {
-					properties->scrollX = recScrollX + x;
-					properties->scrollY = recScrollY + y;
+					properties->offsetX = recOffsetX;
+					properties->offsetY = recOffsetY;
+					properties->zoomX = recZoomX;
+					properties->zoomY = recZoomY;
+					properties->angle = recAngle;
 					if (entity->isDestroyed || entity->parent != this) continue;
 					entity->draw(vx, vy, vw, vh);
 				}
@@ -109,7 +124,7 @@ namespace Amara {
 
 			Amara::Entity* add(Amara::Entity* entity) {
 				entities.push_back(entity);
-				entity->init(properties, scene);
+				entity->init(properties, scene, this);
 				return entity;
 			}
 
@@ -160,6 +175,35 @@ namespace Amara {
 
 			void destroy() {
 				destroy(true);
+			}
+
+			void setVisible(bool val) {
+				isVisible = val;
+			}
+
+			void setScale(float gx, float gy) {
+                scaleX = gx;
+                scaleY = gy;
+            }
+            void setScale(float g) {
+                setScale(g, g);
+            }
+
+            void changeScale(float gx, float gy) {
+                scaleX += gx;
+                scaleY += gy;
+            }
+            void changeScale(float gi) {
+                changeScale(gi, gi);
+            }
+
+			void setScrollFactor(float gx, float gy) {
+				scrollFactorX = gx;
+				scrollFactorY = gy;
+			}
+
+			void setScrollFactor(float gi) {
+				setScrollFactor(gi, gi);
 			}
 
 			virtual void create() {}

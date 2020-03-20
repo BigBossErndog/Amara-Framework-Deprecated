@@ -74,8 +74,8 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
-                destRect.x = floor(floor(x - properties->scrollX - (originX * imageWidth)) * properties->zoomX);
-                destRect.y = floor(floor(y - properties->scrollY - (originY * imageHeight)) * properties->zoomY);
+                destRect.x = floor(floor(x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * properties->zoomX);
+                destRect.y = floor(floor(y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * properties->zoomY);
                 destRect.w = ceil(ceil(imageWidth * scaleX) * properties->zoomX);
                 destRect.h = ceil(ceil(imageHeight * scaleY) * properties->zoomY);
 
@@ -143,7 +143,7 @@ namespace Amara {
                             (SDL_Texture*)(texture->asset),
                             &srcRect,
                             &destRect,
-                            angle,
+                            angle + properties->angle,
                             &origin,
                             SDL_FLIP_NONE
                         );
@@ -180,22 +180,6 @@ namespace Amara {
             }
             void setOrigin(float g) {
                 setOrigin(g, g);
-            }
-
-            void setScale(float gx, float gy) {
-                scaleX = gx;
-                scaleY = gy;
-            }
-            void setScale(float g) {
-                setScale(g, g);
-            }
-
-            void changeScale(float gx, float gy) {
-                scaleX += gx;
-                scaleY += gy;
-            }
-            void changeScale(float gi) {
-                changeScale(gi, gi);
             }
 
             void setFrame(int fr) {

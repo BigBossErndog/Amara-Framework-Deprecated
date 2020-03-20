@@ -1,6 +1,8 @@
 #ifndef AMARA_INTRECT
 #define AMARA_INTRECT
 
+#include "amara.h"
+
 namespace Amara {
     class IntVector2 {
         public:
@@ -42,6 +44,12 @@ namespace Amara {
                 y = ny;
                 width = nw;
                 height = nh;
+            }
+
+            bool overlaps(IntRect rect) {
+                bool overlapX = Amara::valueInRange(x, rect.x, rect.x + rect.width) || Amara::valueInRange(rect.x, x, x + width);
+                bool overlapY = Amara::valueInRange(y, rect.y, rect.y + rect.height) || Amara::valueInRange(rect.y, y, y + height);
+                return overlapX && overlapY;
             }
     };
 

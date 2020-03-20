@@ -33,8 +33,13 @@ namespace Amara {
             float scrollX = 0;
             float scrollY = 0;
 
+            float offsetX = 0;
+            float offsetY = 0;
+
             float zoomX = 0;
             float zoomY = 0;
+
+            float angle = 0;
 
             Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;

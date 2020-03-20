@@ -42,7 +42,9 @@ class TurnWhenClicked: public Script {
 
 class TestScene : public Scene {
     public:
+        Layer* layer;
         Sprite* gnik;
+        Canvas* canvas;
         TrueTypeFont* txt;
         bool gnikDestroyed = false;
         int c = 0;
@@ -65,7 +67,7 @@ class TestScene : public Scene {
         }
         void create() {
             audio->add("vanquisher");
-            audio->play("vanquisher");
+            // audio->play("vanquisher");
 
 			controls->addKey("up", K_UP);
             controls->addKey("down", K_DOWN);
@@ -103,23 +105,29 @@ class TestScene : public Scene {
 
             // add(new TilemapLayer("tiles", "mikaelHouse_upper"));
             Tilemap* tilemap;
-            add(tilemap = new Tilemap("tiles", "reeds_home"));
+            this->add(tilemap = new Tilemap("tiles", "reeds_home"));
             tilemap->createAllLayers();
             tilemap->getLayer("floor")->setCameraBounds(mainCamera);
 
-            add(gnik = new Sprite(0, 0, "teenGnikolas"));
+            this->add(layer = new Container(100, 100));
+
+            layer->add(gnik = new Sprite(0, 0, "teenGnikolas"));
             gnik->setOrigin(0.5);
             gnik->id = "teenGnik";
             gnik->play("downWalk");
             gnik->depth = 0;
             gnik->setInteractable();
-            gnik->recite(new TurnWhenClicked());
+            // gnik->recite(new TurnWhenClicked());
+            layer->recite(new TurnWhenClicked());
 
-            add(txt = new TrueTypeFont(32*4, 32* 4, "pressStart", "Hello\nWorld"));
+            gnik->add(txt = new TrueTypeFont(0, 0, "pressStart", "Hello\nWorld"));
             txt->setColor(255, 255, 255);
-            txt->setOrigin(1);
+            txt->setOrigin(0);
             txt->setText("Hello World\nUr Momma once told me the world revolved around me.");
             txt->alignment = FC_ALIGN_RIGHT;
+
+            layer->setScale(2);
+
 
             // Amara::Sprite* obj;
             // for (int j = 0; j < 100; j++) {
@@ -132,9 +140,10 @@ class TestScene : public Scene {
 
 			controls->addKey("esc", K_ESCAPE);
 
-            mainCamera->startFollow(gnik);
+            mainCamera->startFollow(layer);
+            // mainCamera->setZoom(2);
             // mainCamera->centerOn(100, 100);
-            // mainCamera->setZoom(4);
+            // mainCamera->setZoom(4); 
             // mainCamera->setZoom(1);
             // mainCamera->centerOn(100*32/2, 100*32/2);;
 
@@ -151,11 +160,15 @@ class TestScene : public Scene {
             // cam->setZoom(8);
             // cam->startFollow(gnik);
 
-            scenePlugin->start("what");
+            // scenePlugin->start("what");
+            add(canvas = new Canvas(0, 0, properties->resolution->width, properties->resolution->height));
+            // canvas->setScrollFactor(0);
+            canvas->beginFill(255, 255, 255);
+            canvas->fillRect(0, 0, game->resolution->width, 100);
+            canvas->endFill();
         }
 
         void update() {
-
             // scene->stop();
 
             // if (!gnikDestroyed) {
@@ -199,9 +212,6 @@ class TestScene : public Scene {
 					game->startWindowedFullscreen();
 				}
 			}
-
-            txt->x = gnik->x;
-            txt->y = gnik->y;
         }
 };
 

@@ -180,14 +180,6 @@ namespace Amara {
                         entity->draw(dx, dy, dw, dh);
                     }
                 }
-
-                for (Amara::Entity* entity : entities) {
-                    properties->scrollX = x;
-                    properties->scrollY = y;
-                    if (entity->isDestroyed || entity->parent != this) continue;
-
-                    entity->draw(vx, vy, vw, vh);
-                }
             }
 
             assignAttributes() {
@@ -196,6 +188,9 @@ namespace Amara {
                 properties->scrollY = scrollY;
                 properties->zoomX = zoomX;
                 properties->zoomY = zoomY;
+                properties->offsetX = 0;
+                properties->offsetY = 0;
+                properties->angle = 0;
             }
 
             void startFollow(Amara::Entity* entity, float lx, float ly) {

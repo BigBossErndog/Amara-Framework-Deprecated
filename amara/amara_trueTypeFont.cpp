@@ -165,8 +165,8 @@ namespace Amara {
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX - (width * originX) + offsetX) * properties->zoomX),
-                            floor(floor(y - properties->scrollY - (height * originY)) * properties->zoomY),
+                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * properties->zoomX),
+                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * properties->zoomY),
                             wordWrapWidth,
                             effect,
                             txt
@@ -183,8 +183,8 @@ namespace Amara {
                         FC_DrawEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX - (width * originX) + offsetX) * properties->zoomX),
-                            floor(floor(y - properties->scrollY - (height * originY)) * properties->zoomY),
+                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * properties->zoomX),
+                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * properties->zoomY),
                             effect,
                             txt
                         );

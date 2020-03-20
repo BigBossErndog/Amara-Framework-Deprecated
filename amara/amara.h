@@ -50,6 +50,9 @@ using namespace std;
 
 #include "amara_trueTypeFont.cpp"
 
+#include "amara_layerContainer.cpp"
+#include "amara_canvas.cpp"
+
 #include "amara_camera.cpp"
 #include "amara_actor.cpp"
 #include "amara_script.cpp"
@@ -69,9 +72,6 @@ using namespace std;
 #include "amara_asset.cpp"
 #include "amara_animation.cpp"
 
-#include "amara_geometry.cpp"
-#include "amara_stateManager.cpp"
-
 #include "amara_events.cpp"
 #include "amara_mouse.cpp"
 #include "amara_pointer.cpp"
@@ -85,3 +85,7 @@ using namespace std;
 #include "amara_debugging.cpp"
 #include "amara_taskManager.cpp"
 #include "amara_gameProperties.cpp"
+
+#include "amara_geometry.cpp"
+#include "amara_stateManager.cpp"
+#include "amara_math.cpp"
