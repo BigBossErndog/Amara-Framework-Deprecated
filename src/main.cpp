@@ -162,13 +162,14 @@ class TestScene : public Scene {
 
             // scenePlugin->start("what");
             add(canvas = new Canvas(0, 0, properties->resolution->width, properties->resolution->height));
-            // canvas->setScrollFactor(0);
-            canvas->beginFill(255, 255, 255);
-            canvas->fillRect(0, 0, game->resolution->width, 100);
-            canvas->endFill();
+            canvas->setScrollFactor(0);
         }
 
         void update() {
+            canvas->beginFill(255, 255, 255);
+            canvas->fillRect(0, 0, game->resolution->width, 100);
+            canvas->copy(gnik);
+            canvas->endFill();
             // scene->stop();
 
             // if (!gnikDestroyed) {

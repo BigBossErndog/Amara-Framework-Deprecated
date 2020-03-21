@@ -132,6 +132,15 @@ namespace Amara {
                 }
             }
 
+            void run() {
+                if (fontAsset != nullptr) {
+                    if (properties->renderTargetsReset) {
+                        fontAsset->reloadFontCache(gRenderer);
+                    }
+                }
+                Amara::Actor::run();
+            }
+
             void draw(int vx, int vy, int vw, int vh) {
                 viewport.x = vx;
                 viewport.y = vy;
@@ -148,11 +157,6 @@ namespace Amara {
                 const char* txt = text.c_str();
 
                 if (fontAsset != nullptr) {
-                    if (fontAsset->recFullscreen != properties->isFullscreen) {
-                        fontAsset->recFullscreen = properties->isFullscreen;
-                        fontAsset->reloadFontCache(gRenderer);
-                    }
-
                     if (wordWrap) {
                         int offsetX = 0;
                         if (alignment == FC_ALIGN_CENTER) {

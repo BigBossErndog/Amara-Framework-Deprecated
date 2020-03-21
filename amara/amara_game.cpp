@@ -32,6 +32,9 @@ namespace Amara {
 			bool windowFocused = false;
 			bool isFullscreen = false;
 
+			bool renderTargetsReset = false;
+			bool renderDeviceReset = false;
+
 			Amara::Loader* load = nullptr;
 			Amara::AssetManager* assets = nullptr;
 			Amara::SceneManager* scenes = nullptr;
@@ -335,6 +338,9 @@ namespace Amara {
 
 				properties->isFullscreen = isFullscreen;
 
+				properties->renderTargetsReset = renderTargetsReset;
+				properties->renderDeviceReset = renderDeviceReset;
+
 				properties->loader = load;
 				properties->assets = assets;
 				properties->scenes = scenes;
@@ -418,6 +424,9 @@ namespace Amara {
 				input->keyboard->manage();
 				input->mouse->manage();
 
+				renderTargetsReset = false;
+				renderDeviceReset = false;
+
 				// manageControllers();
 
 				while (SDL_PollEvent(&e) != 0) {
@@ -485,6 +494,12 @@ namespace Amara {
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_ENTER)) {
 						windowFocused = true;
 						properties->windowFocused = true;
+					}
+					else if (e.type == SDL_RENDER_TARGETS_RESET) {
+						renderTargetsReset = true;
+					}
+					else if (e.type == SDL_RENDER_DEVICE_RESET) {
+						renderDeviceReset = true;
 					}
 					// else if (e.type == SDL_CONTROLLERDEVICEADDED) {
 					// 	SDL_GameController* nsdlc = SDL_GameControllerOpen(e.cdevice.which);

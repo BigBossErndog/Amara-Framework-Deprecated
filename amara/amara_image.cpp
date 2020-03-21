@@ -169,7 +169,11 @@ namespace Amara {
 
                     imageWidth = width;
                     imageHeight = height;
+
                     return true;
+                }
+                else {
+                    cout << "Texture with key: \"" << gTextureKey << "\" was not found." << endl;
                 }
                 return false;
             }

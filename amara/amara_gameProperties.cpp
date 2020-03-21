@@ -50,6 +50,9 @@ namespace Amara {
             bool windowFocused = false;
 			bool isFullscreen = false;
 
+            bool renderTargetsReset = false;
+            bool renderDeviceReset = false;
+
             int fps = 60;
             int lps = fps;
             int realFPS = fps;

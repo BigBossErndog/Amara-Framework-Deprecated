@@ -40,6 +40,9 @@ using namespace std;
 
 #include "amara_scene.cpp"
 
+#include "amara_layerContainer.cpp"
+#include "amara_canvas.cpp"
+
 #include "amara_sprite.cpp"
 #include "amara_animationManager.cpp"
 #include "amara_image.cpp"
@@ -49,9 +52,6 @@ using namespace std;
 #include "amara_tile.cpp"
 
 #include "amara_trueTypeFont.cpp"
-
-#include "amara_layerContainer.cpp"
-#include "amara_canvas.cpp"
 
 #include "amara_camera.cpp"
 #include "amara_actor.cpp"

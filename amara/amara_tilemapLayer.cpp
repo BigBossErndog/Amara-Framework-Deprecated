@@ -109,6 +109,9 @@ namespace Amara {
                         Amara::Tile tile;
                         tiles.resize(width*height, tile);
                     }
+                    else {
+                        cout << "JSON with key: \"" << tiledJsonKey << "\" was not found." << endl;
+                    }
                 }
             }
 
@@ -165,6 +168,9 @@ namespace Amara {
                     imageWidth = width;
                     imageHeight = height;
                     return true;
+                }
+                else {
+                    cout << "Texture with key: \"" << textureKey << "\" was not found." << endl;
                 }
                 return false;
             }

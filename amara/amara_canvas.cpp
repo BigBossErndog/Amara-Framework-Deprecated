@@ -14,6 +14,8 @@ namespace Amara {
             int imageHeight = 0;
             bool getLogicalDimensions = false;
 
+            Amara::Image drawImage;
+
             SDL_Color recColor;
             SDL_Rect drawnRect;
             SDL_Rect destRect;
@@ -44,15 +46,10 @@ namespace Amara {
                 }
 
                 if (canvas == nullptr) {
-                    canvas = SDL_CreateTexture(
-                        properties->gRenderer,
-                        SDL_GetWindowPixelFormat(properties->gWindow),
-                        SDL_TEXTUREACCESS_TARGET,
-                        floor(width),
-                        floor(height)
-                    );
-                    SDL_QueryTexture(canvas, NULL, NULL, &imageWidth, &imageHeight);
+                    createNewCanvasTexture();
                 }
+
+                drawImage.init(properties, scene, this);
             }
 
             void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
@@ -60,6 +57,13 @@ namespace Amara {
                 SDL_GetRenderDrawColor(properties->gRenderer, &recColor.r, &recColor.g, &recColor.b, &recColor.a);
                 SDL_SetRenderDrawColor(properties->gRenderer, r, g, b, a);
                 drawnBlendMode = SDL_BLENDMODE_BLEND;
+
+                properties->zoomX = 1;
+                properties->zoomY = 1;
+                properties->offsetX = 0;
+                properties->offsetY = 0;
+                properties->scrollX = 0;
+                properties->scrollY = 0;
             }
             void beginFill(Uint8 r, Uint8 g, Uint8 b) {
                 beginFill(r, g, b, 255);
@@ -88,6 +92,20 @@ namespace Amara {
                 endFill();
             }
 
+            void createNewCanvasTexture() {
+                if (canvas != nullptr) {
+                    delete canvas;
+                }
+                canvas = SDL_CreateTexture(
+                    properties->gRenderer,
+                    SDL_GetWindowPixelFormat(properties->gWindow),
+                    SDL_TEXTUREACCESS_TARGET,
+                    floor(width),
+                    floor(height)
+                );
+                SDL_QueryTexture(canvas, NULL, NULL, &imageWidth, &imageHeight);
+            }
+
             void fillBlendMode(SDL_BlendMode mode) {
                 drawnBlendMode = mode;
             }
@@ -101,6 +119,45 @@ namespace Amara {
                 SDL_SetRenderTarget(properties->gRenderer, canvas);
                 SDL_SetRenderDrawBlendMode(properties->gRenderer, drawnBlendMode);
                 SDL_RenderFillRect(properties->gRenderer, &drawnRect);
+            }
+
+            void copy(int gx, int gy, string textureKey, int frame) {
+                drawImage.setTexture(textureKey);
+                drawImage.x = gx;
+                drawImage.y = gy;
+                drawImage.frame = frame;
+                drawImage.draw(0, 0, imageWidth, imageHeight);
+            }
+
+            void copy(int gx, int gy, string textureKey) {
+                copy(gx, gy, textureKey, 0);
+            }
+
+            void copy(string textureKey) {
+                copy(0, 0, textureKey);
+            }
+
+            void copy(int gx, int gy, Amara::Image* img) {
+                drawImage.setTexture(img->textureKey);
+                drawImage.x = x;
+                drawImage.y = y;
+                drawImage.originX = img->originX;
+                drawImage.originY = img->originY;
+                drawImage.scaleX = img->scaleX;
+                drawImage.scaleY = img->scaleY;
+                drawImage.frame = img->frame;
+                drawImage.draw(0, 0, imageWidth, imageHeight);
+            }
+
+            void copy(Amara::Image* img) {
+                copy(0, 0, img);
+            }
+
+            void run() {
+                if (properties->renderDeviceReset) {
+                    createNewCanvasTexture();
+                }
+                Amara::Actor::run();
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
@@ -171,6 +228,8 @@ namespace Amara {
                 }
 
                 Amara::Entity::draw(vx, vy, vw, vh);
+
+                clear();
             }
     };
 }
