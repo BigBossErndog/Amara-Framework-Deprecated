@@ -168,7 +168,7 @@ class TestScene : public Scene {
         void update() {
             canvas->beginFill(255, 255, 255);
             canvas->fillRect(0, 0, game->resolution->width, 100);
-            canvas->copy(gnik);
+            // canvas->copy(gnik);
             canvas->endFill();
             // scene->stop();
 

@@ -121,7 +121,7 @@ namespace Amara {
                 SDL_RenderFillRect(properties->gRenderer, &drawnRect);
             }
 
-            void copy(int gx, int gy, string textureKey, int frame) {
+            void copy(string textureKey, int gx, int gy, int frame) {
                 drawImage.setTexture(textureKey);
                 drawImage.x = gx;
                 drawImage.y = gy;
@@ -129,28 +129,24 @@ namespace Amara {
                 drawImage.draw(0, 0, imageWidth, imageHeight);
             }
 
-            void copy(int gx, int gy, string textureKey) {
-                copy(gx, gy, textureKey, 0);
+            void copy(string textureKey,int gx, int gy) {
+                copy(textureKey, gx, gy, 0);
             }
 
             void copy(string textureKey) {
-                copy(0, 0, textureKey);
+                copy(textureKey, 0, 0);
             }
 
-            void copy(int gx, int gy, Amara::Image* img) {
+            void copy(Amara::Image* img, int gx, int gy, int gFrame, float gOriginX, float gOriginY, float gScaleX, float gScaleY) {
                 drawImage.setTexture(img->textureKey);
-                drawImage.x = x;
-                drawImage.y = y;
-                drawImage.originX = img->originX;
-                drawImage.originY = img->originY;
-                drawImage.scaleX = img->scaleX;
-                drawImage.scaleY = img->scaleY;
-                drawImage.frame = img->frame;
+                drawImage.x = gx;
+                drawImage.y = gy;
+                drawImage.frame = gFrame;
+                drawImage.originX = gOriginX;
+                drawImage.originY = gOriginY;
+                drawImage.scaleX = gScaleX;
+                drawImage.scaleY = gScaleY;
                 drawImage.draw(0, 0, imageWidth, imageHeight);
-            }
-
-            void copy(Amara::Image* img) {
-                copy(0, 0, img);
             }
 
             void run() {
