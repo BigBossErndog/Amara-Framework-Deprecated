@@ -10,24 +10,24 @@ namespace Amara {
 		public:
 			Amara::Game* game = nullptr;
 			Amara::GameProperties* properties = nullptr;
-			unordered_map<string, Amara::Scene*> sceneMap;
-			vector<Amara::Scene*> sceneList;
+			std::unordered_map<std::string, Amara::Scene*> sceneMap;
+			std::vector<Amara::Scene*> sceneList;
 
 			SceneManager(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
 				game = properties->game;
 			}
 
-			Amara::Scene* add(string key, Amara::Scene* scene) {
+			Amara::Scene* add(std::string key, Amara::Scene* scene) {
 				sceneMap[key] = scene;
 				sceneList.push_back(scene);
 				scene->setup(properties, new ScenePlugin(key, properties, scene, &sceneMap, &sceneList));
-				cout << "ADDED SCENE: " << scene->scenePlugin->key << endl;
+				std::cout << "ADDED SCENE: " << scene->scenePlugin->key << std::endl;
 				return scene;
 			}
 
-			Amara::Scene* remove(string key) {
-				unordered_map<string, Amara::Scene*>::iterator got = sceneMap.find(key);
+			Amara::Scene* remove(std::string key) {
+				std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap.find(key);
 				if (got != sceneMap.end()) {
 					sceneMap.erase(key);
 					return got->second;
@@ -65,8 +65,8 @@ namespace Amara {
 				}
 			}
 
-			Amara::Scene* start(string key) {
-				unordered_map<string, Amara::Scene*>::iterator got = sceneMap.find(key);
+			Amara::Scene* start(std::string key) {
+				std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap.find(key);
 				if (got != sceneMap.end()) {
 					Amara::Scene* scene = sceneMap[key];
 					scene->scenePlugin->start();

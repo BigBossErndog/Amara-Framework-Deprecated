@@ -6,7 +6,7 @@
 namespace Amara {
     class StateManager {
         public:
-            string currentState;
+            std::string currentState;
 
             int currentEvent = 1;
             int eventLooker = 0;
@@ -24,7 +24,7 @@ namespace Amara {
                 eventLooker = 0;
             }
 
-            bool state(string key) {
+            bool state(std::string key) {
                 if (currentState.empty()) {
                     currentState = key;
                 }
@@ -45,7 +45,7 @@ namespace Amara {
                 return false;
             }
 
-            void switchState(string key) {
+            void switchState(std::string key) {
                 currentState = key;
                 currentEvent = 1;
             }

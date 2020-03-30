@@ -10,7 +10,7 @@ namespace Amara {
             Mix_Music* music = nullptr;
             int channel = -1;
 
-            Music(string givenKey, AssetType givenType, Mix_Music* givenAsset, Amara::GameProperties* gameProperties): Amara::AudioBase(givenKey, givenType, givenAsset) {
+            Music(std::string givenKey, AssetType givenType, Mix_Music* givenAsset, Amara::GameProperties* gameProperties): Amara::AudioBase(givenKey, givenType, givenAsset) {
                 properties = gameProperties;
 				music = givenAsset;
             }
@@ -77,6 +77,9 @@ namespace Amara {
 
                 if (Mix_PlayingMusic() && properties->music == this) {
 					Mix_VolumeMusic(floor(volume * masterVolume * parentVolume * 128));
+				}
+				else {
+					isPlaying = false;
 				}
             }
     };

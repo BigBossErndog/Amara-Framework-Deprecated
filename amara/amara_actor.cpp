@@ -6,7 +6,7 @@
 namespace Amara {
     class Actor: public Amara::Entity {
         public:
-            vector<Amara::Script*> scripts;
+            std::vector<Amara::Script*> scripts;
 
             Actor(): Amara::Entity() {}
 

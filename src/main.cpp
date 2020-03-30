@@ -1,6 +1,8 @@
 #include <amara.h>
-#include "what.cpp"
+
 using namespace Amara;
+using namespace std;
+#include "what.cpp"
 
 class ScriptRotation: public Script {
     public:
@@ -62,7 +64,7 @@ class TestScene : public Scene {
             load->json("mikaelHouse_ground", "assets/mikaelHouse/mikaelHouse_ground.json");
 
             load->ttf("pressStart", "assets/press-start.regular.ttf", 8);
-            
+
             load->music("vanquisher", "assets/vanquisher.wav");
         }
         void create() {
@@ -101,7 +103,7 @@ class TestScene : public Scene {
 			// gnik2->setOrigin(0.5);
 			// gnik2->recite(new DelayedAnim(gnik));
             // gnik2->play("downStand");
-            
+
 
             // add(new TilemapLayer("tiles", "mikaelHouse_upper"));
             Tilemap* tilemap;
@@ -112,7 +114,7 @@ class TestScene : public Scene {
             this->add(layer = new Container(100, 100));
 
             layer->add(gnik = new Sprite(0, 0, "teenGnikolas"));
-            gnik->setOrigin(0.5);
+            gnik->setOrigin(0);
             gnik->id = "teenGnik";
             gnik->play("downWalk");
             gnik->depth = 0;
@@ -143,7 +145,7 @@ class TestScene : public Scene {
             mainCamera->startFollow(layer);
             // mainCamera->setZoom(2);
             // mainCamera->centerOn(100, 100);
-            // mainCamera->setZoom(4); 
+            // mainCamera->setZoom(4);
             // mainCamera->setZoom(1);
             // mainCamera->centerOn(100*32/2, 100*32/2);;
 
@@ -167,8 +169,8 @@ class TestScene : public Scene {
 
         void update() {
             canvas->beginFill(255, 255, 255);
-            canvas->fillRect(0, 0, game->resolution->width, 100);
-            // canvas->copy(gnik);
+            // canvas->fillRect(0, 0, game->resolution->width, 100);
+            canvas->copy(gnik);
             canvas->endFill();
             // scene->stop();
 

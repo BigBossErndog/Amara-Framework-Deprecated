@@ -9,8 +9,8 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::InputManager* input = nullptr;
 
-            unordered_map<string, Amara::Control*> controls;
-            vector<Amara::Control*> controlList;
+            std::unordered_map<std::string, Amara::Control*> controls;
+            std::vector<Amara::Control*> controlList;
 
             ControlScheme(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -18,9 +18,9 @@ namespace Amara {
                 controlList.clear();
             }
 
-            Amara::Control* newControl(string key) {
+            Amara::Control* newControl(std::string key) {
                 if (get(key) != nullptr) {
-                    cout << "Control \"" << key << "\" already exists." << endl;
+                    std::cout << "Control \"" << key << "\" already exists." << std::endl;
                     return get(key);
                 }
 
@@ -31,58 +31,58 @@ namespace Amara {
                 return newControl;
             }
 
-            Amara::Control* get(string key) {
-                unordered_map<string, Amara::Control*>::iterator got = controls.find(key);
+            Amara::Control* get(std::string key) {
+                std::unordered_map<std::string, Amara::Control*>::iterator got = controls.find(key);
                 if (got != controls.end()) {
                     return got->second;
                 }
                 return nullptr;
             }
 
-            Amara::Control* addKey(string id, Amara::Key* key) {
+            Amara::Control* addKey(std::string id, Amara::Key* key) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                     control->addKey(key);
                     return control;
                 }
                 
-                cout << "Key \"" << id << "\" has not been initialized." << endl;
+                std::cout << "Key \"" << id << "\" has not been initialized." << std::endl;
                 control = newControl(id);
-                cout << "Key \"" << id << "\" now exists." << endl;
+                std::cout << "Key \"" << id << "\" now exists." << std::endl;
                 return addKey(id, key);
             }
 
-            Amara::Control* addKey(string id, Amara::Keycode keyCode) {
+            Amara::Control* addKey(std::string id, Amara::Keycode keyCode) {
                 Amara::Key* key = input->keyboard->get(keyCode);
                 if (key != nullptr) {
                     return addKey(id, key);
                 }
-                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << endl;
-                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << endl;
+                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << std::endl;
+                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << std::endl;
                 key = input->keyboard->addKey(keyCode);
                 return addKey(id, key);
             }
 
-            Amara::Control* setKey(string id, Amara::Key* key) {
+            Amara::Control* setKey(std::string id, Amara::Key* key) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                     control->setKey(key);
                     return control;
                 }
                 
-                cout << "Key \"" << id << "\" has not been initialized." << endl;
+                std::cout << "Key \"" << id << "\" has not been initialized." << std::endl;
                 control = newControl(id);
-                cout << "Key \"" << id << "\" now exists." << endl;
+                std::cout << "Key \"" << id << "\" now exists." << std::endl;
                 return setKey(id, key);
             }
 
-            Amara::Control* setKey(string id, Amara::Keycode keyCode) {
+            Amara::Control* setKey(std::string id, Amara::Keycode keyCode) {
                 Amara::Key* key = input->keyboard->get(keyCode);
                 if (key != nullptr) {
                     return setKey(id, key);
                 }
-                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << endl;
-                cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << endl;
+                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << std::endl;
+                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << std::endl;
                 key = input->keyboard->addKey(keyCode);
                 return setKey(id, key);
             }
@@ -93,7 +93,7 @@ namespace Amara {
                 }
             }
 
-            bool isDown(string id) {
+            bool isDown(std::string id) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                    return control->isDown;
@@ -101,7 +101,7 @@ namespace Amara {
                 return false;
             }
 
-            bool justDown(string id) {
+            bool justDown(std::string id) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                    return control->justDown;
@@ -109,7 +109,7 @@ namespace Amara {
                 return false;
             }
 
-            bool justUp(string id) {
+            bool justUp(std::string id) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                    return control->justUp;
@@ -117,7 +117,7 @@ namespace Amara {
                 return false;
             }
 
-            bool tapped(string id) {
+            bool tapped(std::string id) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                    return control->tapped;
@@ -125,7 +125,7 @@ namespace Amara {
                 return false;
             }
 
-            bool held(string id) {
+            bool held(std::string id) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                    return control->held;
@@ -133,7 +133,7 @@ namespace Amara {
                 return false;
             }
 
-            bool activated(string id) {
+            bool activated(std::string id) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {
                    return control->activated;

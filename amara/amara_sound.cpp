@@ -9,14 +9,14 @@ namespace Amara {
             Mix_Chunk* sound = nullptr;
 			int channel = -1;
 
-            Sound(string givenKey, AssetType givenType, Mix_Chunk* givenAsset): Amara::AudioBase(givenKey, givenType, givenAsset) {
+            Sound(std::string givenKey, AssetType givenType, Mix_Chunk* givenAsset): Amara::AudioBase(givenKey, givenType, givenAsset) {
 				sound = givenAsset;
             }
 
 			virtual void play(bool loops) {
 				channel = Mix_PlayChannel(-1, sound, loops);
 				if (channel == -1) {
-					cout << "Error playing sound: \"" << key << "\"" << endl;
+					std::cout << "Error playing sound: \"" << key << "\"" << std::endl;
 					return;
 				}
 				Mix_Volume(channel, floor(volume * masterVolume * 128));

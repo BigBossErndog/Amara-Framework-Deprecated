@@ -11,7 +11,7 @@ namespace Amara {
 
 			Amara::GameProperties* properties;
 
-			string name;
+			std::string name;
 			bool quitted = false;
 			bool dragged = false;
 
@@ -63,7 +63,7 @@ namespace Amara {
 
 			SDL_Event e;
 
-			Game(string givenName) {
+			Game(std::string givenName) {
 				name = givenName;
 
 				properties = new Amara::GameProperties();
@@ -232,7 +232,7 @@ namespace Amara {
 				close();
 			}
 
-			void start(string startKey) {
+			void start(std::string startKey) {
 				// Start a specific scene
 				scenes->start(startKey);
 				start();

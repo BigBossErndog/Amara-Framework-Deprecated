@@ -10,7 +10,7 @@ namespace Amara {
 
     class Scene: public Amara::Actor {
         public:
-            string key;
+            std::string key;
             Amara::Game* game = nullptr;
             Amara::LoadManager* load = nullptr;
             Amara::ScenePlugin* scenePlugin = nullptr;
@@ -19,7 +19,7 @@ namespace Amara {
             Amara::AssetManager* assets = nullptr;
 
             Amara::Camera* mainCamera = nullptr;
-            vector<Amara::Camera*> cameras;
+            std::vector<Amara::Camera*> cameras;
 
             bool initialLoaded = false;
             bool initialCreated = false;
@@ -66,7 +66,7 @@ namespace Amara {
                 mainCamera->init(properties, this, this, &entities);
 
                 preload();
-                cout << "START LOADING TASKS: " << load->tasks.size() << " loading tasks." << endl;
+                std::cout << "START LOADING TASKS: " << load->tasks.size() << " loading tasks." << std::endl;
             }
 
             Amara::Entity* add(Amara::Entity* entity) {

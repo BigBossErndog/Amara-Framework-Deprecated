@@ -14,14 +14,14 @@ namespace Amara {
                 loader = properties->loader;
             }
 
-            Amara::Asset* get(string key) {
+            Amara::Asset* get(std::string key) {
                 return loader->get(key);
             }
 
-            Amara::Animation* addAnim(string textureKey, string animKey, vector<int> frames, int frameRate, bool loop) {
+            Amara::Animation* addAnim(std::string textureKey, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
                 Amara::Asset* asset = get(textureKey);
                 if (asset == nullptr) {
-                    cout << "Couldn't find animation \"" << textureKey << "\"" << endl;
+                    std::cout << "Couldn't find animation \"" << textureKey << "\"" << std::endl;
                     return nullptr;
                 }
                 if (asset->type == SPRITESHEET) {
@@ -29,17 +29,17 @@ namespace Amara {
                 }
             }
 
-            Amara::Animation* addAnim(string textureKey, string animKey, int frame) {
+            Amara::Animation* addAnim(std::string textureKey, std::string animKey, int frame) {
                 return addAnim(textureKey, animKey, {frame}, 1, false);
             }
 
-            void addAnim(vector<string> textureKeys, string animKey, vector<int> frames, int frameRate, bool loop) {
-                for (string tKey : textureKeys) {
+            void addAnim(std::vector<std::string> textureKeys, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
+                for (std::string tKey : textureKeys) {
                     addAnim(tKey, animKey, frames, frameRate, loop);
                 }
             }
 
-            void addAnim(vector<string> textureKeys, string animKey, int frame) {
+            void addAnim(std::vector<std::string> textureKeys, std::string animKey, int frame) {
                 addAnim(textureKeys, animKey, frame);
             }
     };

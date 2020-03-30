@@ -6,9 +6,9 @@
 namespace Amara {
     class Tilemap: public Amara::Actor {
         public:
-            string textureKey;
-            string tiledJsonKey;
-            json tiledJson;
+            std::string textureKey;
+            std::string tiledJsonKey;
+            nlohmann::json tiledJson;
 
             int width = 0;
             int height = 0;
@@ -19,21 +19,21 @@ namespace Amara {
             int tileWidth = 0;
             int tileHeight = 0;
 
-            unordered_map<string, Amara::TilemapLayer*> layers;
+            std::unordered_map<std::string, Amara::TilemapLayer*> layers;
 
             Tilemap(): Amara::Actor() {}
 
-            Tilemap(float gx, float gy, string gTextureKey) {
+            Tilemap(float gx, float gy, std::string gTextureKey) {
                 x = gx;
                 y = gy;
                 textureKey = gTextureKey;
             }
             
-            Tilemap(float gx, float gy, string gTextureKey, string gTiledJsonKey): Tilemap(gx, gy, gTextureKey) {
+            Tilemap(float gx, float gy, std::string gTextureKey, std::string gTiledJsonKey): Tilemap(gx, gy, gTextureKey) {
                 tiledJsonKey = gTiledJsonKey;
             }
 
-            Tilemap(string gTextureKey, string gTiledJsonKey): Tilemap(0, 0, gTextureKey, gTiledJsonKey) {}
+            Tilemap(std::string gTextureKey, std::string gTiledJsonKey): Tilemap(0, 0, gTextureKey, gTiledJsonKey) {}
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
@@ -61,16 +61,16 @@ namespace Amara {
                 return newLayer;
             }
 
-            Amara::TilemapLayer* createLayer(string layerKey) {
+            Amara::TilemapLayer* createLayer(std::string layerKey) {
                 if (tiledJsonKey.empty()) return nullptr;
-                cout << "Creating Layer: \"" << layerKey << "\" with tilemap \"" << tiledJsonKey << "\"" << endl;
+                std::cout << "Creating Layer: \"" << layerKey << "\" with tilemap \"" << tiledJsonKey << "\"" << std::endl;
                 Amara::TilemapLayer* newLayer;
                 ((Amara::Entity*)scene)->add(newLayer = new Amara::TilemapLayer(textureKey, tiledJsonKey, layerKey));
                 layers[layerKey] = newLayer;
                 return newLayer;
             }
 
-            Amara::TilemapLayer* getLayer(string layerKey) {
+            Amara::TilemapLayer* getLayer(std::string layerKey) {
                 if (layers.find(layerKey) != layers.end()) {
                     return layers[layerKey];
                 }

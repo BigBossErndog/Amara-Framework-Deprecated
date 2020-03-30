@@ -7,7 +7,7 @@ namespace Amara {
     class TaskManager {
         public:
             Amara::GameProperties* properties = nullptr;
-            vector<void*> deleteQueue;
+            std::vector<void*> deleteQueue;
 
             TaskManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -21,7 +21,7 @@ namespace Amara {
                 void* obj;
                 int size = deleteQueue.size();
                 if (size > 0) {
-                    cout << "TaskManager: Deleting " << size << " objects." << endl;
+                    std::cout << "TaskManager: Deleting " << size << " objects." << std::endl;
                 }
                 for (size_t i = 0; i < size; i++) {
                     obj = deleteQueue.at(i);

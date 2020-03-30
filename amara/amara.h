@@ -16,9 +16,6 @@
 #include <functional>
 #include <math.h>
 #include <nlohmann/json.hpp>
-using json = nlohmann::json;
-
-using namespace std;
 
 #ifndef AMARA_SDL
 #define AMARA_SDL

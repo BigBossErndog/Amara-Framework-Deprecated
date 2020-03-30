@@ -6,8 +6,8 @@
 namespace Amara {
     class Control {
         public:
-            string id;
-            vector<Amara::Key*> keys;
+            std::string id;
+            std::vector<Amara::Key*> keys;
 
             bool isDown = false;
             bool justDown = false;
@@ -19,7 +19,7 @@ namespace Amara {
             Amara::Key* lastDown = nullptr;
 
 
-            Control(string givenId) {
+            Control(std::string givenId) {
                 id = givenId;
                 keys.clear();
             }

@@ -9,7 +9,7 @@ namespace Amara {
             SDL_Renderer* gRenderer = nullptr;
 
             Amara::ImageTexture* texture = nullptr;
-            string textureKey;
+            std::string textureKey;
 
             SDL_Rect viewport;
             SDL_Rect srcRect;
@@ -35,11 +35,11 @@ namespace Amara {
                 textureKey.clear();
             }
 
-            Image(string givenKey): Amara::Actor() {
+            Image(std::string givenKey): Amara::Actor() {
                 textureKey = givenKey;
             }
 
-            Image(float gx, float gy, string givenKey): Image(givenKey) {
+            Image(float gx, float gy, std::string givenKey): Image(givenKey) {
                 x = gx;
                 y = gy;
             }
@@ -153,7 +153,7 @@ namespace Amara {
                 Amara::Entity::draw(vx, vy, vw, vh);
             }
 
-            bool setTexture(string gTextureKey) {
+            bool setTexture(std::string gTextureKey) {
                 texture = (Amara::ImageTexture*)(load->get(gTextureKey));
                 if (texture != nullptr) {
                    textureKey = texture->key;
@@ -173,7 +173,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    cout << "Texture with key: \"" << gTextureKey << "\" was not found." << endl;
+                    std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
                 }
                 return false;
             }

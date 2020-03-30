@@ -27,7 +27,7 @@ namespace Amara {
         public:
             Amara::EventType type;
             bool disabled = false;
-            vector<Amara::Interactable*> ignore;
+            std::vector<Amara::Interactable*> ignore;
     };
     
     class EventManager {
@@ -35,7 +35,7 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::InputManager* input = nullptr;
 
-            vector<Amara::Event*> eventList;
+            std::vector<Amara::Event*> eventList;
 
             EventManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;

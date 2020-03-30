@@ -16,13 +16,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <std::string.h>
 #include <time.h>
 #include <limits>
 
 #include <iostream>
 #include <math.h>
-#include <nlohmann/json.hpp>
+#include <nlohmann/nlohmann::json.hpp>
 
 namespace FAKE_AMARA {
 	class WorldEntity;
@@ -95,7 +95,7 @@ namespace FAKE_AMARA {
 	}
 
 	/*
-	 * Used to hold a 2d vector of ints.
+	 * Used to hold a 2d std::vector of ints.
 	 */
 	class intVector {
 		public:
@@ -118,7 +118,7 @@ namespace FAKE_AMARA {
 	};
 
 	/*
-	 * Used to hold a 2d vector of floats
+	 * Used to hold a 2d std::vector of floats
 	 */
 	class floatVector {
 		public:
@@ -5358,7 +5358,7 @@ namespace FAKE_AMARA {
 				return false;
 			}
 
-			char* string() {
+			char* std::string() {
 				return buffer;
 			}
 

@@ -8,14 +8,14 @@ namespace Amara {
 
     class Animation {
         public:
-            string texture;
-            string key;
+            std::string texture;
+            std::string key;
 
-            vector<int> frames;
+            std::vector<int> frames;
             int frameRate = 1;
             bool loop;
 
-            Animation(string tx, string id, vector<int> givenFrames, int gFrameRate, bool gLoop)  {
+            Animation(std::string tx, std::string id, std::vector<int> givenFrames, int gFrameRate, bool gLoop)  {
                 texture = tx;
                 key = id;
 
@@ -24,7 +24,7 @@ namespace Amara {
                 loop = gLoop;
             }
 
-            Animation(string tx, string id, int frame): Animation(tx, id, {frame}, 1, false) {}
+            Animation(std::string tx, std::string id, int frame): Animation(tx, id, {frame}, 1, false) {}
 
             int frameAt(int index) {
                 return frames.at(index);

@@ -4,6 +4,8 @@
 #include "amara.h"
 
 namespace Amara {
+    class AudioGroup;
+
     enum AudioFade {
         NOFADE,
         FADEIN, 
@@ -23,7 +25,11 @@ namespace Amara {
             bool isPaused = false;
             
             AudioBase(): Amara::Asset() {}
-            AudioBase(string gKey, Amara::AssetType gType, void* gAsset): Amara::Asset(gKey, gType, gAsset) {}
+            AudioBase(std::string gKey, Amara::AssetType gType, void* gAsset): Amara::Asset(gKey, gType, gAsset) {}
+
+            Amara::AudioGroup* group = nullptr;
+            
+            std::string nextInChain = "";
             
             void setVolume(float vol) {
                 volume = vol;

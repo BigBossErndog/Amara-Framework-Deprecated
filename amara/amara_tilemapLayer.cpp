@@ -8,15 +8,15 @@ namespace Amara {
         public:
             SDL_Renderer* gRenderer = nullptr;
             Amara::ImageTexture* texture = nullptr;
-            string textureKey;
+            std::string textureKey;
 
             bool givenTiledJson = false;
-            json tiledJson;
-            string tiledJsonKey;
+            nlohmann::json tiledJson;
+            std::string tiledJsonKey;
 
-            string tiledLayerKey;
+            std::string tiledLayerKey;
 
-            vector<Amara::Tile> tiles;
+            std::vector<Amara::Tile> tiles;
             
             int width = 0;
             int height = 0;
@@ -57,12 +57,12 @@ namespace Amara {
                 tiles.resize(width*height, tile);
             }
 
-            TilemapLayer(string gTextureKey, string gTiledJsonKey) {
+            TilemapLayer(std::string gTextureKey, std::string gTiledJsonKey) {
                 textureKey = gTextureKey;
                 tiledJsonKey = gTiledJsonKey;
             }
 
-            TilemapLayer(string gTextureKey, string gTiledJsonKey, string gLayerKey): TilemapLayer(gTextureKey, gTiledJsonKey) {
+            TilemapLayer(std::string gTextureKey, std::string gTiledJsonKey, std::string gLayerKey): TilemapLayer(gTextureKey, gTiledJsonKey) {
                 tiledLayerKey = gLayerKey;
             }
 
@@ -81,7 +81,7 @@ namespace Amara {
                 }
             }
 
-            void setupLayer(string gTextureKey, string gTiledJsonKey, string gLayerKey) {
+            void setupLayer(std::string gTextureKey, std::string gTiledJsonKey, std::string gLayerKey) {
                 textureKey = gTextureKey;
                 tiledJsonKey = gTiledJsonKey;
                 tiledLayerKey = gLayerKey;
@@ -91,7 +91,7 @@ namespace Amara {
                 setupTiledLayer(gLayerKey);
             }
 
-            void setTiledJson(string tiledJsonKey) {
+            void setTiledJson(std::string tiledJsonKey) {
                 if (!tiledJsonKey.empty()) {
                     tiledJson = ((Amara::JsonFile*) load->get(tiledJsonKey))->jsonObj;
                     if (tiledJson != nullptr) {
@@ -110,14 +110,14 @@ namespace Amara {
                         tiles.resize(width*height, tile);
                     }
                     else {
-                        cout << "JSON with key: \"" << tiledJsonKey << "\" was not found." << endl;
+                        std::cout << "JSON with key: \"" << tiledJsonKey << "\" was not found." << std::endl;
                     }
                 }
             }
 
-            void setupTiledLayer(string layerKey) {
+            void setupTiledLayer(std::string layerKey) {
                 if (!givenTiledJson) return; 
-                json layers = tiledJson["layers"];
+                nlohmann::json layers = tiledJson["layers"];
 
                 unsigned long tileId;
                 int firstgid = tiledJson["tilesets"][0]["firstgid"];
@@ -137,29 +137,30 @@ namespace Amara {
                         bool fvertical = (tileId & Amara::TILED_FLIPPEDVERTICALLY) != 0;
                         bool fdiagonal = (tileId & Amara::TILED_FLIPPEDANTIDIAGONALLY) != 0;
                         
+                        Amara::Tile& tile = tiles.at(t);
                         tileId = tileId & ~(Amara::TILED_FLIPPEDHORIZONTALLY | Amara::TILED_FLIPPEDVERTICALLY | Amara::TILED_FLIPPEDANTIDIAGONALLY);
-                        tiles.at(t).id = (int)(tileId - firstgid);
-                        tiles.at(t).x = (t % width);
-                        tiles.at(t).y = floor(((float)t) / (float)width);
-                        tiles.at(t).fhorizontal = fhorizontal;
-                        tiles.at(t).fvertical = fvertical;
-                        tiles.at(t).fdiagonal = fdiagonal;
+                        tile.id = (int)(tileId - firstgid);
+                        tile.x = (t % width);
+                        tile.y = floor(((float)t) / (float)width);
+                        tile.fhorizontal = fhorizontal;
+                        tile.fvertical = fvertical;
+                        tile.fdiagonal = fdiagonal;
                     }
                 }
             }
 
-            void setupTiledLayer(string tiledJsonKey, string gLayerKey) {
+            void setupTiledLayer(std::string tiledJsonKey, std::string gLayerKey) {
                 setTiledJson(tiledJsonKey);
                 setupTiledLayer(gLayerKey);
             }
 
-            void setupTiledLayer(vector<int> gTiles) {
+            void setupTiledLayer(std::vector<int> gTiles) {
                 for (size_t j = 0; j < gTiles.size(); j++) {
                     tiles.at(j).id = gTiles.at(j);
                 }
             }
 
-            bool setTexture(string textureKey) {
+            bool setTexture(std::string textureKey) {
                 Amara::Loader* load = properties->loader;
                 texture = (Amara::ImageTexture*)(load->get(textureKey));
                 if (texture != nullptr) {
@@ -170,7 +171,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    cout << "Texture with key: \"" << textureKey << "\" was not found." << endl;
+                    std::cout << "Texture with key: \"" << textureKey << "\" was not found." << std::endl;
                 }
                 return false;
             }
@@ -195,10 +196,8 @@ namespace Amara {
                 SDL_Texture* tex = (SDL_Texture*)texture->asset;
                 SDL_SetTextureBlendMode(tex, blendMode);
 				SDL_SetTextureAlphaMod(tex, alpha * 255);
-
-                Amara::Tile tile;
-                for (int t = 0; t < tiles.size(); t++) {
-                    tile = tiles.at(t);
+                
+                for (Amara::Tile& tile : tiles) {
                     frame = tile.id;
 
                     tileAngle = 0;

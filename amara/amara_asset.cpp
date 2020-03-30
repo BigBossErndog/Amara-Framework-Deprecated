@@ -19,11 +19,11 @@ namespace Amara {
         public:
             AssetType type;
             void* asset;
-            string key;
+            std::string key;
 
             Asset() {}
 
-            Asset(string givenKey, AssetType givenType, void* givenAsset) {
+            Asset(std::string givenKey, AssetType givenType, void* givenAsset) {
                 key = givenKey;
                 type = givenType;
 				asset = givenAsset;
@@ -37,7 +37,7 @@ namespace Amara {
 
             SDL_Texture* asset = nullptr;
 
-            ImageTexture(string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType, givenAsset) {
+            ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType, givenAsset) {
                 SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
                 asset = givenAsset;
             }
@@ -48,9 +48,9 @@ namespace Amara {
             int frameWidth = 0;
             int frameHeight = 0;
 
-            unordered_map<string, Amara::Animation*> anims;
+            std::unordered_map<std::string, Amara::Animation*> anims;
 
-            Spritesheet(string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, newtexture) {
+            Spritesheet(std::string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, newtexture) {
                 asset = newtexture;
                 frameWidth = newwidth;
                 frameHeight = newheight;
@@ -62,9 +62,9 @@ namespace Amara {
                 }
             }
 
-            Amara::Animation* addAnim(string animKey, vector<int> frames, int frameRate, bool loop) {
+            Amara::Animation* addAnim(std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
                 Amara::Animation* anim;
-                unordered_map<string, Amara::Animation*>::iterator got = anims.find(animKey);
+                std::unordered_map<std::string, Amara::Animation*>::iterator got = anims.find(animKey);
                 if (got != anims.end()) {
                     anim = got->second;
                     anim->frames = frames;
@@ -75,15 +75,15 @@ namespace Amara {
 
                 anim = new Amara::Animation(key, animKey, frames, frameRate, loop);
                 anims[animKey] = anim;
-                cout << "Added animation \"" << animKey << "\" to spritesheet \"" << key << "." << endl;
+                std::cout << "Added animation \"" << animKey << "\" to spritesheet \"" << key << "." << std::endl;
                 return anim;
             }
-            Amara::Animation* addAnim(string animKey, int frame) {
+            Amara::Animation* addAnim(std::string animKey, int frame) {
                 return addAnim(animKey, {frame}, 1, false);
             }
 
-            Amara::Animation* getAnim(string animKey) {
-                unordered_map<string, Amara::Animation*>::iterator got = anims.find(animKey);
+            Amara::Animation* getAnim(std::string animKey) {
+                std::unordered_map<std::string, Amara::Animation*>::iterator got = anims.find(animKey);
                 if (got != anims.end()) {
                     return got->second;
                 }
@@ -93,30 +93,30 @@ namespace Amara {
 
     class StringFile: public Amara::Asset {
         public:
-            string contents;
+            std::string contents;
 
-            StringFile(string givenKey, AssetType givenType, string gContents): Amara::Asset(givenKey, STRINGFILE, nullptr) {
+            StringFile(std::string givenKey, AssetType givenType, std::string gContents): Amara::Asset(givenKey, STRINGFILE, nullptr) {
                 contents = gContents;
             }
 
-            string getString() {
+            std::string getString() {
                 return contents;
             }
 
-            string toString() {
+            std::string toString() {
                 return getString();
             }
     };
 
 	class JsonFile: public Amara::Asset {
 		public:
-            json jsonObj;
+            nlohmann::json jsonObj;
 
-			JsonFile(string givenKey, AssetType givenType, json gJson): Amara::Asset(givenKey, JSONFILE, nullptr) {
+			JsonFile(std::string givenKey, AssetType givenType, nlohmann::json gJson): Amara::Asset(givenKey, JSONFILE, nullptr) {
                 jsonObj = gJson;
             }
 
-            json& getJSON() {
+            nlohmann::json& getJSON() {
                 return jsonObj;
             }
 	};
@@ -124,14 +124,14 @@ namespace Amara {
     class TTFAsset: public Amara::Asset {
         public:
             FC_Font* font = nullptr;
-            string path;
+            std::string path;
             int size;
             SDL_Color color;
             int style;
 
             bool recFullscreen = false;
 
-            TTFAsset(string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF, gFont) {
+            TTFAsset(std::string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF, gFont) {
                 font = gFont;
             }
 

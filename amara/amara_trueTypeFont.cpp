@@ -8,9 +8,9 @@ namespace Amara {
         public:
             SDL_Renderer* gRenderer = nullptr;
             Amara::TTFAsset* fontAsset = nullptr;
-            string fontKey;
+            std::string fontKey;
 
-            string text;
+            std::string text;
             SDL_Rect viewport;
             SDL_Color color = FC_MakeColor(0, 0, 0, 255);
             FC_AlignEnum alignment = FC_ALIGN_LEFT;
@@ -35,11 +35,11 @@ namespace Amara {
                 y = gy;
             }
 
-            TrueTypeFont(float gx, float gy, string gFontKey): TrueTypeFont(gx, gy) {
+            TrueTypeFont(float gx, float gy, std::string gFontKey): TrueTypeFont(gx, gy) {
                 fontKey = gFontKey;
             }
 
-            TrueTypeFont(float gx, float gy, string gFontKey, string gText): TrueTypeFont(gx, gy, gFontKey) {
+            TrueTypeFont(float gx, float gy, std::string gFontKey, std::string gText): TrueTypeFont(gx, gy, gFontKey) {
                 text = gText;
             }
 
@@ -60,7 +60,7 @@ namespace Amara {
 				create();
 			}
 
-            void setFont(string gFontKey) {
+            void setFont(std::string gFontKey) {
                 fontAsset = (Amara::TTFAsset*)(load->get(gFontKey));
                 if (fontAsset != nullptr) {
                     fontKey = gFontKey;
@@ -68,7 +68,7 @@ namespace Amara {
                 }
             }
 
-            void setText(string newTxt) {
+            void setText(std::string newTxt) {
                 text = newTxt;
                 const char* txt = text.c_str();
                 findDimensions();

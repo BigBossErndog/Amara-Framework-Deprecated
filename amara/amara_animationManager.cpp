@@ -23,13 +23,13 @@ namespace Amara {
                 parent = givenParent;
             }
 
-            void play(Amara::ImageTexture* texture, string animKey) {
+            void play(Amara::ImageTexture* texture, std::string animKey) {
                 if (texture == nullptr || texture->type != SPRITESHEET) {
                     return;
                 }
                 Amara::Animation* anim = ((Amara::Spritesheet*)texture)->getAnim(animKey);
                 if (anim == nullptr) {
-                    cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << endl;
+                    std::cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << std::endl;
                 }
                 if (anim != currentAnim) {
                     currentAnim = anim;

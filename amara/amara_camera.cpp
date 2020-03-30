@@ -8,7 +8,7 @@ namespace Amara {
 
     class Camera : public Amara::Entity {
         public:
-            vector<Amara::Entity*>* sceneEntities = nullptr;
+            std::vector<Amara::Entity*>* sceneEntities = nullptr;
 
             bool definedDimensions = false;
 
@@ -55,7 +55,7 @@ namespace Amara {
                 y = gy;
             }
 
-            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* gParent, vector<Amara::Entity*>* givenEntities) {
+            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* gParent, std::vector<Amara::Entity*>* givenEntities) {
                 properties = gameProperties;
                 sceneEntities = givenEntities;
                 parent = gParent;
@@ -173,7 +173,7 @@ namespace Amara {
                 dh -= oh;
 
                 if (sceneEntities != nullptr) {
-                    vector<Amara::Entity*>& rSceneEntities = *sceneEntities;
+                    std::vector<Amara::Entity*>& rSceneEntities = *sceneEntities;
                     for (Amara::Entity* entity : rSceneEntities) {
                         assignAttributes();
                         if (entity->isDestroyed) continue;

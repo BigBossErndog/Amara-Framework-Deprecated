@@ -21,18 +21,18 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::Scene* scene = nullptr;
 
-            string key;
+            std::string key;
 
-            unordered_map<string, Amara::Scene*>* sceneMap = nullptr;
-            vector<Amara::Scene*>* sceneList = nullptr;
+            std::unordered_map<std::string, Amara::Scene*>* sceneMap = nullptr;
+            std::vector<Amara::Scene*>* sceneList = nullptr;
 
-            vector<SceneTask> tasks;
+            std::vector<SceneTask> tasks;
 
             bool isActive = false;
             bool isPaused = false;
             bool isSleeping = false;
 
-            ScenePlugin(string givenKey, Amara::GameProperties* gameProperties, Amara::Scene* givenScene, unordered_map<string, Amara::Scene*>* givenSceneMap, vector<Amara::Scene*>* givenSceneList) {
+            ScenePlugin(std::string givenKey, Amara::GameProperties* gameProperties, Amara::Scene* givenScene, std::unordered_map<std::string, Amara::Scene*>* givenSceneMap, std::vector<Amara::Scene*>* givenSceneList) {
                 key = givenKey;
 
                 properties = gameProperties;
@@ -46,8 +46,8 @@ namespace Amara {
                 tasks.clear();
             }
 
-            Amara::Scene* get(string key) {
-                unordered_map<string, Amara::Scene*>::iterator got = sceneMap->find(key);
+            Amara::Scene* get(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
                     return got->second;
                 }
@@ -58,16 +58,16 @@ namespace Amara {
                 tasks.push_back(START);
             }
 
-            void start(string key) {
-                unordered_map<string, Amara::Scene*>::iterator got = sceneMap->find(key);
+            void start(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
                     stop(key);
                     got->second->scenePlugin->start();
                 }
             }
 
-            void stop(string key) {
-                unordered_map<string, Amara::Scene*>::iterator got = sceneMap->find(key);
+            void stop(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
                     got->second->scenePlugin->stop();
                 }

@@ -10,8 +10,8 @@ namespace Amara {
         public:
             Amara::GameProperties* properties = nullptr;
 
-            unordered_map<Amara::Keycode, Amara::Key*> keys;
-            vector<SDL_Keycode> tappedKeycodes;
+            std::unordered_map<Amara::Keycode, Amara::Key*> keys;
+            std::vector<SDL_Keycode> tappedKeycodes;
 
             Amara::Key* lastKeyDown = nullptr;
 			Amara::Keycode lastKeycodeDown;
@@ -28,7 +28,7 @@ namespace Amara {
             }
 
             void press(Amara::Keycode keyCode) {
-                unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
+                std::unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
                 Amara::Key* key;
                 for (it = keys.begin(); it != keys.end(); it++) {
                     key = it->second;
@@ -43,7 +43,7 @@ namespace Amara {
             }
 
             void release(Amara::Keycode keyCode) {
-                unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
+                std::unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
                 Amara::Key* key;
                 for (it = keys.begin(); it != keys.end(); it++) {
                     key = it->second;
@@ -61,7 +61,7 @@ namespace Amara {
             }
 
             void manage() {
-                unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
+                std::unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
                 Amara::Key* key;
                 for (it = keys.begin(); it != keys.end(); it++) {
                     key = it->second;

@@ -16,6 +16,8 @@ namespace Amara {
 
             Amara::Image drawImage;
 
+            bool clearEveryFrame = true;
+
             SDL_Color recColor;
             SDL_Rect drawnRect;
             SDL_Rect destRect;
@@ -121,19 +123,31 @@ namespace Amara {
                 SDL_RenderFillRect(properties->gRenderer, &drawnRect);
             }
 
-            void copy(string textureKey, int gx, int gy, int frame) {
+            void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY, float scaleX, float scaleY) {
                 drawImage.setTexture(textureKey);
                 drawImage.x = gx;
                 drawImage.y = gy;
-                drawImage.frame = frame;
+                drawImage.frame = gFrame;
+                drawImage.originX = originX;
+                drawImage.originY = originY;
+                drawImage.scaleX = scaleX;
+                drawImage.scaleY = scaleY;
                 drawImage.draw(0, 0, imageWidth, imageHeight);
             }
 
-            void copy(string textureKey,int gx, int gy) {
+            void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY) {
+                copy(textureKey, gx, gy, gFrame, originX, originY, 1, 1);
+            }
+
+            void copy(std::string textureKey, int gx, int gy, int gFrame) {
+                copy(textureKey, gx, gy, gFrame, 0, 0);
+            }
+
+            void copy(std::string textureKey, int gx, int gy) {
                 copy(textureKey, gx, gy, 0);
             }
 
-            void copy(string textureKey) {
+            void copy(std::string textureKey) {
                 copy(textureKey, 0, 0);
             }
 
@@ -147,6 +161,22 @@ namespace Amara {
                 drawImage.scaleX = gScaleX;
                 drawImage.scaleY = gScaleY;
                 drawImage.draw(0, 0, imageWidth, imageHeight);
+            }
+
+            void copy(Amara::Image* img, int gx, int gy, int gFrame, float gOriginX, float gOriginY) {
+                copy(img, gx, gy, gFrame, gOriginX, gOriginY, img->scaleX, img->scaleY);
+            }
+
+            void copy(Amara::Image* img, int gx, int gy, int gFrame) {
+                copy(img, gx, gy, gFrame, img->originX, img->originY);
+            }
+
+            void copy(Amara::Image* img, int gx, int gy) {
+                copy(img, gx, gy, img->frame);
+            }
+
+            void copy(Amara::Image* img) {
+                copy(img, img->x, img->y);
             }
 
             void run() {
@@ -225,7 +255,7 @@ namespace Amara {
 
                 Amara::Entity::draw(vx, vy, vw, vh);
 
-                clear();
+                if (clearEveryFrame) clear();
             }
     };
 }

@@ -30,9 +30,9 @@ namespace Amara {
 			Amara::AudioGroup* audio = nullptr;
 			Amara::Loader* load = nullptr;
 
-			vector<Amara::Entity*> entities;
+			std::vector<Amara::Entity*> entities;
 
-			string id;
+			std::string id;
 
 			float x = 0;
 			float y = 0;
@@ -73,7 +73,7 @@ namespace Amara {
 				init(gameProperties, givenScene, nullptr);
 			}
 
-			Amara::Entity* setId(string newId) {
+			Amara::Entity* setId(std::string newId) {
 				id = newId;
 				return this;
 			}
@@ -113,7 +113,7 @@ namespace Amara {
 				}
 			}
 
-			Amara::Entity* get(string find) {
+			Amara::Entity* get(std::string find) {
 				for (Amara::Entity* entity : entities) {
 					if (entity->id.compare(find) == 0) {
 						return entity;

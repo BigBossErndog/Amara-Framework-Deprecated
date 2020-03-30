@@ -9,19 +9,22 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::Loader* load = nullptr;
 
-            vector<Amara::AudioGroup*> groups;
-            vector<Amara::AudioBase*> sounds;
+            std::vector<Amara::AudioGroup*> groups;
+            std::vector<Amara::AudioBase*> sounds;
 
-            AudioGroup(string gKey) {
+            Amara::AudioBase* lastPlayed = nullptr;
+            Amara::AudioBase* currentlyPlaying = nullptr;
+
+            AudioGroup(std::string gKey) {
                 key = gKey;
             }
 
-            AudioGroup(Amara::GameProperties* gameProperties, string gKey): AudioGroup(gKey) {
+            AudioGroup(Amara::GameProperties* gameProperties, std::string gKey): AudioGroup(gKey) {
                 properties = gameProperties;
                 load = properties->loader;
             }
 
-            AudioGroup(string gKey, Amara::AssetType gType, void* asset): Amara::AudioBase(gKey, gType, asset) {}
+            AudioGroup(std::string gKey, Amara::AssetType gType, void* asset): Amara::AudioBase(gKey, gType, asset) {}
 
             Amara::AudioGroup* add(Amara::AudioGroup* gGroup) {
                 groups.push_back(gGroup);
@@ -31,18 +34,26 @@ namespace Amara {
 
             Amara::AudioBase* add(Amara::AudioBase* sound) {
                 sounds.push_back(sound);
+                sound->group = this;
                 return sound;
             }
 
-            Amara::AudioBase* add(string fKey) {
+            Amara::AudioBase* add(std::string fKey) {
                 Amara::AudioBase* sound = (Amara::AudioBase*)load->get(fKey);
                 if (sound != nullptr) {
+                    lastPlayed = sound;
+                    currentlyPlaying = sound;
+
+                    if (sound->group != nullptr) {
+                        sound->group->lastPlayed = sound;
+                        sound->group->currentlyPlaying = sound;
+                    }
                     return add(sound);
                 }
                 return nullptr;
             }
 
-            Amara::AudioGroup* getGroup(string fKey) {
+            Amara::AudioGroup* getGroup(std::string fKey) {
                 for (Amara::AudioGroup* group : groups) {
                     if (group->key.compare(fKey) == 0) {
                         return group;
@@ -57,7 +68,7 @@ namespace Amara {
                 return nullptr;
             }
 
-            Amara::AudioBase* getSound(string fKey) {
+            Amara::AudioBase* getSound(std::string fKey) {
                 for (Amara::AudioBase* sound : sounds) {
                     if (sound->key.compare(fKey) == 0) {
                         return sound;
@@ -74,7 +85,7 @@ namespace Amara {
                 return nullptr;
             }
 
-            Amara::AudioBase* get(string fKey) {
+            Amara::AudioBase* get(std::string fKey) {
                 Amara::AudioBase* audio;
 
                 audio = getSound(fKey);
@@ -90,9 +101,10 @@ namespace Amara {
                 return nullptr;
             }
 
-            Amara::AudioBase* play(string fKey) {
+            Amara::AudioBase* play(std::string fKey) {
                 Amara::AudioBase* audio = get(fKey);
                 if (audio != nullptr) {
+                    lastPlayed = nullptr;
                     audio->play();
                 }
 
@@ -108,6 +120,12 @@ namespace Amara {
 
                 for (Amara::AudioGroup* audio : groups) {
                     audio->run(volume * masterVolume * parentVolume);
+                }
+
+                if (currentlyPlaying != nullptr) {
+                    if (!currentlyPlaying->isPlaying) {
+                        currentlyPlaying = nullptr;
+                    }
                 }
             } 
     };

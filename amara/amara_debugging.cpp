@@ -12,12 +12,12 @@ namespace Amara {
             }
     };
 
-    void log(string msg) {
-        cout << msg << endl;
+    void log(std::string msg) {
+        std::cout << msg << std::endl;
     }
 
-    void error(string msg) {
-        cout << "Amara::Error: " << msg << endl;
+    void error(std::string msg) {
+        std::cout << "Amara::Error: " << msg << std::endl;
         Amara::Error* e = nullptr;
         e->breakGame();
     }
