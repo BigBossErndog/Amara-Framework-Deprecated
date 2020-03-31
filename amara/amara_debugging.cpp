@@ -13,7 +13,7 @@ namespace Amara {
     };
 
     void log(std::string msg) {
-        std::cout << msg << std::endl;
+        SDL_Log(msg.c_str());
     }
 
     void error(std::string msg) {

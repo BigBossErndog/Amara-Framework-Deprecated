@@ -43,6 +43,8 @@ namespace Amara {
 			Amara::ControlScheme* controls = nullptr;
 			bool controllerEnabled = true;
 
+			SDL_Color backgroundColor;
+
 			Amara::AudioGroup* audio = nullptr;
 
 			Amara::EventManager* events = nullptr;
@@ -265,11 +267,14 @@ namespace Amara {
 			}
 
 			void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-				SDL_SetRenderDrawColor(gRenderer, r, g, b, a);
+				backgroundColor.r = r;
+				backgroundColor.g = g;
+				backgroundColor.b = b;
+				backgroundColor.a = a;
 			}
 
 			void setBackgroundColor(Uint8 r, Uint8 g, Uint8 b) {
-				SDL_SetRenderDrawColor(gRenderer, r, g, b, 255);
+				setBackgroundColor(r, g, b, 255);
 			}
 
 			void resizeWindow(int neww, int newh) {
@@ -370,6 +375,7 @@ namespace Amara {
 
 			void draw() {
 				// Clear the Renderer
+				SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 				SDL_RenderClear(gRenderer);
 
 				if (frameCounter >= logicDelay) {

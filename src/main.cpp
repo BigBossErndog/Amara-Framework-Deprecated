@@ -56,6 +56,7 @@ class TestScene : public Scene {
         }
 
         void preload() {
+            game->setBackgroundColor(255, 255, 255);
             // cout << "PRELOADING" << endl;
             load->spritesheet("teenGnikolas", "assets/teenGnikolas.png", 64, 64);
             load->image("tiles", "assets/tiles.png");

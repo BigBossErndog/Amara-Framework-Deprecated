@@ -20,7 +20,7 @@ OTHER_LIB_PATHS = -I ext_lib\nlohmann\include -I ext_lib\tileson -I ext_lib/tile
 
 AMARA_PATH = -I .\amara
 
-COMPILER_FLAGS = -w -mwindows
+COMPILER_FLAGS = -w
 
 win64: $(SRC_FILES)
 	cls

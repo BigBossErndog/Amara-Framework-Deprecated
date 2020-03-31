@@ -88,9 +88,6 @@ namespace Amara {
             }
 
             Amara::Asset* get(std::string key) {
-                std::cout << "LOADING" << std::endl;
-                Amara::Asset* got = load->get("mikaelHouse_upper");
-                std::cout << "GOT IT" << std::endl;
                 return load->get(key);
             }
 

@@ -112,8 +112,6 @@ namespace Amara {
 				properties->scrollX = 0;
 				properties->scrollY = 0;
 
-                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 255);
-
                 stable_sort(cameras.begin(), cameras.end(), sortEntities());
                 stable_sort(entities.begin(), entities.end(), sortEntities());
 
