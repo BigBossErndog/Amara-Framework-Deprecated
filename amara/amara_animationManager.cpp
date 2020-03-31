@@ -31,7 +31,7 @@ namespace Amara {
                 if (anim == nullptr) {
                     std::cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << std::endl;
                 }
-                if (anim != currentAnim) {
+                if (anim != currentAnim || (anim != nullptr && isFinished)) {
                     currentAnim = anim;
 
                     currentIndex = 0;
@@ -41,10 +41,11 @@ namespace Amara {
                         currentFrame = anim->frameAt(currentIndex);
                         parent->frame = currentFrame;
                     }
+
+                    isFinished = false;
+                    isActive = true;
+                    isPaused = false;
                 }
-                isFinished = false;
-                isActive = true;
-                isPaused = false;
             }
 
             void stop() {
