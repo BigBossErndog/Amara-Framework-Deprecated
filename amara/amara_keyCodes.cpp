@@ -8,7 +8,7 @@ namespace Amara {
         K_UNKNOWN = 0,
 
         K_RETURN = '\r',
-        K_ESCAPE = '\033',
+        K_ESC = '\033',
         K_BACKSPACE = '\b',
         K_TAB = '\t',
         K_SPACE = ' ',

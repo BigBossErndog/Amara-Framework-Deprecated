@@ -123,7 +123,7 @@ namespace Amara {
 				SDL_UpdateWindowSurface(gWindow);
 
 				// Setting up the Renderer
-				gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+				gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 				if (gRenderer == NULL) {
 					printf("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
 					return false;
@@ -312,19 +312,16 @@ namespace Amara {
 			void startFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN);
 				isFullscreen = true;
-				SDL_GetWindowSize(gWindow, &window->width, &window->height);
 			}
 
 			void startWindowedFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 				isFullscreen = true;
-				SDL_GetWindowSize(gWindow, &window->width, &window->height);
 			}
 
 			void exitFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, 0);
 				isFullscreen = false;
-				SDL_GetWindowSize(gWindow, &window->width, &window->height);
 			}
 
 		protected:
@@ -363,6 +360,8 @@ namespace Amara {
 				properties->fps = fps;
 				properties->lps = lps;
 				properties->realFPS = realFPS;
+
+				properties->backgroundColor = backgroundColor;
 			}
 
 			void update() {
