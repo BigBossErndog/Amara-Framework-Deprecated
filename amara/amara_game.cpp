@@ -195,7 +195,7 @@ namespace Amara {
 
 				writeProperties();
 
-				resizeWindow(width, height);
+				setWindowSize(width, height);
 			}
 
 			// For when the player closes the game
@@ -277,7 +277,7 @@ namespace Amara {
 				setBackgroundColor(r, g, b, 255);
 			}
 
-			void resizeWindow(int neww, int newh) {
+			void setWindowSize(int neww, int newh) {
 				if (gWindow != NULL) {
 					SDL_SetWindowSize(gWindow, neww, newh);
 					window->width = neww;
@@ -304,8 +304,8 @@ namespace Amara {
 				writeProperties();
 			}
 
-			void resizeWindowAndResolution(int neww, int newh) {
-				resizeWindow(neww, newh);
+			void setWindowAndResolution(int neww, int newh) {
+				setWindowSize(neww, newh);
 				setResolution(neww, newh);
 			}
 
