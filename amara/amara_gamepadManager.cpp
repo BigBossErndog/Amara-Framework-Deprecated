@@ -99,6 +99,39 @@ namespace Amara {
                 return false;
             }
 
+            bool tapped(Amara::Buttoncode bcode) {
+                for (Amara::Gamepad* gamepad: gamepads) {
+                    if (gamepad->isConnected && gamepad->controller != nullptr) {
+                        if (gamepad->tapped(bcode)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            bool held(Amara::Buttoncode bcode) {
+                for (Amara::Gamepad* gamepad: gamepads) {
+                    if (gamepad->isConnected && gamepad->controller != nullptr) {
+                        if (gamepad->held(bcode)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            bool activated(Amara::Buttoncode bcode) {
+                for (Amara::Gamepad* gamepad: gamepads) {
+                    if (gamepad->isConnected && gamepad->controller != nullptr) {
+                        if (gamepad->activated(bcode)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
             void manage() {
                 connected.clear();
                 disconnected.clear();

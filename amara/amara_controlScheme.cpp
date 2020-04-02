@@ -24,7 +24,7 @@ namespace Amara {
                     return get(key);
                 }
 
-                Amara::Control* newControl = new Amara::Control(key);
+                Amara::Control* newControl = new Amara::Control(properties, key);
                 controls[key] = newControl;
                 controlList.push_back(newControl);
 

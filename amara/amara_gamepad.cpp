@@ -77,6 +77,30 @@ namespace Amara {
                 }
                 return false;
             }
+
+            bool tapped(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->tapped;
+                }
+                return false;
+            }
+
+            bool held(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->held;
+                }
+                return false;
+            }
+
+            bool activated(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->held;
+                }
+                return false;
+            }
             
             void connect(SDL_GameController* gController) {
                 controller = gController;
