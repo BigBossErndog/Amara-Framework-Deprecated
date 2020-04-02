@@ -87,8 +87,9 @@
 
 #include "amara_debugging.cpp"
 #include "amara_taskManager.cpp"
+#include "amara_stateManager.cpp"
+
 #include "amara_gameProperties.cpp"
 
 #include "amara_geometry.cpp"
-#include "amara_stateManager.cpp"
 #include "amara_math.cpp"

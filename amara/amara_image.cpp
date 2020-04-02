@@ -28,9 +28,6 @@ namespace Amara {
             float originX = 0;
             float originY = 0;
 
-            float scaleX = 1;
-            float scaleY = 1;
-
             Image(): Actor() {
                 textureKey.clear();
             }
@@ -45,22 +42,41 @@ namespace Amara {
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
-                Amara::Interactable::init(gameProperties);
-                
 				properties = gameProperties;
-				scene = givenScene;
-                parent = givenParent;
                 load = properties->loader;
                 gRenderer = properties->gRenderer;
-                input = properties->input;
-                audio = properties->audio;
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);
                 }
 
-				create();
+                Amara::Actor::init(gameProperties, givenScene, givenParent);
 			}
+
+            virtual void configure(nlohmann::json config) {
+                Amara::Actor::configure(config);
+                if (config.find("texture") != config.end()) {
+                    setTexture(config["texture"]);
+                }
+                if (config.find("frame") != config.end()) {
+                    frame = config["frame"];
+                }
+                if (config.find("originX") != config.end()) {
+                    originX = config["originX"];
+                }
+                if (config.find("originY") != config.end()) {
+                    originY = config["originY"];
+                }
+            }
+
+            virtual nlohmann::json toData() {
+                nlohmann::json config = Amara::Actor::toData();
+                if (texture != nullptr) config["texture"] = texture->key;
+                config["frame"] = frame;
+                config["originX"] = originX;
+                config["originY"] = originY;
+                return config;
+            }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 bool skipDrawing = false;

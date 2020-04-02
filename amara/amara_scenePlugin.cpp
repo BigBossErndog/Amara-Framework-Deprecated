@@ -102,34 +102,40 @@ namespace Amara {
                             isPaused = false;
                             isSleeping = false;
                             scene->init();
+                            scene->onStart();
                             break;
                         case STOP:
                             isActive = false;
                             isPaused = false;
                             isSleeping = false;
+                            scene->onStop();
                             break;
                         case PAUSE:
                             if (isActive && !isPaused) {
                                 isPaused = true;
                                 isSleeping = false;
+                                scene->onStart();
                             }
                             break;
                         case RESUME:
                             if (isActive && isPaused) {
                                 isPaused = false;
                                 isSleeping = false;
+                                scene->onResume();
                             }
                             break;
                         case SLEEP:
                             if (isActive && !isSleeping) {
                                 isPaused = false;
                                 isSleeping = true;
+                                scene->onSleep();
                             }
                             break;
                         case WAKE:
                             if (isActive && isSleeping) {
                                 isPaused = false;
                                 isSleeping = false;
+                                scene->onWake();
                             }
                             break;
                     }

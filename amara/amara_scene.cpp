@@ -141,6 +141,13 @@ namespace Amara {
             virtual void create() {}
             virtual void update() {}
 
+            virtual void onStart() {}
+            virtual void onStop() {}
+            virtual void onPause() {}
+            virtual void onResume() {}
+            virtual void onSleep() {}
+            virtual void onWake() {}
+
             ~Scene() {
                 delete load;
             }

@@ -4,7 +4,7 @@
 #include "amara.h"
 
 namespace Amara {
-    const int JOYSTICK_DEADZONE = 8000;
+    const int JOYSTICK_DEADZONE = 12000;
 
     class Stick: public Amara::Button {
         public:

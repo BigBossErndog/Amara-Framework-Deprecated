@@ -73,6 +73,46 @@ namespace Amara {
 				init(gameProperties, givenScene, nullptr);
 			}
 
+			virtual void configure(nlohmann::json config) {
+				if (config.find("id") != config.end()) {
+                    id = config["id"];
+                }
+				if (config.find("x") != config.end()) {
+					x = config["x"];
+				}
+				if (config.find("y") != config.end()) {
+					y = config["y"];
+				}
+				if (config.find("scaleX") != config.end()) {
+					scaleX = config["scaleX"];
+				}
+				if (config.find("scaleY") != config.end()) {
+					scaleY = config["scaleY"];
+				}
+				if (config.find("scrollFactorX") != config.end()) {
+					scrollFactorX = config["scrollFactorX"];
+				}
+				if (config.find("scrollFactorY") != config.end()) {
+					scrollFactorY = config["scrollFactorY"];
+				}
+				if (config.find("isVisible") != config.end()) {
+					isVisible = config["isVisible"];
+				}
+			}
+
+			virtual nlohmann::json toData() {
+				nlohmann::json config;
+				config["id"] = id;
+				config["x"] = x;
+				config["y"] = y;
+				config["scaleX"] = scaleX;
+				config["scaleY"] = scaleY;
+				config["scrollFactorX"] = scrollFactorX;
+				config["scrollFactorY"] = scrollFactorY;
+				config["isVisible"] = isVisible;
+				return config;
+			}
+
 			Amara::Entity* setId(std::string newId) {
 				id = newId;
 				return this;
