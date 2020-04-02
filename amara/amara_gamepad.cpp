@@ -19,6 +19,7 @@ namespace Amara {
         public:
             SDL_GameController* controller = nullptr;
             SDL_JoystickID id;
+            int index = 0;
 
             std::unordered_map<Amara::Buttoncode, Amara::Button*> buttons;
             std::vector<Amara::Buttoncode> buttonCodes;

@@ -168,8 +168,14 @@ namespace Amara {
 				SDL_RenderSetLogicalSize(gRenderer, width, height);
 
 				display = new Amara::IntRect(0, 0, dm.w, dm.h);
+				properties->display = display;
+
 				resolution = new Amara::IntRect(0, 0, width, height);
+				properties->resolution = resolution;
+
 				window = new Amara::IntRect(0, 0, width, height);
+				properties->window = window;
+
 				SDL_GetWindowPosition(gWindow, &window->x, &window->y);
 				// SDL_Log("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
 
@@ -184,6 +190,15 @@ namespace Amara {
 				input->mouse = new Amara::Mouse(properties);
 				input->gamepads = new Amara::GamepadManager(properties);
 				properties->input = input;
+				
+
+				// Check connected gamepads
+				for (int i = 0; i < SDL_NumJoysticks(); i++) {
+					if (SDL_IsGameController(i)) {
+						SDL_GameController* controller = SDL_GameControllerOpen(i);
+						input->gamepads->connectGamepad(controller);
+					}
+				}
 
 				controls = new Amara::ControlScheme(properties);
 				properties->controls = controls;
@@ -509,7 +524,8 @@ namespace Amara {
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						input->gamepads->get(controller)->press(e.cbutton.button);
+						Amara::Gamepad* gamepad = input->gamepads->get(controller);
+						if (gamepad != nullptr) gamepad->press(e.cbutton.button);
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONUP) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);

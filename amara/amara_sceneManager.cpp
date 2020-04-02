@@ -54,7 +54,7 @@ namespace Amara {
 			void draw() {
 				Amara::Scene* scene;
 				Amara::ScenePlugin* scenePlugin;
-
+				
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
 					scenePlugin = scene->scenePlugin;

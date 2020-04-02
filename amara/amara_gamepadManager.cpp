@@ -17,19 +17,32 @@ namespace Amara {
                 }
                 gamepads.clear();
 
-                for (int i = 0; i < 8; i++) {
-                    gamepads.push_back(new Amara::Gamepad());
+                for (int i = 0; i < 4; i++) {
+                    Amara::Gamepad* gamepad = new Amara::Gamepad();
+                    gamepad->index = gamepads.size();
+                    gamepads.push_back(gamepad);
                 }
             }
 
             void connectGamepad(SDL_GameController* controller) {
+                SDL_JoystickID id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller));
                 for (Amara::Gamepad* gamepad: gamepads) {
-                    if (gamepad->controller == nullptr) {
+                    if (gamepad->controller == nullptr && !gamepad->isConnected) {
                         gamepad->connect(controller);
                         connected.push_back(gamepad);
 				        SDL_Log("Game Info: Controller connected, Name: %s\n", SDL_GameControllerName(controller));
+                        return;
+                    }
+                    else if (gamepad->id == id) {
+                        return;
                     }
                 }
+                Amara::Gamepad* gamepad = new Amara::Gamepad();
+                gamepad->index = gamepads.size();
+                gamepads.push_back(gamepad);
+                gamepad->connect(controller);
+                connected.push_back(gamepad);
+                SDL_Log("Game Info: Controller connected, Name: %s\n", SDL_GameControllerName(controller));
             }
 
             void disconnectGamepad(SDL_GameController* controller) {
@@ -38,8 +51,19 @@ namespace Amara {
                         gamepad->disconnect();
                         SDL_Log("Game Info: Controller disconnected, Name: %s\n", SDL_GameControllerName(controller));
                         disconnected.push_back(gamepad);
+                        return;
                     }
                 }
+            }
+
+            int numConnected() {
+                int count = 0;
+                for (Amara::Gamepad* gamepad: gamepads) {
+                    if (gamepad->isConnected && gamepad->controller != nullptr) {
+                        count += 1;
+                    }
+                }
+                return count;
             }
 
             Amara::Gamepad* get(int index) {

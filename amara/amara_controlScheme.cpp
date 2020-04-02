@@ -101,7 +101,7 @@ namespace Amara {
             }
 
             void run() {
-               for (Amara::Control* control : controlList) {
+                for (Amara::Control* control : controlList) {
                     control->run();
                 }
             }
