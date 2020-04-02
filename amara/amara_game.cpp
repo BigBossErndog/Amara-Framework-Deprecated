@@ -529,7 +529,13 @@ namespace Amara {
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONUP) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						input->gamepads->get(controller)->release(e.cbutton.button);
+						Amara::Gamepad* gamepad = input->gamepads->get(controller);
+						if (gamepad != nullptr) gamepad->release(e.cbutton.button);
+					}
+					else if (e.type == SDL_CONTROLLERAXISMOTION) {
+						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.caxis.which);
+						Amara::Gamepad* gamepad = input->gamepads->get(controller);
+						if (gamepad != nullptr) gamepad->push(e.caxis.axis, e.caxis.value);
 					}
 				}
 				

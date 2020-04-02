@@ -20,20 +20,28 @@ class TestScene: public Scene {
             controls->addButton("left", BUTTON_DPAD_LEFT);
             controls->addButton("right", BUTTON_DPAD_RIGHT);
 
+            controls->addButton("left", BUTTON_TRIGGERLEFT);
+            controls->addButton("right", BUTTON_TRIGGERRIGHT);
+
+            controls->addButton("up", LEFTSTICK_UP);
+            controls->addButton("down", LEFTSTICK_DOWN);
+            controls->addButton("left", LEFTSTICK_LEFT);
+            controls->addButton("right", LEFTSTICK_RIGHT);
+
             controls->addButton("confirm", BUTTON_A);
         }
 
         void update() {
-            if (controls->justDown("up")) {
+            if (controls->isDown("up")) {
                 log("UP PRESSED");
             }
-            if (controls->justDown("down")) {
+            if (controls->isDown("down")) {
                 log("DOWN PRESSED");
             }
-            if (controls->justDown("left")) {
+            if (controls->isDown("left")) {
                 log("LEFT PRESSED");
             }
-            if (controls->justDown("right")) {
+            if (controls->isDown("right")) {
                 log("RIGHT PRESSED");
             }
             if (controls->justDown("confirm")) {

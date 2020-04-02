@@ -40,7 +40,7 @@ namespace Amara {
             }
 
             void addAnim(std::vector<std::string> textureKeys, std::string animKey, int frame) {
-                addAnim(textureKeys, animKey, frame);
+                addAnim(textureKeys, animKey, {frame}, 1, false);
             }
     };
 }
