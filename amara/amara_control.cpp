@@ -41,6 +41,15 @@ namespace Amara {
                 addKey(nKey);
             }
 
+            void addButton(Amara::Buttoncode bcode) {
+                buttons.push_back(bcode);
+            }
+
+            void setButton(Amara::Buttoncode bcode) {
+                buttons.clear();
+                addButton(bcode);
+            }
+
             Amara::Key* remove(Amara::Keycode keyCode) {
                 Amara::Key* key;
                 for (size_t i = 0; i < keys.size(); i++) {

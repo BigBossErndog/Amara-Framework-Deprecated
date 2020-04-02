@@ -87,6 +87,19 @@ namespace Amara {
                 return setKey(id, key);
             }
 
+            Amara::Control* addButton(std::string id, Amara::Buttoncode bcode) {
+                Amara::Control* control = get(id);
+                if (control != nullptr) {
+                    control->addButton(bcode);
+                    return control;
+                }
+                
+                std::cout << "Key \"" << id << "\" has not been initialized." << std::endl;
+                control = newControl(id);
+                std::cout << "Key \"" << id << "\" now exists." << std::endl;
+                return addButton(id, bcode);
+            }
+
             void run() {
                for (Amara::Control* control : controlList) {
                     control->run();
