@@ -80,33 +80,39 @@ namespace Amara {
 				SDL_VERSION(&compiledVersion);
            		SDL_GetVersion(&linkedVersion);
 
-				printf("Compiled against SDL version %d.%d.%d ...\n",
+				SDL_Log("Compiled against SDL version %d.%d.%d ...\n",
                 compiledVersion.major, compiledVersion.minor, compiledVersion.patch);
-            	printf("Linking against SDL version %d.%d.%d.\n",
+            	SDL_Log("Linking against SDL version %d.%d.%d.\n",
                 linkedVersion.major, linkedVersion.minor, linkedVersion.patch);
 
 				// Creating the video context
 				if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-					printf("Game Error: Failed to initialize Video.");
+					SDL_Log("Game Error: Failed to initialize Video.");
 					return false;
 				}
 
 				// Creating the audio context
 				if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-					printf("Game Error: Failed to initialize Audio.");
+					SDL_Log("Game Error: Failed to initialize Audio.");
+					return false;
+				}
+
+				// Setting up joy sticks
+				if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
+					SDL_Log("Game Error: Failed to initialize Joystick.");
 					return false;
 				}
 
 				// Setting up controllers
 				if (controllerEnabled && SDL_Init(SDL_INIT_GAMECONTROLLER) < 0) {
-					printf("Game Error: Failed to initialize Game Controller.");
+					SDL_Log("Game Error: Failed to initialize Game Controller.");
 					return false;
 				}
 
 				// Creating the window
 				gWindow = SDL_CreateWindow(this->name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
 				if (gWindow == NULL) {
-					printf("Window could not be created. Game Error: %s\n", SDL_GetError());
+					SDL_Log("Window could not be created. Game Error: %s\n", SDL_GetError());
 					return false;
 				}
 				properties->gWindow = gWindow;
@@ -125,7 +131,7 @@ namespace Amara {
 				// Setting up the Renderer
 				gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 				if (gRenderer == NULL) {
-					printf("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
+					SDL_Log("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
 					return false;
 				}
 				properties->gRenderer = gRenderer;
@@ -136,25 +142,25 @@ namespace Amara {
 				// Initialize PNG loading
 				int imgFlags = IMG_INIT_PNG;
 				if (!(IMG_Init(imgFlags) & imgFlags)) {
-					printf("Game Error: Could not load assets. SDL_image Error: %s\n", IMG_GetError());
+					SDL_Log("Game Error: Could not load assets. SDL_image Error: %s\n", IMG_GetError());
 					return false;
 				}
 
 				 //Initialize SDL_ttf
 				 if(TTF_Init() == -1) {
-					 printf( "Game Error: SDL_ttf could not initialize. SDL_ttf Error: %s\n", TTF_GetError());
+					 SDL_Log( "Game Error: SDL_ttf could not initialize. SDL_ttf Error: %s\n", TTF_GetError());
 					 return false;
 				}
 
 				//Initialize SDL_mixer
 				if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0 ) {
-					printf("Game Error: SDL_mixer could not initialize. SDL_mixer Error: %s\n", Mix_GetError());
+					SDL_Log("Game Error: SDL_mixer could not initialize. SDL_mixer Error: %s\n", Mix_GetError());
 					return false;
 				}
 
 				SDL_DisplayMode dm;
 				if (SDL_GetCurrentDisplayMode(0, &dm) != 0) {
-					printf("Game Error: Unable to detect display. Error: %s\n", SDL_GetError());
+					SDL_Log("Game Error: Unable to detect display. Error: %s\n", SDL_GetError());
 					return false;
 				}
 
@@ -165,7 +171,7 @@ namespace Amara {
 				resolution = new Amara::IntRect(0, 0, width, height);
 				window = new Amara::IntRect(0, 0, width, height);
 				SDL_GetWindowPosition(gWindow, &window->x, &window->y);
-				// printf("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
+				// SDL_Log("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
 
 				load = new Amara::Loader(properties);
 				properties->loader = load;
@@ -176,6 +182,7 @@ namespace Amara {
 				input = new Amara::InputManager();
 				input->keyboard = new Amara::Keyboard(properties);
 				input->mouse = new Amara::Mouse(properties);
+				input->gamepads = new Amara::GamepadManager(properties);
 				properties->input = input;
 
 				controls = new Amara::ControlScheme(properties);
@@ -334,25 +341,10 @@ namespace Amara {
 				properties->width = width;
 				properties->height = height;
 
-				properties->display = display;
-				properties->resolution = resolution;
-				properties->window = window;
-
 				properties->isFullscreen = isFullscreen;
 
 				properties->renderTargetsReset = renderTargetsReset;
 				properties->renderDeviceReset = renderDeviceReset;
-
-				properties->loader = load;
-				properties->assets = assets;
-				properties->scenes = scenes;
-
-				properties->input = input;
-				properties->controls = controls;
-				properties->audio = audio;
-				properties->taskManager = taskManager;
-
-				properties->events = events;
 
 				properties->lagging = lagging;
 				properties->dragged = dragged;
@@ -428,6 +420,7 @@ namespace Amara {
 				// Handle events on queue
 				input->keyboard->manage();
 				input->mouse->manage();
+				input->gamepads->manage();
 
 				renderTargetsReset = false;
 				renderDeviceReset = false;
@@ -506,21 +499,22 @@ namespace Amara {
 					else if (e.type == SDL_RENDER_DEVICE_RESET) {
 						renderDeviceReset = true;
 					}
-					// else if (e.type == SDL_CONTROLLERDEVICEADDED) {
-					// 	SDL_GameController* nsdlc = SDL_GameControllerOpen(e.cdevice.which);
-
-					// 	Amara::Controller* newcontroller = new Amara::Controller(nsdlc);
-					// 	printf("Game Info: Controller connected, Name: %s\n", SDL_GameControllerName(nsdlc));
-					// 	controllers->push(newcontroller);
-					// }
-					// else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
-					// 	SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-					// 	getController(controller)->press(e.cbutton.button);
-					// }
-					// else if (e.type == SDL_CONTROLLERBUTTONUP) {
-					// 	SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-					// 	getController(controller)->release(e.cbutton.button);
-					// }
+					else if (e.type == SDL_CONTROLLERDEVICEADDED) {
+						SDL_GameController* controller = SDL_GameControllerOpen(e.cdevice.which);
+						input->gamepads->connectGamepad(controller);					
+					}
+					else if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
+						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
+						input->gamepads->disconnectGamepad(controller);
+					}
+					else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
+						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
+						input->gamepads->get(controller)->press(e.cbutton.button);
+					}
+					else if (e.type == SDL_CONTROLLERBUTTONUP) {
+						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
+						input->gamepads->get(controller)->release(e.cbutton.button);
+					}
 				}
 				
 				controls->run();

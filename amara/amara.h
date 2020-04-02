@@ -73,6 +73,11 @@
 #include "amara_mouse.cpp"
 #include "amara_pointer.cpp"
 
+#include "amara_gamepadManager.cpp"
+#include "amara_gamepad.cpp"
+#include "amara_stick.cpp"
+#include "amara_button.cpp"
+
 #include "amara_keyboard.cpp"
 #include "amara_key.cpp"
 #include "amara_keyCodes.cpp"

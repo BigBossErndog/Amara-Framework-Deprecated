@@ -60,6 +60,16 @@ namespace Amara {
                 return nullptr;
             }
 
+            clearKeys() {
+                std::unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
+                Amara::Key* key;
+                for (it = keys.begin(); it != keys.end(); it++) {
+                    key = it->second;
+                    delete key;
+                }
+                keys.clear();
+            }
+
             void manage() {
                 std::unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
                 Amara::Key* key;
@@ -68,6 +78,10 @@ namespace Amara {
                     key->manage();
                 }
                 tappedKeycodes.clear();
+            }
+
+            ~Keyboard() {
+                clearKeys();
             }
     };
 }

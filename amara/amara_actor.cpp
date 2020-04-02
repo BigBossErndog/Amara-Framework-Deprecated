@@ -40,6 +40,15 @@ namespace Amara {
             Amara::Entity* add(Amara::Entity* entity) {
                 return Amara::Entity::add(entity);
             }
+
+            ~Actor() {
+                for (Amara::Script* script: scripts) {
+                    if (script->deleteOnFinish) {
+                        delete script;
+                    }
+                }
+                scripts.clear();
+            }
     };
 }
 

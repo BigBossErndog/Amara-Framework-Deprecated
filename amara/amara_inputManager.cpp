@@ -6,11 +6,13 @@
 namespace Amara {
     class Keyboard;
     class Mouse;
+    class GamepadManager;
     
     class InputManager {
         public:
             Amara::Keyboard* keyboard = nullptr;
             Amara::Mouse* mouse = nullptr;
+            Amara::GamepadManager* gamepads = nullptr;
 
             InputManager() {}
     };
