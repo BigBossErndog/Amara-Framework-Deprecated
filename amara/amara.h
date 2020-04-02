@@ -77,6 +77,7 @@
 #include "amara_gamepad.cpp"
 #include "amara_stick.cpp"
 #include "amara_button.cpp"
+#include "amara_buttonCodes.cpp"
 
 #include "amara_keyboard.cpp"
 #include "amara_key.cpp"

@@ -20,14 +20,62 @@ namespace Amara {
             SDL_GameController* controller = nullptr;
             SDL_JoystickID id;
 
-            std::unordered_map<Uint8, Amara::Button*> buttons;
+            std::unordered_map<Amara::Buttoncode, Amara::Button*> buttons;
+            std::vector<Amara::Buttoncode> buttonCodes;
             
             bool isConnected = false;
             bool justConnected = false;
             bool justDisconnected = false;
             
             Gamepad() {
-                
+                buttons.clear();
+                addButton(BUTTON_A);
+                addButton(BUTTON_B);
+                addButton(BUTTON_X);
+                addButton(BUTTON_Y);
+                addButton(BUTTON_DPAD_LEFT);
+                addButton(BUTTON_DPAD_RIGHT);
+                addButton(BUTTON_DPAD_UP);
+                addButton(BUTTON_DPAD_DOWN);
+            }
+
+            Amara::Button* addButton(Amara::Buttoncode bcode) {
+                if (getButton(bcode) == nullptr) {
+                    buttons[bcode] = new Amara::Button(bcode);
+                    buttonCodes.push_back(bcode);
+                }
+                return buttons[bcode];
+            }
+
+            Amara::Button* getButton(Amara::Buttoncode bcode) {
+                if (buttons.find(bcode) != buttons.end()) {
+                    return buttons[bcode];
+                }
+                return nullptr;
+            }
+
+            bool isDown(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->isDown;
+                }
+                return false;
+            }
+
+            bool justDown(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->justDown;
+                }
+                return false;
+            }
+
+            bool justUp(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->justUp;
+                }
+                return false;
             }
             
             void connect(SDL_GameController* gController) {
@@ -46,14 +94,26 @@ namespace Amara {
             void manage() {
                 justConnected = false;
                 justDisconnected = false;
+                std::unordered_map<Uint8, Amara::Button*>::iterator it;
+                Amara::Button* btn;
+                for (it = buttons.begin(); it != buttons.end(); it++) {
+                    btn = it->second;
+                    btn->manage();
+                }
             }
 
-            void press(Uint8 btn) {
-
+            void press(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->press();
+                }
             }
 
-            void release(Uint8 btn) {
-                
+            void release(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->release();
+                }
             }
 
             ~Gamepad() {
@@ -64,6 +124,7 @@ namespace Amara {
                     delete btn;
                 }
                 buttons.clear();
+                buttonCodes.clear();
             }
     };
 }

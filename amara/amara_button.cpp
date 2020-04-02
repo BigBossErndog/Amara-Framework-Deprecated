@@ -6,7 +6,11 @@
 namespace Amara {
     class Button: public Amara::Key {
         public:
-            
+            Amara::Buttoncode buttonCode;
+
+            Button(Amara::Buttoncode bcode) {
+                buttonCode = bcode;
+            }
     };
 }
 
