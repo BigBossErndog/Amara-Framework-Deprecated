@@ -18,6 +18,9 @@ namespace Amara {
             bool rightClicked = false;
             bool middleClicked = false;
 
+            bool justReleased = false;
+            bool leftReleased = false;
+
             bool isHovered = false;
             bool justHovered = false;
 
@@ -66,12 +69,15 @@ namespace Amara {
             }
 
             virtual void run() {
-                justClicked = false;
-                leftClicked = false;
-                rightClicked = false;
-                middleClicked = false;
-
                 if (isInteractable) {
+                    justClicked = false;
+                    leftClicked = false;
+                    rightClicked = false;
+                    middleClicked = false;
+
+                    justReleased = false;
+                    leftReleased = false;
+
                     for (Amara::Event* event : events->eventList) {
                         if (event->disabled) continue;
                         switch (event->type) {
@@ -79,7 +85,12 @@ namespace Amara {
                                 if (isHovered) {
                                     onClick();
                                     onPointerDown();
-                                    event->disabled = true;
+                                    if (event->taken) {
+                                        event->taken->justClicked = false;
+                                        event->taken->leftClicked = false;
+                                    }
+                                    event->taken = this;
+
                                     justClicked = true;
                                     leftClicked = true;
                                 }
@@ -87,21 +98,40 @@ namespace Amara {
                             case OBJECTRIGHTCLICK:
                                 if (isHovered) {
                                     onRightClick();
-                                    event->disabled = true;
+                                    if (event->taken) {
+                                        event->taken->justClicked = false;
+                                        event->taken->rightClicked = false;
+                                    }
+                                    event->taken = this;
+
+                                    justClicked = true;
                                     rightClicked = true;
                                 }
                                 break;
                             case OBJECTMIDDLERELEASE:
                                 if (isHovered) {
                                     onMiddleClick();
-                                    event->disabled = true;
+                                    if (event->taken) {
+                                        event->taken->justClicked = false;
+                                        event->taken->middleClicked = false;
+                                    }
+                                    event->taken = this;
+
+                                    justClicked = true;
                                     middleClicked = true;
                                 }
                                 break;
                             case OBJECTLEFTRELEASE:
                                 if (isHovered) {
                                     onRelease();
-                                    event->disabled = true;
+                                    if (event->taken) {
+                                        event->taken->justReleased = false;
+                                        event->taken->leftReleased = false;
+                                    }
+                                    event->taken = this;
+
+                                    justReleased = true;
+                                    leftReleased = true;
                                 }
                                 break;
                         }

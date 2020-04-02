@@ -50,8 +50,9 @@ namespace Amara {
 			bool isDestroyed = false;
 			bool isVisible = true;
 
-			Entity() {
-				
+			Entity() {}
+			Entity(nlohmann::json config) {
+				configure(config);
 			}
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {

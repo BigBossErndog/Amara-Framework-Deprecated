@@ -27,6 +27,7 @@ namespace Amara {
         public:
             Amara::EventType type;
             bool disabled = false;
+            Amara::Interactable* taken;
             std::vector<Amara::Interactable*> ignore;
     };
     
