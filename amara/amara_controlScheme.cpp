@@ -18,6 +18,18 @@ namespace Amara {
                 controlList.clear();
             }
 
+            virtual void configure(nlohmann::json config) {
+
+            }
+
+            virtual nlohmann::json toData() {
+                nlohmann::json config;
+                for (Amara::Control* control: controlList) {
+                    config[control->id] = control->toData();
+                }
+                return config;
+            }
+
             Amara::Control* newControl(std::string key) {
                 if (get(key) != nullptr) {
                     std::cout << "Control \"" << key << "\" already exists." << std::endl;
@@ -99,6 +111,10 @@ namespace Amara {
                 std::cout << "Key \"" << id << "\" now exists." << std::endl;
                 return addButton(id, bcode);
             }
+
+            Amara::Control* addButton(std::string id, Amara::Button* button) {
+                return addKey(id, button);
+            } 
 
             void run() {
                 for (Amara::Control* control : controlList) {

@@ -18,12 +18,17 @@ namespace Amara {
 				game = properties->game;
 			}
 
-			Amara::Scene* add(std::string key, Amara::Scene* scene) {
+			Amara::Scene* add(std::string key, Amara::Scene* scene, bool willStart) {
 				sceneMap[key] = scene;
 				sceneList.push_back(scene);
 				scene->setup(properties, new ScenePlugin(key, properties, scene, &sceneMap, &sceneList));
 				std::cout << "ADDED SCENE: " << scene->scenePlugin->key << std::endl;
+				if (willStart) scene->scenePlugin->start();
 				return scene;
+			}
+
+			Amara::Scene* add(std::string key, Amara::Scene* scene) {
+				return add(key, scene, false);
 			}
 
 			Amara::Scene* remove(std::string key) {

@@ -32,6 +32,21 @@ namespace Amara {
                 keys.clear();
             }
 
+            virtual nlohmann::json toData() {
+                nlohmann::json config;
+                config["keys"] = nlohmann::json::array();
+                for (Amara::Key* key: keys) {
+                    config["keys"].push_back(key->keyCode);
+                }
+
+                config["buttons"] = nlohmann::json::array();
+                for (Amara::Buttoncode button: buttons) {
+                    config["buttons"].push_back(button);
+                }
+
+                return config;
+            }
+
             void addKey(Amara::Key* nKey) {
                 keys.push_back(nKey);
             }
