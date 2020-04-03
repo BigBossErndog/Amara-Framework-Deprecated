@@ -176,6 +176,11 @@ namespace Amara {
                 return false;
             }
 
+            Amara::Tile getTileAt(int gx, int gy) {
+                int index = (gy * width) + gx;
+                return tiles[index];
+            }
+
             void run() {
                 Amara::Actor::run();
             }
@@ -193,9 +198,11 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
-                SDL_Texture* tex = (SDL_Texture*)texture->asset;
-                SDL_SetTextureBlendMode(tex, blendMode);
-				SDL_SetTextureAlphaMod(tex, alpha * 255);
+                if (texture != nullptr) {
+                    SDL_Texture* tex = (SDL_Texture*)texture->asset;
+                    SDL_SetTextureBlendMode(tex, blendMode);
+                    SDL_SetTextureAlphaMod(tex, alpha * 255);
+                }
                 
                 for (Amara::Tile& tile : tiles) {
                     frame = tile.id;

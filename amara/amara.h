@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <vector>
 #include <deque>
+#include <list>
 #include <algorithm>
 #include <functional>
 #include <math.h>
@@ -24,6 +25,29 @@
     #include <SDL_ttf.h>
     #include <SDL_mixer.h>
     #include <SDL_FontCache.c>
+#endif
+
+#ifndef AMARA_DIRECTIONS
+#define AMARA_DIRECTIONS
+
+namespace Amara {
+    enum Direction {
+        NoDir,
+        Up,
+        UpLeft,
+        UpRight,
+        Down,
+        DownLeft,
+        DownRight,
+        Left,
+        Right
+    };
+
+    std::vector<Direction> DirectionsInOrder = { Down, DownLeft, Left, UpLeft, Up, UpRight, Right, DownRight };
+    std::vector<Direction> FourDirections = { Down, Left, Up, Right };
+    std::vector<Direction> DiagonalDirections = { DownLeft, UpLeft, UpRight, DownRight };
+}
+
 #endif
 
 #include "amara_game.cpp"
@@ -43,6 +67,8 @@
 #include "amara_sprite.cpp"
 #include "amara_animationManager.cpp"
 #include "amara_image.cpp"
+
+#include "amara_pathFinding.cpp"
 
 #include "amara_tilemap.cpp"
 #include "amara_tilemapLayer.cpp"

@@ -20,6 +20,7 @@ namespace Amara {
             int tileHeight = 0;
 
             std::unordered_map<std::string, Amara::TilemapLayer*> layers;
+            std::vector<Amara::TilemapLayer*> walls;
 
             Tilemap(): Amara::Actor() {}
 
@@ -41,8 +42,8 @@ namespace Amara {
                     tiledJson = ((Amara::JsonFile*)load->get(tiledJsonKey))->jsonObj;
 
                     if (tiledJson != nullptr) {
-                        width = tiledJson["width"];
-                        height = tiledJson["height"];
+                        if (tiledJson["width"] > width) width = tiledJson["width"];
+                        if (tiledJson["height"] > height) height = tiledJson["height"];
                         tileWidth = tiledJson["tilewidth"];
                         tileHeight = tiledJson["tileheight"];
                     }
@@ -58,6 +59,8 @@ namespace Amara {
                 Amara::TilemapLayer* newLayer;
                 ((Amara::Entity*)scene)->add(newLayer = new Amara::TilemapLayer(mapWidth, mapHeight, tileWidth, tileHeight));
                 newLayer->setTexture(textureKey);
+                if (newLayer->width > width) width = newLayer->width;
+                if (newLayer->height > height) height = newLayer->height;
                 return newLayer;
             }
 
@@ -67,6 +70,8 @@ namespace Amara {
                 Amara::TilemapLayer* newLayer;
                 ((Amara::Entity*)scene)->add(newLayer = new Amara::TilemapLayer(textureKey, tiledJsonKey, layerKey));
                 layers[layerKey] = newLayer;
+                if (newLayer->width > width) width = newLayer->width;
+                if (newLayer->height > height) height = newLayer->height;
                 return newLayer;
             }
 
@@ -75,6 +80,18 @@ namespace Amara {
                     return layers[layerKey];
                 }
                 return nullptr;
+            }
+
+            std::vector<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
+                walls.clear();
+                Amara::TilemapLayer* layer;
+                for (std::string layerKey: wallKeys) {
+                    layer = getLayer(layerKey);
+                    if (layer) {
+                        walls.push_back(layer);
+                    }
+                }
+                return walls;
             }
 
             void createAllLayers() {

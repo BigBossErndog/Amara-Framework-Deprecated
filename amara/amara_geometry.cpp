@@ -69,6 +69,67 @@ namespace Amara {
                 height = nh;
             }
     };
+
+    int getOffsetX(Amara::Direction dir) {
+        switch (dir) {
+            case Up:
+                return 0;
+                break;
+            case UpLeft:
+                return -1;
+                break;
+            case UpRight:
+                return 1;
+                break;
+            case Down:
+                return 0;
+                break;
+            case DownLeft:
+                return -1;
+                break;
+            case DownRight:
+                return 1;
+                break;
+            case Left:
+                return -1;
+                break;
+            case Right:
+                return 1;
+                break;
+        }
+
+        return 0;
+    }
+
+    int getOffsetY(Amara::Direction dir) {
+        switch (dir) {
+            case Up:
+                return -1;
+                break;
+            case UpLeft:
+                return -1;
+                break;
+            case UpRight:
+                return -1;
+                break;
+            case Down:
+                return 1;
+                break;
+            case DownLeft:
+                return 1;
+                break;
+            case DownRight:
+                return 1;
+                break;
+            case Left:
+                return 0;
+                break;
+            case Right:
+                return 0;
+                break;
+        }
+        return 0;
+    }
 }
 
 #endif
