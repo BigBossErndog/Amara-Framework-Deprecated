@@ -16,7 +16,7 @@ namespace Amara {
 
     class PathTile {
         public:
-            int id = 0;
+            int id = -1;
             int parentId = -1;
             int x = 0;
             int y = 0;
@@ -40,6 +40,7 @@ namespace Amara {
 
             std::deque<Amara::PathTile> path;
             std::vector<Amara::PathTile> allTiles;
+            Amara::PathTile emptyTile;
 
             SDL_Thread* thread = nullptr;
             bool findingPath = false;
@@ -201,8 +202,7 @@ namespace Amara {
                     path.pop_front();
                     return tile;
                 }
-                Amara::PathTile tile;
-                return tile;
+                return emptyTile;
             }
 
             Amara::PathFindingTask* start() {
@@ -321,80 +321,6 @@ namespace Amara {
         task->foundPath = foundPath;
         return 0;
     }
-
-    // {
-    //     Amara::TileMap* map = (Amara::TileMap*) data;
-
-	// 	Amara::LinkedList* openList = new Amara::LinkedList();
-	// 	Amara::LinkedList* closedList = new Amara::LinkedList();
-
-	// 	openList->push(map->startTile);
-	// 	map->startTile->calculateCosts();
-
-	// 	bool findingPath = true;
-
-	// 	Amara::Tile* current = NULL;
-	// 	Amara::Tile* neighbor = NULL;
-
-	// 	bool pathFound = false;
-
-	// 	while (findingPath) {
-	// 		if (openList->length() == 0) {
-	// 			findingPath = false;
-	// 			break;
-	// 		}
-
-	// 		current = getSmallestFCost(openList);
-	// 		openList->remove(current);
-	// 		closedList->push(current);
-
-	// 		if (current == NULL) {
-	// 			map->path = NULL;
-	// 			findingPath = false;
-	// 		}
-	// 		else if (current == map->targetTile) {
-	// 			findingPath = false;
-	// 			pathFound = true;
-	// 		}
-	// 		else {
-	// 			checkNeighbor(openList, closedList, current, current->north, 10);
-	// 			checkNeighbor(openList, closedList, current, current->east, 10);
-	// 			checkNeighbor(openList, closedList, current, current->south, 10);
-	// 			checkNeighbor(openList, closedList, current, current->west, 10);
-	// 			if (map->walkDiagonally) {
-	// 				if (current->pos->y > 0 && current->pos->x < map->size->x-1) {
-	// 					checkNeighbor(openList, closedList, current, current->northeast, 14);
-	// 				}
-	// 				if (current->pos->y < map->size->y-1 && current->pos->x < map->size->x-1) {
-	// 					checkNeighbor(openList, closedList, current, current->southeast, 14);
-	// 				}
-	// 				if (current->pos->y > 0 && current->pos->x > 0) {
-	// 					checkNeighbor(openList, closedList, current, current->northwest, 14);
-	// 				}
-	// 				if (current->pos->y < map->size->y-1 && current->pos->x > 0) {
-	// 					checkNeighbor(openList, closedList, current, current->southwest, 14);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	if (pathFound) {
-	// 		current = map->targetTile;
-	// 		while (current != map->startTile) {
-	// 			neighbor = current->lastTile;
-	// 			neighbor->nextTile = current;
-	// 			current = neighbor;
-	// 		}
-	// 		map->path = map->startTile->nextTile;
-	// 		map->makingPath = false;
-	// 	}
-
-	// 	openList->destroy();
-	// 	closedList->destroy();
-	// 	delete openList;
-	// 	delete closedList;
-	// 	return 0;
-    // }
 }
 
 #endif

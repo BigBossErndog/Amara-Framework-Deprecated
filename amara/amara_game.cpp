@@ -252,10 +252,27 @@ namespace Amara {
 
 					// Manage frame catch up and slow down
 					manageFPSEnd();
+
+					deleteObjects();
+					taskManager->run();
 				}
 				close();
 			}
 
+			void deleteObjects() {
+				std::vector<Amara::Entity*>& deleteQueue = taskManager->getDeleteQueue();
+				Amara::Entity* obj;
+                int size = deleteQueue.size();
+                if (size > 0) {
+                    std::cout << "TaskManager: Deleting " << size << " objects." << std::endl;
+                }
+                for (size_t i = 0; i < size; i++) {
+                    obj = deleteQueue.at(i);
+                    delete obj;
+                }
+                deleteQueue.clear();
+			}
+ 
 			void start(std::string startKey) {
 				// Start a specific scene
 				scenes->start(startKey);
@@ -394,8 +411,6 @@ namespace Amara {
 
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
-
-				taskManager->run();
 			}
 
 			void manageFPSStart() {

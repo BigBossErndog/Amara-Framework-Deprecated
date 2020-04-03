@@ -66,7 +66,7 @@ namespace Amara {
 				}
 				else {
 					// Convert surface to screen format.
-					optimizedSurface = SDL_ConvertSurface(loadedSurface, gSurface->format, NULL);
+					optimizedSurface = SDL_ConvertSurface(loadedSurface, gSurface->format, 0);
 
 					if (optimizedSurface == NULL) {
 						std::cout << "Unable to optimize image %s. SDL Error: %s\n" << path << SDL_GetError() << std::endl;

@@ -4,31 +4,26 @@
 #include "amara.h"
 
 namespace Amara {
+    class Entity;
+    
     class TaskManager {
         public:
             Amara::GameProperties* properties = nullptr;
-            std::vector<void*> deleteQueue;
+            std::vector<Amara::Entity*> deleteQueue;
 
             TaskManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
             }
 
-            void queueDeletion(void* obj) {
+            void queueDeletion(Amara::Entity* obj) {
                 deleteQueue.push_back(obj);
             }
 
-            void run() {
-                void* obj;
-                int size = deleteQueue.size();
-                if (size > 0) {
-                    std::cout << "TaskManager: Deleting " << size << " objects." << std::endl;
-                }
-                for (size_t i = 0; i < size; i++) {
-                    obj = deleteQueue.at(i);
-                    delete obj;
-                }
-                deleteQueue.clear();
+            std::vector<Amara::Entity*>& getDeleteQueue() {
+                return deleteQueue;
             }
+
+            void run() {}
     };
 }
 

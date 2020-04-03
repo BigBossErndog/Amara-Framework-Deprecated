@@ -135,7 +135,7 @@ namespace Amara {
                 font = gFont;
             }
 
-            reloadFontCache(SDL_Renderer* gRenderer) {
+            void reloadFontCache(SDL_Renderer* gRenderer) {
                 FC_ClearFont(font);
                 FC_LoadFont(font, gRenderer, path.c_str(), size, color, style);
             }

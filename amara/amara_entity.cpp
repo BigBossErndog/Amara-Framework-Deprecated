@@ -249,6 +249,8 @@ namespace Amara {
 
 			virtual void create() {}
 			virtual void update() {}
+
+			virtual ~Entity() {}
 		protected:
 	};
 }

@@ -24,7 +24,7 @@ namespace Amara {
                 right = new Amara::Button();
             }
 
-            pushX(Sint16 value) {
+            void pushX(Sint16 value) {
                 if (value < -JOYSTICK_DEADZONE && xvalue > -JOYSTICK_DEADZONE) {
                     left->press();
                 }
@@ -42,7 +42,7 @@ namespace Amara {
                 xvalue = value;
             }
 
-            pushY(Sint16 value) {
+            void pushY(Sint16 value) {
                 if (value < -JOYSTICK_DEADZONE && yvalue > -JOYSTICK_DEADZONE) {
                     up->press();
                 }
