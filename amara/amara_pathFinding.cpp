@@ -309,7 +309,7 @@ namespace Amara {
 
         if (foundPath) {
             int current = targetId;
-            while (current != startId) {
+            while (current != -1) {
                 Amara::PathTile& curTile = task->getTile(current);
                 task->path.push_front(curTile);
                 current = curTile.parentId;

@@ -15,11 +15,11 @@ namespace Amara {
 			bool held = false;
             bool activated = false;
 
-            int downCounter = 0;
+            int downTime = 0;
 			int tapTime = 15;
 
             Key() {
-                downCounter = 0;
+                downTime = 0;
             }
 
             Key(SDL_Keycode givenKeyCode): Key() {
@@ -29,7 +29,7 @@ namespace Amara {
             void press() {
 				if (!isDown) {
 					isDown = true;
-					downCounter = 0;
+					downTime = 0;
 					justDown = true;
 					held = false;
 				}
@@ -42,7 +42,7 @@ namespace Amara {
 				isDown = false;
 				activated = false;
 				held = false;
-				if (downCounter < tapTime) {
+				if (downTime < tapTime) {
 					tapped = true;
 				}
 			}
@@ -51,8 +51,8 @@ namespace Amara {
                 justUp = false;
 				justDown = false;
 				if (isDown) {
-					downCounter += 1;
-					if (downCounter > tapTime) {
+					downTime += 1;
+					if (downTime > tapTime) {
 						held = true;
 					}
 				}
