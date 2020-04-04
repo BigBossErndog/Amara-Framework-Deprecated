@@ -182,7 +182,7 @@ namespace Amara {
                 }
             }
 
-            assignAttributes() {
+            void assignAttributes() {
                 properties->currentCamera = this;
                 properties->scrollX = scrollX;
                 properties->scrollY = scrollY;

@@ -225,18 +225,15 @@ namespace Amara {
 				// Quit Game
 				quitted = true;
 
-				//Destroy window
-				SDL_FreeSurface(gSurface);
-				gSurface = NULL;
-
-				SDL_DestroyRenderer(gRenderer);
-				SDL_DestroyWindow(gWindow);
-
 				//Quit SDL subsystems
 				Mix_CloseAudio();
 				Mix_Quit();
 				TTF_Quit();
 				IMG_Quit();
+
+				SDL_DestroyRenderer(gRenderer);
+				SDL_DestroyWindow(gWindow);
+
 				SDL_Quit();
 			}
 
@@ -389,7 +386,9 @@ namespace Amara {
 			}
 
 			void update() {
+				if (quitted) return;
 				handleEvents();
+				if (quitted) return;
 				events->manage();
 				scenes->run();
 				scenes->manageTasks();

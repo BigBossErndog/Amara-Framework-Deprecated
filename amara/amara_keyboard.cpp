@@ -60,7 +60,7 @@ namespace Amara {
                 return nullptr;
             }
 
-            clearKeys() {
+            void clearKeys() {
                 std::unordered_map<Amara::Keycode, Amara::Key*>::iterator it;
                 Amara::Key* key;
                 for (it = keys.begin(); it != keys.end(); it++) {

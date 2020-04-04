@@ -6,7 +6,7 @@
 namespace Amara {
     class Error {
         public:
-            breakGame() {
+            void breakGame() {
                 Amara::Error* e = nullptr;
                 e->breakGame();
             }
