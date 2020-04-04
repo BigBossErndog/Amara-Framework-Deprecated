@@ -26,8 +26,11 @@ COMPILER_FLAGS = -w
 
 all:
 	@echo "Usage: make (option)"
-	@echo "Options: win64 win32"
+	@echo "Options: win64 win32 archlinux64"
 	@echo "Options: playwin playlinux"
+
+clean:
+	rm -rf $(BUILD_PATH)/*
 
 win64: $(SRC_FILES)
 	cls
@@ -51,12 +54,6 @@ archlinux64:
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_ARCHLINUX64) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_LINUX)
 	mkdir -p $(BUILD_PATH)/assets
 	cp -a assets/. $(BUILD_PATH)/assets/
-
-clean:
-	rm -rf $(BUILD_PATH)/*
-
-play:
-	$(BUILD_EXECUTABLE_WIN)
 
 playwin:
 	$(BUILD_EXECUTABLE_WIN)
