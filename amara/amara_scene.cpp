@@ -133,6 +133,7 @@ namespace Amara {
                 
                 for (Amara::Camera* cam : cameras) {
                     if (cam->isDestroyed || cam->parent != this) continue;
+                    using namespace std;
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
             }

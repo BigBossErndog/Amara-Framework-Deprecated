@@ -153,7 +153,7 @@ namespace Amara {
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
-                int dx, dy, dw, dh, ow, oh = 0;
+                int dx = 0, dy = 0, dw = 0, dh = 0, ow = 0, oh = 0;
 
                 dx = vx + floor(x);
                 if (dx < vx) {
