@@ -63,12 +63,12 @@ playlinux:
 
 
 setup-apt64:
-	sudo apt-get install libsdl2
+	sudo apt-get install libsdl2-2.0-0
 	sudo apt-get install libsdl2-dev
-	sudo apt-get install libsdl2-image
-	sudo apt-get install libsdl2-ttf
-	sudo apt-get install libsdl2-mixer
-	sudo apt-get install libsdl2-net
+	sudo apt-get install libsdl2-image-dev
+	sudo apt-get install libsdl2-ttf-dev
+	sudo apt-get install libsdl2-mixer-dev
+	sudo apt-get install libsdl2-net-dev
 
 setup-yum64:
 	sudo yum install SDL2
