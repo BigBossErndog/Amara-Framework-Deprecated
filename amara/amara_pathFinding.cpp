@@ -178,7 +178,7 @@ namespace Amara {
                 Amara::Tile tile;
                 for (Amara::TilemapLayer* layer: walls) {
                     tile = layer->getTileAt(gx, gy);
-                    if (tile.id != 0) {
+                    if (tile.id >= 0) {
                         return true;
                     }
                 }
