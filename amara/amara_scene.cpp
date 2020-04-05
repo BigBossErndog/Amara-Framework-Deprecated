@@ -45,7 +45,7 @@ namespace Amara {
                 scenePlugin = gScenePlugin;
             }
 
-            void init() {
+            virtual void init() {
                 initialLoaded = false;
                 
                 load->reset();
@@ -69,19 +69,19 @@ namespace Amara {
                 std::cout << "START LOADING TASKS: " << load->tasks.size() << " loading tasks." << std::endl;
             }
 
-            Amara::Entity* add(Amara::Entity* entity) {
+            virtual Amara::Entity* add(Amara::Entity* entity) {
                 entities.push_back(entity);
                 entity->init(properties, this, this);
                 return entity;
             }
 
-            Amara::Camera* add(Amara::Camera* cam) {
+            virtual Amara::Camera* add(Amara::Camera* cam) {
                 cameras.push_back(cam);
                 cam->init(properties, this, this, &entities);
                 return cam;
             }
 
-            void run() {
+            virtual void run() {
                 properties->currentScene = this;
 
                 if (!initialLoaded) {
@@ -107,7 +107,7 @@ namespace Amara {
                 }
             }
 
-            void draw() {
+            virtual void draw() {
                 properties->currentScene = this;
 				properties->scrollX = 0;
 				properties->scrollY = 0;

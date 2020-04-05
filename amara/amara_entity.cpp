@@ -155,7 +155,7 @@ namespace Amara {
 				}
 			}
 
-			Amara::Entity* get(std::string find) {
+			virtual Amara::Entity* get(std::string find) {
 				for (Amara::Entity* entity : entities) {
 					if (entity->id.compare(find) == 0) {
 						return entity;
@@ -164,20 +164,20 @@ namespace Amara {
 				return nullptr;
 			}
 
-			Amara::Entity* add(Amara::Entity* entity) {
+			virtual Amara::Entity* add(Amara::Entity* entity) {
 				entities.push_back(entity);
 				entity->init(properties, scene, this);
 				return entity;
 			}
 
-			Amara::Entity* remove(size_t index) {
+			virtual Amara::Entity* remove(size_t index) {
 				Amara::Entity* child = entities.at(index);
 				child->parent = nullptr;
 				entities.erase(entities.begin() + index);
 				return child;
 			}
 
-			Amara::Entity* remove(Amara::Entity* entity) {
+			virtual Amara::Entity* remove(Amara::Entity* entity) {
 				Amara::Entity* child;
 				int numChildren = entities.size();
 				for (size_t i = 0; i < numChildren; i++) {
@@ -189,7 +189,7 @@ namespace Amara {
 				return nullptr;
 			}
 
-			void destroy(bool recursiveDestroy) {
+			virtual void destroy(bool recursiveDestroy) {
 				if (parent != nullptr) {
 					parent->remove(this);
 				}
@@ -215,7 +215,7 @@ namespace Amara {
 				properties->taskManager->queueDeletion(this);
 			}
 
-			void destroy() {
+			virtual void destroy() {
 				destroy(true);
 			}
 
