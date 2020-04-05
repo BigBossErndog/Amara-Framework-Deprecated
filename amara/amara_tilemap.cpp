@@ -60,6 +60,8 @@ namespace Amara {
                         if (tiledJson["height"] > height) height = tiledJson["height"];
                         tileWidth = tiledJson["tilewidth"];
                         tileHeight = tiledJson["tileheight"];
+                        widthInPixels = tileWidth * width;
+                        heightInPixels = tileHeight * height;
                     }
                 }
             }
@@ -99,6 +101,10 @@ namespace Amara {
                 layers[layerKey] = newLayer;
                 if (newLayer->width > width) width = newLayer->width;
                 if (newLayer->height > height) height = newLayer->height;
+                tileWidth = newLayer->tileWidth;
+                tileHeight = newLayer->tileHeight;
+                widthInPixels = tileWidth * width;
+                heightInPixels = tileHeight * height;
                 return newLayer;
             }
 
