@@ -14,7 +14,7 @@ SDL_LIBRARY_PATHS_WIN64 = -L ext_lib/SDL2/win64/lib -L ext_lib/SDL2_image/win64/
 SDL_INCLUDE_PATHS_WIN32 = -I ext_lib/SDL2/win32/include/SDL2 -I ext_lib/SDL2_image/win32/include/SDL2 -I ext_lib/SDL2_ttf/win32/include/SDL2 -I ext_lib/SDL2_mixer/win32/include/SDL2 -I ext_lib/SDL_FontCache
 SDL_LIBRARY_PATHS_WIN32 = -L ext_lib/SDL2/win32/lib -L ext_lib/SDL2_image/win32/lib -L ext_lib/SDL2_ttf/win32/lib -L ext_lib/SDL2_mixer/win32/lib
 
-SDL_INCLUDE_PATHS_ARCHLINUX64 = -I ext_lib/SDL2/archlinux64 -I ext_lib/SDL_FontCache
+SDL_INCLUDE_PATHS_LINUX = `sdl2-config --cflags` -I ext_lib/SDL_FontCache
 
 LINKER_FLAGS = -l SDL2main -l SDL2 -l SDL2_image -l SDL2_ttf -l SDL2_mixer
 
@@ -26,7 +26,7 @@ COMPILER_FLAGS = -w
 
 all:
 	@echo "Usage: make (option)"
-	@echo "Options: win64 win32 archlinux64"
+	@echo "Options: win64 win32 archlinux"
 	@echo "Options: playwin playlinux"
 
 clean:
@@ -48,10 +48,10 @@ win32: $(SRC_FILES)
 	mkdir -p $(BUILD_PATH)/assets
 	cp -a assets/. $(BUILD_PATH)/assets/
 
-archlinux64:
+linux:
 	clear
 	rm -rf build/*
-	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_ARCHLINUX64) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_LINUX)
+	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_LINUX) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_LINUX)
 	mkdir -p $(BUILD_PATH)/assets
 	cp -a assets/. $(BUILD_PATH)/assets/
 
