@@ -50,6 +50,33 @@ namespace Amara {
                 }
             }
 
+            void setTiledJson(std::string gTiledJsonKey) {
+                tiledJsonKey = gTiledJsonKey;
+                if (!tiledJsonKey.empty()) {
+                    tiledJson = ((Amara::JsonFile*)load->get(tiledJsonKey))->jsonObj;
+
+                    if (tiledJson != nullptr) {
+                        if (tiledJson["width"] > width) width = tiledJson["width"];
+                        if (tiledJson["height"] > height) height = tiledJson["height"];
+                        tileWidth = tiledJson["tilewidth"];
+                        tileHeight = tiledJson["tileheight"];
+                    }
+                }
+            }
+
+            bool setTexture(std::string gTextureKey) {
+                Amara::Loader* load = properties->loader;
+                Amara::ImageTexture* texture = (Amara::ImageTexture*)(load->get(gTextureKey));
+                if (texture != nullptr) {
+                    textureKey = texture->key;
+                    return true;
+                }
+                else {
+                    std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
+                }
+                return false;
+            }
+
             Amara::TilemapLayer* add(Amara::TilemapLayer* gLayer) {
                 Amara::Actor::add(gLayer);
                 return gLayer;

@@ -160,9 +160,9 @@ namespace Amara {
                 }
             }
 
-            bool setTexture(std::string textureKey) {
+            bool setTexture(std::string gTextureKey) {
                 Amara::Loader* load = properties->loader;
-                texture = (Amara::ImageTexture*)(load->get(textureKey));
+                texture = (Amara::ImageTexture*)(load->get(gTextureKey));
                 if (texture != nullptr) {
                     textureKey = texture->key;
 
@@ -171,7 +171,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    std::cout << "Texture with key: \"" << textureKey << "\" was not found." << std::endl;
+                    std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
                 }
                 return false;
             }
