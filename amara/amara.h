@@ -24,6 +24,7 @@
     #include <SDL_image.h>
     #include <SDL_ttf.h>
     #include <SDL_mixer.h>
+    #include <SDL_net.h>
     #include <SDL_FontCache.c>
 #endif
 
@@ -80,6 +81,9 @@ namespace Amara {
 #include "amara_actor.cpp"
 #include "amara_script.cpp"
 #include "amara_entity.cpp"
+
+#include "amara_tweener.cpp"
+#include "amara_tweenBase.cpp"
 
 #include "amara_interactable.cpp"
 

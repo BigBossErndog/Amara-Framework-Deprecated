@@ -16,7 +16,7 @@ SDL_LIBRARY_PATHS_WIN32 = -L ext_lib/SDL2/win32/lib -L ext_lib/SDL2_image/win32/
 
 SDL_INCLUDE_PATHS_LINUX = `sdl2-config --cflags` -I ext_lib/SDL_FontCache
 
-LINKER_FLAGS = -l SDL2main -l SDL2 -l SDL2_image -l SDL2_ttf -l SDL2_mixer
+LINKER_FLAGS = -l SDL2main -l SDL2 -l SDL2_image -l SDL2_ttf -l SDL2_mixer -l SDL2_net
 
 OTHER_LIB_PATHS = -I ext_lib/nlohmann/include
 
@@ -60,3 +60,29 @@ playwin:
 
 playlinux:
 	./$(BUILD_EXECUTABLE_LINUX)
+
+
+setup-apt64:
+	sudo apt-get install libsdl2
+	sudo apt-get install libsdl2-dev
+	sudo apt-get install libsdl2-image
+	sudo apt-get install libsdl2-ttf
+	sudo apt-get install libsdl2-mixer
+	sudo apt-get install libsdl2-net
+
+setup-yum64:
+	sudo yum install SDL2
+	sudo yum install SDL2_image
+	sudo yum install SDL2_ttf
+	sudo yum install SDL2_mixer
+	sudo yum install SDL2_net
+
+setup-pacman64:
+	sudo pacman -S sdl2
+	sudo pacman -S sdl2_image
+	sudo pacman -S sdl2_ttf
+	sudo pacman -S sdl2_mixer
+	sudo pacman -S sdl2_net
+
+
+
