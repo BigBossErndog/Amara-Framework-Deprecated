@@ -6,7 +6,7 @@
 namespace Amara {
     class Scene;
 
-    class Camera : public Amara::Entity {
+    class Camera : public Amara::Actor {
         public:
             std::vector<Amara::Entity*>* sceneEntities = nullptr;
 
@@ -77,12 +77,6 @@ namespace Amara {
                 }
 
 				update();
-
-				for (Amara::Entity* entity : entities) {
-                    if (entity->isDestroyed || entity->parent != this) continue;
-					entity->run();
-				}
-
                 updateValues();
 
                 if (followTarget != nullptr) {
@@ -105,6 +99,8 @@ namespace Amara {
 
                 updateValues();
                 recordValues();
+
+                Amara::Actor::run();
 			}
 
             void updateValues() {
@@ -242,8 +238,13 @@ namespace Amara {
             }
 
             void setZoom(float gx, float gy) {
+                float cx = centerX;
+                float cy = centerY;
+
                 zoomX = gx;
                 zoomY = gy;
+
+                centerOn(centerX, centerY);
                 updateValues();
             }
             void setZoom(float gi) {
@@ -251,9 +252,7 @@ namespace Amara {
             }
 
             void changeZoom(float gx, float gy) {
-                zoomX += gx;
-                zoomY += gy;
-                updateValues();
+                setZoom(zoomX + gx, zoomY + gy);
             }
             void changeZoom(float gi) {
                 changeZoom(gi, gi);
@@ -269,6 +268,23 @@ namespace Amara {
 
             void removeBounds() {
                 lockedToBounds = false;
+            }
+
+            Amara::Script* scrollTo(float tx, float ty, double tt, Amara::Easing gEasing, bool center) {
+                return recite(createTween_ScrollCamera(tx, ty, tt, gEasing, center));
+            }
+            Amara::Script* scrollTo(float tx, float ty, double tt, Amara::Easing gEasing) {
+                return scrollTo(tx, ty, tt, gEasing, true);
+            }
+            Amara::Script* scrollTo(float tx, float ty, double tt) {
+                return scrollTo(tx, ty, tt, LINEAR, true);
+            }
+
+            Amara::Script* zoomTo(float zt, float tt, Amara::Easing gEasing) {
+                return recite(createTween_CameraZoom(zt, tt, gEasing));
+            }
+            Amara::Script* zoomTo(float zt, float tt) {
+                return zoomTo(zt, tt, LINEAR);
             }
 
             ~Camera() {

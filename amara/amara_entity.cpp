@@ -19,7 +19,7 @@ namespace Amara {
 		}
 	};
 	
-	class Entity : public Amara::SortedEntity, public Amara::Interactable, public Amara::Tweener  {
+	class Entity : public Amara::SortedEntity, public Amara::Interactable {
 		public:
 			Amara::GameProperties* properties;
 			Amara::Scene* scene = nullptr;
@@ -57,6 +57,7 @@ namespace Amara {
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
 				Amara::Interactable::init(gameProperties);
+				
 				properties = gameProperties;
 				scene = givenScene;
 				parent = givenParent;
@@ -146,7 +147,6 @@ namespace Amara {
 
 			virtual void run() {
 				Amara::Interactable::run();
-				Amara::Tweener::run();
 				update();
 
 				for (Amara::Entity* entity : entities) {

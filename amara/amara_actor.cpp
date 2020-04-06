@@ -4,13 +4,14 @@
 #include "amara.h"
 
 namespace Amara {
+    class Tween;
     class Actor: public Amara::Entity {
         public:
             std::vector<Amara::Script*> scripts;
 
             Actor(): Amara::Entity() {}
 
-            void recite(Amara::Script* script) {
+            virtual Amara::Script* recite(Amara::Script* script) {
                 scripts.push_back(script);
                 script->init(properties, this);
                 script->prepare();
@@ -30,6 +31,10 @@ namespace Amara {
                         }
                     }
                 }
+            }
+
+            bool stillActing() {
+                return (scripts.size() > 0);
             }
 
             void run() {

@@ -8,7 +8,7 @@ namespace Amara {
     class Scene;
     class Actor;
 
-    class Script: Amara::StateManager {
+    class Script: public Amara::StateManager {
         public:
             Amara::GameProperties* properties = nullptr;
             Amara::Actor* parent = nullptr;
@@ -27,6 +27,7 @@ namespace Amara {
             Script(): Script(true) {}
 
             void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
+                Amara::StateManager::properties = gameProperties;
                 properties = gameProperties;
                 game = properties->game;
                 scene = properties->currentScene;

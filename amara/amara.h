@@ -62,6 +62,9 @@ namespace Amara {
 
 #include "amara_scene.cpp"
 
+#include "amara_tweens_camera.cpp"
+#include "amara_tween.cpp"
+
 #include "amara_layerContainer.cpp"
 #include "amara_canvas.cpp"
 
@@ -78,12 +81,11 @@ namespace Amara {
 #include "amara_trueTypeFont.cpp"
 
 #include "amara_camera.cpp"
+#include "amara_fdeclare_tweens.cpp"
+
 #include "amara_actor.cpp"
 #include "amara_script.cpp"
 #include "amara_entity.cpp"
-
-#include "amara_tweener.cpp"
-#include "amara_tweenBase.cpp"
 
 #include "amara_interactable.cpp"
 
@@ -122,4 +124,5 @@ namespace Amara {
 #include "amara_gameProperties.cpp"
 
 #include "amara_geometry.cpp"
+#include "amara_easing.cpp"
 #include "amara_math.cpp"
