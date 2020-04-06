@@ -62,6 +62,7 @@ namespace Amara {
 
 #include "amara_scene.cpp"
 
+#include "amara_tweens_entities.cpp"
 #include "amara_tweens_camera.cpp"
 #include "amara_tween.cpp"
 
