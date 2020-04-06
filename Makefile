@@ -76,6 +76,10 @@ setup-yum64:
 	sudo yum install SDL2_ttf
 	sudo yum install SDL2_mixer
 	sudo yum install SDL2_net
+	sudo yum install SDL2_image-devel
+	sudo yum install SDL2_ttf-devel
+	sudo yum install SDL2_mixer-devel
+	sudo yum install SDL2_net-devel
 
 setup-pacman64:
 	sudo pacman -S sdl2
