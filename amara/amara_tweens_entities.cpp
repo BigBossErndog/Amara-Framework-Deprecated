@@ -38,6 +38,39 @@ namespace Amara {
                 }
             }
     };
+
+    class Tween_Scale: public Tween {
+        public:
+            float startScaleX;
+            float startScaleY;
+            float targetScale;
+
+            Tween_Scale(float ts, double tt, Amara::Easing gEasing) {
+                targetScale = ts;
+                time = tt;
+                easing = gEasing;
+            }
+            Tween_Scale(float ts, double tt): Tween_Scale(ts, tt, LINEAR) {}
+
+            void prepare(Amara::Actor* actor) {
+                startScaleX = actor->scaleX;
+                startScaleY = actor->scaleY;
+            }
+
+            void script(Amara::Actor* actor) {
+                Amara::Tween::script();
+                switch (easing) {
+                    case LINEAR:
+                        actor->scaleX = linearEase(startScaleX, targetScale, progress);
+                        actor->scaleY = linearEase(startScaleY, targetScale, progress);
+                        break;
+                    case SINE:
+                        actor->scaleX = sineEase(startScaleX, targetScale, progress);
+                        actor->scaleY = sineEase(startScaleY, targetScale, progress);
+                        break;
+                }
+            }
+    };
 }
 
 #endif

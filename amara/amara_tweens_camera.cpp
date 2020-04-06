@@ -66,7 +66,8 @@ namespace Amara {
     class Tween_CameraZoom: public Amara::Tween {
         public:
             Amara::Camera* cam;
-            float zStart = 1;
+            float zStartX = 1;
+            float zStartY = 1;
             float zTarget = 1;
 
             Tween_CameraZoom(float gTarget, double tt, Amara::Easing gEasing) {
@@ -78,21 +79,24 @@ namespace Amara {
 
             void prepare(Amara::Actor* actor) {
                 cam = (Amara::Camera*)actor;
-                zStart = cam->zoomX;
+                zStartX = cam->zoomX;
+                zStartY = cam->zoomY;
             }
 
             void script() {
                 Amara::Tween::script();
-                float nz = 0;
+                float nzx = 0, nzy = 0;
                 switch (easing) {
                     case LINEAR:
-                        nz = linearEase(zStart, zTarget, progress);
+                        nzx = linearEase(zStartX, zTarget, progress);
+                        nzy = linearEase(zStartY, zTarget, progress);
                         break;
                     case SINE:
-                        nz = sineEase(zStart, zTarget, progress);
+                        nzx = sineEase(zStartX, zTarget, progress);
+                        nzy = sineEase(zStartY, zTarget, progress);
                         break;
                 }
-                cam->setZoom(nz);
+                cam->setZoom(nzx, nzy);
             }
     };
     
