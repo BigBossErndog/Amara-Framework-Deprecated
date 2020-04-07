@@ -15,6 +15,8 @@ namespace Amara {
             int waitCounter = 0;
 
             bool skipEvent = false;
+            
+            std::string jumpFlag;
 
             StateManager() {
                 reset();
@@ -29,6 +31,7 @@ namespace Amara {
                 currentState.clear();
                 currentEvent = 1;
                 eventLooker = 0;
+                jumpFlag.clear();
             }
 
             bool state(std::string key) {
@@ -127,6 +130,36 @@ namespace Amara {
                     }
                 }
                 return ret;
+            }
+
+            bool bookmark(std::string flag) {
+                bool toReturn = false;
+
+                if (once()) {
+                    toReturn = true;
+                }
+                else {
+                    if (jumpFlag.compare(flag) == 0) {
+                        jumpFlag.clear();
+                        currentEvent = eventLooker;
+                        nextEvt();
+                        toReturn = true;
+                    }
+                }
+
+                return toReturn;
+            }
+
+            void jump(std::string flag) {
+                jumpFlag = flag;
+            }
+
+            bool jumpEvt(std::string flag) {
+                if (evt()) {
+                    jump(flag);
+                    return true;
+                }
+                return false;
             }
     };
 }

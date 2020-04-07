@@ -44,20 +44,15 @@ namespace Amara {
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
-                Amara::Interactable::init(gameProperties);
-                
 				properties = gameProperties;
-				scene = givenScene;
-                parent = givenParent;
                 load = properties->loader;
                 gRenderer = properties->gRenderer;
-                input = properties->input;
 
                 if (!fontKey.empty()) {
                     setFont(fontKey);
                 }
 
-				create();
+                Amara::Actor::init(gameProperties, givenScene, givenParent);
 			}
 
             void setFont(std::string gFontKey) {

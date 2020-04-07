@@ -78,7 +78,7 @@ namespace Amara {
                 return config;
             }
 
-            virtual void draw(int vx, int vy, int vw, int vh) override {
+            virtual void drawTexture(int vx, int vy, int vw, int vh) {
                 bool skipDrawing = false;
 
                 if (alpha < 0) alpha = 0;
@@ -165,6 +165,10 @@ namespace Amara {
                         );
                     }
                 }
+            }
+
+            virtual void draw(int vx, int vy, int vw, int vh) override {
+                drawTexture(vx, vy, vw, vh);
 
                 Amara::Entity::draw(vx, vy, vw, vh);
             }
