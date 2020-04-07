@@ -26,7 +26,7 @@ namespace Amara {
 
             Script(): Script(true) {}
 
-            void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
+            void init(Amara::GameProperties* gameProperties) {
                 Amara::StateManager::properties = gameProperties;
                 properties = gameProperties;
                 game = properties->game;
@@ -34,7 +34,10 @@ namespace Amara {
                 input = properties->input;
                 controls = properties->controls;
                 audio = properties->audio;
+            }
 
+            void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
+                init(gameProperties);
                 parent = parentActor;
             }
             
