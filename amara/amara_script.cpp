@@ -11,9 +11,9 @@ namespace Amara {
     class Script: public Amara::StateManager {
         public:
             Amara::GameProperties* properties = nullptr;
-            Amara::Actor* parent = nullptr;
-            Amara::Scene* scene = nullptr;
             Amara::Game* game = nullptr;
+            Amara::Scene* scene = nullptr;
+            Amara::Actor* parent = nullptr;
             Amara::InputManager* input = nullptr;
             Amara::ControlScheme* controls = nullptr;
             Amara::AudioGroup* audio = nullptr;
