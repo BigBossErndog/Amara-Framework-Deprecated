@@ -12,7 +12,7 @@ namespace Amara {
 			Amara::GameProperties* properties;
 
 			std::string name;
-			bool quitted = false;
+			bool quit = false;
 			bool dragged = false;
 
 			SDL_Window* gWindow = NULL;
@@ -223,7 +223,7 @@ namespace Amara {
 			// For when the player closes the game
 			void close() {
 				// Quit Game
-				quitted = true;
+				quit = true;
 
 				//Quit SDL subsystems
 				Mix_CloseAudio();
@@ -239,7 +239,7 @@ namespace Amara {
 
 			void start() {
 				// Game Loop
-				while (!quitted) {
+				while (!quit) {
 					manageFPSStart();
 
 					writeProperties();
@@ -386,9 +386,9 @@ namespace Amara {
 			}
 
 			void update() {
-				if (quitted) return;
+				if (quit) return;
 				handleEvents();
-				if (quitted) return;
+				if (quit) return;
 				events->manage();
 				scenes->run();
 				scenes->manageTasks();
@@ -418,7 +418,7 @@ namespace Amara {
 
 			void manageFPSEnd() {
 				// Check if frame finished early
-				if (quitted) return;
+				if (quit) return;
 				int totalWait = 0;
 				logicDelay = 0;
 				lagging = false;
@@ -458,7 +458,8 @@ namespace Amara {
 
 				while (SDL_PollEvent(&e) != 0) {
 					if (e.type == SDL_QUIT) {
-						quitted = true;
+						quit = true;
+						properties->quit = true;
 					}
 					else if (e.type == SDL_KEYDOWN) {
 						input->keyboard->press(e.key.keysym.sym);

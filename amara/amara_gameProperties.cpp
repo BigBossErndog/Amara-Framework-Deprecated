@@ -22,6 +22,7 @@ namespace Amara {
     class GameProperties {
         public:
             Amara::Game* game = nullptr;
+            bool quit = false;
 
             SDL_Window* gWindow = NULL;
 			SDL_Surface* gSurface = NULL;

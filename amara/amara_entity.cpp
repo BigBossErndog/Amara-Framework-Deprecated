@@ -4,6 +4,7 @@
 #include "amara.h"
 
 namespace Amara {
+	class Game;
 	class Scene;
 	class InputManager;
 	class ControlScheme;
@@ -21,7 +22,8 @@ namespace Amara {
 	
 	class Entity : public Amara::SortedEntity, public Amara::Interactable {
 		public:
-			Amara::GameProperties* properties;
+			Amara::GameProperties* properties = nullptr;
+			Amara::Game*  game = nullptr;
 			Amara::Scene* scene = nullptr;
 			Amara::Entity* parent = nullptr;
 
@@ -59,6 +61,7 @@ namespace Amara {
 				Amara::Interactable::init(gameProperties);
 				
 				properties = gameProperties;
+				game = properties->game;
 				scene = givenScene;
 				parent = givenParent;
 
@@ -121,6 +124,7 @@ namespace Amara {
 			}
 
 			virtual void draw(int vx, int vy, int vw, int vh) {
+				if (properties->quit) return;
 				if (!isVisible) return;
 
 				float recOffsetX = properties->offsetX + x;

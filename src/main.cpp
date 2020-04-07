@@ -5,11 +5,15 @@ using namespace std;
 
 class TestScene: public Scene {
     public:
+        Textbox* box;
         void preload() {
-            
+            load->image("box", "assets/orangeTextbox.png");
+            load->ttf("pressStart", "assets/press-start.regular.ttf", 16);
         }
 
         void create() {
+            add(box = new Textbox(400, 160, "box", "pressStart"));
+
             controls->addKey("up", KEY_UP);
             controls->addKey("down", KEY_DOWN);
             controls->addKey("left", KEY_LEFT);
@@ -32,18 +36,24 @@ class TestScene: public Scene {
         }
 
         void update() {
+            int neww = box->width, newh = box->height;
             if (controls->isDown("up")) {
                 log("UP PRESSED");
+                box->height -= 1;
             }
             if (controls->isDown("down")) {
                 log("DOWN PRESSED");
+                box->height += 1;
             }
             if (controls->isDown("left")) {
                 log("LEFT PRESSED");
+                box->width -= 1;
             }
             if (controls->isDown("right")) {
                 log("RIGHT PRESSED");
+                box->width += 1;
             }
+
             if (controls->justDown("confirm")) {
                 cout << input->gamepads->numConnected() << endl;
             }

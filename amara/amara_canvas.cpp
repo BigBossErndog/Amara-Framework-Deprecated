@@ -7,7 +7,7 @@ namespace Amara {
     class Canvas: public Actor {
         public:
             SDL_Texture* canvas = nullptr;
-
+            
             float width = 0;
             float height = 0;
             int imageWidth = 0;
@@ -24,7 +24,6 @@ namespace Amara {
             SDL_Rect viewport;
             SDL_Point origin;
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
-            SDL_BlendMode drawnBlendMode = SDL_BLENDMODE_BLEND;
 
             float originX = 0;
             float originY = 0;
@@ -54,11 +53,11 @@ namespace Amara {
                 drawImage.init(properties, scene, this);
             }
 
-            void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+            void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a, SDL_BlendMode gBlendMode) {
                 SDL_SetRenderTarget(properties->gRenderer, canvas);
                 SDL_GetRenderDrawColor(properties->gRenderer, &recColor.r, &recColor.g, &recColor.b, &recColor.a);
                 SDL_SetRenderDrawColor(properties->gRenderer, r, g, b, a);
-                drawnBlendMode = SDL_BLENDMODE_BLEND;
+                SDL_SetRenderDrawBlendMode(properties->gRenderer, gBlendMode);
 
                 properties->zoomX = 1;
                 properties->zoomY = 1;
@@ -66,6 +65,10 @@ namespace Amara {
                 properties->offsetY = 0;
                 properties->scrollX = 0;
                 properties->scrollY = 0;
+                
+            } 
+            void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+                beginFill(r, g, b, a, SDL_BLENDMODE_NONE);
             }
             void beginFill(Uint8 r, Uint8 g, Uint8 b) {
                 beginFill(r, g, b, 255);
@@ -89,14 +92,14 @@ namespace Amara {
                 
                 SDL_SetRenderDrawBlendMode(properties->gRenderer, SDL_BLENDMODE_NONE);
                 SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_NONE);
-                SDL_RenderFillRect(properties->gRenderer, &drawnRect);
+                SDL_RenderClear(properties->gRenderer);
 
                 endFill();
             }
 
             void createNewCanvasTexture() {
                 if (canvas != nullptr) {
-                    delete canvas;
+                    SDL_DestroyTexture(canvas);
                 }
                 canvas = SDL_CreateTexture(
                     properties->gRenderer,
@@ -108,18 +111,11 @@ namespace Amara {
                 SDL_QueryTexture(canvas, NULL, NULL, &imageWidth, &imageHeight);
             }
 
-            void fillBlendMode(SDL_BlendMode mode) {
-                drawnBlendMode = mode;
-            }
-
             void fillRect(int rx, int ry, int rw, int rh) {
                 drawnRect.x = rx;
                 drawnRect.y = ry;
                 drawnRect.w = rw;
                 drawnRect.h = rh;
-                
-                SDL_SetRenderTarget(properties->gRenderer, canvas);
-                SDL_SetRenderDrawBlendMode(properties->gRenderer, drawnBlendMode);
                 SDL_RenderFillRect(properties->gRenderer, &drawnRect);
             }
 
