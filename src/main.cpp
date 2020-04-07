@@ -5,14 +5,14 @@ using namespace std;
 
 class TestScene: public Scene {
     public:
-        Textbox* box;
+        TextBox* box;
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
             load->ttf("pressStart", "assets/press-start.regular.ttf", 16);
         }
 
         void create() {
-            add(box = new Textbox(400, 160, "box", "pressStart"));
+            add(box = new TextBox(400, 160, "box", "pressStart"));
 
             controls->addKey("up", KEY_UP);
             controls->addKey("down", KEY_DOWN);

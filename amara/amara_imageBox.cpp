@@ -1,10 +1,10 @@
-#ifndef AMARA_TEXTBOX
-#define AMARA_TEXTBOX
+#ifndef AMARA_BOXIMAGE
+#define AMARA_BOXIMAGE
 
 #include "amara.h"
 
 namespace Amara {
-    class Textbox: public Amara::Actor {
+    class ImageBox: public Amara::Actor {
         public:
             SDL_Renderer* gRenderer = nullptr;
             SDL_Texture* canvas = nullptr;
@@ -33,25 +33,19 @@ namespace Amara {
 
             float originX = 0;
             float originY = 0;
-            
-            std::string fontKey;
-            Amara::TrueTypeFont* txt;
 
-            Amara::StateManager* copySM = nullptr;
-            Amara::StateManager sm;
-
-            Textbox(int gx, int gy, int gw, int gh, std::string gTextureKey, std::string gFontKey) {
+            ImageBox(float gx, float gy, int gw, int gh, std::string gTextureKey) {
                 x = gx;
                 y = gy;
                 width = gw;
                 height = gh;
                 textureKey = gTextureKey;
-                fontKey = gFontKey;
             }
-            Textbox(int gw, int gh, std::string gTextureKey, std::string gFontKey): Textbox(0, 0, gw, gh, gTextureKey, gFontKey) {}
 
-            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
-				properties = gameProperties;
+            ImageBox(int gw, int gh, std::string gTextureKey): ImageBox(0, 0, gw, gh, gTextureKey) {}
+
+            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
+                properties = gameProperties;
                 load = properties->loader;
                 gRenderer = properties->gRenderer;
 
@@ -62,16 +56,6 @@ namespace Amara {
                 setSize(width, height);
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
-                
-                txt = new TrueTypeFont(0, 0);
-                add(txt);
-                if (!fontKey.empty()) {
-                    setFont(fontKey);
-                }
-			}
-
-            virtual void update() {
-
             }
 
             virtual void drawBoxPart(int part) {
@@ -270,11 +254,6 @@ namespace Amara {
                     std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
                 }
                 return false;
-            }
-
-            void setFont(std::string gFontKey) {
-                fontKey = gFontKey;
-                txt->setFont(fontKey);
             }
     };
 }
