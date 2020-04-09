@@ -142,7 +142,15 @@ namespace Amara {
                         else {
                             fText += word;
                         }
-                        fText += ' ';
+                        word = " ";
+                        pText = fText + word;
+                        txt->setText(pText);
+                        if (txt->width > wrapWidth) {
+                            fText += '\n';
+                        }
+                        else {
+                            fText += word;
+                        }
                         word = "";
                     }
                     else {
