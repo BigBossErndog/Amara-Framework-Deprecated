@@ -75,7 +75,8 @@ namespace Amara {
 
             virtual Amara::Camera* add(Amara::Camera* cam) {
                 cameras.push_back(cam);
-                cam->init(properties, this, this, &entities);
+                cam->init(properties, this, this);
+                cam->sceneCameras = &cameras;
                 return cam;
             }
 

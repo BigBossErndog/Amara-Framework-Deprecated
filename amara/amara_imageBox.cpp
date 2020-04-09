@@ -24,11 +24,12 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
-            int minWidth = 16;
-            int minHeight = 16;
+            int minWidth = 8;
+            int minHeight = 8;
 
             int openWidth = 0;
             int openHeight = 0;
+            bool lockOpen = true;
             
             int boxTextureWidth = 0;
             int boxTextureHeight = 0;
@@ -45,6 +46,8 @@ namespace Amara {
                 y = gy;
                 width = gw;
                 height = gh;
+                openWidth = width;
+                openHeight = height;
                 textureKey = gTextureKey;
             }
 
@@ -75,29 +78,29 @@ namespace Amara {
 
                 switch (part % 3) {
                     case 0:
-                        destRect.x = 0;
+                        destRect.x = (width - openWidth)/2;
                         destRect.w = partWidth;
                         break;
                     case 1:
-                        destRect.x = partWidth;
-                        destRect.w = width - partWidth*2;
+                        destRect.x = (width - openWidth)/2 + partWidth;
+                        destRect.w = openWidth - partWidth*2;
                         break;
                     case 2:
-                        destRect.x = width - partWidth;
+                        destRect.x = (width - openWidth)/2 + openWidth - partWidth;
                         destRect.w = partWidth;
                         break;
                 }
                 switch ((int)floor(part/(float)3)) {
                     case 0:
-                        destRect.y = 0;
+                        destRect.y = (height - openHeight)/2;
                         destRect.h = partHeight;
                         break;
                     case 1:
-                        destRect.y = partHeight;
-                        destRect.h = height - partHeight*2;
+                        destRect.y = (height - openHeight)/2 + partHeight;
+                        destRect.h = openHeight - partHeight*2;
                         break;
                     case 2:
-                        destRect.y = height - partHeight;
+                        destRect.y = (height - openHeight)/2 + openHeight - partHeight;
                         destRect.h = partHeight;
                         break;
                 }
@@ -143,7 +146,14 @@ namespace Amara {
                 if (recWidth != width || recHeight != height) {
                     recWidth = width;
                     recHeight = height;
+                    if (openWidth > width) openWidth = width;
+                    if (openHeight > height) openHeight = height;
                     createNewCanvasTexture();
+                }
+
+                if (lockOpen) {
+                    openWidth = width;
+                    openHeight = height;
                 }
 
                 SDL_SetRenderTarget(properties->gRenderer, canvas);
@@ -268,6 +278,18 @@ namespace Amara {
             void setSize(int nw, int nh) {
                 width = nw;
                 height = nh;
+            }
+
+            void setOpenSize(int nw, int nh) {
+                openWidth = nw;
+                openHeight = nh;
+                if (openWidth > width) openWidth = width;
+                if (openHeight > height) openHeight = height;
+                if (openWidth < minWidth) openWidth = minWidth;
+                if (openHeight < minHeight) openHeight = minHeight;
+            }
+            void changeOpenSize(int gx, int gy) {
+                setOpenSize(openWidth + gx, openHeight + gy);
             }
 
             void setOrigin(float gx, float gy) {

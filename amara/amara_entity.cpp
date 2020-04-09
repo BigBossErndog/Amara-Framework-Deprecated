@@ -274,7 +274,7 @@ namespace Amara {
 				setZoomFactor(gi, gi);
 			}
 
-			void bringToFront() {
+			virtual void bringToFront() {
 				std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
 				for (Amara::Entity* entity: rSceneEntities) {
 					if (depth <= entity->depth) {

@@ -47,7 +47,7 @@ namespace Amara {
                 return false;
             }
 
-            bool isState(std::string key) {
+            bool inState(std::string key) {
                 if (currentState.compare(key) == 0) {
                     return true;
                 }

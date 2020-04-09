@@ -8,7 +8,7 @@ namespace Amara {
 
     class Camera : public Amara::Actor {
         public:
-            std::vector<Amara::Entity*>* sceneEntities = nullptr;
+            std::vector<Amara::Camera*>* sceneCameras = nullptr;
 
             bool definedDimensions = false;
 
@@ -58,9 +58,8 @@ namespace Amara {
                 y = gy;
             }
 
-            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* gParent, std::vector<Amara::Entity*>* givenEntities) {
+            virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* gParent) {
                 properties = gameProperties;
-                sceneEntities = givenEntities;
                 parent = gParent;
                 scene = givenScene;
 
@@ -173,18 +172,16 @@ namespace Amara {
                 dh = (y + height > vh) ? ceil(vh - y) : height;
                 dh -= oh;
 
-                if (sceneEntities != nullptr) {
-                    std::vector<Amara::Entity*>& rSceneEntities = *sceneEntities;
-                    Amara::Entity* entity;
-                    for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {
-                        entity = *it;
-                        if (entity->isDestroyed || entity->scene != scene) {
-                            rSceneEntities.erase(it--);
-                        }
-                        if (!entity->isVisible) continue;
-                        assignAttributes();
-                        entity->draw(dx, dy, dw, dh);
+                std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
+                Amara::Entity* entity;
+                for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {
+                    entity = *it;
+                    if (entity->isDestroyed || entity->scene != scene) {
+                        rSceneEntities.erase(it--);
                     }
+                    if (!entity->isVisible) continue;
+                    assignAttributes();
+                    entity->draw(dx, dy, dw, dh);
                 }
             }
 
@@ -280,6 +277,16 @@ namespace Amara {
 
             void removeBounds() {
                 lockedToBounds = false;
+            }
+
+            virtual void bringToFront() {
+                if (sceneCameras == nullptr) return;
+                std::vector<Amara::Camera*>& rSceneCameras = *sceneCameras;
+				for (Amara::Camera* cam: rSceneCameras) {
+					if (depth <= cam->depth) {
+						depth = cam->depth + 1;
+					}
+				}
             }
 
             Amara::Script* scrollTo(float tx, float ty, double tt, Amara::Easing gEasing, bool center) {
