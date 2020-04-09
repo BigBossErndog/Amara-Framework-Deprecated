@@ -4,7 +4,7 @@
 #include "amara.h"
 
 namespace Amara {
-    class TextBox: public Amara::ImageBox {
+    class TextBox: public Amara::UIBox {
         public:
             std::string text;
             std::string wrappedText;
@@ -44,13 +44,13 @@ namespace Amara {
 
             Amara::Color textColor = {0, 0, 0, 0};
 
-            TextBox(float gx, float gy, int gw, int gh, std::string gTextureKey, std::string gFontKey): ImageBox(gx, gy, gw, gh, gTextureKey) {
+            TextBox(float gx, float gy, int gw, int gh, std::string gTextureKey, std::string gFontKey): Amara::UIBox(gx, gy, gw, gh, gTextureKey) {
                 fontKey = gFontKey;
             }
             TextBox(int gw, int gh, std::string gTextureKey, std::string gFontKey): TextBox(0, 0, gw, gh, gTextureKey, gFontKey) {}
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
-				Amara::ImageBox::init(gameProperties, givenScene, givenParent);
+				Amara::UIBox::init(gameProperties, givenScene, givenParent);
                 
                 txt = new TrueTypeFont(0, 0);
                 add(txt);

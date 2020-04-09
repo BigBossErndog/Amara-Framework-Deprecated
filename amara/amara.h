@@ -69,7 +69,7 @@ namespace Amara {
 #include "amara_tween.cpp"
 
 #include "amara_textBox.cpp"
-#include "amara_imageBox.cpp"
+#include "amara_uiBox.cpp"
 
 #include "amara_controlScheme.cpp"
 #include "amara_control.cpp"

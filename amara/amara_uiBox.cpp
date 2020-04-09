@@ -1,10 +1,10 @@
-#ifndef AMARA_BOXIMAGE
-#define AMARA_BOXIMAGE
+#ifndef AMARA_UIBOX
+#define AMARA_UIBOX
 
 #include "amara.h"
 
 namespace Amara {
-    class ImageBox: public Amara::Actor {
+    class UIBox: public Amara::Actor {
         public:
             SDL_Renderer* gRenderer = nullptr;
             SDL_Texture* canvas = nullptr;
@@ -41,7 +41,7 @@ namespace Amara {
             float originX = 0;
             float originY = 0;
 
-            ImageBox(float gx, float gy, int gw, int gh, std::string gTextureKey) {
+            UIBox(float gx, float gy, int gw, int gh, std::string gTextureKey) {
                 x = gx;
                 y = gy;
                 width = gw;
@@ -51,7 +51,7 @@ namespace Amara {
                 textureKey = gTextureKey;
             }
 
-            ImageBox(int gw, int gh, std::string gTextureKey): ImageBox(0, 0, gw, gh, gTextureKey) {}
+            UIBox(int gw, int gh, std::string gTextureKey): UIBox(0, 0, gw, gh, gTextureKey) {}
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
                 properties = gameProperties;
@@ -234,7 +234,9 @@ namespace Amara {
                     }
                 }
 
-                Amara::Entity::draw(vx, vy, vw, vh);
+                if (openWidth == width && openHeight == height) {
+                    Amara::Entity::draw(vx, vy, vw, vh);
+                }
             }
 
             void createNewCanvasTexture() {
