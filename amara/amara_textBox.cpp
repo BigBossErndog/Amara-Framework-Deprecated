@@ -11,9 +11,15 @@ namespace Amara {
             std::string recText;
             std::string txtProgress;
 
+            std::string progressControl;
+
             unsigned int progress = 0;
             unsigned int timeCounter = 0;
-            unsigned int progressDelay = 16;
+            unsigned int progressDelay = 2;
+            unsigned int progressSpeed = 1;
+            bool finishedProgress = false;
+
+            float sayStartDelay = 0.2;
 
             bool isProgressive = false;
 
@@ -29,7 +35,7 @@ namespace Amara {
             Amara::Alignment verticalAlignment = ALIGN_TOP;
 
             Amara::StateManager* copySm = nullptr;
-            Amara::StateManager sm;
+            Amara::StateManager mySm;
 
             Amara::Color textColor = {0, 0, 0, 0};
 
@@ -52,19 +58,23 @@ namespace Amara {
                 if (recText.compare(text) != 0) {
                     setText(text);
                 }
-
+                
                 if (!isProgressive) {
                     txtProgress = wrappedText;
+                    finishedProgress = true;
                 }
                 else {
                     timeCounter += 1;
                     if (timeCounter >= progressDelay) {
                         timeCounter = 0;
-                        progress += 1;
+                        progress += progressSpeed;
+
                     }
                     if (progress >= wrappedText.length()) {
                         progress = wrappedText.length();
                         txtProgress = text;
+                        finishedProgress = true;
+
                     }
                     else {
                         txtProgress = wrappedText.substr(0, progress);
@@ -114,9 +124,13 @@ namespace Amara {
                 std::string word;
                 int pos = 0;
 
+                txt->setWordWrap(false);
+
                 text = newText;
                 wrappedText = adjustText(newText, width - marginLeft - marginRight);
                 recText = text;
+
+                finishedProgress = false;
 
                 timeCounter = 0;
                 progress = 0;
@@ -133,20 +147,12 @@ namespace Amara {
                 for (int i = 0; i < gText.length(); i++) {
                     c = gText.at(i);
                     if (c == ' ') {
+                        word += c;
                         pText = fText + word;
                         txt->setText(pText);
                         if (txt->width > wrapWidth) {
                             fText += '\n';
                             fText += word;
-                        }
-                        else {
-                            fText += word;
-                        }
-                        word = " ";
-                        pText = fText + word;
-                        txt->setText(pText);
-                        if (txt->width > wrapWidth) {
-                            fText += '\n';
                         }
                         else {
                             fText += word;
@@ -206,6 +212,9 @@ namespace Amara {
                 setProgressive(gDelay);
                 isProgressive = gProgressive;
             }
+            void setProgressive(bool gProgressive) {
+                setProgressive(gProgressive, progressDelay);
+            }
             void setProgressive() {
                 setProgressive(true);
             }
@@ -217,10 +226,69 @@ namespace Amara {
                 copySm = &gsm;
             }
 
-            void checkSm() {
+            Amara::StateManager& checkSm() {
                 if (copySm != nullptr) {
-                    sm = *copySm;
+                    return *copySm;
                 }
+                else {
+                    return mySm;
+                }
+            }
+
+            virtual bool say(std::string gText) {
+                Amara::StateManager& sm = checkSm();
+                bool toReturn = false;
+
+                if (sm.once()) {
+                    setText("");
+                    setVisible(true);
+                    toReturn = true;
+                }
+
+                sm.wait(sayStartDelay);
+
+                if (sm.once()) {
+                    setText(gText);
+                    toReturn = true;
+                }
+
+                if (sm.evt()) {
+                    if (finishedProgress) {
+                        sm.nextEvt();
+                    }
+
+                    toReturn = true;
+                }
+
+                if (sm.evt()) {
+                    if (progressControl.empty() || controls->justDown(progressControl)) {
+                        sm.nextEvt();
+                    }
+                }
+
+                return toReturn;
+            }
+
+            virtual bool show() {
+                Amara::StateManager& sm = checkSm();
+                if (sm.once()) {
+                    setVisible(true);
+                    return true;
+                }
+                return false;
+            }
+
+            virtual bool hide() {
+                Amara::StateManager& sm = checkSm();
+                if (sm.once()) {
+                    setVisible(false);
+                    return true;
+                }
+                return false;
+            }
+
+            virtual void setProgressControl(std::string gControl) {
+                progressControl = gControl;
             }
     };
 }

@@ -124,9 +124,9 @@ namespace Amara {
             void setWordWrap(int w) {
                 wordWrapWidth = w;
                 setWordWrap();
-            }  
-            void removeWordWrap() {
-                wordWrap = false;
+            } 
+            void setWordWrap(bool g) {
+                wordWrap = g;
                 findDimensions();
             }
 

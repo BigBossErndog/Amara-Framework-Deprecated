@@ -64,17 +64,17 @@ namespace Amara {
 #include "amara_scene.cpp"
 #include "amara_ltimer.cpp"
 
-#include "amara_controlScheme.cpp"
-#include "amara_control.cpp"
-
-#include "amara_scene.cpp"
-
 #include "amara_tweens_entities.cpp"
 #include "amara_tweens_camera.cpp"
 #include "amara_tween.cpp"
 
 #include "amara_textBox.cpp"
 #include "amara_imageBox.cpp"
+
+#include "amara_controlScheme.cpp"
+#include "amara_control.cpp"
+
+#include "amara_scene.cpp"
 
 #include "amara_layerContainer.cpp"
 #include "amara_canvas.cpp"
