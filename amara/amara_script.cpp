@@ -54,7 +54,7 @@ namespace Amara {
 
             virtual void prepare() {}
             virtual void prepare(Amara::Actor* entity) {}
-
+            
             virtual void script() {}
             virtual void script(Amara::Actor* entity) {}
     };

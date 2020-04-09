@@ -119,7 +119,7 @@ namespace Amara {
                 SDL_RenderFillRect(properties->gRenderer, &drawnRect);
             }
 
-            void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY, float scaleX, float scaleY) {
+            void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY, float scaleX, float scaleY, float angle) {
                 drawImage.setTexture(textureKey);
                 drawImage.x = gx;
                 drawImage.y = gy;
@@ -129,6 +129,10 @@ namespace Amara {
                 drawImage.scaleX = scaleX;
                 drawImage.scaleY = scaleY;
                 drawImage.draw(0, 0, imageWidth, imageHeight);
+            }
+
+            void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY, float scaleX, float scaleY) {
+                copy(textureKey, gx, gy, gFrame, originX, originY, scaleX, scaleY, 0);
             }
 
             void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY) {

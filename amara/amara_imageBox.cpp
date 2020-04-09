@@ -23,6 +23,12 @@ namespace Amara {
             float recHeight = -1;
             int width = 0;
             int height = 0;
+
+            int minWidth = 16;
+            int minHeight = 16;
+
+            int openWidth = 0;
+            int openHeight = 0;
             
             int boxTextureWidth = 0;
             int boxTextureHeight = 0;
@@ -130,6 +136,10 @@ namespace Amara {
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
+                if (!isVisible) return;
+                if (width < minWidth) width = minWidth;
+                if (height < minHeight) height = minHeight;
+
                 if (recWidth != width || recHeight != height) {
                     recWidth = width;
                     recHeight = height;
@@ -213,11 +223,6 @@ namespace Amara {
                 Amara::Entity::draw(vx, vy, vw, vh);
             }
 
-            void setSize(int nw, int nh) {
-                width = nw;
-                height = nh;
-            }
-
             void createNewCanvasTexture() {
                 if (canvas != nullptr) {
                     SDL_DestroyTexture(canvas);
@@ -254,6 +259,19 @@ namespace Amara {
                     std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
                 }
                 return false;
+            }
+
+            void setSize(int nw, int nh) {
+                width = nw;
+                height = nh;
+            }
+
+            void setOrigin(float gx, float gy) {
+                originX = gx;
+                originY = gy;
+            }
+            void setOrigin(float gi) {
+                setOrigin(gi, gi);
             }
     };
 }

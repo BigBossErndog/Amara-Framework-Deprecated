@@ -152,6 +152,7 @@ namespace Amara {
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
+                if (!isVisible) return;
                 int dx = 0, dy = 0, dw = 0, dh = 0, ow = 0, oh = 0;
 
                 dx = vx + floor(x);
@@ -176,6 +177,7 @@ namespace Amara {
                     for (Amara::Entity* entity : rSceneEntities) {
                         assignAttributes();
                         if (entity->isDestroyed) continue;
+                        if (!entity->isVisible) continue;
                         entity->draw(dx, dy, dw, dh);
                     }
                 }

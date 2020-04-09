@@ -125,7 +125,6 @@ namespace Amara {
 
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
-				if (!isVisible) return;
 
 				float recOffsetX = properties->offsetX + x;
 				float recOffsetY = properties->offsetY + y;
@@ -145,6 +144,7 @@ namespace Amara {
 					properties->zoomY = recZoomY;
 					properties->angle = recAngle;
 					if (entity->isDestroyed || entity->parent != this) continue;
+					if (!entity->isVisible) continue;
 					entity->draw(vx, vy, vw, vh);
 				}
 			}

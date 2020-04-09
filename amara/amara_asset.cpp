@@ -41,6 +41,10 @@ namespace Amara {
                 SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
                 asset = givenAsset;
             }
+
+            ~ImageTexture() {
+                SDL_DestroyTexture(asset);
+            }
     };
 
     class Spritesheet : public Amara::ImageTexture {

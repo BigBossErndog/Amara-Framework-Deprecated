@@ -191,7 +191,7 @@ namespace Amara {
             /*
 			 * Loads a TrueTypeFont.
 			 */
-			bool ttf(std::string key, std::string path, int size, SDL_Color color, int style, bool replace) {
+			bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -224,11 +224,11 @@ namespace Amara {
 				return success;
 			}
 
-			bool ttf(std::string key, std::string path, int size, SDL_Color color, int style) {
+			bool ttf(std::string key, std::string path, int size, Amara::Color color, int style) {
 				return ttf(key, path, size, color, style, false);
 			}
 
-			bool ttf(std::string key, std::string path, int size, SDL_Color color) {
+			bool ttf(std::string key, std::string path, int size, Amara::Color color) {
 				return ttf(key, path, size, color, TTF_STYLE_NORMAL);
 			}
 

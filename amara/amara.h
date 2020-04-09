@@ -51,6 +51,13 @@ namespace Amara {
 
 #endif
 
+#ifndef AMARA_CONSTS
+#define AMARA_CONSTS
+namespace Amara {
+    typedef SDL_Color Color;
+}
+#endif
+
 #include "amara_game.cpp"
 #include "amara_sceneManager.cpp"
 #include "amara_scenePlugin.cpp"

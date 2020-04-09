@@ -4,6 +4,14 @@
 #include "amara.h"
 
 namespace Amara {
+    enum Alignment {
+        ALIGN_LEFT,
+        ALIGN_CENTER,
+        ALIGN_RIGHT,
+        ALIGN_TOP,
+        ALIGN_BOTTOM
+    };
+
     class TrueTypeFont: public Amara::Actor {
         public:
             SDL_Renderer* gRenderer = nullptr;
@@ -12,9 +20,9 @@ namespace Amara {
 
             std::string text;
             SDL_Rect viewport;
-            SDL_Color color = FC_MakeColor(0, 0, 0, 255);
-            FC_AlignEnum alignment = FC_ALIGN_LEFT;
-            FC_Effect effect;  
+            Amara::Color color = FC_MakeColor(0, 0, 0, 255);
+            Amara::Alignment alignment = ALIGN_LEFT;
+            FC_Effect effect;
 
             float originX = 0;
             float originY = 0;
@@ -41,6 +49,10 @@ namespace Amara {
 
             TrueTypeFont(float gx, float gy, std::string gFontKey, std::string gText): TrueTypeFont(gx, gy, gFontKey) {
                 text = gText;
+            }
+
+            TrueTypeFont(float gx, float gy, std::string gFontKey, std::string gText, Amara::Color gColor): TrueTypeFont(gx, gy, gFontKey, gText) {
+                color = gColor;
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
@@ -73,6 +85,9 @@ namespace Amara {
                 color.r = r;
                 color.g = g;
                 color.b = b;
+            }
+            void setColor(Amara::Color gColor) {
+                color = gColor;
             }
 
             void setOrigin(float gx, float gy) {
@@ -143,7 +158,7 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
-                effect.alignment = alignment;
+                effect.alignment = (FC_AlignEnum)alignment;
                 effect.scale.x = scaleX * properties->zoomX;
                 effect.scale.y = scaleY * properties->zoomY;
                 color.a = alpha * 255;
@@ -154,11 +169,11 @@ namespace Amara {
                 if (fontAsset != nullptr) {
                     if (wordWrap) {
                         int offsetX = 0;
-                        if (alignment == FC_ALIGN_CENTER) {
+                        if (alignment == ALIGN_CENTER) {
                             offsetX = width * 0.5;
                         }
-                        else if (alignment == FC_ALIGN_RIGHT) {
-                            offsetX = -width;
+                        else if (alignment == ALIGN_RIGHT) {
+                            offsetX = width;
                         }
                         
                         FC_DrawColumnEffect(
@@ -173,10 +188,10 @@ namespace Amara {
                     }
                     else {
                         int offsetX = 0;
-                        if (alignment == FC_ALIGN_CENTER) {
+                        if (alignment == ALIGN_CENTER) {
                             offsetX = width * 0.5;
                         }
-                        else if (alignment == FC_ALIGN_RIGHT) {
+                        else if (alignment == ALIGN_RIGHT) {
                             offsetX = width;
                         }
                         FC_DrawEffect(

@@ -8,11 +8,18 @@ class TestScene: public Scene {
         TextBox* box;
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
-            load->ttf("pressStart", "assets/press-start.regular.ttf", 16);
+            load->ttf("pressStart", "assets/press-start.regular.ttf", 8);
         }
 
         void create() {
             add(box = new TextBox(400, 160, "box", "pressStart"));
+            box->setText("Somebody once told me the world revolved around me.");
+            box->setColor(255, 255, 255);
+            box->setProgressive();
+
+            box->setOrigin(0.5);
+            box->x = game->resolution->width/2;
+            box->y = game->resolution->height/2;
 
             controls->addKey("up", KEY_UP);
             controls->addKey("down", KEY_DOWN);
@@ -33,6 +40,8 @@ class TestScene: public Scene {
             controls->addButton("right", LEFTSTICK_RIGHT);
 
             controls->addButton("confirm", BUTTON_A);
+
+            controls->addKey("full", KEY_ESC);
         }
 
         void update() {
@@ -54,8 +63,15 @@ class TestScene: public Scene {
                 box->width += 1;
             }
 
-            if (controls->justDown("confirm")) {
-                cout << input->gamepads->numConnected() << endl;
+            if (controls->justDown("full")) {
+                if (!game->isFullscreen) {
+                    game->setWindowSize(game->display->width, game->display->height);
+                    game->startFullscreen();
+                }
+                else {
+                    game->setWindowSize(960, 720);
+                    game->exitFullscreen();
+                }
             }
         }
 };
@@ -63,6 +79,7 @@ class TestScene: public Scene {
 int main(int argc, char** args) {
     Game* game = new Game("Amara Game");
     game->init(480, 360);
+    game->setWindowSize(960, 720);
 
     game->scenes->add("test", new TestScene());
     game->start("test");

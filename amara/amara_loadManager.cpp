@@ -16,7 +16,7 @@ namespace Amara {
 
         int size;
         int style;
-        SDL_Color color;
+        Amara::Color color;
     };
 
     class LoadManager {
@@ -170,7 +170,7 @@ namespace Amara {
                 json(key, path, false);
             }
 
-            void ttf(std::string key, std::string path, int size, SDL_Color color, int style, bool replace) {
+            void ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
                 Amara::LoadTask* t = new Amara::LoadTask();
                 t->type = TTF;
                 t->path = path;
@@ -181,11 +181,11 @@ namespace Amara {
                 pushTask(key, t);
             }
 
-            void ttf(std::string key, std::string path, int size, SDL_Color color, int style) {
+            void ttf(std::string key, std::string path, int size, Amara::Color color, int style) {
 				ttf(key, path, size, color, style, false);
 			}
 
-			void ttf(std::string key, std::string path, int size, SDL_Color color) {
+			void ttf(std::string key, std::string path, int size, Amara::Color color) {
 				ttf(key, path, size, color, TTF_STYLE_NORMAL);
 			}
 

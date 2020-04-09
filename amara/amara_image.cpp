@@ -190,6 +190,8 @@ namespace Amara {
                     imageWidth = width;
                     imageHeight = height;
 
+                    frame = 0;
+
                     return true;
                 }
                 else {
