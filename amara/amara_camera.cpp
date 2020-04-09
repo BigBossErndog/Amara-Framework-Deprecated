@@ -62,6 +62,7 @@ namespace Amara {
                 properties = gameProperties;
                 sceneEntities = givenEntities;
                 parent = gParent;
+                scene = givenScene;
 
                 if (!definedDimensions) {
                     width = properties->resolution->width;
@@ -174,10 +175,14 @@ namespace Amara {
 
                 if (sceneEntities != nullptr) {
                     std::vector<Amara::Entity*>& rSceneEntities = *sceneEntities;
-                    for (Amara::Entity* entity : rSceneEntities) {
-                        assignAttributes();
-                        if (entity->isDestroyed) continue;
+                    Amara::Entity* entity;
+                    for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {
+                        entity = *it;
+                        if (entity->isDestroyed || entity->scene != scene) {
+                            rSceneEntities.erase(it--);
+                        }
                         if (!entity->isVisible) continue;
+                        assignAttributes();
                         entity->draw(dx, dy, dw, dh);
                     }
                 }
@@ -192,6 +197,8 @@ namespace Amara {
                 properties->offsetX = 0;
                 properties->offsetY = 0;
                 properties->angle = 0;
+                properties->zoomFactorX = 1;
+                properties->zoomFactorY = 1;
             }
 
             void startFollow(Amara::Entity* entity, float lx, float ly) {

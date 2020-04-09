@@ -158,9 +158,12 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
+
                 effect.alignment = (FC_AlignEnum)alignment;
-                effect.scale.x = scaleX * properties->zoomX;
-                effect.scale.y = scaleY * properties->zoomY;
+                effect.scale.x = scaleX * nzoomX;
+                effect.scale.y = scaleY * nzoomY;
                 color.a = alpha * 255;
                 effect.color = color;
 
@@ -179,8 +182,8 @@ namespace Amara {
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * properties->zoomX),
-                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * properties->zoomY),
+                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
+                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             wordWrapWidth,
                             effect,
                             txt
@@ -197,8 +200,8 @@ namespace Amara {
                         FC_DrawEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * properties->zoomX),
-                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * properties->zoomY),
+                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
+                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             effect,
                             txt
                         );

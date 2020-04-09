@@ -198,8 +198,10 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(properties->gRenderer, &viewport);
 
-                destRect.x = floor(floor(x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * properties->zoomX);
-                destRect.y = floor(floor(y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * properties->zoomY);
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
+                destRect.x = floor(floor(x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = floor(floor(y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
                 destRect.w = ceil(ceil(imageWidth * scaleX) * properties->zoomX);
                 destRect.h = ceil(ceil(imageHeight * scaleY) * properties->zoomY);
 

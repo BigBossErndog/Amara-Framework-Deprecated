@@ -44,6 +44,8 @@ namespace Amara {
 
 			float scrollFactorX = 1;
 			float scrollFactorY = 1;
+			float zoomFactorX = 1;
+			float zoomFactorY = 1;
 			
 			float angle = 0;
 			float alpha = 1;
@@ -126,27 +128,42 @@ namespace Amara {
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
 
+				float recScrollX = properties->scrollX * scrollFactorX;
+				float recScrollY = properties->scrollY * scrollFactorY;
 				float recOffsetX = properties->offsetX + x;
 				float recOffsetY = properties->offsetY + y;
 				float recZoomX = properties->zoomX * scaleX;
 				float recZoomY = properties->zoomY * scaleY;
+				float recZoomFactorX = properties->zoomFactorX * zoomFactorX;
+				float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
 				float recAngle = properties->angle + angle;
 
 				if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
 				
 				stable_sort(entities.begin(), entities.end(), sortEntities());
+				
+				Amara::Entity* entity;
+				for (auto it = entities.begin(); it != entities.end(); it++) {
+                    entity = *it;
 
-				for (Amara::Entity* entity : entities) {
+                    if (entity->isDestroyed || entity->parent != this) {
+                        entities.erase(it--);
+                        continue;
+                    }
+					if (!entity->isVisible) continue;
+					
+					properties->scrollX = recScrollX;
+					properties->scrollY = recScrollY;
 					properties->offsetX = recOffsetX;
 					properties->offsetY = recOffsetY;
 					properties->zoomX = recZoomX;
 					properties->zoomY = recZoomY;
+					properties->zoomFactorX = recZoomFactorX;
+					properties->zoomFactorY = recZoomFactorY;
 					properties->angle = recAngle;
-					if (entity->isDestroyed || entity->parent != this) continue;
-					if (!entity->isVisible) continue;
 					entity->draw(vx, vy, vw, vh);
-				}
+                }
 			}
 
 			virtual void run() {
@@ -194,9 +211,7 @@ namespace Amara {
 			}
 
 			virtual void destroy(bool recursiveDestroy) {
-				if (parent != nullptr) {
-					parent->remove(this);
-				}
+				parent = nullptr;
 
 				Amara::Entity* child;
 				int numChildren = entities.size();
@@ -247,9 +262,25 @@ namespace Amara {
 				scrollFactorX = gx;
 				scrollFactorY = gy;
 			}
-
 			void setScrollFactor(float gi) {
 				setScrollFactor(gi, gi);
+			}
+
+			void setZoomFactor(float gx, float gy) {
+				zoomFactorX = gx;
+				zoomFactorY = gy;
+			}
+			void setZoomFactor(float gi) {
+				setZoomFactor(gi, gi);
+			}
+
+			void bringToFront() {
+				std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
+				for (Amara::Entity* entity: rSceneEntities) {
+					if (depth <= entity->depth) {
+						depth = entity->depth + 1;
+					}
+				}
 			}
 
 			virtual void create() {}

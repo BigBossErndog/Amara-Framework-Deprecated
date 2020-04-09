@@ -124,7 +124,7 @@ namespace Amara {
                                 srcRect.h = partHeight;
                                 break;
                         }
-
+                        
                         SDL_RenderCopy(
                             gRenderer,
                             (SDL_Texture*)(texture->asset),
@@ -147,6 +147,8 @@ namespace Amara {
                 }
 
                 SDL_SetRenderTarget(properties->gRenderer, canvas);
+                SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
                 SDL_RenderClear(gRenderer);
                 for (int i = 0; i < 9; i++) {
                     drawBoxPart(i);
@@ -164,10 +166,13 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(properties->gRenderer, &viewport);
 
-                destRect.x = floor(floor(x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * properties->zoomX);
-                destRect.y = floor(floor(y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * properties->zoomY);
-                destRect.w = ceil(ceil(width * scaleX) * properties->zoomX);
-                destRect.h = ceil(ceil(height * scaleY) * properties->zoomY);
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
+                
+                destRect.x = floor(floor(x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+                destRect.y = floor(floor(y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+                destRect.w = ceil(ceil(width * scaleX) * nzoomX);
+                destRect.h = ceil(ceil(height * scaleY) * nzoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
@@ -218,7 +223,6 @@ namespace Amara {
                         );
                     }
                 }
-                // SDL_Log("DRAWING: %d, %d, %d, %d - %d, %d", destRect.x, destRect.y, destRect.w, destRect.h, imageWidth, imageHeight);
 
                 Amara::Entity::draw(vx, vy, vw, vh);
             }
@@ -229,7 +233,7 @@ namespace Amara {
                 }
                 canvas = SDL_CreateTexture(
                     properties->gRenderer,
-                    SDL_GetWindowPixelFormat(properties->gWindow),
+                    SDL_PIXELFORMAT_RGBA8888,
                     SDL_TEXTUREACCESS_TARGET,
                     floor(width),
                     floor(height)

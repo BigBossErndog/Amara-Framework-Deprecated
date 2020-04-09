@@ -36,6 +36,9 @@ namespace Amara {
             int scrollX = 0;
             int scrollY = 0;
 
+            float zoomFactorX = 1;
+            float zoomFactorY = 1;
+
             float offsetX = 0;
             float offsetY = 0;
 

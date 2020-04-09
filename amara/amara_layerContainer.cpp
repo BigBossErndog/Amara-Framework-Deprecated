@@ -39,19 +39,21 @@ namespace Amara {
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 int dx = 0, dy = 0, dw = 0, dh = 0, ox = 0, oy = 0;
 
-                dx = floor(floor(x - properties->scrollX*scrollFactorX + properties->offsetX - (originX*width*scaleX)) * properties->zoomX);
-                dy = floor(floor(y - properties->scrollY*scrollFactorY + properties->offsetY - (originY*height*scaleY)) * properties->zoomY);
-                dw = width * scaleX * properties->zoomX;
-                dh = height * scaleY * properties->zoomY;
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
+                dx = floor(floor(x - properties->scrollX*scrollFactorX + properties->offsetX - (originX*width*scaleX)) * nzoomX);
+                dy = floor(floor(y - properties->scrollY*scrollFactorY + properties->offsetY - (originY*height*scaleY)) * nzoomY);
+                dw = width * scaleX * nzoomX;
+                dh = height * scaleY * nzoomY;
 
                 if (dx < 0) {
                     dw += dx;
-                    ox += dx/(scaleX*properties->zoomX);
+                    ox += dx/(scaleX*nzoomX);
                     dx = 0;
                 }
                 if (dy < 0) {
                     dh += dy;
-                    oy += dy/(scaleY*properties->zoomY);
+                    oy += dy/(scaleY*nzoomY);
                     dy = 0;
                 }
                 if (dx + dw > vw) {
@@ -68,6 +70,8 @@ namespace Amara {
 
                 float recZoomX = properties->zoomX;
                 float recZoomY = properties->zoomY;
+                float recZoomFactorX = properties->zoomFactorX * zoomFactorX;
+                float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
 
 				for (Amara::Entity* entity : entities) {
                     properties->scrollX = 0;
@@ -76,6 +80,8 @@ namespace Amara {
                     properties->offsetY = oy;
                     properties->zoomX = recZoomX * scaleX;
                     properties->zoomY = recZoomY * scaleY;
+                    properties->zoomFactorX = recZoomFactorX;
+                    properties->zoomFactorY = recZoomFactorY;
 					if (entity->isDestroyed || entity->parent != this) continue;
 					entity->draw(vx + dx, vy + dy, dw, dh);
 				}

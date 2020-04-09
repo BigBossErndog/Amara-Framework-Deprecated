@@ -129,7 +129,7 @@ namespace Amara {
 				SDL_UpdateWindowSurface(gWindow);
 
 				// Setting up the Renderer
-				gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+				gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
 				if (gRenderer == NULL) {
 					SDL_Log("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
 					return false;

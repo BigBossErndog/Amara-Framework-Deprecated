@@ -6,6 +6,8 @@ using namespace std;
 class TestScene: public Scene {
     public:
         TextBox* box;
+        Camera* exCam;
+
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
             load->ttf("pressStart", "assets/press-start.regular.ttf", 8);
@@ -16,6 +18,7 @@ class TestScene: public Scene {
             box->setText("Somebody once told me the world revolved around me.");
             box->setColor(255, 255, 255);
             box->setProgressive();
+            box->id = "TEXTBOX";
 
             box->setOrigin(0.5);
             box->x = game->resolution->width/2;
@@ -40,8 +43,14 @@ class TestScene: public Scene {
             controls->addButton("right", LEFTSTICK_RIGHT);
 
             controls->addButton("confirm", BUTTON_A);
+            controls->addKey("confirm", KEY_SPACE);
 
             controls->addKey("full", KEY_ESC);
+
+            add(exCam = new Camera(10, 10, 96, 72));
+            exCam->centerOn(game->width/(float)2, game->height/(float)2);
+            exCam->setZoom(1/(float)5);
+            box->bringToFront();
         }
 
         void update() {
@@ -63,6 +72,10 @@ class TestScene: public Scene {
                 box->width += 1;
             }
 
+            if (controls->justDown("confirm")) {
+                
+            }
+
             if (controls->justDown("full")) {
                 if (!game->isFullscreen) {
                     game->setWindowSize(game->display->width, game->display->height);
@@ -80,6 +93,7 @@ int main(int argc, char** args) {
     Game* game = new Game("Amara Game");
     game->init(480, 360);
     game->setWindowSize(960, 720);
+    // game->setBackgroundColor(255, 255, 255);
 
     game->scenes->add("test", new TestScene());
     game->start("test");
