@@ -122,6 +122,8 @@ namespace Amara {
                         if (cam->isDestroyed || cam->parent != this) continue;
                         cam->run();
                     }
+
+                    afterUpdate();
                 }
             }
 
@@ -157,6 +159,8 @@ namespace Amara {
                     }
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
+
+                afterDraw();
             }
 
             virtual void preload() {}
@@ -169,6 +173,9 @@ namespace Amara {
             virtual void onResume() {}
             virtual void onSleep() {}
             virtual void onWake() {}
+
+            virtual void afterUpdate() {}
+            virtual void afterDraw() {}
 
             ~Scene() {
                 delete load;

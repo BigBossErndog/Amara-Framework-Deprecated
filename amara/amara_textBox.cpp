@@ -188,12 +188,12 @@ namespace Amara {
                 txt->setFont(fontKey);
             }
 
-            void setColor(int r, int g, int b) {
+            void setTextColor(int r, int g, int b) {
                 textColor.r = r;
                 textColor.g = g;
                 textColor.b = b;
             }
-            void setColor(Amara::Color gColor) {
+            void setTextColor(Amara::Color gColor) {
                 textColor = gColor;
             }
 

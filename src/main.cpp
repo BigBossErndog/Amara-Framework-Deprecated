@@ -16,7 +16,7 @@ class TestScene: public Scene {
         void create() {
             add(box = new TextBox(400, 160, "box", "pressStart"));
             box->setText("Somebody once told me the world revolved around me.");
-            box->setColor(255, 255, 255);
+            box->setTextColor(255, 255, 255);
             box->setProgressive();
             box->id = "TEXTBOX";
 
