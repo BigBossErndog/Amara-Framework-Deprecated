@@ -301,6 +301,10 @@ namespace Amara {
             void setOrigin(float gi) {
                 setOrigin(gi, gi);
             }
+
+            ~UIBox() {
+                SDL_DestroyTexture(canvas);
+            }
     };
 }
 

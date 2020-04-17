@@ -11,12 +11,8 @@ namespace Amara {
     class Scene: public Amara::Actor {
         public:
             std::string key;
-            Amara::Game* game = nullptr;
-            Amara::LoadManager* load = nullptr;
+            Amara::LoadManager* loadManager = nullptr;
             Amara::ScenePlugin* scenePlugin = nullptr;
-            Amara::InputManager* input = nullptr;
-            Amara::ControlScheme* controls = nullptr;
-            Amara::AssetManager* assets = nullptr;
 
             Amara::Camera* mainCamera = nullptr;
             std::vector<Amara::Camera*> cameras;
@@ -30,24 +26,27 @@ namespace Amara {
 
             virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* gScenePlugin) final {
                 properties = gameProperties;
+				game = properties->game;
 
-                game = properties->game;
-                input = properties->input;
-                controls = properties->controls;
+				input = properties->input;
+				controls = properties->controls;
+				audio = properties->audio;
                 assets = properties->assets;
-                audio = properties->audio;
 
-                if (load != nullptr) {
-                    delete load;
+                if (loadManager != nullptr) {
+                    delete loadManager;
                 }
-                load = new Amara::LoadManager(properties);
+                loadManager = new Amara::LoadManager(properties);
+                setLoader(loadManager);
 
                 scenePlugin = gScenePlugin;
+                isActive = false;
             }
 
             virtual void init() {
-                initialLoaded = false;
-                
+                initialLoaded = false; 
+
+                setLoader(loadManager);
                 load->reset();
 
                 for (Amara::Camera* cam : cameras) {
@@ -62,9 +61,8 @@ namespace Amara {
                 entities.clear();
                 
                 add(mainCamera = new Amara::Camera());
-
                 preload();
-                std::cout << "START LOADING TASKS: " << load->tasks.size() << " loading tasks." << std::endl;
+                std::cout << "START LOADING TASKS: " << load->numTasks() << " loading tasks." << std::endl;
             }
 
             virtual Amara::Entity* add(Amara::Entity* entity) {
@@ -106,6 +104,7 @@ namespace Amara {
                     load->run();
                     if (!load->stillLoading) {
                         initialLoaded = true;
+                        setLoader(properties->loader);
                         create();
                     }
                 }

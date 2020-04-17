@@ -17,6 +17,9 @@ namespace Amara {
             std::unordered_map<std::string, Amara::Asset*> assets;
 			std::string selfkey;
 
+			bool stillLoading = false;
+			int loadSpeed = 100;
+
             Loader(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
 				game = properties->game;
@@ -24,10 +27,9 @@ namespace Amara {
                 gSurface = properties->gSurface;
                 gRenderer = properties->gRenderer;
                 assets.clear();
-				assets["control"] = new Amara::Asset("control", IMAGE, nullptr);
             }
 
-            Amara::Asset* get(std::string key) {
+            virtual Amara::Asset* get(std::string key) {
                 std::unordered_map<std::string, Amara::Asset*>::iterator got = assets.find(key);
                 if (got != assets.end()) {
                     return got->second;
@@ -35,7 +37,7 @@ namespace Amara {
                 return nullptr;
             }
 
-			bool remove(std::string key) {
+			virtual bool remove(std::string key) {
 				Amara::Asset* asset = get(key);
 				if (asset != nullptr) {
 					assets.erase(key);
@@ -44,11 +46,15 @@ namespace Amara {
 				}
 				return false;
 			}
+			
+			virtual void reset() {}
+			virtual void run() {}
+			virtual int numTasks() {}
 
             /*
 			 * Slow image.
 			 */
-			bool surface(std::string key, std::string path, bool replace) {
+			virtual bool surface(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -89,14 +95,14 @@ namespace Amara {
 				return success;
 			}
 
-			bool surface(std::string key, std::string path) {
+			virtual bool surface(std::string key, std::string path) {
 				return surface(key, path, false);
 			}
 
             /*
 			 * Fast texture image.
 			 */
-			bool image(std::string key, std::string path, bool replace) {
+			virtual bool image(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -138,14 +144,14 @@ namespace Amara {
 				return success;
 			}
 
-			bool image(std::string key, std::string path) {
+			virtual bool image(std::string key, std::string path) {
 				return image(key, path, false);
 			}
 
             /*
 			 *  Spritesheet handles frame width and height.
 			 */
-			bool spritesheet(std::string key, std::string path, int frwidth, int frheight, bool replace) {
+			virtual bool spritesheet(std::string key, std::string path, int frwidth, int frheight, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -184,14 +190,14 @@ namespace Amara {
 				return success;
 			}
 
-			bool spritesheet(std::string key, std::string path, int frwidth, int frheight) {
+			virtual bool spritesheet(std::string key, std::string path, int frwidth, int frheight) {
 				return spritesheet(key, path, frwidth, frheight, false);
 			}
 
             /*
 			 * Loads a TrueTypeFont.
 			 */
-			bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
+			virtual bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -224,19 +230,19 @@ namespace Amara {
 				return success;
 			}
 
-			bool ttf(std::string key, std::string path, int size, Amara::Color color, int style) {
+			virtual bool ttf(std::string key, std::string path, int size, Amara::Color color, int style) {
 				return ttf(key, path, size, color, style, false);
 			}
 
-			bool ttf(std::string key, std::string path, int size, Amara::Color color) {
+			virtual bool ttf(std::string key, std::string path, int size, Amara::Color color) {
 				return ttf(key, path, size, color, TTF_STYLE_NORMAL);
 			}
 
-			bool ttf(std::string key, std::string path, int size) {
+			virtual bool ttf(std::string key, std::string path, int size) {
 				return ttf(key, path, size, FC_MakeColor(0,0,0,255));
 			}
 
-            bool sound(std::string key, std::string path, bool replace) {
+            virtual bool sound(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -261,12 +267,12 @@ namespace Amara {
 				return success;
 			}
 
-			bool sound(std::string key, std::string path) {
+			virtual bool sound(std::string key, std::string path) {
 				return sound(key, path, false);
 			}
 
 
-			bool music(std::string key, std::string path, bool replace) {
+			virtual bool music(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -291,11 +297,11 @@ namespace Amara {
 				return success;
 			}
 
-            bool music(std::string key, std::string path) {
+            virtual bool music(std::string key, std::string path) {
 				return music(key, path, false);
 			}
 
-			bool stringFile(std::string key, std::string path, bool replace) {
+			virtual bool stringFile(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -327,7 +333,7 @@ namespace Amara {
 				return success;
 			}
 
-			bool json(std::string key, std::string path, bool replace) {
+			virtual bool json(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
@@ -357,6 +363,10 @@ namespace Amara {
 					success = false;
 				}
 				return success;
+			}
+
+			virtual bool json(std::string key, std::string path) {
+				json(key, path, false);
 			}
     };
 }

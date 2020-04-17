@@ -19,20 +19,14 @@ namespace Amara {
         Amara::Color color;
     };
 
-    class LoadManager {
+    class LoadManager: public Loader {
         public:
-            Amara::Game* game = nullptr;
-            Amara::GameProperties* properties = nullptr;
             Amara::Loader* load = nullptr;
 
             std::deque<Amara::LoadTask*> tasks;
             bool stillLoading = false;
 
-            int assetsPerFrame = 10;
-
-            LoadManager(Amara::GameProperties* gameProperties) {
-                properties = gameProperties;
-                game = properties->game;
+            LoadManager(Amara::GameProperties* gameProperties): Amara::Loader(gameProperties) {
                 load = properties->loader;
                 reset();
             }
@@ -44,12 +38,20 @@ namespace Amara {
                 tasks.clear();
             }
 
+            bool remove(std::string key) {
+                return load->remove(key);
+            }
+
+            int numTasks() {
+                return tasks.size();
+            }
+
             void run() {
                 stillLoading = false;
                 Amara::LoadTask* task;
                 int count = 0;
                 bool success;
-                while (tasks.size() > 0 && count < assetsPerFrame) {
+                while (tasks.size() > 0 && count < loadSpeed) {
                     task = tasks.front();
                     success = false;
                     stillLoading  = true;
@@ -96,18 +98,19 @@ namespace Amara {
                 tasks.push_back(asset);
             }
 
-            void image(std::string key, std::string path, bool replace) {
+            bool image(std::string key, std::string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
                 t->type = IMAGE;
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);
+                return true;
             }
-            void image(std::string key, std::string path) {
-                image(key, path, false);
+            bool image(std::string key, std::string path) {
+                return image(key, path, false);
             }
 
-            void spritesheet(std::string key, std::string path, int frameWidth, int frameHeight, bool replace) {
+            bool spritesheet(std::string key, std::string path, int frameWidth, int frameHeight, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
                 t->type = SPRITESHEET;
                 t->path = path;
@@ -116,12 +119,13 @@ namespace Amara {
                 t->frameHeight = frameHeight;
                 t->replace = replace;
                 pushTask(key, t);
+                return true;
             }
-            void spritesheet(std::string key, std::string path, int frameWidth, int frameHeight) {
-                spritesheet(key, path, frameWidth, frameHeight, false);
+            bool spritesheet(std::string key, std::string path, int frameWidth, int frameHeight) {
+                return spritesheet(key, path, frameWidth, frameHeight, false);
             }
-            void spritesheet(std::string key, std::string path, int frameWH) {
-                spritesheet(key, path, frameWH, frameWH);
+            bool spritesheet(std::string key, std::string path, int frameWH) {
+                return spritesheet(key, path, frameWH, frameWH);
             }
 
             bool sound(std::string key, std::string path, bool replace) {
@@ -130,6 +134,7 @@ namespace Amara {
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);
+                return true;
 			}
 
 			bool sound(std::string key, std::string path) {
@@ -148,29 +153,31 @@ namespace Amara {
 				return music(key, path, false);
 			}
 
-            void stringFile(std::string key, std::string path, bool replace) {
+            bool stringFile(std::string key, std::string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
                 t->type = STRINGFILE;
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);
+                return true;
             }
-            void stringFile(std::string key, std::string path) {
-                stringFile(key, path, false);
+            bool stringFile(std::string key, std::string path) {
+                return stringFile(key, path, false);
             }
 
-            void json(std::string key, std::string path, bool replace) {
+            bool json(std::string key, std::string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
                 t->type = JSONFILE;
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);
+                return true;
             }
-            void json(std::string key, std::string path) {
-                json(key, path, false);
+            bool json(std::string key, std::string path) {
+                return json(key, path, false);
             }
 
-            void ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
+            bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
                 Amara::LoadTask* t = new Amara::LoadTask();
                 t->type = TTF;
                 t->path = path;
@@ -179,18 +186,19 @@ namespace Amara {
                 t->color = color;
                 t->style = style;
                 pushTask(key, t);
+                return true;
             }
 
-            void ttf(std::string key, std::string path, int size, Amara::Color color, int style) {
-				ttf(key, path, size, color, style, false);
+            bool ttf(std::string key, std::string path, int size, Amara::Color color, int style) {
+				return ttf(key, path, size, color, style, false);
 			}
 
-			void ttf(std::string key, std::string path, int size, Amara::Color color) {
-				ttf(key, path, size, color, TTF_STYLE_NORMAL);
+			bool ttf(std::string key, std::string path, int size, Amara::Color color) {
+				return ttf(key, path, size, color, TTF_STYLE_NORMAL);
 			}
 
-			void ttf(std::string key, std::string path, int size) {
-				ttf(key, path, size, FC_MakeColor(0,0,0,255));
+			bool ttf(std::string key, std::string path, int size) {
+				return ttf(key, path, size, FC_MakeColor(0,0,0,255));
 			}
     };
 }

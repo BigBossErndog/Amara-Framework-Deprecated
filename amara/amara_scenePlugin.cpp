@@ -141,6 +141,7 @@ namespace Amara {
                     }
                 }
                 tasks.clear();
+                scene->isActive = isActive;
             }
     };
 }

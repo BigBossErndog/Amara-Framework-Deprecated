@@ -259,6 +259,10 @@ namespace Amara {
 
                 if (clearEveryFrame) clear();
             }
+
+            ~Canvas() {
+                SDL_DestroyTexture(canvas);
+            }
     };
 }
 

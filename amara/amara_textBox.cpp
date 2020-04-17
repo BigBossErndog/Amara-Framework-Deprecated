@@ -69,6 +69,10 @@ namespace Amara {
                     finishedProgress = true;
                 }
                 else {
+                    if (!progressControl.empty() && controls->justDown(progressControl)) {
+                        progress = wrappedText.length();
+                    }
+                    
                     timeCounter += 1;
                     if (timeCounter >= progressDelay) {
                         timeCounter = 0;

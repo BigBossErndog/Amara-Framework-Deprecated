@@ -42,6 +42,15 @@ namespace Amara {
             void addAnim(std::vector<std::string> textureKeys, std::string animKey, int frame) {
                 addAnim(textureKeys, animKey, {frame}, 1, false);
             }
+
+            void addAnim(std::string textureKey, std::string animKey, int startFrame, int numFrames, int frameRate, bool loop) {
+                std::vector<int> frames;
+                frames.clear();
+                for (int i = 0; i < numFrames; i++) {
+                    frames.push_back(startFrame + i);
+                }
+                addAnim(textureKey, animKey, frames, frameRate, loop);
+            }
     };
 }
 

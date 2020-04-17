@@ -18,6 +18,7 @@ namespace Amara {
     class EventManager;
     class Music;
     class AudioGroup;
+    class Assets;
 
     class GameProperties {
         public:

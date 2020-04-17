@@ -30,6 +30,7 @@ namespace Amara {
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
 			Amara::AudioGroup* audio = nullptr;
+			Amara::AssetManager* assets = nullptr;
 			Amara::Loader* load = nullptr;
 
 			std::vector<Amara::Entity*> entities;
@@ -70,6 +71,7 @@ namespace Amara {
 				input = properties->input;
 				controls = properties->controls;
 				audio = properties->audio;
+				assets = properties->assets;
 				load = properties->loader;
 
 				isActive = true;
@@ -281,6 +283,19 @@ namespace Amara {
 						depth = entity->depth + 1;
 					}
 				}
+			}
+
+			virtual void setLoader(Amara::Loader* gLoader, bool recursive) {
+				load = gLoader;
+				if (recursive) {
+					for (Amara::Entity* entity: entities) {
+						entity->setLoader(gLoader);
+					}
+				}
+			}
+
+			virtual void setLoader(Amara::Loader* gLoader) {
+				setLoader(gLoader, true);
 			}
 
 			virtual void create() {}
