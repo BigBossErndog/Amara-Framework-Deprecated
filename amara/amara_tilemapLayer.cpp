@@ -238,7 +238,7 @@ namespace Amara {
                     float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                     float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
                     destRect.x = floor(floor(x + tx - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth)) * nzoomX);
-                    destRect.y = floor(floor(y + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
+                    destRect.y = floor(floor(y-z + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
                     destRect.w = ceil(ceil(tileWidth * scaleX) * nzoomX);
                     destRect.h = ceil(ceil(tileHeight * scaleY) * nzoomY);
 

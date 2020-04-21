@@ -9,6 +9,13 @@ namespace Amara {
 	class InputManager;
 	class ControlScheme;
 
+	class PhysicsBase: public Amara::FloatRect {
+		public:
+			bool deleteWithParent = true;
+			
+			virtual void run() {}
+	};
+
 	class SortedEntity {
 		public:
 			int depth = 0;
@@ -35,10 +42,13 @@ namespace Amara {
 
 			std::vector<Amara::Entity*> entities;
 
+			Amara::PhysicsBase* physics = nullptr;
+
 			std::string id;
 
 			float x = 0;
 			float y = 0;
+			float z = 0;
 
 			float scaleX = 1;
 			float scaleY = 1;
@@ -171,6 +181,9 @@ namespace Amara {
 			virtual void run() {
 				Amara::Interactable::run();
 				update();
+				if (physics != nullptr) {
+					physics->run();
+				}
 
 				for (Amara::Entity* entity : entities) {
 					if (entity->isDestroyed || entity->parent != this) continue;
@@ -210,6 +223,20 @@ namespace Amara {
 					}
 				}
 				return nullptr;
+			}
+
+			virtual Amara::Entity* add(Amara::PhysicsBase* gPhysics) {
+				if (physics != nullptr) {
+					delete physics;
+				}
+				physics = gPhysics;
+			}
+
+			virtual void remove(Amara::PhysicsBase* fPhysics) {
+				if (physics == fPhysics) {
+					delete physics;
+					physics = nullptr;
+				}
 			}
 
 			virtual void destroy(bool recursiveDestroy) {
@@ -301,7 +328,11 @@ namespace Amara {
 			virtual void create() {}
 			virtual void update() {}
 
-			virtual ~Entity() {}
+			virtual ~Entity() {
+				if (physics != nullptr && physics->deleteWithParent) {
+					delete physics;
+				}
+			}
 		protected:
 	};
 }

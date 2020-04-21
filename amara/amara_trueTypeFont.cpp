@@ -183,7 +183,7 @@ namespace Amara {
                             fontAsset->font,
                             gRenderer,
                             floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            floor(floor(y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             wordWrapWidth,
                             effect,
                             txt
@@ -201,7 +201,7 @@ namespace Amara {
                             fontAsset->font,
                             gRenderer,
                             floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor(floor(y - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            floor(floor(y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             effect,
                             txt
                         );

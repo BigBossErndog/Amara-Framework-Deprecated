@@ -51,6 +51,13 @@ namespace Amara {
                 bool overlapY = Amara::valueInRange(y, rect.y, rect.y + rect.height) || Amara::valueInRange(rect.y, y, y + height);
                 return overlapX && overlapY;
             }
+
+            void copy(IntRect rect) {
+                x = rect.x;
+                y = rect.y;
+                width = rect.width;
+                height = rect.height;
+            }
     };
 
     class FloatRect {
@@ -67,6 +74,19 @@ namespace Amara {
                 y = ny;
                 width = nw;
                 height = nh;
+            }
+
+            bool overlaps(FloatRect rect) {
+                bool overlapX = Amara::valueInRange(x, rect.x, rect.x + rect.width) || Amara::valueInRange(rect.x, x, x + width);
+                bool overlapY = Amara::valueInRange(y, rect.y, rect.y + rect.height) || Amara::valueInRange(rect.y, y, y + height);
+                return overlapX && overlapY;
+            }
+
+            void copy(FloatRect rect) {
+                x = rect.x;
+                y = rect.y;
+                width = rect.width;
+                height = rect.height;
             }
     };
 

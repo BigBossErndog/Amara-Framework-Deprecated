@@ -6,15 +6,30 @@
 namespace Amara {
     enum Easing {
         LINEAR,
-        SINE
+        SINE_INOUT,
+        SINE_IN,
+        SINE_OUT,
+        SINE_INOUT_BACKROUND
     };
 
-    float linearEase(float startVal, float endVal, double progress) {
+    double linearEase(float startVal, float endVal, double progress) {
         return startVal + (endVal - startVal)*progress;
     }   
 
-    double sineEase(float startVal, float endVal, double progress) {
+    double sineInOutEase(float startVal, float endVal, double progress) {
         return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI) + 1)/2;
+    }
+
+    double sineOut(float startVal, float endVal, double progress) {
+        return startVal + (endVal - startVal)*(sin(progress*M_PI/2));
+    }
+
+    double sineIn(float startVal, float endVal, double progress) {
+        return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI/2) + 1);
+    }
+
+    double sineInOutBackRound(float startVal, float endVal, double progress) {
+        return startVal + (endVal + startVal)*(sin(-M_PI/2 + progress*M_PI*2) + 1)/2;
     }
 }
 

@@ -23,6 +23,7 @@ class TestScene: public Scene {
             box->setOrigin(0.5);
             box->x = game->resolution->width/2;
             box->y = game->resolution->height/2;
+            box->setTextColor(0, 0, 0);
 
             controls->addKey("up", KEY_UP);
             controls->addKey("down", KEY_DOWN);

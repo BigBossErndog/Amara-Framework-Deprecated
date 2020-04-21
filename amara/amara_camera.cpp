@@ -84,7 +84,7 @@ namespace Amara {
                 updateValues();
 
                 if (followTarget != nullptr) {
-                    if (followTarget->isDestroyed) {
+                    if (followTarget->isDestroyed || !followTarget->isActive) {
                         stopFollow();
                     }
                     else {
@@ -162,7 +162,7 @@ namespace Amara {
                     dx = vx;
                 }
 
-                dy = vy + floor(y);
+                dy = vy + floor(y-z);
                 if (dy < vy) {
                     oh = vy - dy;
                     dy = vy;
