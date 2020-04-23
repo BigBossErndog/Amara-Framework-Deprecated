@@ -39,7 +39,7 @@ make setup-apt64
 ```
 make setup-yum64
 ```
-#### Pacman (Majaro / Arch Linux) 64-bit
+#### Pacman (Manjaro / Arch Linux) 64-bit
 ```
 make setup-pacman64
 ```
