@@ -1,6 +1,8 @@
 # Amara
+A C++ game framework built on top of SDL2. Based on Actors and Recitals.
+
 ## About
-A C++ game framework built on top of SDL2.
+
 
 Enough features to make a full game, still working on more features to match the capabilities of other frameworks.
 
@@ -13,4 +15,6 @@ DMs are open.
 
 ## Why does this exist?
 
-Alternative work flow based on Actors and Recitalsm, makes it easier to program behaviors into the game. Some design decisions are also borrowed from the Phaser.io Javascript framework, which I like and became accustomed to. I wanted to emulate the architecture of some of my web games in C++, as my eventual aim will be to build native cross-platform games for many devices such as Nintendo Switch.
+Alternative work flow based on Actors and Recitalsm, making it easier to program event based behaviors into the game. State Machines are built into 'Scripts' which make it easy to give instructions to an Actor for things like enemy AI and moving characters in cutscenes.
+
+Some design decisions are also borrowed from the Phaser.io Javascript framework, which I like and became accustomed to. I wanted to emulate the architecture of some of my web games in C++, as my eventual aim will be to build native cross-platform games for many devices such as Nintendo Switch.
