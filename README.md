@@ -13,6 +13,34 @@ Please reach out to me if you would be interested in learning how to use it.
 www.twitter.com/bigbosserndog
 DMs are open.
 
+## Setting Up
+Clone the repository then follow the instructions for setting up Amara on your development platform of choice.
+```
+
+```
+
+### Windows
+You will find that the project si already set up for Windows.
+
+### Linux
+The following `make` commands will set up Amara depending on which package management system you use.
+#### Apt (Ubuntu / Debian) 64-bit
+```
+make setup-apt64
+```
+#### Yum (Fedora) 64-bit
+```
+make setup-yum64
+```
+#### Pacman (Majaro / Arch Linux) 64-bit
+```
+make setup-pacman64
+```
+
+
+### MacOS
+As I don't have access to a Mac, I cannot provide a way to build for MacOS right now.
+
 ## Why does this exist?
 
 Alternative work flow based on Actors and Recitalsm, making it easier to program event based behaviors into the game. State Machines are built into 'Scripts' which make it easy to give instructions to an Actor for things like enemy AI and moving characters in cutscenes.
