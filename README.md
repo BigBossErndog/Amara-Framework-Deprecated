@@ -16,11 +16,12 @@ DMs are open.
 ## Setting Up
 Clone the repository then follow the instructions for setting up Amara on your development platform of choice.
 ```
-
+git clone https://github.com/BigBossErndog/Amara-Framework.git
+cd amara-framework
 ```
 
 ### Windows
-You will find that the project si already set up for Windows.
+You will find that the project is already set up for Windows, complete with all the necessary headers and dlls :)
 
 ### Linux
 The following `make` commands will set up Amara depending on which package management system you use.
