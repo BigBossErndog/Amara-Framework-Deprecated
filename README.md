@@ -44,6 +44,6 @@ As I don't have access to a Mac, I cannot provide a way to build for MacOS right
 
 ## Why does this exist?
 
-Alternative work flow based on Actors and Recitalsm, making it easier to program event based behaviors into the game. State Machines are built into 'Scripts' which make it easy to give instructions to an Actor for things like enemy AI and moving characters in cutscenes.
+Alternative work flow based on Actors and Scripts which the Actors recite, making it easier to program event based behaviors into the game. And easy to use State Machine is built into Scripts which makes it easy to give sequential instructions to an Actor for things like enemy AI and moving characters in cutscenes.
 
 Some design decisions are also borrowed from the Phaser.io Javascript framework, which I like and became accustomed to. I wanted to emulate the architecture of some of my web games in C++, as my eventual aim will be to build native cross-platform games for many devices such as Nintendo Switch.
