@@ -1,7 +1,7 @@
 # Amara
 A C++ game framework built on top of SDL2. Based on Actors and Recitals.
 
-## About
+## State of the project
 
 
 Enough features to make a full game, still working on more features to match the capabilities of other frameworks.
