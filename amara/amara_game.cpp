@@ -26,6 +26,8 @@ namespace Amara {
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;
 
+			nlohmann::json globalData;
+
 			bool lagging = false;
 			int lagCounter = 0;
 

@@ -44,9 +44,9 @@ namespace Amara {
         Right
     };
 
-    std::vector<Direction> DirectionsInOrder = { Down, DownLeft, Left, UpLeft, Up, UpRight, Right, DownRight };
-    std::vector<Direction> FourDirections = { Down, Left, Up, Right };
-    std::vector<Direction> DiagonalDirections = { DownLeft, UpLeft, UpRight, DownRight };
+    std::vector<Amara::Direction> DirectionsInOrder = { Right, DownRight, Down, DownLeft, Left, UpLeft, Up, UpRight };
+    std::vector<Amara::Direction> FourDirections = { Down, Left, Up, Right };
+    std::vector<Amara::Direction> DiagonalDirections = { DownLeft, UpLeft, UpRight, DownRight };
 }
 
 #endif

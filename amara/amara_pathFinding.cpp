@@ -4,8 +4,6 @@
 #include "amara.h"
 
 namespace Amara {
-    class Walker;
-
     int findPath(void* data);
 
     enum PathTileState {
