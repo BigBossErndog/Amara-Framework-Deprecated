@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_TEXTBOX
 #define AMARA_TEXTBOX
 

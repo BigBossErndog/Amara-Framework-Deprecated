@@ -1,5 +1,6 @@
-#ifndef AMARA_INTRECT
-#define AMARA_INTRECT
+#pragma once
+#ifndef AMARA_GEOMETRY
+#define AMARA_GEOMETRY
 
 #include "amara.h"
 

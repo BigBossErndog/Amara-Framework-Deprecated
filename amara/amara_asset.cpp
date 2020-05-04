@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_ASSET
 #define AMARA_ASSET
 

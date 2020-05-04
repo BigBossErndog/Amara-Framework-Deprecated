@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_SOUND
 #define AMARA_SOUND
 

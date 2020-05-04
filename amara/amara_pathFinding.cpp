@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_PATHFINDING
 #define AMARA_PATHFINDING
 

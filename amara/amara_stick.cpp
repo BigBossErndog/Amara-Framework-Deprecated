@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_STICK
 #define AMARA_STICK
 

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_TWEENS
 #define AMARA_TWEENS
 

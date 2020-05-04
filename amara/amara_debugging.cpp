@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_DEBUGGING
 #define AMARA_DEBUGGING
 

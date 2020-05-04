@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_UIBOX
 #define AMARA_UIBOX
 
@@ -179,10 +180,10 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
                 
-                destRect.x = floor(floor(x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-                destRect.y = floor(floor(y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
-                destRect.w = ceil(ceil(width * scaleX) * nzoomX);
-                destRect.h = ceil(ceil(height * scaleY) * nzoomY);
+                destRect.x = floor((x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+                destRect.y = floor((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+                destRect.w = ceil((width * scaleX) * nzoomX);
+                destRect.h = ceil((height * scaleY) * nzoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;

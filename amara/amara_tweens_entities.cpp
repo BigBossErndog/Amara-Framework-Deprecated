@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_TWEENS_ENTITIES
 #define AMARA_TWEENS_ENTITIES
 

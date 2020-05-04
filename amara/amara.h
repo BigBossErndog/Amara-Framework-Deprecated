@@ -1,22 +1,25 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <streambuf>
-#include <time.h>
-#include <limits>
-#include <bitset>
-#include <map>
-#include <unordered_map>
-#include <vector>
-#include <deque>
-#include <list>
-#include <algorithm>
-#include <functional>
-#include <math.h>
-#include <nlohmann/json.hpp>
+#ifndef AMARA_STD
+#define AMARA_STD
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <string>
+    #include <iostream>
+    #include <fstream>
+    #include <streambuf>
+    #include <time.h>
+    #include <limits>
+    #include <bitset>
+    #include <map>
+    #include <unordered_map>
+    #include <vector>
+    #include <deque>
+    #include <list>
+    #include <algorithm>
+    #include <functional>
+    #include <math.h>
+    #include <nlohmann/json.hpp>
+#endif 
 
 #ifndef AMARA_SDL
 #define AMARA_SDL

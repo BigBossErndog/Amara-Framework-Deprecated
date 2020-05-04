@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_LTIMER
 #define AMARA_LTIMER
 

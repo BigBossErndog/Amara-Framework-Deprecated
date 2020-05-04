@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_SCRIPT
 #define AMARA_SCRIPT
 

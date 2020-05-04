@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_AUDIOGROUP
 #define AMARA_AUDIOGROUP
 

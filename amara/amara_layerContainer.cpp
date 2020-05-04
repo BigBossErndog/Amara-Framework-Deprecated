@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_LAYER
 #define AMARA_LAYER
 
@@ -41,8 +42,8 @@ namespace Amara {
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
-                dx = floor(floor(x - properties->scrollX*scrollFactorX + properties->offsetX - (originX*width*scaleX)) * nzoomX);
-                dy = floor(floor(y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY*height*scaleY)) * nzoomY);
+                dx = floor((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX*width*scaleX)) * nzoomX);
+                dy = floor((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY*height*scaleY)) * nzoomY);
                 dw = width * scaleX * nzoomX;
                 dh = height * scaleY * nzoomY;
 

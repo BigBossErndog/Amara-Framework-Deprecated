@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_MATH
 #define AMARA_MATH
 

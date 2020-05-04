@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_CONTROLSCHEME
 #define AMARA_CONTROLSCHEME
 

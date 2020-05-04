@@ -1,5 +1,6 @@
-#ifndef Amara_AnimationManager
-#define Amara_AnimationManager
+#pragma once
+#ifndef Amara_ANIMATIONMANAGER
+#define AMARA_ANIMATIONMANAGER
 
 #include "amara.h"
 

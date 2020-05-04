@@ -1,5 +1,6 @@
-#ifndef AMARA_GAME_PROPERTIES
-#define AMARA_GAME_PROPERTIES
+#pragma once
+#ifndef AMARA_GAMEPROPERTIES
+#define AMARA_GAMEPROPERTIES
 
 #include "amara.h"
 
@@ -51,6 +52,7 @@ namespace Amara {
             Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;
+            Amara::FloatVector2* scale = nullptr;
 
             bool lagging = false;
             bool dragged = false;

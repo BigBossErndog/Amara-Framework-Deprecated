@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_LOADER
 #define AMARA_LOADER
 

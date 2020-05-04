@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_SPRITE
 #define AMARA_SPRITE
 

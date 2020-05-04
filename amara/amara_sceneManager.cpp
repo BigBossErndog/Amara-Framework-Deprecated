@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_SCENEMANAGER
 #define AMARA_SCENEMANAGER
 

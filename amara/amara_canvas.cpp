@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_CANVAS
 #define AMARA_CANVAS
 
@@ -200,10 +201,10 @@ namespace Amara {
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
-                destRect.x = floor(floor(x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = floor(floor(y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
-                destRect.w = ceil(ceil(imageWidth * scaleX) * properties->zoomX);
-                destRect.h = ceil(ceil(imageHeight * scaleY) * properties->zoomY);
+                destRect.x = floor((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = floor((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRect.w = ceil((imageWidth * scaleX) * properties->zoomX);
+                destRect.h = ceil((imageHeight * scaleY) * properties->zoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_MOUSE
 #define AMARA_MOUSE
 

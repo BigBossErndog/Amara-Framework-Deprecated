@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_ACTOR
 #define AMARA_ACTOR
 

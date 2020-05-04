@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_INPUTMANAGER
 #define AMARA_INPUTMANAGER
 

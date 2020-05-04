@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_EVENTS
 #define AMARA_EVENTS
 

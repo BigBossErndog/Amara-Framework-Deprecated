@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_FDECLARE_TWEENS
 #define AMARA_FDECLARE_TWEENS
 

@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_STATEMANAGER
 #define AMARA_STATEMANAGER
 

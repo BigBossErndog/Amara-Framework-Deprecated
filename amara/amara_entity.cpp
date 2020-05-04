@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_ENTITY
 #define AMARA_ENTITY
 

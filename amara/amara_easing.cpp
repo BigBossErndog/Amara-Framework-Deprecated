@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_EASING
 #define AMARA_EASING
 

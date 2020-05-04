@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_TILEMAPLAYER
 #define AMARA_TILEMAPLAYER
 
@@ -237,10 +238,10 @@ namespace Amara {
                     
                     float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                     float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
-                    destRect.x = floor(floor(x + tx - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth)) * nzoomX);
-                    destRect.y = floor(floor(y-z + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
-                    destRect.w = ceil(ceil(tileWidth * scaleX) * nzoomX);
-                    destRect.h = ceil(ceil(tileHeight * scaleY) * nzoomY);
+                    destRect.x = floor((x + tx - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth)) * nzoomX);
+                    destRect.y = floor((y-z + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
+                    destRect.w = ceil((tileWidth * scaleX) * nzoomX);
+                    destRect.h = ceil((tileHeight * scaleY) * nzoomY);
 
                     origin.x = destRect.w * originX + destRect.w/2;
                     origin.y = destRect.h * originY + destRect.h/2;

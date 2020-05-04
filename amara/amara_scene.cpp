@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_SCENE
 #define AMARA_SCENE
 
@@ -32,6 +33,8 @@ namespace Amara {
 				controls = properties->controls;
 				audio = properties->audio;
                 assets = properties->assets;
+
+                scene = this;
 
                 if (loadManager != nullptr) {
                     delete loadManager;

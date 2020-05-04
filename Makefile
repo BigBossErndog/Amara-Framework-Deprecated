@@ -34,7 +34,6 @@ clean:
 
 win64: $(SRC_FILES)
 	cls
-	rm -rf build/*
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_WIN64) $(SDL_LIBRARY_PATHS_WIN64) $(COMPILER_FLAGS) -l mingw32 $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_WIN)
 	cp dlls/win64/* $(BUILD_PATH)/
 	mkdir -p $(BUILD_PATH)/assets

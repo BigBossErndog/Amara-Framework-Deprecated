@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_AUDIOBASE
 #define AMARA_AUDIOBASE
 

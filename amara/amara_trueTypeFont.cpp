@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_TRUETYPEFONT
 #define AMARA_TRUETYPEFONT
 
@@ -182,8 +183,8 @@ namespace Amara {
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor(floor(y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            floor((x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
+                            floor((y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             wordWrapWidth,
                             effect,
                             txt
@@ -200,8 +201,8 @@ namespace Amara {
                         FC_DrawEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor(floor(x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor(floor(y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            floor((x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
+                            floor((y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             effect,
                             txt
                         );

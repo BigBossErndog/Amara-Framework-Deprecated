@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_KEYCODES
 #define AMARA_KEYCODES
 

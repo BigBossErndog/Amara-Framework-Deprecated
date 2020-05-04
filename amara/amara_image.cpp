@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_IMAGE
 #define AMARA_IMAGE
 
@@ -27,6 +28,9 @@ namespace Amara {
 
             float originX = 0;
             float originY = 0;
+
+            bool flipHorizontal = false;
+            bool flipVertical = false;
 
             Image(): Actor() {
                 textureKey.clear();
@@ -67,6 +71,12 @@ namespace Amara {
                 if (config.find("originY") != config.end()) {
                     originY = config["originY"];
                 }
+                if (config.find("flipHorizontal") != config.end()) {
+                    flipHorizontal = config["flipHorizontal"];
+                }
+                if (config.find("flipVertical") != config.end()) {
+                    flipVertical = config["flipVertical"];
+                }
             }
 
             virtual nlohmann::json toData() {
@@ -75,6 +85,8 @@ namespace Amara {
                 config["frame"] = frame;
                 config["originX"] = originX;
                 config["originY"] = originY;
+                config["flipHorizontal"] = flipHorizontal;
+                config["flipVertical"] = flipVertical;
                 return config;
             }
 
@@ -93,10 +105,10 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
                 
-                destRect.x = floor(floor(x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = floor(floor(y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
-                destRect.w = ceil(ceil(imageWidth * scaleX) * nzoomX);
-                destRect.h = ceil(ceil(imageHeight * scaleY) * nzoomY);
+                destRect.x = floor((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = floor((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRect.w = ceil((imageWidth * scaleX) * nzoomX);
+                destRect.h = ceil((imageHeight * scaleY) * nzoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
@@ -156,6 +168,14 @@ namespace Amara {
 
                         SDL_SetTextureBlendMode(tx, blendMode);
 				        SDL_SetTextureAlphaMod(tx, alpha * 255);
+
+                        SDL_RendererFlip flipVal = SDL_FLIP_NONE;
+                        if (flipHorizontal) {
+                            flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_HORIZONTAL);
+                        }
+                        if (flipVertical) {
+                            flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
+                        }
 
                         SDL_RenderCopyEx(
                             gRenderer,

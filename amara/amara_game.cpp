@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_GAME
 #define AMARA_GAME
 
@@ -75,6 +76,8 @@ namespace Amara {
 			}
 
 			bool init(int startWidth, int startHeight) {
+				SDL_SetMainReady();
+
 				width = startWidth;
 				height = startHeight;
 

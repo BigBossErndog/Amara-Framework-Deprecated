@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_ALIGNMENT
 #define AMARA_ALIGNMENT
 

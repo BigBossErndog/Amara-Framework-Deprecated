@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_GAMEPADMANAGER
 #define AMARA_GAMEPADMANAGER
 

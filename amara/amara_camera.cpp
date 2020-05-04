@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_CAMERA
 #define AMARA_CAMERA
 
@@ -76,6 +77,11 @@ namespace Amara {
 				if (!definedDimensions) {
                     x = 0;
                     y = 0;
+
+                    if (width != properties->resolution->width || height != properties->resolution->height) {
+                        centerOn(centerX, centerY);
+                    }
+
                     width = properties->resolution->width;
                     height = properties->resolution->height;
                 }
@@ -258,8 +264,8 @@ namespace Amara {
                 setZoomScale(gZoomScale);
                 zoomX = gx;
                 zoomY = gy;
+                centerOn(cx, cy);
 
-                centerOn(centerX, centerY);
                 updateValues();
             }
 

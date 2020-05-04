@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_POINTER
 #define AMARA_POINTER
 

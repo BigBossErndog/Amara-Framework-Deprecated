@@ -1,5 +1,6 @@
-#ifndef Amara_TaskManager
-#define Amara_TaskManager
+#pragma once
+#ifndef AMARA_TASKMANAGER
+#define AMARA_TASKMANAGER
 
 #include "amara.h"
 

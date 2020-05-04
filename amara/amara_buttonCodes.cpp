@@ -1,3 +1,4 @@
+#pragma once
 #ifndef AMARA_BUTTONCODES
 #define AMARA_BUTTONCODES
 
