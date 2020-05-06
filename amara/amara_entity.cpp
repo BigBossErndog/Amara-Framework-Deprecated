@@ -19,7 +19,7 @@ namespace Amara {
 
 	class SortedEntity {
 		public:
-			int depth = 0;
+			float depth = 0;
 	};
 
 	struct sortEntities {
@@ -118,6 +118,9 @@ namespace Amara {
 				if (config.find("isVisible") != config.end()) {
 					isVisible = config["isVisible"];
 				}
+				if (config.find("alpha") != config.end()) {
+					alpha = config["alpha"];
+				}
 			}
 
 			virtual nlohmann::json toData() {
@@ -130,6 +133,7 @@ namespace Amara {
 				config["scrollFactorX"] = scrollFactorX;
 				config["scrollFactorY"] = scrollFactorY;
 				config["isVisible"] = isVisible;
+				config["alpha"] = alpha;
 				return config;
 			}
 

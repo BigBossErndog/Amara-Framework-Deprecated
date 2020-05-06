@@ -1,6 +1,6 @@
 #pragma once
 #ifndef Amara_ANIMATIONMANAGER
-#define AMARA_ANIMATIONMANAGER
+#define Amara_ANIMATIONMANAGER
 
 #include "amara.h"
 
@@ -24,9 +24,9 @@ namespace Amara {
                 parent = givenParent;
             }
 
-            void play(Amara::ImageTexture* texture, std::string animKey) {
+            bool play(Amara::ImageTexture* texture, std::string animKey) {
                 if (texture == nullptr || texture->type != SPRITESHEET) {
-                    return;
+                    return false;
                 }
                 Amara::Animation* anim = ((Amara::Spritesheet*)texture)->getAnim(animKey);
                 if (anim == nullptr) {
@@ -41,12 +41,22 @@ namespace Amara {
                     if (anim != nullptr) {
                         currentFrame = anim->frameAt(currentIndex);
                         parent->frame = currentFrame;
+
+                        return true;
                     }
 
                     isFinished = false;
                     isActive = true;
                     isPaused = false;
                 }
+                return false;
+            }
+
+            Amara::Animation* get(std::string animKey) {
+                if (parent && parent->texture && parent->texture->type == SPRITESHEET) {
+                    return ((Amara::Spritesheet*)parent->texture)->getAnim(animKey);
+                }
+                return nullptr;
             }
 
             void stop() {

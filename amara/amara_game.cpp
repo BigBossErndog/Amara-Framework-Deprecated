@@ -12,6 +12,8 @@ namespace Amara {
 
 			Amara::GameProperties* properties;
 
+			nlohmann::json globalData;
+
 			std::string name;
 			bool quit = false;
 			bool dragged = false;
@@ -26,8 +28,6 @@ namespace Amara {
 			Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;
-
-			nlohmann::json globalData;
 
 			bool lagging = false;
 			int lagCounter = 0;
@@ -195,6 +195,8 @@ namespace Amara {
 				input->mouse = new Amara::Mouse(properties);
 				input->gamepads = new Amara::GamepadManager(properties);
 				properties->input = input;
+
+				globalData.clear();
 				
 
 				// Check connected gamepads

@@ -28,7 +28,7 @@ namespace Amara {
 
     class PathFindingTask {
         public:
-            std::vector<Amara::TilemapLayer*> walls;
+            Amara::WallFinder* wallFinder;
             int startX = 0;
             int startY = 0;
             int targetX = 0;
@@ -50,22 +50,10 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
-            PathFindingTask(std::vector<Amara::TilemapLayer*> gWalls) {
-                walls = gWalls;
-                width = walls[0]->width;
-                height = walls[0]->height;
-            }
-
-            PathFindingTask(Amara::TilemapLayer* wallLayer) {
-                walls = {wallLayer};
-                width = walls[0]->width;
-                height = walls[0]->height;
-            }
-
-            PathFindingTask(Amara::Tilemap* tilemap) {
-                walls = tilemap->walls;
-                width = tilemap->width;
-                height = tilemap->height;
+            PathFindingTask(Amara::WallFinder* gWallFinder) {
+                wallFinder = gWallFinder;
+                width = gWallFinder->getMapWidth();
+                height = gWallFinder->getMapHeight();
             }
 
             void calculateCosts(PathTile& child, PathTile& parent) {
@@ -174,14 +162,7 @@ namespace Amara {
             }
 
             bool isWall(int gx, int gy) {
-                Amara::Tile tile;
-                for (Amara::TilemapLayer* layer: walls) {
-                    tile = layer->getTileAt(gx, gy);
-                    if (tile.id >= 0) {
-                        return true;
-                    }
-                }
-                return false;
+                return wallFinder->isWall(gx, gy);
             }
 
             Amara::PathFindingTask* from(int gx, int gy) {

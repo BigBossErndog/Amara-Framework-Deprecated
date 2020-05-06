@@ -7,7 +7,9 @@
 namespace Amara {
     class Sprite: public Amara::Image, public Amara::Animated {
         public:
-            Sprite(int gx, int gy, std::string tx): Amara::Image(gx, gy, tx) {}
+            Sprite(float gx, float gy, std::string tx): Amara::Image(gx, gy, tx) {}
+            Sprite(float gx, float gy): Amara::Image(gx, gy) {}
+            Sprite(std::string tx): Amara::Image(tx) {}
             Sprite(): Amara::Image() {};
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
@@ -15,8 +17,8 @@ namespace Amara {
                 Amara::Image::init(gameProperties, givenScene, givenParent);
 			}
 
-            virtual void play(std::string animKey) {
-                anims->play(texture, animKey);
+            virtual bool play(std::string animKey) {
+                return anims->play(texture, animKey);
             }
 
             virtual void configure(nlohmann::json config) {

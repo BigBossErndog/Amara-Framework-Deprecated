@@ -103,6 +103,8 @@ namespace Amara {
 
 #include "amara_interactable.cpp"
 
+#include "amara_wallFinder.cpp"
+
 #include "amara_assetManager.cpp"
 #include "amara_audioGroup.cpp"
 

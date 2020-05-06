@@ -5,7 +5,7 @@
 #include "amara.h"
 
 namespace Amara {
-    class Tilemap: public Amara::Actor {
+    class Tilemap: public Amara::Actor, public Amara::WallFinder {
         public:
             std::string textureKey;
             std::string tiledJsonKey;
@@ -128,6 +128,17 @@ namespace Amara {
                 return walls;
             }
 
+            virtual bool isWall(int gx, int gy) {
+                Amara::Tile tile;
+                for (Amara::TilemapLayer* layer: walls) {
+                    tile = layer->getTileAt(gx, gy);
+                    if (tile.id >= 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             void createAllLayers() {
                 if (tiledJsonKey.empty()) return;
                 int numLayers = tiledJson["layers"].size();
@@ -142,6 +153,13 @@ namespace Amara {
 
             void draw(int vx, int vy, int vw, int vh) {
                 Amara::Actor::draw(vx, vy, vw, vh);
+            }
+
+            virtual int getMapWidth() {
+                return width;
+            }
+            virtual int getMapHeight() {
+                return height;
             }
     };
 }

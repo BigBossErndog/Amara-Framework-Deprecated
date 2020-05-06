@@ -39,7 +39,6 @@ namespace Amara {
     class Animated {
         public:
             Amara::AnimationManager* anims = nullptr;
-            int frame = 0;
 
             virtual void play() {}
     };
