@@ -47,13 +47,17 @@ namespace Amara {
                 return Amara::Entity::add(entity);
             }
 
-            ~Actor() {
+            void clearScripts() {
                 for (Amara::Script* script: scripts) {
                     if (script->deleteOnFinish) {
                         delete script;
                     }
                 }
                 scripts.clear();
+            }
+
+            ~Actor() {
+                clearScripts();
             }
     };
 }

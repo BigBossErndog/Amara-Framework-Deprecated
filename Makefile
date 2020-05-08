@@ -34,25 +34,27 @@ clean:
 
 win64: $(SRC_FILES)
 	cls
+	rm -rf build/*.dll
+	rm -rf build/assets/*
+	cp -R assets build/assets
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_WIN64) $(SDL_LIBRARY_PATHS_WIN64) $(COMPILER_FLAGS) -l mingw32 $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_WIN)
 	cp dlls/win64/* $(BUILD_PATH)/
-	mkdir -p $(BUILD_PATH)/assets
-	cp -a assets/. $(BUILD_PATH)/assets/
+
 
 win32: $(SRC_FILES)
 	cls
-	rm -rf build/*
+	rm -rf build/*.dll
+	rm -rf build/assets/*
+	cp -R assets build/assets
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_WIN32) $(SDL_LIBRARY_PATHS_WIN32) $(COMPILER_FLAGS) -l mingw32 $(LINKER_FLAGS) -I ext_lib/SDL2-32/bin -o $(BUILD_EXECUTABLE_WIN)
 	cp dlls/win32/* $(BUILD_PATH)/
-	mkdir -p $(BUILD_PATH)/assets
-	cp -a assets/. $(BUILD_PATH)/assets/
 
 linux:
 	clear
-	rm -rf build/*
+	rm -rf build/*.dll
+	rm -rf build/assets/*
+	cp -R assets build/assets
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_LINUX) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_LINUX)
-	mkdir -p $(BUILD_PATH)/assets
-	cp -a assets/. $(BUILD_PATH)/assets/
 
 playwin:
 	$(BUILD_EXECUTABLE_WIN)

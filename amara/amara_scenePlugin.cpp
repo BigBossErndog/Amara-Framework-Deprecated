@@ -10,6 +10,7 @@ namespace Amara {
     enum SceneTask {
         STOP,
         START,
+        RESTART,
         PAUSE,
         RESUME,
         SLEEP,
@@ -74,6 +75,34 @@ namespace Amara {
                 }
             }
 
+            void resume(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
+                if (got != sceneMap->end()) {
+                    got->second->scenePlugin->resume();
+                }
+            }
+
+            void restart(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
+                if (got != sceneMap->end()) {
+                    got->second->scenePlugin->restart();
+                }
+            }
+
+            void sleep(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
+                if (got != sceneMap->end()) {
+                    got->second->scenePlugin->sleep();
+                }
+            }
+
+            void wake(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
+                if (got != sceneMap->end()) {
+                    got->second->scenePlugin->wake();
+                }
+            }
+
             void stop() {
                 tasks.push_back(STOP);
             }
@@ -84,6 +113,10 @@ namespace Amara {
 
             void resume() {
                 tasks.push_back(RESUME);
+            }
+
+            void restart() {
+                tasks.push_back(RESTART);
             }
 
             void sleep() {
@@ -109,7 +142,17 @@ namespace Amara {
                             isActive = false;
                             isPaused = false;
                             isSleeping = false;
+                            scene->clearScripts();
                             scene->onStop();
+                            break;
+                        case RESTART:
+                            isActive = true;
+                            isPaused = false;
+                            isSleeping = false;
+                            scene->clearScripts();
+                            scene->onStop();
+                            scene->init();
+                            scene->onStart();
                             break;
                         case PAUSE:
                             if (isActive && !isPaused) {

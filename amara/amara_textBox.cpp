@@ -23,6 +23,11 @@ namespace Amara {
             float sayStartDelay = 0.2;
 
             bool isProgressive = false;
+            bool allowSkip = true;
+            bool autoProgress = false;
+            int autoProgressDelay = 60;
+            int autoProgressCounter = 0;
+
 
             std::string fontKey;
             Amara::TrueTypeFont* txt;
@@ -70,7 +75,7 @@ namespace Amara {
                     finishedProgress = true;
                 }
                 else {
-                    if (!progressControl.empty() && controls->justDown(progressControl)) {
+                    if (!progressControl.empty() && controls->justDown(progressControl) && allowSkip) {
                         progress = wrappedText.length();
                     }
                     
@@ -262,6 +267,7 @@ namespace Amara {
 
                 if (sm.evt()) {
                     if (finishedProgress) {
+                        autoProgressCounter = 0;
                         sm.nextEvt();
                     }
 
@@ -269,7 +275,13 @@ namespace Amara {
                 }
 
                 if (sm.evt()) {
-                    if (progressControl.empty() || controls->justDown(progressControl)) {
+                    if (autoProgress) {
+                        autoProgressCounter += 1;
+                        if (autoProgressCounter >= autoProgressDelay) {
+                            sm.nextEvt();
+                        }
+                    }
+                    else if (progressControl.empty() || controls->justDown(progressControl)) {
                         sm.nextEvt();
                     }
                 }
