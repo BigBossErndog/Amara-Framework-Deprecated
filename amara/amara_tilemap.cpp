@@ -22,6 +22,7 @@ namespace Amara {
 
             std::unordered_map<std::string, Amara::TilemapLayer*> layers;
             std::vector<Amara::TilemapLayer*> walls;
+            std::unordered_map<int, Amara::Direction> wallTypes;
 
             Tilemap(): Amara::Actor() {}
 
@@ -139,6 +140,26 @@ namespace Amara {
                 return false;
             }
 
+            virtual bool isWall(int gx, int gy, Amara::Direction dir) {
+                Amara::Tile tile;
+                for (Amara::TilemapLayer* layer: walls) {
+                    tile = layer->getTileAt(gx, gy);
+                    if (wallTypes.find(tile.id) != wallTypes.end()) {
+                        if (wallTypes[tile.id] == dir) {
+                            return true;
+                        }
+                    }
+                    else if (tile.id >= 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            void setWallId(int id, Amara::Direction dir) {
+                wallTypes[id] = dir;
+            }
+
             void createAllLayers() {
                 if (tiledJsonKey.empty()) return;
                 int numLayers = tiledJson["layers"].size();
@@ -160,6 +181,10 @@ namespace Amara {
             }
             virtual int getMapHeight() {
                 return height;
+            }
+
+            void setCameraBounds(Amara::Camera* cam) {
+                cam->setBounds(x, y, widthInPixels, heightInPixels);
             }
     };
 }

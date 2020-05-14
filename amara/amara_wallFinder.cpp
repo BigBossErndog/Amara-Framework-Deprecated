@@ -9,6 +9,10 @@ namespace Amara {
                 return false;
             }
 
+            virtual bool isWall(int gx, int gy, Amara::Direction dir) {
+                return false;
+            }
+
             virtual int getMapWidth() {
                 return 0;
             }
