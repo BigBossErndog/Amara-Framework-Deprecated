@@ -26,6 +26,9 @@ namespace Amara {
                     script->script();
                     script->script(this);
                     if (script->finished) {
+                        if (script->chainedScript != nullptr) {
+                            recite(script->chainedScript);
+                        }
                         scripts.erase(it--);
                         if (script->deleteOnFinish) {
                             delete script;

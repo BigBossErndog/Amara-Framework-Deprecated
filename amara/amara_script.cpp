@@ -21,11 +21,24 @@ namespace Amara {
 
             bool deleteOnFinish = true;
 
+            Amara::Script* chainedScript = nullptr;
+
             Script(bool deleteWhenDone): Amara::StateManager() {
                 deleteOnFinish = deleteWhenDone;
             }
 
             Script(): Script(true) {}
+
+            Amara::Script* chain(Amara::Script* gScript) {
+                chainedScript = gScript;
+                return chainedScript;
+            }
+
+            Amara::Script* unchain() {
+                Amara::Script* recScript = chainedScript;
+                chainedScript = nullptr;
+                return recScript;
+            }
 
             virtual void init(Amara::GameProperties* gameProperties) {
                 Amara::StateManager::properties = gameProperties;
