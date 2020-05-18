@@ -66,6 +66,8 @@ namespace Amara {
                 add(mainCamera = new Amara::Camera());
                 preload();
                 std::cout << "START LOADING TASKS: " << load->numTasks() << " loading tasks." << std::endl;
+
+                data["entityType"] = "scene";
             }
 
             virtual Amara::Entity* add(Amara::Entity* entity) {

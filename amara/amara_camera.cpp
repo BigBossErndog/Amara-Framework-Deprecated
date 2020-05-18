@@ -71,6 +71,8 @@ namespace Amara {
                 }
 
                 recordValues();
+
+               data["entityType"] = "camera";
             }
 
             virtual void run() {

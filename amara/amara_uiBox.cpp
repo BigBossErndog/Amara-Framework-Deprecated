@@ -66,6 +66,8 @@ namespace Amara {
                 setSize(width, height);
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
+
+                data["entityType"] = "uiBox";
             }
 
             virtual void drawBoxPart(int part) {

@@ -60,6 +60,8 @@ namespace Amara {
                 }
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
+
+                data["entityType"] = "image";
 			}
 
             virtual void configure(nlohmann::json config) {

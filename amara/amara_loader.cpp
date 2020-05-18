@@ -58,7 +58,7 @@ namespace Amara {
 			virtual bool surface(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;
@@ -106,7 +106,7 @@ namespace Amara {
 			virtual bool image(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;
@@ -155,7 +155,7 @@ namespace Amara {
 			virtual bool spritesheet(std::string key, std::string path, int frwidth, int frheight, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;
@@ -201,7 +201,7 @@ namespace Amara {
 			virtual bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;
@@ -246,7 +246,7 @@ namespace Amara {
             virtual bool sound(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;
@@ -276,7 +276,7 @@ namespace Amara {
 			virtual bool music(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;
@@ -305,7 +305,7 @@ namespace Amara {
 			virtual bool stringFile(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;
@@ -337,7 +337,7 @@ namespace Amara {
 			virtual bool json(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key %s has already been used.\n" << key << std::endl;
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
 				bool success = true;

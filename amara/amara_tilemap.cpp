@@ -50,6 +50,8 @@ namespace Amara {
                         tileHeight = tiledJson["tileheight"];
                     }
                 }
+                
+                data["entityType"] = "tilemap";
             }
 
             void setTiledJson(std::string gTiledJsonKey) {
@@ -110,6 +112,63 @@ namespace Amara {
                 return newLayer;
             }
 
+            void createAllLayers() {
+                if (tiledJsonKey.empty()) return;
+                int numLayers = tiledJson["layers"].size();
+                std::string layerKey;
+                std::string layerType;
+                for (size_t l = 0; l < numLayers; l++) {
+                    layerKey = tiledJson["layers"][l]["name"];
+                    layerType = tiledJson["layers"][l]["type"];
+                    if (layerType.compare("tilelayer") == 0) {
+                        createLayer(layerKey);
+                    }
+                }
+            }
+
+            void createObjectLayer(bool check, nlohmann::json layerData, void(*createFunc)(Amara::Tilemap*, nlohmann::json)) {
+                std::string layerType = layerData["type"];
+                if (layerType.compare("objectgroup") != 0) return;
+                int dataSize = layerData["objects"].size();
+                for (int i = 0; i < dataSize; i++) {
+                    createFunc(this, layerData["objects"][i]);
+                }
+            }
+
+            void createObjectLayer(std::string fLayerKey, void(*createFunc)(Amara::Tilemap*, nlohmann::json)) {
+                if (tiledJsonKey.empty()) return;
+                int numLayers = tiledJson["layers"].size();
+                std::string layerKey;
+                for (size_t l = 0; l < numLayers; l++) {
+                    layerKey = tiledJson["layers"][l]["name"];
+                    if (layerKey.compare(fLayerKey) == 0) {
+                        createObjectLayer(true, tiledJson["layers"][l], createFunc);
+                    }
+                }
+            }
+
+            void createAllObjectLayers(void(*createFunc)(Amara::Tilemap*, nlohmann::json)) {
+                if (tiledJsonKey.empty()) return;
+                int numLayers = tiledJson["layers"].size();
+                for (size_t l = 0; l < numLayers; l++) {
+                    createObjectLayer(true, tiledJson["layers"][l], createFunc);
+                }
+            }
+
+            nlohmann::json getTiledLayerData(std::string fLayerKey) {
+                nlohmann::json toReturn;
+                if (tiledJsonKey.empty()) return toReturn;
+                int numLayers = tiledJson["layers"].size();
+                std::string layerKey;
+                for (size_t l = 0; l < numLayers; l++) {
+                    layerKey = tiledJson["layers"][l]["name"];
+                    if (layerKey.compare(fLayerKey) == 0) {
+                        toReturn  = tiledJson["layers"][l];
+                    }
+                }
+                return toReturn;
+            } 
+
             Amara::TilemapLayer* getLayer(std::string layerKey) {
                 if (layers.find(layerKey) != layers.end()) {
                     return layers[layerKey];
@@ -160,14 +219,6 @@ namespace Amara {
                 wallTypes[id] = dir;
             }
 
-            void createAllLayers() {
-                if (tiledJsonKey.empty()) return;
-                int numLayers = tiledJson["layers"].size();
-                for (size_t l = 0; l < numLayers; l++) {
-                    createLayer(tiledJson["layers"][l]["name"]);
-                }
-            }
-
             void run() {
                 Amara::Actor::run();
             }
@@ -185,6 +236,14 @@ namespace Amara {
 
             void setCameraBounds(Amara::Camera* cam) {
                 cam->setBounds(x, y, widthInPixels, heightInPixels);
+            }
+
+            int convertGID(unsigned long id) {
+                if (!tiledJson.empty() && tiledJson.find("tilesets") != tiledJson.end()) {
+                    int firstgid = tiledJson["tilesets"][0]["firstgid"];
+                    return tiledGID2ID(id, firstgid);
+                }
+                return -1;
             }
     };
 }

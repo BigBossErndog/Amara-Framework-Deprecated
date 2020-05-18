@@ -5,6 +5,18 @@
 #include "amara.h"
 
 namespace Amara {
+    int tiledGID2ID(unsigned long tilegid, unsigned long firstgid) {
+        bool fhorizontal = (tilegid & Amara::TILED_FLIPPEDHORIZONTALLY) != 0;
+        bool fvertical = (tilegid & Amara::TILED_FLIPPEDVERTICALLY) != 0;
+        bool fdiagonal = (tilegid & Amara::TILED_FLIPPEDANTIDIAGONALLY) != 0;
+        
+        tilegid = tilegid & ~(Amara::TILED_FLIPPEDHORIZONTALLY | Amara::TILED_FLIPPEDVERTICALLY | Amara::TILED_FLIPPEDANTIDIAGONALLY);
+        int tileId = (int)(tilegid - firstgid);
+
+        return tileId;
+    }
+
+
     class TilemapLayer: public Amara::Actor {
         public:
             SDL_Renderer* gRenderer = nullptr;
@@ -80,6 +92,8 @@ namespace Amara {
                 if (!tiledLayerKey.empty()) {
                     setupTiledLayer(tiledLayerKey);
                 }
+
+                data["entityType"] = "tilemapLayer";
             }
 
             void setupLayer(std::string gTextureKey, std::string gTiledJsonKey, std::string gLayerKey) {
@@ -323,6 +337,14 @@ namespace Amara {
 
             void setCameraBounds(Amara::Camera* cam) {
                 cam->setBounds(x, y, widthInPixels, heightInPixels);
+            }
+
+            int convertGID(unsigned long id) {
+                if (!tiledJson.empty() && tiledJson.find("tilesets") != tiledJson.end()) {
+                    int firstgid = tiledJson["tilesets"][0]["firstgid"];
+                    return tiledGID2ID(id, firstgid);
+                }
+                return -1;
             }
     };
 }

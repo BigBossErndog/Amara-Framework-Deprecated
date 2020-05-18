@@ -45,6 +45,8 @@ namespace Amara {
 
 			Amara::PhysicsBase* physics = nullptr;
 
+			nlohmann::json data;
+
 			std::string id;
 
 			float x = 0;
@@ -86,6 +88,7 @@ namespace Amara {
 				load = properties->loader;
 
 				isActive = true;
+				data["entityType"] = "data";
 				create();
 			}
 
@@ -121,6 +124,9 @@ namespace Amara {
 				if (config.find("alpha") != config.end()) {
 					alpha = config["alpha"];
 				}
+				if (config.find("data") != config.end()) {
+					data = config["data"];
+				}
 			}
 
 			virtual nlohmann::json toData() {
@@ -134,6 +140,7 @@ namespace Amara {
 				config["scrollFactorY"] = scrollFactorY;
 				config["isVisible"] = isVisible;
 				config["alpha"] = alpha;
+				config["data"] = data;
 				return config;
 			}
 

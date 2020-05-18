@@ -66,6 +66,8 @@ namespace Amara {
                 }
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
+
+                data["entityType"] = "trueTypeFont";
 			}
 
             void setFont(std::string gFontKey) {

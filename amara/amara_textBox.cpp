@@ -63,6 +63,8 @@ namespace Amara {
                 if (!fontKey.empty()) {
                     setFont(fontKey);
                 }
+
+                data["entityType"] = "textBox";
 			}
 
             virtual void update() {
