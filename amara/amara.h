@@ -91,6 +91,7 @@ namespace Amara {
 #include "amara_tilemap.cpp"
 #include "amara_tilemapLayer.cpp"
 #include "amara_tile.cpp"
+#include "amara_tileAnimation.cpp"
 
 #include "amara_trueTypeFont.cpp"
 

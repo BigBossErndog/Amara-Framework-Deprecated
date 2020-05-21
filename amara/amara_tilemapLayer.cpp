@@ -62,6 +62,8 @@ namespace Amara {
             int widthInPixels = 0;
             int heightInPixels = 0;
 
+            std::unordered_map<int, Amara::TileAnimation> animations;
+
             TilemapLayer(float gw, float gh, float tw, float th): Amara::Actor() {
                 width = gw;
                 height = gh;
@@ -119,8 +121,7 @@ namespace Amara {
             void setTiledJson(std::string tiledJsonKey) {
                 if (!tiledJsonKey.empty()) {
                     tiledJson = ((Amara::JsonFile*) load->get(tiledJsonKey))->jsonObj;
-                    if (tiledJson != nullptr) {
-                        tiledJsonKey.clear();
+                    if (!tiledJson.empty()) {
                         givenTiledJson = true;
 
                         width = tiledJson["width"];
@@ -133,6 +134,18 @@ namespace Amara {
 
                         Amara::Tile tile;
                         tiles.resize(width*height, tile);
+
+                        animations.clear();
+                        if (tiledJson.find("tilesets") != tiledJson.end()) {
+                            for (nlohmann::json& tilesetJson: tiledJson["tilesets"]) {
+                                if (tilesetJson.find("tiles") != tilesetJson.end()) {
+                                    for (nlohmann::json& animData: tilesetJson["tiles"]) {
+                                        int tileId = animData["id"];
+                                        animations.insert(std::make_pair(tileId, Amara::TileAnimation(properties, animData)));
+                                    }
+                                }
+                            }
+                        }
                     }
                     else {
                         std::cout << "JSON with key: \"" << tiledJsonKey << "\" was not found." << std::endl;
@@ -208,6 +221,12 @@ namespace Amara {
             }
 
             void run() {
+                std::unordered_map<int, Amara::TileAnimation>::iterator it = animations.begin();
+
+                while(it != animations.end()) {
+                    it->second.update();
+                    it++;
+                }
                 Amara::Actor::run();
             }
 
@@ -330,6 +349,12 @@ namespace Amara {
                             if (hy + hh > vy + vh) hh = (vy - hy);
 
                             checkForHover(hx, hy, hw, hh);
+                            
+                            auto got = animations.find(frame);
+                            if (got != animations.end()) {
+                                frame = got->second.currentTileId;
+                                // std::cout << frame << std::endl;
+                            }
 
                             if (texture != nullptr) {
                                 SDL_Texture* tex = (SDL_Texture*)texture->asset;
