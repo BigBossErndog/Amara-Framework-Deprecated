@@ -21,6 +21,8 @@ namespace Amara {
         float tileHeight = 0;
         int widthInPixels = 0;
         int heightInPixels = 0;
+
+        bool animated  = false;
     };
 }
 

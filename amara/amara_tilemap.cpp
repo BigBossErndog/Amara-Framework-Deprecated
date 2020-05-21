@@ -97,7 +97,7 @@ namespace Amara {
                 return newLayer;
             }
 
-            Amara::TilemapLayer* createLayer(std::string layerKey) {
+            Amara::TilemapLayer* createLayer(std::string layerKey, float gx, float gy) {
                 if (tiledJsonKey.empty()) return nullptr;
                 std::cout << "Creating Layer: \"" << layerKey << "\" with tilemap \"" << tiledJsonKey << "\"" << std::endl;
                 Amara::TilemapLayer* newLayer;
@@ -105,11 +105,20 @@ namespace Amara {
                 layers[layerKey] = newLayer;
                 if (newLayer->width > width) width = newLayer->width;
                 if (newLayer->height > height) height = newLayer->height;
+
+                newLayer->x = x;
+                newLayer->y = y;
+                newLayer->setTilemap(this, this);
+
                 tileWidth = newLayer->tileWidth;
                 tileHeight = newLayer->tileHeight;
                 widthInPixels = tileWidth * width;
                 heightInPixels = tileHeight * height;
                 return newLayer;
+            }
+
+            Amara::TilemapLayer* createLayer(std::string layerKey) {
+                return createLayer(layerKey, 0, 0);
             }
 
             void createAllLayers() {

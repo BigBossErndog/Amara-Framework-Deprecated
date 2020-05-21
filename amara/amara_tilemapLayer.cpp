@@ -5,6 +5,8 @@
 #include "amara.h"
 
 namespace Amara {
+    class Tilemap;
+
     int tiledGID2ID(unsigned long tilegid, unsigned long firstgid) {
         bool fhorizontal = (tilegid & Amara::TILED_FLIPPEDHORIZONTALLY) != 0;
         bool fvertical = (tilegid & Amara::TILED_FLIPPEDVERTICALLY) != 0;
@@ -30,6 +32,9 @@ namespace Amara {
             std::string tiledLayerKey;
 
             std::vector<Amara::Tile> tiles;
+
+            Amara::Tilemap* tilemap = nullptr;
+            Amara::Entity* tilemapEntity = nullptr;
             
             int width = 0;
             int height = 0;
@@ -104,6 +109,11 @@ namespace Amara {
                 setTexture(textureKey);
                 setTiledJson(tiledJsonKey);
                 setupTiledLayer(gLayerKey);
+            }
+
+            void setTilemap(Amara::Tilemap* gTilemap, Amara::Entity* gTilemapEntity) {
+                tilemap = gTilemap;
+                tilemapEntity = gTilemapEntity;
             }
 
             void setTiledJson(std::string tiledJsonKey) {
@@ -226,6 +236,13 @@ namespace Amara {
                 int endX = width - 1;
                 int endY = height - 1;
 
+                float px = 0;
+                float py = 0;
+                if (tilemapEntity) {
+                    px = tilemapEntity->x;
+                    py = tilemapEntity->y;
+                }
+
                 if (startX < 0) startX = 0;
                 if (startY < 0) startY = 0;
                 if (endX >= width) endX = width - 1;
@@ -244,7 +261,13 @@ namespace Amara {
                         flip = SDL_FLIP_NONE;
                         if (tile.fhorizontal) {
                             if (tile.fvertical) {
-                                tileAngle = 180;
+                                if (tile.fdiagonal) {
+                                    tileAngle = 90;
+                                    flip = SDL_FLIP_VERTICAL;
+                                }
+                                else {
+                                    tileAngle = 180;
+                                }
                             }
                             else if (tile.fdiagonal) {
                                 tileAngle = 90;
@@ -262,8 +285,8 @@ namespace Amara {
                             }
                         }
                         
-                        tx = tile.x * tileWidth;
-                        ty = tile.y * tileHeight;
+                        tx = tile.x * tileWidth + px;
+                        ty = tile.y * tileHeight + py;
 
                         bool skipDrawing = false;
                         
@@ -277,29 +300,6 @@ namespace Amara {
                         origin.x = destRect.w * originX + destRect.w/2;
                         origin.y = destRect.h * originY + destRect.h/2;
 
-                        int hx, hy, hw, hh = 0;
-                        hw = destRect.w;
-                        hh = destRect.h;
-
-                        if (destRect.x >= 0) {
-                            hx = destRect.x + vx;
-                        }
-                        else {
-                            hw -= -(destRect.x);
-                            hx = vx;
-                        }
-                        if (destRect.y >= 0) {
-                            hy = destRect.y + vy;
-                        }
-                        else {
-                            hh -= -(destRect.h);
-                            hy = vy;
-                        }
-                        if (hx + hw > vx + vw) hw = (vx - hx);
-                        if (hy + hh > vy + vh) hh = (vy - hy);
-
-                        checkForHover(hx, hy, hw, hh);
-
                         if (destRect.x + destRect.w <= 0) skipDrawing = true;
                         if (destRect.y + destRect.h <= 0) skipDrawing = true;
                         if (destRect.x >= vw) skipDrawing = true;
@@ -308,6 +308,29 @@ namespace Amara {
                         if (destRect.h <= 0) skipDrawing = true;
 
                         if (!skipDrawing) {
+                            int hx, hy, hw, hh = 0;
+                            hw = destRect.w;
+                            hh = destRect.h;
+
+                            if (destRect.x >= 0) {
+                                hx = destRect.x + vx;
+                            }
+                            else {
+                                hw -= -(destRect.x);
+                                hx = vx;
+                            }
+                            if (destRect.y >= 0) {
+                                hy = destRect.y + vy;
+                            }
+                            else {
+                                hh -= -(destRect.h);
+                                hy = vy;
+                            }
+                            if (hx + hw > vx + vw) hw = (vx - hx);
+                            if (hy + hh > vy + vh) hh = (vy - hy);
+
+                            checkForHover(hx, hy, hw, hh);
+
                             if (texture != nullptr) {
                                 SDL_Texture* tex = (SDL_Texture*)texture->asset;
                                 maxFrame = ((texture->width / tileWidth) * (texture->height / tileHeight));

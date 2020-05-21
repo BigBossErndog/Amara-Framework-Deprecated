@@ -124,25 +124,6 @@ namespace Amara {
                 hw = destRect.w;
                 hh = destRect.h;
 
-                if (destRect.x >= 0) {
-                    hx = destRect.x + vx;
-                }
-                else {
-                    hw -= -(destRect.x);
-                    hx = vx;
-                }
-                if (destRect.y >= 0) {
-                    hy = destRect.y + vy;
-                }
-                else {
-                    hh -= -(destRect.y);
-                    hy = vy;
-                }
-                if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
-                if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
-
-                checkForHover(hx, hy, hw, hh);
-
                 if (destRect.x + destRect.w <= 0) skipDrawing = true;
                 if (destRect.y + destRect.h <= 0) skipDrawing = true;
                 if (destRect.x >= vw) skipDrawing = true;
@@ -151,6 +132,25 @@ namespace Amara {
                 if (destRect.h <= 0) skipDrawing = true;
 
                 if (!skipDrawing) {
+                    if (destRect.x >= 0) {
+                        hx = destRect.x + vx;
+                    }
+                    else {
+                        hw -= -(destRect.x);
+                        hx = vx;
+                    }
+                    if (destRect.y >= 0) {
+                        hy = destRect.y + vy;
+                    }
+                    else {
+                        hh -= -(destRect.y);
+                        hy = vy;
+                    }
+                    if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
+                    if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
+
+                    checkForHover(hx, hy, hw, hh);
+
                     if (texture != nullptr) {
                         SDL_Texture* tx = (SDL_Texture*)texture->asset;
                         switch (texture->type) {
