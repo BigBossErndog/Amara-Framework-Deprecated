@@ -135,16 +135,19 @@ namespace Amara {
                 }
             }
 
-            void createObjectLayer(bool check, nlohmann::json layerData, void(*createFunc)(Amara::Tilemap*, nlohmann::json)) {
+            void createObjectLayer(bool check, nlohmann::json layerData, void(*createFunc)(Amara::Tilemap*, nlohmann::json, int)) {
                 std::string layerType = layerData["type"];
                 if (layerType.compare("objectgroup") != 0) return;
                 int dataSize = layerData["objects"].size();
                 for (int i = 0; i < dataSize; i++) {
-                    createFunc(this, layerData["objects"][i]);
+                    nlohmann::json data = layerData["objects"][i];
+                    int gid = data["gid"];
+                    int id = convertGID(gid);
+                    createFunc(this, data, id);
                 }
             }
 
-            void createObjectLayer(std::string fLayerKey, void(*createFunc)(Amara::Tilemap*, nlohmann::json)) {
+            void createObjectLayer(std::string fLayerKey, void(*createFunc)(Amara::Tilemap*, nlohmann::json, int)) {
                 if (tiledJsonKey.empty()) return;
                 int numLayers = tiledJson["layers"].size();
                 std::string layerKey;
@@ -156,7 +159,7 @@ namespace Amara {
                 }
             }
 
-            void createAllObjectLayers(void(*createFunc)(Amara::Tilemap*, nlohmann::json)) {
+            void createAllObjectLayers(void(*createFunc)(Amara::Tilemap*, nlohmann::json, int)) {
                 if (tiledJsonKey.empty()) return;
                 int numLayers = tiledJson["layers"].size();
                 for (size_t l = 0; l < numLayers; l++) {
