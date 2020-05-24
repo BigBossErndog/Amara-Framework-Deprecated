@@ -223,7 +223,7 @@ namespace Amara {
 
                     if (canvas != nullptr) {
                         SDL_SetTextureBlendMode(canvas, blendMode);
-				        SDL_SetTextureAlphaMod(canvas, alpha * 255);
+				        SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);
 
                         SDL_RenderCopyEx(
                             properties->gRenderer,

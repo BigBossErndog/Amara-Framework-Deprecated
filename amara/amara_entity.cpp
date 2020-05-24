@@ -152,6 +152,9 @@ namespace Amara {
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
 
+				if (alpha < 0) alpha = 0;
+                if (alpha > 1) alpha = 1;
+
 				float recScrollX = properties->scrollX * scrollFactorX;
 				float recScrollY = properties->scrollY * scrollFactorY;
 				float recOffsetX = properties->offsetX + x;
@@ -161,9 +164,7 @@ namespace Amara {
 				float recZoomFactorX = properties->zoomFactorX * zoomFactorX;
 				float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
 				float recAngle = properties->angle + angle;
-
-				if (alpha < 0) alpha = 0;
-                if (alpha > 1) alpha = 1;
+				float recAlpha = properties->alpha * alpha;
 				
 				stable_sort(entities.begin(), entities.end(), sortEntities());
 				
@@ -186,6 +187,7 @@ namespace Amara {
 					properties->zoomFactorX = recZoomFactorX;
 					properties->zoomFactorY = recZoomFactorY;
 					properties->angle = recAngle;
+					properties->alpha = recAlpha;
 					entity->draw(vx, vy, vw, vh);
                 }
 			}
@@ -323,6 +325,19 @@ namespace Amara {
 			}
 			void setZoomFactor(float gi) {
 				setZoomFactor(gi, gi);
+			}
+
+			void resetPassOnProperties() {
+				properties->zoomX = 1;
+                properties->zoomY = 1;
+                properties->zoomFactorX = 1;
+                properties->zoomFactorY = 1;
+                properties->angle = 0;
+                properties->offsetX = 0;
+                properties->offsetY = 0;
+                properties->scrollX = 0;
+                properties->scrollY = 0;
+				properties->alpha = 1;
 			}
 
 			virtual void bringToFront() {

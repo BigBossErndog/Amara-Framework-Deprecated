@@ -247,7 +247,7 @@ namespace Amara {
                 if (texture != nullptr) {
                     SDL_Texture* tex = (SDL_Texture*)texture->asset;
                     SDL_SetTextureBlendMode(tex, blendMode);
-                    SDL_SetTextureAlphaMod(tex, alpha * 255);
+                    SDL_SetTextureAlphaMod(tex, alpha * properties->alpha * 255);
                 }
 
                 int startX = 0;

@@ -49,6 +49,8 @@ namespace Amara {
 
             float angle = 0;
 
+            float alpha = 1;
+
             Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;

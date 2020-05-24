@@ -174,7 +174,7 @@ namespace Amara {
                         }
 
                         SDL_SetTextureBlendMode(tx, blendMode);
-				        SDL_SetTextureAlphaMod(tx, alpha * 255);
+				        SDL_SetTextureAlphaMod(tx, alpha * properties->alpha * 255);
 
                         SDL_RendererFlip flipVal = SDL_FLIP_NONE;
                         if (flipHorizontal) {

@@ -167,7 +167,7 @@ namespace Amara {
                 effect.alignment = (FC_AlignEnum)alignment;
                 effect.scale.x = scaleX * nzoomX;
                 effect.scale.y = scaleY * nzoomY;
-                color.a = alpha * 255;
+                color.a = alpha * properties->alpha * 255;
                 effect.color = color;
 
                 const char* txt = text.c_str();
