@@ -82,6 +82,8 @@ namespace Amara {
 #include "amara_layerContainer.cpp"
 #include "amara_canvas.cpp"
 
+#include "amara_particles.cpp"
+
 #include "amara_sprite.cpp"
 #include "amara_animationManager.cpp"
 #include "amara_image.cpp"

@@ -251,6 +251,16 @@ namespace Amara {
 				}
 			}
 
+			virtual void destroyChildren() {
+				Amara::Entity* child;
+				int numChildren = entities.size();
+				for (size_t i = 0; i < numChildren; i++) {
+					child = entities.at(i);
+					child->destroy();
+				}
+				entities.clear();
+			}
+
 			virtual void destroy(bool recursiveDestroy) {
 				parent = nullptr;
 
