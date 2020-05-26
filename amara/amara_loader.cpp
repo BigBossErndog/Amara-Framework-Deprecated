@@ -47,6 +47,50 @@ namespace Amara {
 				}
 				return false;
 			}
+
+			virtual bool add(SDL_Texture* tx, std::string key, bool replace) {
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
+					return false;
+				}
+				if (tx == nullptr) {
+					std::cout << "No texture was given for key: \"" << key << "\"" <<  std::endl;
+					return false;
+				}
+				std::cout << "Added Asset: " << key << std::endl;
+				Amara::Asset* newAsset = new Amara::ImageTexture(key, IMAGE, tx);
+				assets[key] = newAsset;
+				if (got != nullptr) {
+					delete got;
+				}
+				return true;
+			}
+			virtual bool add(SDL_Texture* tx, std::string key) {
+				return add(tx, key, true);
+			}
+
+			virtual bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key, bool replace) {
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
+					return false;
+				}
+				if (tx == nullptr) {
+					std::cout << "No texture was given for key: \"" << key << "\"" <<  std::endl;
+					return false;
+				}
+				std::cout << "Loaded: " << key << std::endl;
+				Amara::Spritesheet* newAsset = new Amara::Spritesheet(key, SPRITESHEET, tx, frwidth, frheight);
+				assets[key] = newAsset;
+				if (got != nullptr) {
+					delete got;
+				}
+				return true;
+			}
+			virtual bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key) {
+				return add(tx, frwidth, frheight, key, true);
+			}
 			
 			virtual void reset() {}
 			virtual void run() {}

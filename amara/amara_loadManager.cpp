@@ -39,8 +39,19 @@ namespace Amara {
                 tasks.clear();
             }
 
+            Amara::Asset* get(std::string key) {
+                return load->get(key);
+            }
+
             bool remove(std::string key) {
                 return load->remove(key);
+            }
+
+            bool add(SDL_Texture* tx, std::string key, bool replace) {
+                return load->add(tx, key, replace);
+            }
+            bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key, bool replace) {
+                return load->add(tx, frwidth, frheight, key, replace);
             }
 
             int numTasks() {
@@ -90,10 +101,6 @@ namespace Amara {
                 }
             }
 
-            Amara::Asset* get(std::string key) {
-                return load->get(key);
-            }
-
             void pushTask(std::string key, Amara::LoadTask* asset) {
                 asset->key = key;
                 tasks.push_back(asset);
@@ -107,9 +114,6 @@ namespace Amara {
                 pushTask(key, t);
                 return true;
             }
-            bool image(std::string key, std::string path) {
-                return image(key, path, false);
-            }
 
             bool spritesheet(std::string key, std::string path, int frameWidth, int frameHeight, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
@@ -122,12 +126,6 @@ namespace Amara {
                 pushTask(key, t);
                 return true;
             }
-            bool spritesheet(std::string key, std::string path, int frameWidth, int frameHeight) {
-                return spritesheet(key, path, frameWidth, frameHeight, false);
-            }
-            bool spritesheet(std::string key, std::string path, int frameWH) {
-                return spritesheet(key, path, frameWH, frameWH);
-            }
 
             bool sound(std::string key, std::string path, bool replace) {
 				Amara::LoadTask* t = new Amara::LoadTask();
@@ -138,20 +136,12 @@ namespace Amara {
                 return true;
 			}
 
-			bool sound(std::string key, std::string path) {
-				return sound(key, path, false);
-			}
-
             bool music(std::string key, std::string path, bool replace) {
 				Amara::LoadTask* t = new Amara::LoadTask();
                 t->type = MUSIC;
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);
-			}
-
-            bool music(std::string key, std::string path) {
-				return music(key, path, false);
 			}
 
             bool stringFile(std::string key, std::string path, bool replace) {
@@ -162,9 +152,6 @@ namespace Amara {
                 pushTask(key, t);
                 return true;
             }
-            bool stringFile(std::string key, std::string path) {
-                return stringFile(key, path, false);
-            }
 
             bool json(std::string key, std::string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
@@ -173,9 +160,6 @@ namespace Amara {
                 t->replace = replace;
                 pushTask(key, t);
                 return true;
-            }
-            bool json(std::string key, std::string path) {
-                return json(key, path, false);
             }
 
             bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
@@ -189,18 +173,6 @@ namespace Amara {
                 pushTask(key, t);
                 return true;
             }
-
-            bool ttf(std::string key, std::string path, int size, Amara::Color color, int style) {
-				return ttf(key, path, size, color, style, false);
-			}
-
-			bool ttf(std::string key, std::string path, int size, Amara::Color color) {
-				return ttf(key, path, size, color, TTF_STYLE_NORMAL);
-			}
-
-			bool ttf(std::string key, std::string path, int size) {
-				return ttf(key, path, size, FC_MakeColor(0,0,0,255));
-			}
     };
 }
 

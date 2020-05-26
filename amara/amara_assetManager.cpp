@@ -19,6 +19,20 @@ namespace Amara {
                 return loader->get(key);
             }
 
+            bool add(SDL_Texture* tx, std::string key, bool replace) {
+                return loader->add(tx, key, replace);
+            }
+            bool add(SDL_Texture* tx, std::string key) {
+                return add(tx, key, true);
+            }
+
+            bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key, bool replace) {
+                return loader->add(tx, frwidth, frheight, key, replace);
+            }
+            bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key) {
+                return add(tx, frwidth, frheight, key, true);
+            }
+
             Amara::Animation* addAnim(std::string textureKey, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
                 Amara::Asset* asset = get(textureKey);
                 if (asset == nullptr) {
