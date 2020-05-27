@@ -110,6 +110,10 @@ namespace Amara {
                     );
                 }
             }
+
+            ~LightLayer() {
+                SDL_DestroyTexture(lightTexture);
+            }
     };
 }
 

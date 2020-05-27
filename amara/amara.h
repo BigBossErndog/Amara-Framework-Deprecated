@@ -63,6 +63,9 @@ namespace Amara {
 
 #include "amara_game.cpp"
 
+#include "amara_transitions.cpp"
+#include "amara_sceneTransition.cpp"
+
 #include "amara_sceneManager.cpp"
 #include "amara_scenePlugin.cpp"
 #include "amara_scene.cpp"
@@ -100,7 +103,9 @@ namespace Amara {
 #include "amara_trueTypeFont.cpp"
 
 #include "amara_camera.cpp"
+
 #include "amara_fdeclare_tweens.cpp"
+#include "amara_sceneTransitionBase.cpp"
 
 #include "amara_actorGroup.cpp"
 
@@ -109,7 +114,6 @@ namespace Amara {
 #include "amara_entity.cpp"
 
 #include "amara_interactable.cpp"
-
 #include "amara_wallFinder.cpp"
 
 #include "amara_assetManager.cpp"

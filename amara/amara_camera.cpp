@@ -10,6 +10,7 @@ namespace Amara {
     class Camera : public Amara::Actor {
         public:
             std::vector<Amara::Camera*>* sceneCameras = nullptr;
+            Amara::SceneTransitionBase* transition = nullptr;
 
             bool definedDimensions = false;
 
@@ -191,6 +192,10 @@ namespace Amara {
                     if (!entity->isVisible) continue;
                     assignAttributes();
                     entity->draw(dx, dy, dw, dh);
+                }
+
+                if (transition != nullptr) {
+                    transition->draw(dx, dy, dw, dh);
                 }
             }
 

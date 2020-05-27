@@ -15,6 +15,8 @@ namespace Amara {
             Amara::LoadManager* loadManager = nullptr;
             Amara::ScenePlugin* scenePlugin = nullptr;
 
+            Amara::SceneTransitionBase* transition = nullptr;
+
             Amara::Camera* mainCamera = nullptr;
             std::vector<Amara::Camera*> cameras;
 
@@ -41,6 +43,8 @@ namespace Amara {
                 }
                 loadManager = new Amara::LoadManager(properties);
                 setLoader(loadManager);
+
+                transition = nullptr;
 
                 scenePlugin = gScenePlugin;
                 isActive = false;
@@ -106,29 +110,59 @@ namespace Amara {
                 properties->currentScene = this;
 
                 if (!initialLoaded) {
+                    if (transition != nullptr) {
+                        transition->update();
+                    }
+
                     load->run();
+
                     if (!load->stillLoading) {
-                        initialLoaded = true;
-                        setLoader(properties->loader);
-                        create();
+                        if (transition != nullptr) {
+                            if (transition->finished) {
+                                initialLoaded = true;
+                                transition->complete();
+                                transition = nullptr;
+                            }
+                            else if (transition->waitingForPermission) {
+                                transition->grantPermission();
+                                setLoader(properties->loader);
+                                create();
+                            }
+                            else if (transition->permissionGranted) {
+                                updateScene();
+                            }
+                        }
+                        else {
+                            initialLoaded = true;
+
+                            setLoader(properties->loader);
+                            create();
+                        }
                     }
                 }
                 else {
-                    update();
-                    reciteScripts();
-                    
-                    for (Amara::Entity* entity : entities) {
-                        if (entity->isDestroyed || entity->parent != this) continue;
-                        entity->run();
+                    updateScene();
+                    if (transition != nullptr) {
+                        transition->update();
                     }
-
-                    for (Amara::Camera* cam : cameras) {
-                        if (cam->isDestroyed || cam->parent != this) continue;
-                        cam->run();
-                    }
-
-                    afterUpdate();
                 }
+            }
+
+            virtual void updateScene() {
+                update();
+                reciteScripts();
+                
+                for (Amara::Entity* entity : entities) {
+                    if (entity->isDestroyed || entity->parent != this) continue;
+                    entity->run();
+                }
+
+                for (Amara::Camera* cam : cameras) {
+                    if (cam->isDestroyed || cam->parent != this) continue;
+                    cam->run();
+                }
+
+                afterUpdate();
             }
 
             virtual void draw() {
@@ -161,10 +195,20 @@ namespace Amara {
                     if (cam->isDestroyed || cam->parent != this) {
                         cameras.erase(it--);
                     }
+                    cam->transition = transition;
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
 
                 afterDraw();
+            }
+
+            virtual Amara::SceneTransitionBase* startTransition(Amara::SceneTransitionBase* gTransition) {
+                if (transition != nullptr) {
+                    return nullptr;
+                }
+                transition = gTransition;
+                transition->init(properties, this);
+                return transition;
             }
 
             virtual void preload() {}

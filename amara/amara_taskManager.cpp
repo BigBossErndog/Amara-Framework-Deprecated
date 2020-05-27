@@ -6,22 +6,31 @@
 
 namespace Amara {
     class Entity;
+    class SceneTransitionBase;
     
     class TaskManager {
         public:
             Amara::GameProperties* properties = nullptr;
-            std::vector<Amara::Entity*> deleteQueue;
+            std::vector<Amara::Entity*> entityDeletionQueue;
+            std::vector<Amara::SceneTransitionBase*> transitionDeletionQueue;
 
             TaskManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
             }
 
             void queueDeletion(Amara::Entity* obj) {
-                deleteQueue.push_back(obj);
+                entityDeletionQueue.push_back(obj);
             }
 
-            std::vector<Amara::Entity*>& getDeleteQueue() {
-                return deleteQueue;
+            void queueDeletion(Amara::SceneTransitionBase* transition) {
+                transitionDeletionQueue.push_back(transition);
+            } 
+
+            std::vector<Amara::Entity*>& getEntityQueue() {
+                return entityDeletionQueue;
+            }
+            std::vector<Amara::SceneTransitionBase*>& getTransitionQueue() {
+                return transitionDeletionQueue;
             }
 
             void run() {}

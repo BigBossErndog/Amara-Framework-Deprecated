@@ -71,6 +71,14 @@ namespace Amara {
 				}
 			}
 
+			Amara::Scene* get(std::string key) {
+				std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap.find(key);
+				if (got != sceneMap.end()) {
+					return sceneMap[key];
+				}
+				return nullptr;
+			}
+
 			Amara::Scene* start(std::string key) {
 				std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap.find(key);
 				if (got != sceneMap.end()) {
