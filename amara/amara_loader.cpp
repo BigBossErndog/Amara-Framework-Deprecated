@@ -91,6 +91,209 @@ namespace Amara {
 			virtual bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key) {
 				return add(tx, frwidth, frheight, key, true);
 			}
+
+			void loadSurfacesFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					surface(key, path, replace);
+				}
+			}
+			void loadImagesFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					image(key, path, replace);
+				}
+			}
+			void loadSpritesheetsFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				int frameWidth, frameHeight;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					frameWidth = asset["frameWidth"];
+					frameHeight = asset["frameHeight"];
+					spritesheet(key, path, frameWidth, frameHeight, replace);
+				}
+			}
+			void loadTTFsFromJSON(nlohmann::json& config) {
+				// std::string key, std::string path, int size, Amara::Color color, int style, bool replace
+				std::string key;
+				std::string path;
+				int size, style, colorSize;
+				std::string strStyle;
+				Amara::Color color;
+				nlohmann::json jsonColor;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					size = asset["size"];
+
+					style = TTF_STYLE_NORMAL;
+					if (asset.find("style") != asset.end()) {
+						nlohmann::json& jsonStyles = asset["styles"];
+						if (jsonStyles.is_array()) {
+							for (nlohmann::json& jsonStyle: jsonStyles) {
+								strStyle = jsonStyle;
+								if (strStyle.compare("bold") == 0) style |= TTF_STYLE_BOLD;
+								if (strStyle.compare("italic") == 0) style |= TTF_STYLE_ITALIC;
+								if (strStyle.compare("underline") == 0) style |= TTF_STYLE_UNDERLINE;
+								if (strStyle.compare("strikethrough") == 0) style |= TTF_STYLE_STRIKETHROUGH;
+								if (strStyle.compare("outline") == 0) style |= TTF_STYLE_OUTLINE;
+							}
+						}
+						else {
+							strStyle = asset["style"];
+						}
+					}
+
+					color = FC_MakeColor(0,0,0,255);
+					if (asset.find("color") != asset.end()) {
+						jsonColor = asset["color"];
+						colorSize = jsonColor.size()
+;						if (colorSize >= 1) color.r = jsonColor[0];
+						if (colorSize >= 2) color.g = jsonColor[1];
+						if (colorSize >= 3) color.b = jsonColor[2];
+						if (colorSize >= 4) color.a = jsonColor[3];
+					}
+
+					ttf(key, path, size, color, replace);
+				}
+			}
+			void loadSoundsFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				int frameWidth, frameHeight;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					sound(key, path, replace);
+				}
+			}
+			void loadMusicFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				int frameWidth, frameHeight;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					music(key, path, replace);
+				}
+			}
+			void loadStringFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				int frameWidth, frameHeight;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					string(key, path, replace);
+				}
+			}
+			void loadJSONfromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				int frameWidth, frameHeight;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					json(key, path, replace);
+				}
+			}
+
+			virtual bool fromJSON(std::string path) {
+				bool success = true;
+
+				std::ifstream in(path, std::ios::in | std::ios::binary);
+				if (in)
+				{
+					std::string contents;
+					in.seekg(0, std::ios::end);
+					contents.resize(in.tellg());
+					in.seekg(0, std::ios::beg);
+					in.read(&contents[0], contents.size());
+					in.close();
+
+					std::cout << "Loaded JSON asset config file: " << path << std::endl;
+					
+					nlohmann::json config = nlohmann::json::parse(contents);
+					if (config.find("surface") != config.end()) {
+						loadSurfacesFromJSON(config["surface"]);
+					}
+					if (config.find("image") != config.end()) {
+						loadImagesFromJSON(config["image"]);
+					}
+					if (config.find("spritesheet") != config.end()) {
+						loadSpritesheetsFromJSON(config["spritesheet"]);
+					}
+					if (config.find("trueTypeFont") != config.end()) {
+						loadTTFsFromJSON(config["trueTypeFont"]);
+					}
+					if (config.find("sound") != config.end()) {
+						loadSoundsFromJSON(config["sound"]);
+					}
+					if (config.find("music") != config.end()) {
+						loadMusicFromJSON(config["music"]);
+					}
+					if (config.find("string") != config.end()) {
+						loadStringFromJSON(config["string"]);
+					}
+					if (config.find("json") != config.end()) {
+						loadJSONfromJSON(config["json"]);
+					}
+				}
+				else {
+					std::cout << "Loader: Failed to read file \"" << path << "\"" << std::endl;
+					success = false;
+				}
+				return success;
+			}
 			
 			virtual void reset() {}
 			virtual void run() {}
@@ -346,7 +549,7 @@ namespace Amara {
 				return music(key, path, false);
 			}
 
-			virtual bool stringFile(std::string key, std::string path, bool replace) {
+			virtual bool string(std::string key, std::string path, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;

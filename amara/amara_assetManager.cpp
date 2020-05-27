@@ -122,7 +122,6 @@ namespace Amara {
                 if (config.find("groups") != config.end()) {
                     std::vector<std::string> groups = config["groups"];
                     for (std::string groupKey: groups) {
-                        std::cout << "TEXTURE GROUP: " << groupKey << std::endl;
                         if (textureGroups.find(groupKey) != textureGroups.end()) {
                             std::vector<std::string> textureKeys = textureGroups[groupKey];
                             

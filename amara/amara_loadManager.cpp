@@ -69,6 +69,9 @@ namespace Amara {
                     stillLoading  = true;
 
                     switch (task->type) {
+                        case JSONCONFIG:
+                            success = load->fromJSON(task->path);
+                            break;
                         case IMAGE:
                             success = load->image(task->key, task->path, task->replace);
                             break;
@@ -104,6 +107,14 @@ namespace Amara {
             void pushTask(std::string key, Amara::LoadTask* asset) {
                 asset->key = key;
                 tasks.push_back(asset);
+            }
+
+            bool fromJSON(std::string path) {
+                Amara::LoadTask* t  = new Amara::LoadTask();
+                t->type = JSONCONFIG;
+                t->path = path;
+                pushTask(path, t);
+                return true;
             }
 
             bool image(std::string key, std::string path, bool replace) {
@@ -144,7 +155,7 @@ namespace Amara {
                 pushTask(key, t);
 			}
 
-            bool stringFile(std::string key, std::string path, bool replace) {
+            bool string(std::string key, std::string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
                 t->type = STRINGFILE;
                 t->path = path;

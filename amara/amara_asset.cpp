@@ -6,6 +6,7 @@
 
 namespace Amara {
     enum AssetType {
+        JSONCONFIG,
         SURFACE,
         IMAGE,
         SPRITESHEET,
