@@ -59,9 +59,7 @@ namespace Amara {
                     return control;
                 }
                 
-                std::cout << "Key \"" << id << "\" has not been initialized." << std::endl;
                 control = newControl(id);
-                std::cout << "Key \"" << id << "\" now exists." << std::endl;
                 return addKey(id, key);
             }
 
@@ -70,8 +68,7 @@ namespace Amara {
                 if (key != nullptr) {
                     return addKey(id, key);
                 }
-                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << std::endl;
-                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << std::endl;
+
                 key = input->keyboard->addKey(keyCode);
                 return addKey(id, key);
             }
@@ -82,10 +79,8 @@ namespace Amara {
                     control->setKey(key);
                     return control;
                 }
-                
-                std::cout << "Key \"" << id << "\" has not been initialized." << std::endl;
+
                 control = newControl(id);
-                std::cout << "Key \"" << id << "\" now exists." << std::endl;
                 return setKey(id, key);
             }
 
@@ -94,8 +89,7 @@ namespace Amara {
                 if (key != nullptr) {
                     return setKey(id, key);
                 }
-                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" has not yet been created." << std::endl;
-                std::cout << "Key with KeyCode \"" << ((int)keyCode) << "\" now exists." << std::endl;
+
                 key = input->keyboard->addKey(keyCode);
                 return setKey(id, key);
             }
@@ -107,9 +101,7 @@ namespace Amara {
                     return control;
                 }
                 
-                std::cout << "Key \"" << id << "\" has not been initialized." << std::endl;
                 control = newControl(id);
-                std::cout << "Key \"" << id << "\" now exists." << std::endl;
                 return addButton(id, bcode);
             }
 

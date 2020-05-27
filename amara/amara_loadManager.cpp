@@ -63,15 +63,12 @@ namespace Amara {
                 Amara::LoadTask* task;
                 int count = 0;
                 bool success;
-                while (tasks.size() > 0 && count < loadSpeed) {
+                while (tasks.size() > 0 && count < load->loadSpeed) {
                     task = tasks.front();
                     success = false;
                     stillLoading  = true;
 
                     switch (task->type) {
-                        case JSONCONFIG:
-                            success = load->fromJSON(task->path);
-                            break;
                         case IMAGE:
                             success = load->image(task->key, task->path, task->replace);
                             break;
@@ -104,17 +101,13 @@ namespace Amara {
                 }
             }
 
+            void setLoadSpeed(int speed) {
+                load->setLoadSpeed(speed);
+            }
+
             void pushTask(std::string key, Amara::LoadTask* asset) {
                 asset->key = key;
                 tasks.push_back(asset);
-            }
-
-            bool fromJSON(std::string path) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = JSONCONFIG;
-                t->path = path;
-                pushTask(path, t);
-                return true;
             }
 
             bool image(std::string key, std::string path, bool replace) {

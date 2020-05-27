@@ -19,7 +19,7 @@ namespace Amara {
 			std::string selfkey;
 
 			bool stillLoading = false;
-			int loadSpeed = 100;
+			int loadSpeed = 64;
 
             Loader(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
@@ -29,6 +29,10 @@ namespace Amara {
                 gRenderer = properties->gRenderer;
                 assets.clear();
             }
+
+			virtual void setLoadSpeed(int speed) {
+				loadSpeed = speed;
+			}
 
             virtual Amara::Asset* get(std::string key) {
                 std::unordered_map<std::string, Amara::Asset*>::iterator got = assets.find(key);
