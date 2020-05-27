@@ -41,7 +41,7 @@ namespace {
                     callback(actor);
                 }
             }
-
+            
             virtual void recite(Amara::Script* script) {
                 for (Amara::Actor* actor: actors) {
                     actor->recite(script);

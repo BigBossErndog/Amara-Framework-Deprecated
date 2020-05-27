@@ -10,6 +10,8 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::Loader* loader = nullptr;
 
+            std::unordered_map<std::string, std::vector<std::string>> textureGroups;
+
             AssetManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 loader = properties->loader;
@@ -65,6 +67,110 @@ namespace Amara {
                     frames.push_back(startFrame + i);
                 }
                 addAnim(textureKey, animKey, frames, frameRate, loop);
+            }
+
+            void configureAnim(nlohmann::json& config) {
+                std::string animKey = config["key"];
+                bool loop = false;
+
+                if (config.find("loop") != config.end()) {
+                    loop = config["loop"];
+                }
+
+                if (config.find("textures") != config.end()) {
+                    nlohmann::json& textures = config["textures"];
+                    std::vector<std::string> textureKeys = textures;
+
+                    if (config.find("frames") != config.end()) {
+                        std::vector<int> frames = config["frames"];
+                        int frameRate = config["frameRate"];
+                        addAnim(textureKeys, animKey, frames, frameRate, loop);
+                    }
+                    else if (config.find("frame") != config.end()) {
+                        int frame = config["frame"];
+                        addAnim(textureKeys, animKey, frame);
+                    }
+                }
+                if (config.find("texture") != config.end()) {
+                    std::string textureKey = config["texture"];
+                    if (config.find("frames") != config.end()) {
+                        std::vector<int> frames = config["frames"];
+                        int frameRate = config["frameRate"];
+                        addAnim(textureKey, animKey, frames, frameRate, loop);
+                    }
+                    else if (config.find("frame") != config.end()) {
+                        int frame = config["frame"];
+                        addAnim(textureKey, animKey, frame);
+                    }
+                }
+                if (config.find("group") != config.end()) {
+                    std::string groupKey = config["group"];
+                    if (textureGroups.find(groupKey) != textureGroups.end()) {
+                        std::vector<std::string> textureKeys = textureGroups[groupKey];
+                        
+                        if (config.find("frames") != config.end()) {
+                            std::vector<int> frames = config["frames"];
+                            int frameRate = config["frameRate"];
+                            addAnim(textureKeys, animKey, frames, frameRate, loop);
+                        }
+                        else if (config.find("frame") != config.end()) {
+                            int frame = config["frame"];
+                            addAnim(textureKeys, animKey, frame);
+                        }
+                    }
+                }
+                if (config.find("groups") != config.end()) {
+                    std::vector<std::string> groups = config["groups"];
+                    for (std::string groupKey: groups) {
+                        std::cout << "TEXTURE GROUP: " << groupKey << std::endl;
+                        if (textureGroups.find(groupKey) != textureGroups.end()) {
+                            std::vector<std::string> textureKeys = textureGroups[groupKey];
+                            
+                            if (config.find("frames") != config.end()) {
+                                std::vector<int> frames = config["frames"];
+                                int frameRate = config["frameRate"];
+                                addAnim(textureKeys, animKey, frames, frameRate, loop);
+                            }
+                            else if (config.find("frame") != config.end()) {
+                                int frame = config["frame"];
+                                addAnim(textureKeys, animKey, frame);
+                            }
+                        }
+                    }
+                }
+            }
+
+            void configureAnimations(nlohmann::json& config) {
+                if (config.find("groups") != config.end()) {
+                    nlohmann::json& groups = config["groups"];
+                    for (nlohmann::json& group: groups) {
+                        std::string key = group["key"];
+                        std::vector<std::string> textures = group["textures"];
+                        textureGroups[key] = textures;
+                    }
+                }
+
+                if (config.find("animations") != config.end()) {
+                    nlohmann::json& anims = config["animations"];
+                    if (anims.is_array()) {
+                        for (nlohmann::json& anim: anims) {
+                            configureAnim(anim);
+                        }
+                    }
+                }
+                else {
+                    configureAnim(config);
+                }
+            }
+
+            void configureAnimations(std::string key) {
+                Amara::JsonFile* configAsset = (Amara::JsonFile*)loader->get(key);
+                if (configAsset != nullptr) {
+                    configureAnimations(configAsset->getJSON());
+                }
+                else {
+                    std::cout << "JSON animations not found: \"" << key << "\"" << std::endl;
+                }
             }
     };
 }
