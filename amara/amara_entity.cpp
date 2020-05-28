@@ -202,7 +202,7 @@ namespace Amara {
 				}
 
 				if (attachedTo != nullptr) {
-					if (attachedTo->destroyed) {
+					if (attachedTo->isDestroyed) {
                         attachedTo = nullptr;
                     }
                     else {
