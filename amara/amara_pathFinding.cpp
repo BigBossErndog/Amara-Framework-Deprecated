@@ -216,6 +216,7 @@ namespace Amara {
                 }
 
                 SDL_Thread* thread = SDL_CreateThread(findPath, NULL, this);
+                SDL_DetachThread(thread);
                 return this;
             }
     };
