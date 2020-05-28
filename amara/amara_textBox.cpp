@@ -66,6 +66,42 @@ namespace Amara {
                 data["entityType"] = "textBox";
 			}
 
+            virtual void configure(nlohmann::json& config) {
+                if (config.find("text") != config.end()) {
+                    setText(config["text"]);
+                }
+                if (config.find("progressDelay") != config.end()) {
+                    progressDelay = config["progressDelay"];
+                }
+                if (config.find("progressSpeed") != config.end()) {
+                    progressSpeed = config["progressSpeed"];
+                }
+                if (config.find("isProgressive") != config.end()) {
+                    isProgressive = config["isProgressive"];
+                }
+                if (config.find("allowSkip") != config.end()) {
+                    allowSkip = config["allowSkip"];
+                }
+                if (config.find("autoProgress") != config.end()) {
+                    autoProgress = config["autoProgress"];
+                }
+                if (config.find("autoProgressDelay") != config.end()) {
+                    autoProgressDelay = config["autoProgressDelay"];
+                }
+                if (config.find("marginTop") != config.end()) {
+                    marginTop = config["marginTop"];
+                }
+                if (config.find("marginBottom") != config.end()) {
+                    marginBottom = config["marginBottom"];
+                }
+                if (config.find("marginLeft") != config.end()) {
+                    marginLeft = config["marginLeft"];
+                }
+                if (config.find("marginRight") != config.end()) {
+                    marginRight = config["marginRight"];
+                }
+            }
+
             virtual void update() {
                 if (recText.compare(text) != 0) {
                     setText(text);
