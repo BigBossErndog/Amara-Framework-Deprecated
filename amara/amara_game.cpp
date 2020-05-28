@@ -46,7 +46,7 @@ namespace Amara {
 			Amara::ControlScheme* controls = nullptr;
 			bool controllerEnabled = true;
 
-			SDL_Color backgroundColor;
+			SDL_Color backgroundColor = {255, 255, 255, 255};
 
 			Amara::AudioGroup* audio = nullptr;
 

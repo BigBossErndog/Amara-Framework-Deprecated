@@ -4,7 +4,7 @@
 
 #include "amara.h"
 
-namespace {
+namespace Amara {
     class ActorGroup {
         public:
             Amara::GameProperties* properties = nullptr;
@@ -47,13 +47,16 @@ namespace {
                     actor->recite(script);
                 }
             }
-            
-            virtual void destroy() {
+
+            void destroyActors() {
                 for (Amara::Actor* actor: actors) {
                     actor->destroy();
                 }
                 actors.clear();
-
+            }
+            
+            virtual void destroy() {
+                destroyActors();
                 delete this;
             }
     };

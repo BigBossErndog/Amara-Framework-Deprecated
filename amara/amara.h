@@ -75,6 +75,7 @@ namespace Amara {
 #include "amara_tweens_camera.cpp"
 #include "amara_tween.cpp"
 
+#include "amara_charaTextBox.cpp"
 #include "amara_textBox.cpp"
 #include "amara_uiBox.cpp"
 

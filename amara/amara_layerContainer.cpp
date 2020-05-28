@@ -73,6 +73,7 @@ namespace Amara {
                 float recZoomY = properties->zoomY;
                 float recZoomFactorX = properties->zoomFactorX * zoomFactorX;
                 float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
+                float recAlpha = properties->alpha * alpha;
 
 				for (Amara::Entity* entity : entities) {
                     properties->scrollX = 0;
@@ -83,6 +84,7 @@ namespace Amara {
                     properties->zoomY = recZoomY * scaleY;
                     properties->zoomFactorX = recZoomFactorX;
                     properties->zoomFactorY = recZoomFactorY;
+                    properties->alpha = recAlpha;
 					if (entity->isDestroyed || entity->parent != this) continue;
 					entity->draw(vx + dx, vy + dy, dw, dh);
 				}

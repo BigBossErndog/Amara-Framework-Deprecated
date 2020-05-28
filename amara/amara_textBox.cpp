@@ -28,7 +28,6 @@ namespace Amara {
             int autoProgressDelay = 60;
             int autoProgressCounter = 0;
 
-
             std::string fontKey;
             Amara::TrueTypeFont* txt;
 
