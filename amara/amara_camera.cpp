@@ -182,6 +182,8 @@ namespace Amara {
                 dh = (y + height > vh) ? ceil(vh - y) : height;
                 dh -= oh;
 
+                SDL_SetRenderTarget(properties->gRenderer, NULL);
+
                 std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
                 Amara::Entity* entity;
                 for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {

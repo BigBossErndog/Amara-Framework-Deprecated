@@ -21,18 +21,25 @@ namespace Amara {
                 return loader->get(key);
             }
 
-            bool add(SDL_Texture* tx, std::string key, bool replace) {
-                return loader->add(tx, key, replace);
+            bool add(std::string key, SDL_Texture* tx, bool replace) {
+                return loader->add(key, tx, replace);
             }
-            bool add(SDL_Texture* tx, std::string key) {
-                return add(tx, key, true);
+            bool add(std::string key, SDL_Texture* tx) {
+                return add(key, tx, false);
             }
 
-            bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key, bool replace) {
-                return loader->add(tx, frwidth, frheight, key, replace);
+            bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight, bool replace) {
+                return loader->add(key, tx, frwidth, frheight, replace);
             }
-            bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key) {
-                return add(tx, frwidth, frheight, key, true);
+            bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight) {
+                return add(key, tx, frwidth, frheight, true);
+            }
+
+            bool add(std::string key, Amara::Asset* newAsset, bool replace) {
+                return loader->add(key, newAsset, replace);
+            }
+            bool add(std::string key, Amara::Asset* newAsset) {
+                return loader->add(key, newAsset, false);
             }
 
             Amara::Animation* addAnim(std::string textureKey, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {

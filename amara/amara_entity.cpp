@@ -35,6 +35,8 @@ namespace Amara {
 			Amara::Scene* scene = nullptr;
 			Amara::Entity* parent = nullptr;
 
+			Amara::Entity* attachedTo = nullptr;
+
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
 			Amara::AudioGroup* audio = nullptr;
@@ -199,6 +201,11 @@ namespace Amara {
 					physics->run();
 				}
 
+				if (attachedTo != nullptr) {
+					x = attachedTo->x;
+					y = attachedTo->y;
+				}
+
 				for (Amara::Entity* entity : entities) {
 					if (entity->isDestroyed || entity->parent != this) continue;
 					entity->run();
@@ -347,6 +354,16 @@ namespace Amara {
 						depth = entity->depth + 1;
 					}
 				}
+			}
+
+			virtual void attachTo(Amara::Entity* entity) {
+				attachedTo = entity;
+				if (entity == nullptr) return;
+				x = attachedTo->x;
+				y = attachedTo->y;
+			}
+			virtual void dettach() {
+				attachedTo = nullptr;
 			}
 
 			virtual void setLoader(Amara::Loader* gLoader, bool recursive) {

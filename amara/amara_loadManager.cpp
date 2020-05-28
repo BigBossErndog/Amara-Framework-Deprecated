@@ -47,11 +47,14 @@ namespace Amara {
                 return load->remove(key);
             }
 
-            bool add(SDL_Texture* tx, std::string key, bool replace) {
-                return load->add(tx, key, replace);
+            bool add(std::string key, SDL_Texture* tx, bool replace) {
+                return load->add(key, tx, replace);
             }
-            bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key, bool replace) {
-                return load->add(tx, frwidth, frheight, key, replace);
+            bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight, bool replace) {
+                return load->add(key, tx, frwidth, frheight, replace);
+            }
+            bool add(std::string key, Amara::Asset* newAsset, bool replace) {
+                return load->add(key, newAsset, replace);
             }
 
             int numTasks() {

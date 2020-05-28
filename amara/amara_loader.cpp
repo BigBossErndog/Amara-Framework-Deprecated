@@ -52,7 +52,7 @@ namespace Amara {
 				return false;
 			}
 
-			virtual bool add(SDL_Texture* tx, std::string key, bool replace) {
+			virtual bool add(std::string key, SDL_Texture* tx, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
@@ -70,11 +70,11 @@ namespace Amara {
 				}
 				return true;
 			}
-			virtual bool add(SDL_Texture* tx, std::string key) {
-				return add(tx, key, true);
+			virtual bool add(std::string key, SDL_Texture* tx) {
+				return add(key, tx, true);
 			}
 
-			virtual bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key, bool replace) {
+			virtual bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight, bool replace) {
 				Amara::Asset* got = get(key);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
@@ -92,8 +92,24 @@ namespace Amara {
 				}
 				return true;
 			}
-			virtual bool add(SDL_Texture* tx, int frwidth, int frheight, std::string key) {
-				return add(tx, frwidth, frheight, key, true);
+			virtual bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight) {
+				return add(key, tx, frwidth, frheight, true);
+			}
+
+			virtual bool add(std::string key, Amara::Asset* newAsset, bool replace) {
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
+					return false;
+				}
+				std::cout << "Asset added: " << key << std::endl;
+				assets[key] = newAsset;
+				if (got != nullptr) {
+					delete got;
+				}
+			}
+			virtual bool add(std::string key, Amara::Asset* newAsset) {
+				return add(key, newAsset);
 			}
 
 			void loadSurfacesFromJSON(nlohmann::json& config) {
