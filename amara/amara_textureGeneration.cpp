@@ -32,14 +32,17 @@ namespace Amara {
                 progress = (progress-fadeStart)/(1-fadeStart);
                 if (progress > 0) {
                     if (progress > 1) progress = 1;
-                    drawColor.r = innerColor.r + (progress * (outerColor.r - innerColor.r));
-                    drawColor.g = innerColor.g + (progress * (outerColor.g - innerColor.g));
-                    drawColor.b = innerColor.b + (progress * (outerColor.b - innerColor.b));
-                    drawColor.a = innerColor.a + (progress * (outerColor.a - innerColor.a));
-
-                    SDL_SetRenderDrawColor(gRenderer, drawColor.r, drawColor.g, drawColor.b, drawColor.a);
-                    SDL_RenderDrawPoint(gRenderer, gx + x, gy + y);
                 }
+                else {
+                    progress = 0;
+                }
+                drawColor.r = innerColor.r + (progress * (outerColor.r - innerColor.r));
+                drawColor.g = innerColor.g + (progress * (outerColor.g - innerColor.g));
+                drawColor.b = innerColor.b + (progress * (outerColor.b - innerColor.b));
+                drawColor.a = innerColor.a + (progress * (outerColor.a - innerColor.a));
+
+                SDL_SetRenderDrawColor(gRenderer, drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+                SDL_RenderDrawPoint(gRenderer, gx + x, gy + y);
             }
         }
     }

@@ -202,8 +202,13 @@ namespace Amara {
 				}
 
 				if (attachedTo != nullptr) {
-					x = attachedTo->x;
-					y = attachedTo->y;
+					if (attachedTo->destroyed) {
+                        attachedTo = nullptr;
+                    }
+                    else {
+                        x = attachedTo->x;
+                        y = attachedTo->y;
+                    }
 				}
 
 				for (Amara::Entity* entity : entities) {

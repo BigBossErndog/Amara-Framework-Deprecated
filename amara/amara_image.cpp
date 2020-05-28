@@ -120,10 +120,6 @@ namespace Amara {
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
 
-                int hx, hy, hw, hh = 0;
-                hw = destRect.w;
-                hh = destRect.h;
-
                 if (destRect.x + destRect.w <= 0) skipDrawing = true;
                 if (destRect.y + destRect.h <= 0) skipDrawing = true;
                 if (destRect.x >= vw) skipDrawing = true;
@@ -132,6 +128,10 @@ namespace Amara {
                 if (destRect.h <= 0) skipDrawing = true;
 
                 if (!skipDrawing) {
+                    int hx, hy, hw, hh = 0;
+                    hw = destRect.w;
+                    hh = destRect.h;
+
                     if (destRect.x >= 0) {
                         hx = destRect.x + vx;
                     }
