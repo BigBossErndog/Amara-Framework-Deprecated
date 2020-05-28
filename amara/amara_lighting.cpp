@@ -19,6 +19,9 @@ namespace Amara {
             float originX = 0.5;
             float originY = 0.5;
 
+            int offsetX = 0;
+            int offsetY = 0;
+
             float zoomFactorX = 1;
             float zoomFactorY = 1;
             float scrollFactorX = 1;
@@ -61,8 +64,8 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
                 
-                destRect.x = floor((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-                destRect.y = floor((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+                destRect.x = floor((x + offsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+                destRect.y = floor((y-z + offsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
                 destRect.w = ceil((width * scaleX) * nzoomX);
                 destRect.h = ceil((height * scaleY) * nzoomY);
 
