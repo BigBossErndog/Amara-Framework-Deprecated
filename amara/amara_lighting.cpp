@@ -15,6 +15,9 @@ namespace Amara {
             SDL_Color outerColor;
             float fadeStart = 0;
 
+            float originX = 0.5;
+            float originY = 0.5;
+
             bool destroyed = false;
 
             Amara::Entity* attachedTo = nullptr;
@@ -41,11 +44,31 @@ namespace Amara {
                 attachedTo = nullptr;
             }
 
+            void draw(SDL_Renderer* gRenderer, int vx, int vy, int vw, int vh) {
+                int nx = x - width * originX;
+                int ny = y - height * originY;
+                
+                Amara::drawRadialGradient(
+                    gRenderer,
+                    nx, ny, width, height,
+                    innerColor, outerColor,
+                    fadeStart
+                );
+            }
+
             virtual void update() {
                 if (attachedTo != nullptr) {
                     x = attachedTo->x;
                     y = attachedTo->y;
                 }
+            }
+
+            void setOrigin(float gx, float gy) {
+                originX = gx;
+                originY = gy;
+            }
+            void setOrigin(float gi) {
+                setOrigin(gi, gi);
             }
 
             void destroy() {
@@ -174,7 +197,7 @@ namespace Amara {
                 Amara::Actor::draw(0, 0, vw, vh);
 
                 for (Amara::Light* light: lights) {
-                    drawRadialGradient(gRenderer, light->x, light->y, light->width, light->height, light->innerColor, light->outerColor, light->fadeStart);
+                    light->draw(gRenderer, vx, vy, vw, vh);
                 }
 
                 SDL_SetRenderDrawColor(gRenderer, recColor.r, recColor.g, recColor.b, recColor.a);
