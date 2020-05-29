@@ -5,36 +5,14 @@
 #include "amara.h"
 
 namespace Amara {
-    class Light {
+    class Light: public Amara::Image {
         public:
-            int x = 0;
-            int y = 0;
-            int z = 0;
-            int width;
-            int height;
             SDL_Color innerColor;
             SDL_Color outerColor;
             float fadeStart = 0;
 
-            float originX = 0.5;
-            float originY = 0.5;
-
             int offsetX = 0;
             int offsetY = 0;
-
-            float zoomFactorX = 1;
-            float zoomFactorY = 1;
-            float scrollFactorX = 1;
-            float scrollFactorY = 1;
-
-            float scaleX = 1;
-            float scaleY = 1;
-
-            SDL_Rect destRect;
-
-            bool destroyed = false;
-
-            Amara::Entity* attachedTo = nullptr;
 
             Light(int gx, int gy, int gWidth, int gHeight, SDL_Color gInnerColor, SDL_Color gOuterColor, float gFadeStart) {
                 x = gx;
@@ -44,70 +22,50 @@ namespace Amara {
                 innerColor = gInnerColor;
                 outerColor = gOuterColor;
                 fadeStart = gFadeStart;
+
+                originX = 0.5;
+                originY = 0.5;
             }
 
             Light(int gx, int gy, int gWidth, int gHeight, SDL_Color gInnerColor, SDL_Color gOuterColor) : Light(gx, gy, gWidth, gHeight, gInnerColor, gOuterColor, 0) {}
 
-            void attachTo(Amara::Entity* entity) {
-                attachedTo = entity;
-                if (entity == nullptr) return;
-                x = attachedTo->x;
-                y = attachedTo->y;
-            }
-            void dettach() {
-                attachedTo = nullptr;
+            Light(int gx, int gy, std::string tx): Amara::Image(gx, gy, tx) {
+                originX = 0.5;
+                originY = 0.5;
+                blendMode = SDL_BLENDMODE_BLEND;
             }
 
             void draw(Amara::GameProperties* properties, SDL_Renderer* gRenderer, int vx, int vy, int vw, int vh) {
-                bool skipDrawing = false;
-
-                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
-                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
-                
-                destRect.x = floor((x + offsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-                destRect.y = floor((y-z + offsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
-                destRect.w = ceil((width * scaleX) * nzoomX);
-                destRect.h = ceil((height * scaleY) * nzoomY);
-
-                if (destRect.x + destRect.w <= 0) skipDrawing = true;
-                if (destRect.y + destRect.h <= 0) skipDrawing = true;
-                if (destRect.x >= vw) skipDrawing = true;
-                if (destRect.y >= vh) skipDrawing = true;
-                if (destRect.w <= 0) skipDrawing = true;
-                if (destRect.h <= 0) skipDrawing = true;
-                
-                if (!skipDrawing) {
-                    Amara::drawRadialGradient(
-                        gRenderer,
-                        destRect.x, destRect.y, destRect.w, destRect.h,
-                        innerColor, outerColor,
-                        fadeStart
-                    );
+                if (texture != nullptr) {
+                    Amara::Image::draw(vx, vy, vw, vh);
                 }
-            }
+                else {
+                    bool skipDrawing = false;
 
-            virtual void update() {
-                if (attachedTo != nullptr) {
-                    if (attachedTo->isDestroyed) {
-                        attachedTo = nullptr;
-                    }
-                    else {
-                        x = attachedTo->x;
-                        y = attachedTo->y;
+                    float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                    float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
+                    
+                    destRect.x = floor((x + renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+                    destRect.y = floor((y-z + renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+                    destRect.w = ceil((width * scaleX) * nzoomX);
+                    destRect.h = ceil((height * scaleY) * nzoomY);
+
+                    if (destRect.x + destRect.w <= 0) skipDrawing = true;
+                    if (destRect.y + destRect.h <= 0) skipDrawing = true;
+                    if (destRect.x >= vw) skipDrawing = true;
+                    if (destRect.y >= vh) skipDrawing = true;
+                    if (destRect.w <= 0) skipDrawing = true;
+                    if (destRect.h <= 0) skipDrawing = true;
+                    
+                    if (!skipDrawing) {
+                        Amara::drawRadialGradient(
+                            gRenderer,
+                            destRect.x, destRect.y, destRect.w, destRect.h,
+                            innerColor, outerColor,
+                            fadeStart
+                        );
                     }
                 }
-            }
-
-            void setOrigin(float gx, float gy) {
-                originX = gx;
-                originY = gy;
-            }
-            void setOrigin(float gi) {
-                setOrigin(gi, gi);
-            }
-
-            void destroy() {
-                destroyed = true;
             }
     };
 
@@ -154,6 +112,7 @@ namespace Amara {
 
             Amara::Light* add(Amara::Light* light) {
                 lights.push_back(light);
+                light->init(properties, scene, this);
                 return light;
             }
 
@@ -187,15 +146,13 @@ namespace Amara {
                 Amara::Light* light;
                 for (auto it = lights.begin(); it != lights.end(); it++) {
                     light = *it;
-                    if (light->destroyed) {
-                        lights.erase(it--);
-                        delete light;
+                    if (!light->isDestroyed) {
+                        light->run();
                     }
-                    else {
-                        light->update();
+                    if (light->isDestroyed) {
+                        lights.erase(it--);
                     }
                 }
-
                 
                 Amara::Actor::run();
             }

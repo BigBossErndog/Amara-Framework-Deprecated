@@ -547,9 +547,11 @@ namespace Amara {
 					}
 					else if (e.type == SDL_RENDER_TARGETS_RESET) {
 						renderTargetsReset = true;
+						load->regenerateAssets();
 					}
 					else if (e.type == SDL_RENDER_DEVICE_RESET) {
 						renderDeviceReset = true;
+						load->regenerateAssets();
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEADDED) {
 						SDL_GameController* controller = SDL_GameControllerOpen(e.cdevice.which);

@@ -57,6 +57,10 @@ namespace Amara {
                 return load->add(key, newAsset, replace);
             }
 
+            void regenerateAssets() {
+                load->regenerateAssets();
+            }
+
             int numTasks() {
                 return tasks.size();
             }

@@ -9,6 +9,7 @@ namespace Amara {
         JSONCONFIG,
         SURFACE,
         IMAGE,
+        RADIALGRADIENTTEXTURE,
         SPRITESHEET,
         TTF,
         SOUND,
@@ -23,6 +24,8 @@ namespace Amara {
             void* asset;
             std::string key;
 
+            bool toRegenerate = false;
+
             Asset() {}
 
             Asset(std::string givenKey, AssetType givenType, void* givenAsset) {
@@ -30,6 +33,8 @@ namespace Amara {
                 type = givenType;
 				asset = givenAsset;
             }
+
+            virtual void regenerate(SDL_Renderer*) {}
     };
 
     class ImageTexture : public Amara::Asset {
@@ -46,6 +51,28 @@ namespace Amara {
 
             ~ImageTexture() {
                 SDL_DestroyTexture(asset);
+            }
+    };
+
+    class RadialGradientTexture: public Amara::ImageTexture {
+        public:
+            SDL_Color innerColor;
+            SDL_Color outerColor;
+            float fadeStart;
+
+            RadialGradientTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
+
+            void configure(SDL_Color gInnerColor, SDL_Color gOuterColor, float gFadeStart) {
+                innerColor = gInnerColor;
+                outerColor = gOuterColor;
+                fadeStart = gFadeStart;
+
+                toRegenerate = true;
+            }
+
+            void regenerate(SDL_Renderer* gRenderer) {
+                SDL_DestroyTexture(Amara::ImageTexture::asset);
+                Amara::ImageTexture::asset = createRadialGradientTexture(gRenderer, width, height, innerColor, outerColor, fadeStart);
             }
     };
 
@@ -143,6 +170,10 @@ namespace Amara {
             void reloadFontCache(SDL_Renderer* gRenderer) {
                 FC_ClearFont(font);
                 FC_LoadFont(font, gRenderer, path.c_str(), size, color, style);
+            }
+
+            void regenerate(SDL_Renderer* gRenderer) {
+                reloadFontCache(gRenderer);
             }
     };
 }

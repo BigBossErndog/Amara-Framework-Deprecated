@@ -29,6 +29,9 @@ namespace Amara {
             float originX = 0;
             float originY = 0;
 
+            float renderOffsetX = 0;
+            float renderOffsetY = 0;
+
             bool flipHorizontal = false;
             bool flipVertical = false;
 
@@ -112,8 +115,8 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
                 
-                destRect.x = floor((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = floor((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRect.x = floor((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = floor((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
                 destRect.w = ceil((imageWidth * scaleX) * nzoomX);
                 destRect.h = ceil((imageHeight * scaleY) * nzoomY);
 
@@ -236,6 +239,15 @@ namespace Amara {
             }
             void setOrigin(float g) {
                 setOrigin(g, g);
+            }
+
+            void setRenderOffset(float gx, float gy) {
+                renderOffsetX = gx;
+                renderOffsetY = gy;
+            }
+
+            void setRenderOffset(float gi) {
+                setRenderOffset(gi, gi);
             }
 
             void setFrame(int fr) {

@@ -104,12 +104,13 @@ namespace Amara {
 				}
 				std::cout << "Asset added: " << key << std::endl;
 				assets[key] = newAsset;
+				newAsset->key = key;
 				if (got != nullptr) {
 					delete got;
 				}
 			}
 			virtual bool add(std::string key, Amara::Asset* newAsset) {
-				return add(key, newAsset);
+				return add(key, newAsset, true);
 			}
 
 			void loadSurfacesFromJSON(nlohmann::json& config) {
@@ -635,6 +636,16 @@ namespace Amara {
 
 			virtual bool json(std::string key, std::string path) {
 				json(key, path, false);
+			}
+
+			virtual void regenerateAssets() {
+				std::unordered_map<std::string, Amara::Asset*>::iterator it = assets.begin();
+				while (it != assets.end()) {
+					if (it->second->toRegenerate) {
+						it->second->regenerate(gRenderer);
+					}
+					it++;
+				}
 			}
     };
 }

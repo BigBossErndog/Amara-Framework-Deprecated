@@ -104,8 +104,6 @@ namespace Amara {
 #include "amara_trueTypeFont.cpp"
 
 #include "amara_camera.cpp"
-
-#include "amara_fdeclare_tweens.cpp"
 #include "amara_sceneTransitionBase.cpp"
 
 #include "amara_actorGroup.cpp"
@@ -152,6 +150,8 @@ namespace Amara {
 #include "amara_stateManager.cpp"
 
 #include "amara_gameProperties.cpp"
+
+#include "amara_fdeclarations.cpp"
 
 #include "amara_geometry.cpp"
 #include "amara_easing.cpp"

@@ -146,11 +146,6 @@ namespace Amara {
             }
 
             void run() {
-                if (fontAsset != nullptr) {
-                    if (properties->renderTargetsReset) {
-                        fontAsset->reloadFontCache(gRenderer);
-                    }
-                }
                 Amara::Actor::run();
             }
 
