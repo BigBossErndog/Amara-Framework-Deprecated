@@ -42,7 +42,9 @@ namespace Amara {
             float originX = 0;
             float originY = 0;
 
-            UIBox(float gx, float gy, int gw, int gh, std::string gTextureKey) {
+            UIBox() {}
+
+            UIBox(float gx, float gy, int gw, int gh, std::string gTextureKey): UIBox() {
                 x = gx;
                 y = gy;
                 width = gw;
@@ -68,6 +70,20 @@ namespace Amara {
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
 
                 data["entityType"] = "uiBox";
+            }
+
+            virtual void configure(nlohmann::json& config) {
+                Amara::Actor::configure(config);
+
+                if (config.find("width") != config.end()) {
+                    width = config["width"];
+                }
+                if (config.find("height") != config.end()) {
+                    height = config["height"];
+                }
+                if (config.find("texture") != config.end()) {
+                    setTexture(config["texture"]);
+                }
             }
 
             virtual void drawBoxPart(int part) {

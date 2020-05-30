@@ -253,6 +253,11 @@ namespace Amara {
             void setFrame(int fr) {
                 frame = fr;
             }
+
+            void scaleTo(float gw, float gh) {
+                scaleX = gw/imageWidth;
+                scaleY = gh/imageHeight;
+            }
     };
 }
 

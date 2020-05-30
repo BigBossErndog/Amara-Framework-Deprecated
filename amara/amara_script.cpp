@@ -18,6 +18,8 @@ namespace Amara {
             Amara::InputManager* input = nullptr;
             Amara::ControlScheme* controls = nullptr;
             Amara::AudioGroup* audio = nullptr;
+            Amara::AssetManager* assets = nullptr;
+            Amara::Loader* load = nullptr;
 
             bool deleteOnFinish = true;
 
@@ -48,6 +50,8 @@ namespace Amara {
                 input = properties->input;
                 controls = properties->controls;
                 audio = properties->audio;
+                assets = properties->assets;
+                load = properties->loader;
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {

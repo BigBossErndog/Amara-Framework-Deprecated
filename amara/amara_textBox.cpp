@@ -49,6 +49,8 @@ namespace Amara {
 
             Amara::Color textColor = {0, 0, 0, 0};
 
+            TextBox() : Amara::UIBox() {}
+
             TextBox(float gx, float gy, int gw, int gh, std::string gTextureKey, std::string gFontKey): Amara::UIBox(gx, gy, gw, gh, gTextureKey) {
                 fontKey = gFontKey;
             }
@@ -67,6 +69,7 @@ namespace Amara {
 			}
 
             virtual void configure(nlohmann::json& config) {
+                Amara::UIBox::configure(config);
                 if (config.find("text") != config.end()) {
                     setText(config["text"]);
                 }
@@ -78,6 +81,9 @@ namespace Amara {
                 }
                 if (config.find("isProgressive") != config.end()) {
                     isProgressive = config["isProgressive"];
+                }
+                if (config.find("progressControl") != config.end()) {
+                    progressControl = config["progressControl"];
                 }
                 if (config.find("allowSkip") != config.end()) {
                     allowSkip = config["allowSkip"];
@@ -99,6 +105,9 @@ namespace Amara {
                 }
                 if (config.find("marginRight") != config.end()) {
                     marginRight = config["marginRight"];
+                }
+                if (config.find("font") != config.end()) {
+                    setFont(config["font"]);
                 }
             }
 

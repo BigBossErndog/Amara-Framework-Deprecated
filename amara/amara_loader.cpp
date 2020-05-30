@@ -293,8 +293,8 @@ namespace Amara {
 					if (config.find("spritesheet") != config.end()) {
 						loadSpritesheetsFromJSON(config["spritesheet"]);
 					}
-					if (config.find("trueTypeFont") != config.end()) {
-						loadTTFsFromJSON(config["trueTypeFont"]);
+					if (config.find("ttf") != config.end()) {
+						loadTTFsFromJSON(config["ttf"]);
 					}
 					if (config.find("sound") != config.end()) {
 						loadSoundsFromJSON(config["sound"]);

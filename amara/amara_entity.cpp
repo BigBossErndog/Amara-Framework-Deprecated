@@ -120,6 +120,12 @@ namespace Amara {
 				if (config.find("scrollFactorY") != config.end()) {
 					scrollFactorY = config["scrollFactorY"];
 				}
+				if (config.find("zoomFactorX") != config.end()) {
+					zoomFactorX = config["zoomFactorX"];
+				}
+				if (config.find("zoomFactorY") != config.end()) {
+					zoomFactorY = config["zoomFactorY"];
+				}
 				if (config.find("isVisible") != config.end()) {
 					isVisible = config["isVisible"];
 				}
@@ -140,6 +146,8 @@ namespace Amara {
 				config["scaleY"] = scaleY;
 				config["scrollFactorX"] = scrollFactorX;
 				config["scrollFactorY"] = scrollFactorY;
+				config["zoomFactorX"] = zoomFactorX;
+				config["zoomFactorY"] = zoomFactorY;
 				config["isVisible"] = isVisible;
 				config["alpha"] = alpha;
 				config["data"] = data;

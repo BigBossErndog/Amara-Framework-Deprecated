@@ -165,6 +165,7 @@ namespace Amara {
 
             TTFAsset(std::string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF, gFont) {
                 font = gFont;
+                toRegenerate = true;
             }
 
             void reloadFontCache(SDL_Renderer* gRenderer) {
