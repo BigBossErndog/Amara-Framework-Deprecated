@@ -36,6 +36,11 @@ namespace Amara {
             int marginLeft = 16;
             int marginRight = 16;
 
+            int extraMarginTop = 0;
+            int extraMarginBottom = 0;
+            int extraMarginLeft = 0;
+            int extraMarginRight = 0;
+
             int openSpeedX = 0;
             int openSpeedY = 0;
             int closeSpeedX = 0;
@@ -94,6 +99,9 @@ namespace Amara {
                 if (config.find("autoProgressDelay") != config.end()) {
                     autoProgressDelay = config["autoProgressDelay"];
                 }
+                if (config.find("margin") != config.end()) {
+                    setMargin(config["margin"]);
+                }
                 if (config.find("marginTop") != config.end()) {
                     marginTop = config["marginTop"];
                 }
@@ -111,10 +119,22 @@ namespace Amara {
                 }
             }
 
+            void clearExtraMargins() {
+                extraMarginTop = 0;
+                extraMarginBottom = 0;
+                extraMarginLeft = 0;
+                extraMarginRight = 0;
+            }
+
             virtual void update() {
                 if (recText.compare(text) != 0) {
                     setText(text);
                 }
+
+                int nMarginTop = marginTop + extraMarginTop;
+                int nMarginBottom = marginBottom + extraMarginBottom;
+                int nMarginLeft = marginLeft + extraMarginLeft;
+                int nMarginRight = marginRight + extraMarginRight;
                 
                 if (!isProgressive) {
                     txtProgress = wrappedText;
@@ -144,34 +164,34 @@ namespace Amara {
                 
                 txt->color = textColor;
                 txt->alignment = horizontalAlignment;
-                txt->setWordWrap(width - (marginLeft + marginRight));
+                txt->setWordWrap(width - (nMarginLeft + nMarginRight));
                 txt->setText(wrappedText);
 
                 switch (horizontalAlignment) {
                     case ALIGN_LEFT:
                         txt->originX = 0;
-                        txt->x = marginLeft;
+                        txt->x = nMarginLeft;
                         break;
                     case ALIGN_CENTER:
                         txt->originX = 0;
-                        txt->x = (marginLeft + (width - marginRight))/2 - txt->width/2;
+                        txt->x = (nMarginLeft + (width - nMarginRight))/2 - txt->width/2;
                         break;
                     case ALIGN_RIGHT:
                         txt->originX = 1;
-                        txt->x = width - marginRight;
+                        txt->x = width - nMarginRight;
                         break;
                 }
                 txt->x -= width*originX;
 
                 switch (verticalAlignment) {
                     case ALIGN_TOP:
-                        txt->y = marginTop;
+                        txt->y = nMarginTop;
                         break;
                     case ALIGN_CENTER:
-                        txt->y = (marginTop + (height - marginBottom))/2 - txt->height/2;
+                        txt->y = (nMarginTop + (height - nMarginBottom))/2 - txt->height/2;
                         break;
                     case ALIGN_BOTTOM:
-                        txt->y = height - marginBottom - txt->height;
+                        txt->y = height - nMarginBottom - txt->height;
                         break;
                 }
                 txt->y -= height*originY;
@@ -185,10 +205,13 @@ namespace Amara {
                 std::string word;
                 int pos = 0;
 
+                int nMarginLeft = marginLeft + extraMarginLeft;
+                int nMarginRight = marginRight + extraMarginRight;
+
                 txt->setWordWrap(false);
 
                 text = newText;
-                wrappedText = adjustText(newText, width - marginLeft - marginRight);
+                wrappedText = adjustText(newText, width - nMarginLeft - nMarginRight);
                 recText = text;
 
                 finishedProgress = false;

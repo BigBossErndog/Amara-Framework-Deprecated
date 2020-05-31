@@ -13,6 +13,9 @@ namespace Amara {
             Amara::Direction portraitAlignment = Left;
             Amara::Direction portraitVerticalAlignment = Down;
 
+            CharaTextBox(): Amara::TextBox() {}
+            CharaTextBox(float gx, float gy, float gw, float gh, std::string gTextureKey, std::string gFontKey): Amara::TextBox(gx, gy, gw, gh, gTextureKey, gFontKey) {}
+
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
 				Amara::TextBox::init(gameProperties, givenScene, givenParent);
 
@@ -26,6 +29,10 @@ namespace Amara {
 
             void configure(nlohmann::json& config) {
                 Amara::TextBox::configure(config);
+                configurePortrait(config);
+            }
+
+            void configurePortrait(nlohmann::json& config) {
                 if (config.find("containerWidth") != config.end()) {
                     container->width = config["containerWidth"];
                 }
@@ -68,30 +75,27 @@ namespace Amara {
 
                 if (config.find("portraitAlignment") != config.end()) {
                     portraitAlignment = config["portraitAlignment"];
-                    switch (portraitAlignment) {
-                        case Left:
-                            marginLeft = marginLeft + container->x + container->width;
-                            break;
-                        case Right:
-                            marginRight = marginRight + (width - (container->x + container->width));
-                            break;
-                    }
                 }
 
                 if (config.find("portraitVerticalAlignment") != config.end()) {
                     portraitVerticalAlignment = config["portraitVerticalAlignment"];
-                    switch (portraitVerticalAlignment) {
-                        case Up:
-                            marginTop = marginTop + container->y + container->width;
-                            break;
-                        case Down:
-                            marginBottom = marginBottom + (height - (container->y + container->height));
-                            break;
-                    }
                 }
+
+                manageMargins();
 
                 if (config.find("portraitTexture") != config.end()) {
                     portrait->setTexture(config["portraitTexture"]);
+                }
+            }
+
+            void manageMargins() {
+                switch (portraitAlignment) {
+                    case Left:
+                        extraMarginLeft = container->width + marginLeft;
+                        break;
+                    case Right:
+                        extraMarginRight = container->height + marginRight;
+                        break;
                 }
             }
 
@@ -105,7 +109,9 @@ namespace Amara {
 
                 if (sm.once()) {
                     container->setVisible(true);
-                    configure(charaData);
+                    configurePortrait(charaData);
+                    manageMargins();
+                    setText("");
                     toReturn = true;
                 }
 
@@ -146,6 +152,8 @@ namespace Amara {
 
                 if (sm.once()) {
                     container->setVisible(false);
+                    clearExtraMargins();
+                    setText("");
                     toReturn = true;
                 }
 

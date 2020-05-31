@@ -36,6 +36,8 @@ namespace Amara {
 			Amara::Entity* parent = nullptr;
 
 			Amara::Entity* attachedTo = nullptr;
+			float attachmentOffsetX = 0;
+			float attachmentOffsetY = 0;
 
 			Amara::InputManager* input = nullptr;
 			Amara::ControlScheme* controls = nullptr;
@@ -214,8 +216,8 @@ namespace Amara {
                         attachedTo = nullptr;
                     }
                     else {
-                        x = attachedTo->x;
-                        y = attachedTo->y;
+                        x = attachedTo->x + attachmentOffsetX;
+                        y = attachedTo->y + attachmentOffsetY;
                     }
 				}
 
@@ -372,11 +374,19 @@ namespace Amara {
 			virtual void attachTo(Amara::Entity* entity) {
 				attachedTo = entity;
 				if (entity == nullptr) return;
-				x = attachedTo->x;
-				y = attachedTo->y;
+				x = attachedTo->x + attachmentOffsetX;
+				y = attachedTo->y + attachmentOffsetY;
 			}
 			virtual void dettach() {
 				attachedTo = nullptr;
+			}
+			void setAttachmentOffset(float gx, float gy) {
+				attachmentOffsetX = gx;
+				attachmentOffsetY = gy;
+				attachTo(attachedTo);
+			}
+			void setAttachementOffset(float gi) {
+				setAttachmentOffset(gi, gi);
 			}
 
 			virtual void setLoader(Amara::Loader* gLoader, bool recursive) {
