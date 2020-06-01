@@ -271,12 +271,20 @@ namespace Amara {
                         if (txt->width > wrapWidth) {
                             fText += '\n';
                             fText += word;
-                            fText += ' ';
                         }
                         else {
-                            word += c;
                             fText += word;
                         }
+
+                        pText = fText + c;
+                        txt->setText(pText);
+                        if (txt->width > wrapWidth) {
+                            fText += '\n';
+                        }
+                        else {
+                            fText += c;
+                        }
+
                         word = "";
                     }
                     else {
