@@ -90,9 +90,15 @@ namespace Amara {
                 }
 
                 manageMargins();
-
+                
                 if (config.find("portraitTexture") != config.end()) {
                     portrait->setTexture(config["portraitTexture"]);
+                }
+                if (config.find("portraitFrame") != config.end()) {
+                    portrait->setFrame(config["portraitFrame"]);
+                }
+                if (config.find("portraitAnimation") != config.end()) {
+                    portrait->play(config["portraitAnimation"]);
                 }
             }
 
