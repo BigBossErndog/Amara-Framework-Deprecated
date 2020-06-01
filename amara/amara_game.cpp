@@ -49,10 +49,7 @@ namespace Amara {
 			SDL_Color backgroundColor = {255, 255, 255, 255};
 
 			Amara::AudioGroup* audio = nullptr;
-
 			Amara::EventManager* events = nullptr;
-
-
 			Amara::TaskManager* taskManager = nullptr;
 
 			bool vsync = false;
@@ -67,6 +64,8 @@ namespace Amara {
 			int logicDelay = 0;
 
 			SDL_Event e;
+
+			bool testing = true;
 
 			Game(std::string givenName) {
 				name = givenName;
@@ -268,7 +267,7 @@ namespace Amara {
 				std::vector<Amara::Entity*>& deleteQueue = taskManager->getEntityQueue();
 				Amara::Entity* obj;
                 int size = deleteQueue.size();
-                if (size > 0) {
+                if (testing && size > 0) {
                     std::cout << "TaskManager: Deleting " << size << " objects." << std::endl;
                 }
                 for (size_t i = 0; i < size; i++) {
@@ -282,7 +281,7 @@ namespace Amara {
 				std::vector<Amara::SceneTransitionBase*>& deleteQueue = taskManager->getTransitionQueue();
 				Amara::SceneTransitionBase* obj;
                 int size = deleteQueue.size();
-                if (size > 0) {
+                if (testing && size > 0) {
                     std::cout << "TaskManager: Deleting " << size << " transitions." << std::endl;
                 }
                 for (size_t i = 0; i < size; i++) {
@@ -388,6 +387,8 @@ namespace Amara {
 				properties->gWindow = gWindow;
 				properties->gSurface = gSurface;
 				properties->gRenderer = gRenderer;
+
+				properties->testing = testing;
 
 				properties->width = width;
 				properties->height = height;

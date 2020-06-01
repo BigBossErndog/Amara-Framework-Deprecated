@@ -32,6 +32,8 @@ namespace Amara {
 
             SDL_Color backgroundColor;
 
+            bool testing = true;
+
             int width = 0;
             int height = 0;
 

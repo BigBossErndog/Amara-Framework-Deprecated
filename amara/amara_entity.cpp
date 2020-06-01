@@ -317,6 +317,12 @@ namespace Amara {
 				isVisible = val;
 			}
 
+			void setAlpha(float nAlpha) {
+				alpha  = nAlpha;
+				if (alpha < 0) alpha = 0;
+				if (alpha > 1) alpha = 1;
+			}
+
 			void setScale(float gx, float gy) {
                 scaleX = gx;
                 scaleY = gy;

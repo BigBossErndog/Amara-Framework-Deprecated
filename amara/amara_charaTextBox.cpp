@@ -13,6 +13,8 @@ namespace Amara {
             Amara::Direction portraitAlignment = Left;
             Amara::Direction portraitVerticalAlignment = Down;
 
+            nlohmann::json defaultPortraitConfig;
+
             CharaTextBox(): Amara::TextBox() {}
             CharaTextBox(float gx, float gy, float gw, float gh, std::string gTextureKey, std::string gFontKey): Amara::TextBox(gx, gy, gw, gh, gTextureKey, gFontKey) {}
 
@@ -33,6 +35,9 @@ namespace Amara {
             }
 
             void configurePortrait(nlohmann::json& config) {
+                if (config.find("textBoxConfig") != config.end()) {
+                    Amara::TextBox::configure(config["textBoxConfig"]);
+                }
                 if (config.find("containerWidth") != config.end()) {
                     container->width = config["containerWidth"];
                 }
@@ -46,7 +51,6 @@ namespace Amara {
                 if (config.find("containerY") != config.end()) {
                     container->y = config["containerY"];
                 }
-
                 if (config.find("containerXFromRight") != config.end()) {
                     int gx = config["xFromRight"];
                     container->x = width - container->width - gx;
@@ -81,6 +85,10 @@ namespace Amara {
                     portraitVerticalAlignment = config["portraitVerticalAlignment"];
                 }
 
+                if (config.find("defaultPortraitConfig") != config.end()) {
+                    defaultPortraitConfig = config["defaultPortraitConfig"];
+                }
+
                 manageMargins();
 
                 if (config.find("portraitTexture") != config.end()) {
@@ -99,7 +107,7 @@ namespace Amara {
                 }
             }
 
-            bool say(nlohmann::json& charaData, std::string gText) {
+            bool say(nlohmann::json& charaData, std::string gText, bool(*showPortrait)(Amara::CharaTextBox*, Amara::Container*)) {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
 
@@ -109,10 +117,27 @@ namespace Amara {
 
                 if (sm.once()) {
                     container->setVisible(true);
+                    container->setAlpha(0);
+                    configure(defaultPortraitConfig);
                     configurePortrait(charaData);
                     manageMargins();
                     setText("");
+                    if (keepOpen) {
+                        openWidth = width;
+                        openHeight = height;
+                    }
                     toReturn = true;
+                }
+
+                if (showPortrait != nullptr) {
+                    if (showPortrait(this, container)) {
+                        toReturn = true;
+                    }
+                }
+                else {
+                    if (sm.once()) {
+                        container->setAlpha(1);
+                    }
                 }
 
                 sm.wait(sayStartDelay);
@@ -146,12 +171,17 @@ namespace Amara {
                 return toReturn;
             }
 
+            bool say(nlohmann::json& charaData, std::string gText) {
+                return say(charaData, gText, nullptr);
+            }
+
             bool say(std::string gText) {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
 
                 if (sm.once()) {
                     container->setVisible(false);
+                    configure(defaultPortraitConfig);
                     clearExtraMargins();
                     setText("");
                     toReturn = true;
@@ -172,6 +202,7 @@ namespace Amara {
                     container->setVisible(false);
                     setText("");
                     toReturn = true;
+                    keepOpen = false;
                 }
 
                 if (sm.evt()) {
@@ -197,6 +228,7 @@ namespace Amara {
                     }
 
                     if (complete) {
+                        keepOpen = false;
                         sm.nextEvt();
                     }
 

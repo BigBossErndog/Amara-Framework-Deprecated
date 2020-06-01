@@ -30,7 +30,7 @@ namespace Amara {
 
             int openWidth = 0;
             int openHeight = 0;
-            bool lockOpen = true;
+            bool lockOpen = false;
             
             int boxTextureWidth = 0;
             int boxTextureHeight = 0;
@@ -77,9 +77,11 @@ namespace Amara {
 
                 if (config.find("width") != config.end()) {
                     width = config["width"];
+                    openWidth = width;
                 }
                 if (config.find("height") != config.end()) {
                     height = config["height"];
+                    openHeight = height;
                 }
                 if (config.find("texture") != config.end()) {
                     setTexture(config["texture"]);

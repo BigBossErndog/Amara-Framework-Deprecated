@@ -110,6 +110,10 @@ namespace Amara {
                 destroyTexture();
             }
 
+            Amara::Entity* add(Amara::Entity* entity) {
+                return Amara::Actor::add(entity);
+            }
+
             Amara::Light* add(Amara::Light* light) {
                 lights.push_back(light);
                 light->init(properties, scene, this);
@@ -186,8 +190,6 @@ namespace Amara {
                 SDL_SetTextureBlendMode(lightTexture, SDL_BLENDMODE_NONE);
                 SDL_RenderFillRect(gRenderer, NULL);
 
-                Amara::Actor::draw(0, 0, vw, vh);
-
                 for (Amara::Light* light: lights) {
                     light->draw(properties, gRenderer, 0, 0, vw, vh);
                 }
@@ -208,6 +210,8 @@ namespace Amara {
                         SDL_FLIP_NONE
                     );
                 }
+
+                Amara::Actor::draw(vx, vy, vw, vh);
             }
 
             ~LightLayer() {

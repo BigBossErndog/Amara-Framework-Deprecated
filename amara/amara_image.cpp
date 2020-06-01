@@ -24,6 +24,11 @@ namespace Amara {
             int imageWidth = 0;
             int imageHeight = 0;
 
+            int cropTop = 0;
+            int cropBottom = 0;
+            int cropLeft = 0;
+            int cropRight = 0;
+
             int frame = 0;
 
             float originX = 0;
@@ -115,10 +120,10 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
                 
-                destRect.x = floor((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = floor((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
-                destRect.w = ceil((imageWidth * scaleX) * nzoomX);
-                destRect.h = ceil((imageHeight * scaleY) * nzoomY);
+                destRect.x = floor((x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = floor((y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRect.w = ceil(((imageWidth-cropLeft-cropRight) * scaleX) * nzoomX);
+                destRect.h = ceil(((imageHeight-cropTop-cropBottom) * scaleY) * nzoomY);
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
@@ -159,20 +164,20 @@ namespace Amara {
                         switch (texture->type) {
                             case IMAGE:
                                 frame = 0;
-                                srcRect.x = 0;
-                                srcRect.y = 0;
-                                srcRect.w = imageWidth;
-                                srcRect.h = imageHeight;
+                                srcRect.x = cropLeft;
+                                srcRect.y = cropTop;
+                                srcRect.w = imageWidth - cropLeft - cropRight;
+                                srcRect.h = imageHeight - cropTop - cropBottom;
                                 break;
                             case SPRITESHEET:
                                 Amara::Spritesheet* spr = (Amara::Spritesheet*)texture;
                                 int maxFrame = ((texture->width / spr->frameWidth) * (texture->height / spr->frameHeight));
                                 frame = frame % maxFrame;
 
-                                srcRect.x = (frame % (texture->width / spr->frameWidth)) * spr->frameWidth;
-                                srcRect.y = floor(frame / (texture->width / spr->frameWidth)) * spr->frameHeight;
-                                srcRect.w = spr->frameWidth;
-                                srcRect.h = spr->frameHeight;
+                                srcRect.x = (frame % (texture->width / spr->frameWidth)) * spr->frameWidth + cropLeft;
+                                srcRect.y = floor(frame / (texture->width / spr->frameWidth)) * spr->frameHeight + cropTop;
+                                srcRect.w = spr->frameWidth - cropLeft - cropRight;
+                                srcRect.h = spr->frameHeight - cropTop - cropBottom;
                                 break;
                         }
 
