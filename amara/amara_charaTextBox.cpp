@@ -38,6 +38,7 @@ namespace Amara {
                 }
                 if (config.find("default") != config.end()) {
                     defaultConfig = config["default"];
+                    configure(defaultConfig);
                 }
             }
 
@@ -90,7 +91,7 @@ namespace Amara {
                 }
 
                 manageMargins();
-                
+
                 if (config.find("portraitTexture") != config.end()) {
                     portrait->setTexture(config["portraitTexture"]);
                 }
@@ -156,6 +157,9 @@ namespace Amara {
                 if (sm.evt()) {
                     if (finishedProgress) {
                         autoProgressCounter = 0;
+                        if (!autoProgress && progressIcon != nullptr) {
+                            progressIcon->setVisible(true);
+                        }
                         sm.nextEvt();
                     }
 
@@ -170,6 +174,7 @@ namespace Amara {
                         }
                     }
                     else if (progressControl.empty() || controls->justDown(progressControl)) {
+                        progressIcon->setVisible(false);
                         sm.nextEvt();
                     }
                 }

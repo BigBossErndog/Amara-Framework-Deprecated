@@ -54,6 +54,8 @@ namespace Amara {
             Amara::StateManager* copySm = nullptr;
             Amara::StateManager mySm;
 
+            Amara::Entity* progressIcon = nullptr;
+
             Amara::Color textColor = {0, 0, 0, 0};
 
             bool keepOpen = false;
@@ -154,6 +156,13 @@ namespace Amara {
                 extraMarginBottom = 0;
                 extraMarginLeft = 0;
                 extraMarginRight = 0;
+            }
+
+            Amara::Entity* addProgressIcon(Amara::Entity* icon) {
+                progressIcon = icon;
+                add(icon);
+                icon->setVisible(false);
+                return icon;
             }
 
             virtual void update() {
@@ -381,6 +390,9 @@ namespace Amara {
                 if (sm.evt()) {
                     if (finishedProgress) {
                         autoProgressCounter = 0;
+                        if (!autoProgress && progressIcon != nullptr) {
+                            progressIcon->setVisible(true);
+                        }
                         sm.nextEvt();
                     }
 
@@ -395,6 +407,7 @@ namespace Amara {
                         }
                     }
                     else if (progressControl.empty() || controls->justDown(progressControl)) {
+                        progressIcon->setVisible(false);
                         sm.nextEvt();
                     }
                 }
