@@ -17,6 +17,10 @@ namespace Amara {
                     else {
                         startScene->scenePlugin->stop();
                     }
+
+                    if (startScene != endScene) {
+                        startScene->transition = nullptr;
+                    }
     
                     if (endScene != nullptr) {
                         if (wakeScene) {

@@ -5,7 +5,7 @@
 #include "amara.h"
 
 namespace Amara {
-    class ColorTransition: public Amara::SceneTransition {
+    class FillTransition: public Amara::SceneTransition {
         public:
             SDL_Color recColor;
             SDL_Color color = {0, 0, 0, 255};
@@ -13,10 +13,10 @@ namespace Amara {
             SDL_Rect drawnRect;
             SDL_Rect viewport;
 
-            float fadeInSpeed = 0.01;
-            float fadeOutSpeed = 0.01;
+            float fadeInSpeed = 0.1;
+            float fadeOutSpeed = 0.1;
 
-            ColorTransition(std::string gNextScene): Amara::SceneTransition(gNextScene) {};
+            FillTransition(std::string gNextScene): Amara::SceneTransition(gNextScene) {};
 
 
             void setColor(int r, int g, int b, int a) {
