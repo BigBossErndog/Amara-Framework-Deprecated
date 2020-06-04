@@ -52,6 +52,9 @@ namespace Amara {
     void drawRadialGradient(Amara::Entity* entity, int gx, int gy, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart) {
         drawRadialGradient(entity->properties->gRenderer, gx, gy, width, height, innerColor, outerColor, fadeStart);
     }
+    void drawRadialGradient(Amara::Loader* loader, int gx, int gy, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart) {
+        drawRadialGradient(loader->properties->gRenderer, gx, gy, width, height, innerColor, outerColor, fadeStart);
+    }
 
     SDL_Texture* createRadialGradientTexture(SDL_Renderer* gRenderer, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart) {
         SDL_Texture* texture = SDL_CreateTexture(
@@ -80,6 +83,9 @@ namespace Amara {
     }
     Amara::RadialGradientTexture* createRadialGradient(Amara::Entity* entity, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart) {
         return createRadialGradient(entity->properties->gRenderer, width, height, innerColor, outerColor, fadeStart);
+    }
+    Amara::RadialGradientTexture* createRadialGradient(Amara::Loader* loader, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart) {
+        return createRadialGradient(loader->properties->gRenderer, width, height, innerColor, outerColor, fadeStart);
     }
 }
 

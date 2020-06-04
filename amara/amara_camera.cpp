@@ -138,8 +138,8 @@ namespace Amara {
                 if (zoomY < 0) zoomY = 0.00001;
 
                 if (lockedToBounds) {
-                    if (width/(zoomX*zoomScale) > boundX + boundW) {
-                        scrollX = boundX - ((width/(zoomX*zoomScale)) - (boundX + boundW))/2;
+                    if (width/(zoomX*zoomScale) > boundW) {
+                        scrollX = boundX - ((width/(zoomX*zoomScale)) - (boundW))/2;
                     }
                     else if (scrollX < boundX) {
                         scrollX = boundX;
@@ -149,8 +149,8 @@ namespace Amara {
                     }
 
                     
-                    if (height/(zoomY*zoomScale) > boundY + boundH) {
-                        scrollY = boundY - ((height/(zoomY*zoomScale)) - (boundY + boundH))/2;
+                    if (height/(zoomY*zoomScale) > boundH) {
+                        scrollY = boundY - ((height/(zoomY*zoomScale)) - (boundH))/2;
                     }
                     else if (scrollY < boundY) {
                         scrollY = boundY;
