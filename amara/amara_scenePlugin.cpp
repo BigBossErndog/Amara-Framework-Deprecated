@@ -8,6 +8,7 @@ namespace Amara {
     class Game;
 
     enum SceneTask {
+        RUN,
         STOP,
         START,
         RESTART,
@@ -54,6 +55,17 @@ namespace Amara {
                     return got->second;
                 }
                 return nullptr;
+            }
+
+            void run() {
+                tasks.push_back(RUN);
+            }
+
+            void run(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
+                if (got != sceneMap->end()) {
+                    got->second->scenePlugin->run();
+                }
             }
 
             void start() {
@@ -131,6 +143,13 @@ namespace Amara {
                 for (size_t i = 0; i < tasks.size(); i++) {
                     SceneTask curTask = tasks.at(i);
                     switch (curTask) {
+                        case RUN:
+                            isActive = true;
+                            isPaused = false;
+                            isSleeping = false;
+                            scene->init();
+                            scene->onStart();
+                            break;
                         case START:
                             isActive = true;
                             isPaused = false;
