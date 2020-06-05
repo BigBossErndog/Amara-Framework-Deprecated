@@ -21,6 +21,10 @@ namespace Amara {
                 return loader->get(key);
             }
 
+            nlohmann::json& getJSON(std::string key) {
+                return loader->getJSON(key);
+            }
+
             bool add(std::string key, SDL_Texture* tx, bool replace) {
                 return loader->add(key, tx, replace);
             }

@@ -42,6 +42,15 @@ namespace Amara {
                 return nullptr;
             }
 
+			nlohmann::json& getJSON(std::string key) {
+				Amara::JsonFile* jf = (Amara::JsonFile*)(get(key));
+				if (jf != nullptr) {
+					return jf->getJSON();
+				}
+				nlohmann::json empty;
+				return empty;
+			}
+
 			virtual bool remove(std::string key) {
 				Amara::Asset* asset = get(key);
 				if (asset != nullptr) {

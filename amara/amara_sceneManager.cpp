@@ -23,8 +23,9 @@ namespace Amara {
 				sceneMap[key] = scene;
 				sceneList.push_back(scene);
 				scene->setup(properties, new ScenePlugin(key, properties, scene, &sceneMap, &sceneList));
-				std::cout << "ADDED SCENE: " << scene->scenePlugin->key << std::endl;
-				if (willStart) scene->scenePlugin->start();
+				scene->key = key;
+				std::cout << "ADDED SCENE: " << scene->scenes->key << std::endl;
+				if (willStart) scene->scenes->start();
 				return scene;
 			}
 
@@ -43,15 +44,15 @@ namespace Amara {
 
 			void run() {
 				Amara::Scene* scene;
-				Amara::ScenePlugin* scenePlugin;
+				Amara::ScenePlugin* scenes;
 
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
-					scenePlugin = scene->scenePlugin;
+					scenes = scene->scenes;
 
-					if (!scenePlugin->isActive) continue;
-					if (scenePlugin->isPaused) continue;
-					if (scenePlugin->isSleeping) continue;
+					if (!scenes->isActive) continue;
+					if (scenes->isPaused) continue;
+					if (scenes->isSleeping) continue;
 
 					scene->run();
 				}
@@ -59,14 +60,14 @@ namespace Amara {
 
 			void draw() {
 				Amara::Scene* scene;
-				Amara::ScenePlugin* scenePlugin;
+				Amara::ScenePlugin* scenes;
 				
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
-					scenePlugin = scene->scenePlugin;
+					scenes = scene->scenes;
 
-					if (!scenePlugin->isActive) continue;
-					if (scenePlugin->isSleeping) continue;
+					if (!scenes->isActive) continue;
+					if (scenes->isSleeping) continue;
 					scene->draw();
 				}
 			}
@@ -83,7 +84,7 @@ namespace Amara {
 				std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap.find(key);
 				if (got != sceneMap.end()) {
 					Amara::Scene* scene = sceneMap[key];
-					scene->scenePlugin->start();
+					scene->scenes->start();
 					return scene;
 				}
 
@@ -92,13 +93,13 @@ namespace Amara {
 
 			void manageTasks() {
 				Amara::Scene* scene;
-				Amara::ScenePlugin* scenePlugin;
+				Amara::ScenePlugin* scenes;
 
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
-					scenePlugin = scene->scenePlugin;
+					scenes = scene->scenes;
 
-					scenePlugin->manageTasks();
+					scenes->manageTasks();
 				}
 			}
 	};

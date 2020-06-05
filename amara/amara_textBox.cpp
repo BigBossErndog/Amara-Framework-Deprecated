@@ -67,6 +67,10 @@ namespace Amara {
             }
             TextBox(int gw, int gh, std::string gTextureKey, std::string gFontKey): TextBox(0, 0, gw, gh, gTextureKey, gFontKey) {}
 
+            TextBox(Amara::StateManager* gsm): TextBox() {
+                copyStateManager(gsm);
+            }
+
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
 				Amara::UIBox::init(gameProperties, givenScene, givenParent);
                 

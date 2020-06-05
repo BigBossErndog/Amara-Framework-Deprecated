@@ -12,10 +12,10 @@ namespace Amara {
             bool startNextScene() {
                 if (once()) {
                     if (sleepScene) {
-                        startScene->scenePlugin->sleep();
+                        startScene->scenes->sleep();
                     }
                     else {
-                        startScene->scenePlugin->stop();
+                        startScene->scenes->stop();
                     }
 
                     if (startScene != endScene) {
@@ -24,10 +24,10 @@ namespace Amara {
     
                     if (endScene != nullptr) {
                         if (wakeScene) {
-                            endScene->scenePlugin->wake();
+                            endScene->scenes->wake();
                         }
                         else {
-                            endScene->scenePlugin->start();
+                            endScene->scenes->start();
                         }
                     }
                     return true;

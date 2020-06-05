@@ -13,7 +13,7 @@ namespace Amara {
         public:
             std::string key;
             Amara::LoadManager* loadManager = nullptr;
-            Amara::ScenePlugin* scenePlugin = nullptr;
+            Amara::ScenePlugin* scenes = nullptr;
 
             Amara::SceneTransitionBase* transition = nullptr;
 
@@ -46,7 +46,7 @@ namespace Amara {
 
                 transition = nullptr;
 
-                scenePlugin = gScenePlugin;
+                scenes = gScenePlugin;
                 isActive = false;
             }
 
