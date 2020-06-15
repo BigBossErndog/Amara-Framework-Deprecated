@@ -31,6 +31,11 @@ namespace Amara {
             int openWidth = 0;
             int openHeight = 0;
             bool lockOpen = false;
+
+            int openSpeedX = 0;
+            int openSpeedY = 0;
+            int closeSpeedX = 0;
+            int closeSpeedY = 0;
             
             int boxTextureWidth = 0;
             int boxTextureHeight = 0;
@@ -41,6 +46,14 @@ namespace Amara {
 
             float originX = 0;
             float originY = 0;
+
+            Amara::Alignment boxHorizontalAlignment = ALIGN_CENTER;
+            Amara::Alignment boxVerticalAlignment = ALIGN_CENTER;
+
+            Amara::StateManager* copySm = nullptr;
+            Amara::StateManager mySm;
+
+            bool keepOpen = false;
 
             UIBox() {}
 
@@ -91,6 +104,26 @@ namespace Amara {
             virtual void drawBoxPart(int part) {
                 bool skipDrawing = false;
                 int partX = 0, partY = 0, partWidth = 0, partHeight = 0;
+
+                float horizontalAlignmentFactor = 0.5;
+                float verticalAlignmentFactor = 0.5;
+
+                switch (boxHorizontalAlignment) {
+                    case ALIGN_LEFT:
+                        horizontalAlignmentFactor = 0;
+                        break;
+                    case ALIGN_RIGHT:
+                        horizontalAlignmentFactor = 1;
+                        break;
+                }
+                switch(boxVerticalAlignment) {
+                    case ALIGN_TOP:
+                        verticalAlignmentFactor = 0;
+                        break;
+                    case ALIGN_BOTTOM:
+                        verticalAlignmentFactor = 1;
+                        break;
+                }
                 
                 partX = floor((part % 3) * boxTextureWidth/(float)3);
                 partY = floor(floor(part/(float)3) * boxTextureHeight/(float)3);
@@ -99,29 +132,29 @@ namespace Amara {
 
                 switch (part % 3) {
                     case 0:
-                        destRect.x = (width - openWidth)/2;
+                        destRect.x = (width - openWidth)*horizontalAlignmentFactor;
                         destRect.w = partWidth;
                         break;
                     case 1:
-                        destRect.x = (width - openWidth)/2 + partWidth;
+                        destRect.x = (width - openWidth)*horizontalAlignmentFactor + partWidth;
                         destRect.w = openWidth - partWidth*2;
                         break;
                     case 2:
-                        destRect.x = (width - openWidth)/2 + openWidth - partWidth;
+                        destRect.x = (width - openWidth)*horizontalAlignmentFactor + openWidth - partWidth;
                         destRect.w = partWidth;
                         break;
                 }
                 switch ((int)floor(part/(float)3)) {
                     case 0:
-                        destRect.y = (height - openHeight)/2;
+                        destRect.y = (height - openHeight)*verticalAlignmentFactor;
                         destRect.h = partHeight;
                         break;
                     case 1:
-                        destRect.y = (height - openHeight)/2 + partHeight;
+                        destRect.y = (height - openHeight)*verticalAlignmentFactor + partHeight;
                         destRect.h = openHeight - partHeight*2;
                         break;
                     case 2:
-                        destRect.y = (height - openHeight)/2 + openHeight - partHeight;
+                        destRect.y = (height - openHeight)*verticalAlignmentFactor + openHeight - partHeight;
                         destRect.h = partHeight;
                         break;
                 }
@@ -321,6 +354,170 @@ namespace Amara {
             }
             void setOrigin(float gi) {
                 setOrigin(gi, gi);
+            }
+
+            Amara::StateManager& checkSm() {
+                if (copySm != nullptr) {
+                    return *copySm;
+                }
+                else {
+                    return mySm;
+                }
+            }
+
+            virtual bool show() {
+                Amara::StateManager& sm = checkSm();
+                if (sm.once()) {
+                    setVisible(true);
+                    return true;
+                }
+                return false;
+            }
+
+            virtual bool hide() {
+                Amara::StateManager& sm = checkSm();
+                if (sm.once()) {
+                    setVisible(false);
+                    return true;
+                }
+                return false;
+            }
+
+            virtual bool open() {
+                Amara::StateManager& sm = checkSm();
+                bool toReturn = false;
+
+                if (sm.once()) {
+                    if (!keepOpen) {
+                        resetOpenSize();
+                    }
+                }
+
+                if (show()) {
+                    toReturn = true;
+                }
+
+                if (sm.evt()) {
+                    bool complete = true;
+
+                    if (openSpeedX > 0) {
+                        openWidth += openSpeedX;
+                        if (openWidth >= width) {
+                            openWidth = width;
+                        }
+                        else {
+                            complete = false;
+                        }
+                    }
+
+                    if (openSpeedY > 0) {
+                        openHeight += openSpeedY;
+                        if (openHeight >= height) {
+                            openHeight = height;
+                        }
+                        else {
+                            complete = false;
+                        }
+                    }
+
+                    if (complete) {
+                        keepOpen = true;
+                        sm.nextEvt();
+                    }
+
+                    toReturn = true;
+                }
+            }
+
+            virtual bool close() {
+                Amara::StateManager& sm = checkSm();
+                bool toReturn = false;
+
+                if (sm.evt()) {
+                    bool complete = true;
+                    if (closeSpeedX > 0) {
+                        openWidth -= closeSpeedX;
+                        if (openWidth <= minWidth) {
+                            openWidth = minWidth;
+                        }
+                        else {
+                            complete = false;
+                        }
+                    }
+
+                    if (closeSpeedY > 0) {
+                        openHeight -= closeSpeedY;
+                        if (openHeight <= minHeight) {
+                            openHeight = minHeight;
+                        }
+                        else {
+                            complete = false;
+                        }
+                    }
+
+                    if (complete) {
+                        keepOpen = false;
+                        sm.nextEvt();
+                    }
+
+                    toReturn = true;
+                }
+
+                if (hide()) {
+                    toReturn = true;
+                }
+
+                return toReturn;
+            }
+
+            void setOpenSpeed(int gx, int gy) {
+                openSpeedX = gx;
+                openSpeedY = gy;
+
+                if (openSpeedX < 0) openSpeedX = 0;
+                if (openSpeedY < 0) openSpeedY = 0;
+
+                resetOpenSize();
+
+                lockOpen = false;
+            }
+            void setOpenSpeed(int gy) {
+                setOpenSpeed(0, gy);
+            }
+            void setOpenSpeed() {
+                setOpenSpeed(0);
+            }
+
+            void setCloseSpeed(int gx, int gy) {
+                closeSpeedX = gx;
+                closeSpeedY = gy;
+
+                if (closeSpeedX < 0) closeSpeedX = 0;
+                if (closeSpeedY < 0) closeSpeedY = 0;
+
+                lockOpen = false;
+            }
+            void setCloseSpeed(int gy) {
+                setCloseSpeed(0, gy);
+            }
+            void setCloseSpeed() {
+                setCloseSpeed(0);
+            }
+
+            void setOpenCloseSpeed(int gx, int gy) {
+                setOpenSpeed(gx, gy);
+                setCloseSpeed(gx, gy);
+            }
+            void setOpenCloseSpeed(int gy) {
+                setOpenCloseSpeed(0, gy);
+            }
+            void setOpenCloseSpeed() {
+                setOpenCloseSpeed(0);
+            }
+
+            void resetOpenSize() {
+                if (openSpeedX > 0) setOpenSize(0, openHeight);
+                if (openSpeedY > 0) setOpenSize(openWidth, 0);
             }
 
             ~UIBox() {

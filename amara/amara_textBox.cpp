@@ -43,22 +43,12 @@ namespace Amara {
 
             int recWrapWidth = -1;
 
-            int openSpeedX = 0;
-            int openSpeedY = 0;
-            int closeSpeedX = 0;
-            int closeSpeedY = 0;
-
             Amara::Alignment horizontalAlignment = ALIGN_LEFT;
             Amara::Alignment verticalAlignment = ALIGN_TOP;
-
-            Amara::StateManager* copySm = nullptr;
-            Amara::StateManager mySm;
 
             Amara::Entity* progressIcon = nullptr;
 
             Amara::Color textColor = {0, 0, 0, 0};
-
-            bool keepOpen = false;
 
             TextBox() : Amara::UIBox() {}
 
@@ -367,18 +357,13 @@ namespace Amara {
                 copySm = &gsm;
             }
 
-            Amara::StateManager& checkSm() {
-                if (copySm != nullptr) {
-                    return *copySm;
-                }
-                else {
-                    return mySm;
-                }
-            }
-
             virtual bool say(std::string gText) {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
+
+                if (sm.once()) {
+                    setText("");
+                }
 
                 if (open()) {
                     toReturn = true;
@@ -419,165 +404,20 @@ namespace Amara {
                 return toReturn;
             }
 
-            virtual bool show() {
-                Amara::StateManager& sm = checkSm();
-                if (sm.once()) {
-                    setVisible(true);
-                    return true;
-                }
-                return false;
-            }
-
-            virtual bool hide() {
-                Amara::StateManager& sm = checkSm();
-                if (sm.once()) {
-                    setVisible(false);
-                    return true;
-                }
-                return false;
-            }
-
-            virtual bool open() {
-                Amara::StateManager& sm = checkSm();
-                bool toReturn = false;
-
-                if (sm.once()) {
-                    if (!keepOpen) {
-                        resetOpenSize();
-                    }
-                }
-
-                if (show()) {
-                    setText("");
-                    toReturn = true;
-                }
-
-                if (sm.evt()) {
-                    bool complete = true;
-
-                    if (openSpeedX > 0) {
-                        openWidth += openSpeedX;
-                        if (openWidth >= width) {
-                            openWidth = width;
-                        }
-                        else {
-                            complete = false;
-                        }
-                    }
-
-                    if (openSpeedY > 0) {
-                        openHeight += openSpeedY;
-                        if (openHeight >= height) {
-                            openHeight = height;
-                        }
-                        else {
-                            complete = false;
-                        }
-                    }
-
-                    if (complete) {
-                        keepOpen = true;
-                        sm.nextEvt();
-                    }
-
-                    toReturn = true;
-                }
-            }
-
             virtual bool close() {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
-
+                
                 if (sm.once()) {
                     setText("");
                     toReturn = true;
                 }
 
-                if (sm.evt()) {
-                    bool complete = true;
-                    if (closeSpeedX > 0) {
-                        openWidth -= closeSpeedX;
-                        if (openWidth <= minWidth) {
-                            openWidth = minWidth;
-                        }
-                        else {
-                            complete = false;
-                        }
-                    }
-
-                    if (closeSpeedY > 0) {
-                        openHeight -= closeSpeedY;
-                        if (openHeight <= minHeight) {
-                            openHeight = minHeight;
-                        }
-                        else {
-                            complete = false;
-                        }
-                    }
-
-                    if (complete) {
-                        keepOpen = false;
-                        sm.nextEvt();
-                    }
-
-                    toReturn = true;
-                }
-
-                if (hide()) {
+                if (Amara::UIBox::close()) {
                     toReturn = true;
                 }
 
                 return toReturn;
-            }
-
-            void setOpenSpeed(int gx, int gy) {
-                openSpeedX = gx;
-                openSpeedY = gy;
-
-                if (openSpeedX < 0) openSpeedX = 0;
-                if (openSpeedY < 0) openSpeedY = 0;
-
-                resetOpenSize();
-
-                lockOpen = false;
-            }
-            void setOpenSpeed(int gy) {
-                setOpenSpeed(0, gy);
-            }
-            void setOpenSpeed() {
-                setOpenSpeed(0);
-            }
-
-            void setCloseSpeed(int gx, int gy) {
-                closeSpeedX = gx;
-                closeSpeedY = gy;
-
-                if (closeSpeedX < 0) closeSpeedX = 0;
-                if (closeSpeedY < 0) closeSpeedY = 0;
-
-                lockOpen = false;
-            }
-            void setCloseSpeed(int gy) {
-                setCloseSpeed(0, gy);
-            }
-            void setCloseSpeed() {
-                setCloseSpeed(0);
-            }
-
-            void setOpenCloseSpeed(int gx, int gy) {
-                setOpenSpeed(gx, gy);
-                setCloseSpeed(gx, gy);
-            }
-            void setOpenCloseSpeed(int gy) {
-                setOpenCloseSpeed(0, gy);
-            }
-            void setOpenCloseSpeed() {
-                setOpenCloseSpeed(0);
-            }
-
-            void resetOpenSize() {
-                if (openSpeedX > 0) setOpenSize(0, openHeight);
-                if (openSpeedY > 0) setOpenSize(openWidth, 0);
             }
 
             virtual void setProgressControl(std::string gControl) {
