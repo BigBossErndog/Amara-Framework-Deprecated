@@ -117,32 +117,6 @@ namespace Amara {
                 if (config.find("font") != config.end()) {
                     setFont(config["font"]);
                 }
-                if (config.find("openSpeedX") != config.end()) {
-                    openSpeedX = config["openSpeedX"];
-                }
-                if (config.find("openSpeedY") != config.end()) {
-                    openSpeedY = config["openSpeedY"];
-                }
-                if (config.find("closeSpeedX") != config.end()) {
-                    closeSpeedX = config["closeSpeedX"];
-                }
-                if (config.find("closeSpeedY") != config.end()) {
-                    closeSpeedY = config["closeSpeedY"];
-                }
-                if (config.find("openCloseSpeedX") != config.end()) {
-                    openSpeedX = config["openCloseSpeedX"];
-                    closeSpeedX = config["openCloseSpeedX"];
-                }
-                if (config.find("openCloseSpeedY") != config.end()) {
-                    openSpeedY = config["openCloseSpeedY"];
-                    closeSpeedY = config["openCloseSpeedY"];
-                }
-                if (config.find("openCloseSpeed") != config.end()) {
-                    setOpenCloseSpeed(config["openCloseSpeed"], config["openCloseSpeed"]);
-                }
-
-                setOpenSpeed(openSpeedX, openSpeedY);
-                setCloseSpeed(closeSpeedX, closeSpeedY);
             }
 
             void clearExtraMargins() {
