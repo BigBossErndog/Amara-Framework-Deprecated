@@ -226,6 +226,8 @@ namespace Amara {
         std::list<int> openList;
         std::list<int> closedList;
 
+        task->wallFinder->locked = true;
+
         int startId = task->startId;
         int targetId = task->targetId;
 
@@ -303,6 +305,7 @@ namespace Amara {
         task->findingPath = false;
         task->thread = nullptr;
         task->foundPath = foundPath;
+        task->wallFinder->locked = false;
         return 0;
     }
 }

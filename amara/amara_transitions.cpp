@@ -16,8 +16,14 @@ namespace Amara {
             float fadeInSpeed = 0.1;
             float fadeOutSpeed = 0.1;
 
-            FillTransition(std::string gNextScene): Amara::SceneTransition(gNextScene) {};
+            FillTransition(std::string gNextScene): Amara::SceneTransition(gNextScene) {}
 
+            FillTransition(std::string gNextScene, float inSpeed, float outSpeed): Amara::FillTransition(gNextScene) {
+                fadeInSpeed = inSpeed;
+                fadeOutSpeed = outSpeed;
+            }
+
+            FillTransition(std::string gNextScene, float speed): FillTransition(gNextScene, speed, speed) {}
 
             void setColor(int r, int g, int b, int a) {
                 color.r = r;

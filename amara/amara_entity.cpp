@@ -104,12 +104,22 @@ namespace Amara {
 				if (config.find("id") != config.end()) {
                     id = config["id"];
                 }
+
 				if (config.find("x") != config.end()) {
 					x = config["x"];
 				}
 				if (config.find("y") != config.end()) {
 					y = config["y"];
 				}
+				if (config.find("xFromRight") != config.end()) {
+					int xFromRight = config["xFromRight"];
+					x = properties->resolution->width - xFromRight;
+				}
+				if (config.find("yFromBottom") != config.end()) {
+					int yFromBottom = config["yFromBottom"];
+					y = properties->resolution->height - yFromBottom;
+				}
+
 				if (config.find("scaleX") != config.end()) {
 					scaleX = config["scaleX"];
 				}
@@ -134,8 +144,21 @@ namespace Amara {
 				if (config.find("alpha") != config.end()) {
 					alpha = config["alpha"];
 				}
+				if (config.find("depth") != config.end()) {
+					depth = config["depth"];
+				}
 				if (config.find("data") != config.end()) {
 					data = config["data"];
+				}
+				if (config.find("bringToFront") != config.end()) {
+					if (config["bringToFront"]) {
+						bringToFront();
+					}
+				}
+				if (config.find("sendToBack") != config.end()) {
+					if (config["sendToBack"]) {
+						sendToBack();
+					}
 				}
 			}
 
@@ -152,6 +175,7 @@ namespace Amara {
 				config["zoomFactorY"] = zoomFactorY;
 				config["isVisible"] = isVisible;
 				config["alpha"] = alpha;
+				config["depth"] = depth;
 				config["data"] = data;
 				return config;
 			}
@@ -371,8 +395,17 @@ namespace Amara {
 			virtual void bringToFront() {
 				std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
 				for (Amara::Entity* entity: rSceneEntities) {
-					if (depth <= entity->depth) {
+					if (entity != this && depth <= entity->depth) {
 						depth = entity->depth + 1;
+					}
+				}
+			}
+
+			virtual void sendToBack() {
+				std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
+				for (Amara::Entity* entity: rSceneEntities) {
+					if (entity != this && depth >= entity->depth) {
+						depth = entity->depth - 1;
 					}
 				}
 			}

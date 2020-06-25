@@ -20,6 +20,8 @@ namespace Amara {
             int tileWidth = 0;
             int tileHeight = 0;
 
+            bool offMapIsWall = true;
+
             std::unordered_map<std::string, Amara::TilemapLayer*> layers;
             std::vector<Amara::TilemapLayer*> walls;
             std::unordered_map<int, Amara::Direction> wallTypes;
@@ -57,15 +59,19 @@ namespace Amara {
             void setTiledJson(std::string gTiledJsonKey) {
                 tiledJsonKey = gTiledJsonKey;
                 if (!tiledJsonKey.empty()) {
-                    tiledJson = ((Amara::JsonFile*)load->get(tiledJsonKey))->jsonObj;
+                    Amara::JsonFile* jsonAsset = (Amara::JsonFile*)load->get(tiledJsonKey);
 
-                    if (tiledJson != nullptr) {
+                    if (jsonAsset != nullptr) {
+                        tiledJson = jsonAsset->getJSON();
                         if (tiledJson["width"] > width) width = tiledJson["width"];
                         if (tiledJson["height"] > height) height = tiledJson["height"];
                         tileWidth = tiledJson["tilewidth"];
                         tileHeight = tiledJson["tileheight"];
                         widthInPixels = tileWidth * width;
                         heightInPixels = tileHeight * height;
+                    }
+                    else {
+                        SDL_Log("Tiled JSON \"%s\" was not found.", gTiledJsonKey);
                     }
                 }
             }
@@ -211,6 +217,9 @@ namespace Amara {
             }
 
             virtual bool isWall(int gx, int gy, Amara::Direction dir) {
+                if (gx < 0 || gy < 0) return (offMapIsWall) ? true : false;
+                if (gx >= width || gy >= height) return (offMapIsWall) ? true : false;
+
                 Amara::Tile tile;
                 for (Amara::TilemapLayer* layer: walls) {
                     tile = layer->getTileAt(gx, gy);

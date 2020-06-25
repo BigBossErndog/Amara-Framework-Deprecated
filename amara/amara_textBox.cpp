@@ -57,9 +57,7 @@ namespace Amara {
             }
             TextBox(int gw, int gh, std::string gTextureKey, std::string gFontKey): TextBox(0, 0, gw, gh, gTextureKey, gFontKey) {}
 
-            TextBox(Amara::StateManager* gsm): TextBox() {
-                copyStateManager(gsm);
-            }
+            TextBox(Amara::StateManager* gsm): UIBox(gsm) {}
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
 				Amara::UIBox::init(gameProperties, givenScene, givenParent);
@@ -73,7 +71,7 @@ namespace Amara {
                 data["entityType"] = "textBox";
 			}
 
-            virtual void configure(nlohmann::json& config) {
+            virtual void configure(nlohmann::json config) {
                 Amara::UIBox::configure(config);
                 if (config.find("text") != config.end()) {
                     setText(config["text"]);
@@ -324,13 +322,6 @@ namespace Amara {
                 setProgressive(true);
             }
 
-            void copyStateManager(Amara::StateManager* gsm) {
-                copySm = gsm;
-            }
-            void copyStateManager(Amara::StateManager& gsm) {
-                copySm = &gsm;
-            }
-
             virtual bool say(std::string gText) {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
@@ -370,7 +361,7 @@ namespace Amara {
                         }
                     }
                     else if (progressControl.empty() || controls->justDown(progressControl)) {
-                        progressIcon->setVisible(false);
+                        if (progressIcon != nullptr) progressIcon->setVisible(false);
                         sm.nextEvt();
                     }
                 }

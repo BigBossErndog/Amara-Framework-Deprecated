@@ -5,6 +5,8 @@
 namespace Amara {
     class WallFinder {
         public:
+            bool locked = false;
+            
             virtual bool isWall(int gx, int gy) {
                 return false;
             }

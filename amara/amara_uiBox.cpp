@@ -25,8 +25,8 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
-            int minWidth = 8;
-            int minHeight = 8;
+            int minWidth = 0;
+            int minHeight = 0;
 
             int openWidth = 0;
             int openHeight = 0;
@@ -57,6 +57,11 @@ namespace Amara {
 
             UIBox() {}
 
+            UIBox(Amara::StateManager* gsm) {
+                copyStateManager(gsm);
+                setVisible(false);
+            }
+
             UIBox(float gx, float gy, int gw, int gh, std::string gTextureKey): UIBox() {
                 x = gx;
                 y = gy;
@@ -85,7 +90,7 @@ namespace Amara {
                 data["entityType"] = "uiBox";
             }
 
-            virtual void configure(nlohmann::json& config) {
+            virtual void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
 
                 if (config.find("width") != config.end()) {
@@ -95,6 +100,20 @@ namespace Amara {
                 if (config.find("height") != config.end()) {
                     height = config["height"];
                     openHeight = height;
+                }
+                if (config.find("xFromRight") != config.end()) {
+                    int xFromRight = config["xFromRight"];
+                    x = properties->resolution->width - width - xFromRight;
+                }
+                if (config.find("yFromBottom") != config.end()) {
+                    int yFromBottom = config["yFromBottom"];        
+                    y = properties->resolution->height - height - yFromBottom;
+                }
+                if (config.find("minWidth") != config.end()) {
+                    minWidth = config["minWidth"];
+                }
+                if (config.find("minHeight") != config.end()) {
+                    minHeight = config["minHeight"];
                 }
                 if (config.find("texture") != config.end()) {
                     setTexture(config["texture"]);
@@ -380,6 +399,13 @@ namespace Amara {
             }
             void setOrigin(float gi) {
                 setOrigin(gi, gi);
+            }
+
+            void copyStateManager(Amara::StateManager* gsm) {
+                copySm = gsm;
+            }
+            void copyStateManager(Amara::StateManager& gsm) {
+                copySm = &gsm;
             }
 
             Amara::StateManager& checkSm() {

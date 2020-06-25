@@ -30,16 +30,24 @@ namespace Amara {
                 data["entityType"] = "charaTextBox";
             }
 
-            void configure(nlohmann::json& config) {
+            void configure(nlohmann::json config) {
+                bool noneFound = true;
                 if (config.find("textBox") != config.end()) {
                     Amara::TextBox::configure(config["textBox"]);
+                    noneFound = false;
                 }
                 if (config.find("portrait") != config.end()) {
                     configurePortrait(config["portrait"]);
+                    noneFound = false;
                 }
                 if (config.find("default") != config.end()) {
                     defaultConfig = config["default"];
                     configure(defaultConfig);
+                    noneFound = false;
+                }
+
+                if (noneFound) {
+                    Amara::TextBox::configure(config);
                 }
             }
 
@@ -115,7 +123,7 @@ namespace Amara {
                 }
             }
 
-            bool say(nlohmann::json& charaData, std::string gText, bool(*showPortrait)(Amara::CharaTextBox*, Amara::Container*)) {
+            bool say(nlohmann::json& charaData, bool(*showPortrait)(Amara::CharaTextBox*, Amara::Container*), std::string gText) {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
 
@@ -125,7 +133,7 @@ namespace Amara {
 
                 if (sm.once()) {
                     container->setVisible(true);
-                    container->setAlpha(0);
+                    if (charaData.find("portrait") == charaData.end()) container->setAlpha(0);
                     configure(defaultConfig);
                     configure(charaData);
                     manageMargins();
@@ -144,7 +152,7 @@ namespace Amara {
                 }
                 else {
                     if (sm.once()) {
-                        container->setAlpha(1);
+                        if (charaData.find("portrait") != charaData.end()) container->setAlpha(1);
                     }
                 }
 
@@ -175,7 +183,7 @@ namespace Amara {
                         }
                     }
                     else if (progressControl.empty() || controls->justDown(progressControl)) {
-                        progressIcon->setVisible(false);
+                        if (progressIcon != nullptr) progressIcon->setVisible(false);
                         sm.nextEvt();
                     }
                 }
@@ -184,7 +192,7 @@ namespace Amara {
             }
 
             bool say(nlohmann::json& charaData, std::string gText) {
-                return say(charaData, gText, nullptr);
+                return say(charaData, nullptr, gText);
             }
 
             bool say(std::string gText) {
