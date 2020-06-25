@@ -16,6 +16,13 @@ namespace Amara {
             float fadeInSpeed = 0.1;
             float fadeOutSpeed = 0.1;
 
+            FillTransition(): Amara::SceneTransition() {}
+            FillTransition(float inSpeed, float outSpeed): FillTransition() {
+                fadeInSpeed = inSpeed;
+                fadeOutSpeed = outSpeed;
+            }
+            FillTransition(float speed): FillTransition(speed, speed) {}
+
             FillTransition(std::string gNextScene): Amara::SceneTransition(gNextScene) {}
 
             FillTransition(std::string gNextScene, float inSpeed, float outSpeed): Amara::FillTransition(gNextScene) {

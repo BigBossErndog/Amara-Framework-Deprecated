@@ -23,6 +23,8 @@ namespace Amara {
             bool sleepScene = false;
             bool wakeScene = false;
 
+            SceneTransitionBase() {}
+
             SceneTransitionBase(std::string gNextScene) {
                 nextSceneKey = gNextScene;
             }
@@ -57,7 +59,7 @@ namespace Amara {
                 }
             }
 
-            virtual void configure(nlohmann::json& config) {
+            virtual void configure(nlohmann::json config) {
                 if (config.find("sleepScene") != config.end()) {
                     sleepScene = config["sleepScene"];
                 }

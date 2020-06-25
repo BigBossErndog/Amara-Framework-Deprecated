@@ -7,6 +7,7 @@
 namespace Amara {
     class SceneTransition: public Amara::SceneTransitionBase {
         public:
+            SceneTransition(): Amara::SceneTransitionBase() {}
             SceneTransition(std::string gNextScene): Amara::SceneTransitionBase(gNextScene) {}
 
             bool startNextScene() {
@@ -33,6 +34,21 @@ namespace Amara {
                     return true;
                 }
                 return false;
+            }
+
+            virtual void configure(nlohmann::json config) {
+                if (config.find("nextScene") != config.end()) {
+                    nextSceneKey = config["nextScene"];
+                    if (endScene) {
+                        endScene->transition = nullptr;
+                    }
+                    if (sceneManager) {
+                        endScene = sceneManager->get(nextSceneKey);
+                        if (endScene != nullptr) {
+                            endScene->transition = this;
+                        }
+                    }
+                }
             }
 
             virtual void init(Amara::GameProperties* gProperties,Amara::Scene* gStartScene) {

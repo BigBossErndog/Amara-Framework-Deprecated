@@ -24,7 +24,7 @@ namespace Amara {
             bool initialCreated = false;
 
             Scene(): Actor() {
-
+                
             }
 
             virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* gScenePlugin) final {
