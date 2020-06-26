@@ -60,6 +60,9 @@ namespace Amara {
 			float scaleX = 1;
 			float scaleY = 1;
 
+			float cameraOffsetX = 0;
+			float cameraOffsetY = 0;
+
 			float scrollFactorX = 1;
 			float scrollFactorY = 1;
 			float zoomFactorX = 1;
@@ -147,6 +150,12 @@ namespace Amara {
 				if (config.find("depth") != config.end()) {
 					depth = config["depth"];
 				}
+				if (config.find("cameraOffsetX") != config.end()) {
+					cameraOffsetX = config["cameraOffsetX"];
+				}
+				if (config.find("cameraOffsetY") != config.end()) {
+					cameraOffsetY = config["cameraOffsetY"];
+				}
 				if (config.find("data") != config.end()) {
 					data = config["data"];
 				}
@@ -176,6 +185,8 @@ namespace Amara {
 				config["isVisible"] = isVisible;
 				config["alpha"] = alpha;
 				config["depth"] = depth;
+				config["cameraOffsetX"] = cameraOffsetX;
+				config["cameraOffsetY"] = cameraOffsetY;
 				config["data"] = data;
 				return config;
 			}

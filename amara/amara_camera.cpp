@@ -97,8 +97,8 @@ namespace Amara {
                         stopFollow();
                     }
                     else {
-                        float tx = (float)followTarget->x;
-                        float ty = (float)followTarget->y;
+                        float tx = followTarget->x + followTarget->cameraOffsetX;
+                        float ty = followTarget->y + followTarget->cameraOffsetY;
 
                         float cx = (width/(zoomX*zoomScale))/2 - (width/(oldZoomX*zoomScale))/2;
                         float cy = (height/(zoomY*zoomScale))/2 - (height/(oldZoomY*zoomScale))/2;

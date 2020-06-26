@@ -36,6 +36,14 @@ namespace Amara {
                         actor->x = sineInOutEase(startX, targetX, progress);
                         actor->y = sineInOutEase(startY, targetY, progress);
                         break;
+                    case SINE_IN:
+                        actor->x = sineInEase(startX, targetX, progress);
+                        actor->y = sineInEase(startY, targetY, progress);
+                        break;
+                    case SINE_OUT:
+                        actor->x = sineOutEase(startX, targetX, progress);
+                        actor->y = sineOutEase(startY, targetY, progress);
+                        break;
                 }
             }
     };
@@ -68,6 +76,14 @@ namespace Amara {
                     case SINE_INOUT:
                         actor->scaleX = sineInOutEase(startScaleX, targetScale, progress);
                         actor->scaleY = sineInOutEase(startScaleY, targetScale, progress);
+                        break;
+                    case SINE_IN:
+                        actor->scaleX = sineInEase(startScaleX, targetScale, progress);
+                        actor->scaleY = sineInEase(startScaleY, targetScale, progress);
+                        break;
+                    case SINE_OUT:
+                        actor->scaleX = sineOutEase(startScaleX, targetScale, progress);
+                        actor->scaleY = sineOutEase(startScaleY, targetScale, progress);
                         break;
                 }
             }

@@ -5,10 +5,17 @@
 #include "amara.h"
 
 namespace Amara {
+    struct StateRecord {
+        std::string name;
+        int event = 0;
+    };
+
     class StateManager {
         public:
             Amara::GameProperties* properties = nullptr;
             std::string currentState;
+
+            std::vector<StateRecord> stateRecords;
 
             int currentEvent = 1;
             int eventLooker = 0;
@@ -31,8 +38,8 @@ namespace Amara {
             void reset() {
                 currentState.clear();
                 currentEvent = 1;
-                eventLooker = 0;
                 jumpFlag.clear();
+                stateRecords.clear();
             }
 
             bool state(std::string key) {
@@ -64,8 +71,51 @@ namespace Amara {
             }
 
             void switchState(std::string key) {
+                if (!currentState.empty()) {
+                    Amara::StateRecord record = {currentState, currentEvent};
+                    stateRecords.push_back(record);
+                }
+
                 currentState = key;
                 currentEvent = 1;
+            }
+
+            bool switchStateEvt(std::string key) {
+                if (once()) {
+                    switchState(key);
+                    return true;
+                }
+                return false;
+            }
+
+            void returnState() {
+                if (stateRecords.empty()) {
+                    reset();
+                }
+                else {
+                    Amara::StateRecord record = stateRecords.back();
+                    currentState = record.name;
+                    currentEvent = record.event;
+                    stateRecords.pop_back();
+                }
+            }
+
+            void returnStateEvt() {
+                if (evt()) {
+                    returnState();
+                }
+            }
+
+            void restartState() {
+                currentEvent = 1;
+            }
+
+            bool restartStateEvt() {
+                if (evt()) {
+                    restartState();
+                    return true;
+                }
+                return false;
             }
 
             bool evt() {

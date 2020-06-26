@@ -53,6 +53,14 @@ namespace Amara {
                         nx = sineInOutEase(startX, targetX, progress);
                         ny = sineInOutEase(startY, targetY, progress);
                         break;
+                    case SINE_IN:
+                        nx = sineInEase(startX, targetX, progress);
+                        ny = sineInEase(startY, targetY, progress);
+                        break;
+                    case SINE_OUT:
+                        nx = sineOutEase(startX, targetX, progress);
+                        ny = sineOutEase(startY, targetY, progress);
+                        break;
                 }
 
                 if (center) {
@@ -95,6 +103,14 @@ namespace Amara {
                     case SINE_INOUT:
                         nzx = sineInOutEase(zStartX, zTarget, progress);
                         nzy = sineInOutEase(zStartY, zTarget, progress);
+                        break;
+                    case SINE_IN:
+                        nzx = sineInEase(zStartX, zTarget, progress);
+                        nzy = sineInEase(zStartY, zTarget, progress);
+                        break;
+                    case SINE_OUT:
+                        nzx = sineOutEase(zStartX, zTarget, progress);
+                        nzy = sineOutEase(zStartY, zTarget, progress);
                         break;
                 }
                 cam->setZoom(nzx, nzy);
