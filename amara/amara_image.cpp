@@ -86,6 +86,10 @@ namespace Amara {
                 if (config.find("originY") != config.end()) {
                     originY = config["originY"];
                 }
+                if (config.find("origin") != config.end()) {
+                    originX = config["origin"];
+                    originY = config["origin"];
+                }
                 if (config.find("flipHorizontal") != config.end()) {
                     flipHorizontal = config["flipHorizontal"];
                 }

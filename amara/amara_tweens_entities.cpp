@@ -26,7 +26,7 @@ namespace Amara {
             }
 
             void script(Amara::Actor* actor) {
-                Amara::Tween::script();
+                Amara::Tween::progressFurther();
                 switch (easing) {
                     case LINEAR:
                         actor->x = linearEase(startX, targetX, progress);
@@ -67,7 +67,7 @@ namespace Amara {
             }
 
             void script(Amara::Actor* actor) {
-                Amara::Tween::script();
+                Amara::Tween::progressFurther();
                 switch (easing) {
                     case LINEAR:
                         actor->scaleX = linearEase(startScaleX, targetScale, progress);

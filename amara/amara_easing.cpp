@@ -30,7 +30,11 @@ namespace Amara {
     }
 
     double sineInOutBackRoundEase(float startVal, float endVal, double progress) {
-        return startVal + (endVal + startVal)*(sin(-M_PI/2 + progress*M_PI*2) + 1)/2;
+        return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI*2) + 1)/2;
+    }
+
+    double sineHardInOutEase(float startVal, float endVal, double progress) {
+        return startVal + (endVal - startVal)*(sin(M_PI * progress));
     }
 }
 

@@ -17,14 +17,18 @@ namespace Amara {
                 script->init(properties, this);
                 script->prepare();
                 script->prepare(this);
+                return script;
             }
 
             void reciteScripts() {
-                Amara::Script* script;
-                for (auto it = scripts.begin(); it != scripts.end(); it++) {
-                    script = *it;
+                for (Amara::Script* script: scripts) {
                     script->script();
                     script->script(this);
+                }
+
+                Amara::Script* script;
+                for (auto it = scripts.begin(); it != scripts.end(); ++it) {
+                    script = *it;
                     if (script->finished) {
                         if (script->chainedScript != nullptr) {
                             recite(script->chainedScript);

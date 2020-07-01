@@ -41,7 +41,7 @@ namespace Amara {
             }
             
             void script() {
-                Amara::Tween::script();
+                Amara::Tween::progressFurther();
                 float nx = 0, ny = 0;
                 
                 switch (easing) {
@@ -93,7 +93,7 @@ namespace Amara {
             }
 
             void script() {
-                Amara::Tween::script();
+                Amara::Tween::progressFurther();
                 float nzx = 0, nzy = 0;
                 switch (easing) {
                     case LINEAR:
