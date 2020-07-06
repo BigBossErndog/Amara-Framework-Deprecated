@@ -95,7 +95,7 @@ namespace Amara {
 				load = properties->loader;
 
 				isActive = true;
-				data["entityType"] = "data";
+				data["entityType"] = "entity";
 				create();
 			}
 

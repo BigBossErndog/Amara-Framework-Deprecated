@@ -146,6 +146,18 @@ namespace Amara {
                 return false;
             }
 
+            int downTime(Amara::Buttoncode bcode) {
+                int t = 0;
+                for (Amara::Gamepad* gamepad: gamepads) {
+                    if (gamepad->isConnected && gamepad->controller != nullptr) {
+                        if (gamepad->downTime(bcode) > t) {
+                            t = gamepad->downTime(bcode);
+                        }
+                    }
+                }
+                return t;
+            }
+
             bool activated(Amara::Buttoncode bcode) {
                 for (Amara::Gamepad* gamepad: gamepads) {
                     if (gamepad->isConnected && gamepad->controller != nullptr) {

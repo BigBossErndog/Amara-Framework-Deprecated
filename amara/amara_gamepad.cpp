@@ -156,6 +156,14 @@ namespace Amara {
                 return false;
             }
 
+            int downTime(Amara::Buttoncode bcode) {
+                Amara::Button* button = getButton(bcode);
+                if (button != nullptr) {
+                    return button->downTime;
+                }
+                return 0;
+            }
+
             bool activated(Amara::Buttoncode bcode) {
                 Amara::Button* button = getButton(bcode);
                 if (button != nullptr) {

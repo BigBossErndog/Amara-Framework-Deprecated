@@ -123,11 +123,28 @@ namespace Amara {
                 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
+
+                bool scaleFlipHorizontal = false;
+                bool scaleFlipVertical = false;
+                float recScaleX = scaleX;
+                float recScaleY = scaleY;
+
+                if (scaleX < 0) {
+                    scaleFlipHorizontal = true;
+                    scaleX = abs(scaleX);
+                }
+                if (scaleY < 0) {
+                    scaleFlipVertical = true;
+                    scaleY = abs(scaleY);
+                }
                 
                 destRect.x = floor((x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
                 destRect.y = floor((y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
                 destRect.w = ceil(((imageWidth-cropLeft-cropRight) * scaleX) * nzoomX);
                 destRect.h = ceil(((imageHeight-cropTop-cropBottom) * scaleY) * nzoomY);
+
+                scaleX = recScaleX;
+                scaleY = recScaleY;
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
@@ -189,10 +206,10 @@ namespace Amara {
 				        SDL_SetTextureAlphaMod(tx, alpha * properties->alpha * 255);
 
                         SDL_RendererFlip flipVal = SDL_FLIP_NONE;
-                        if (flipHorizontal) {
+                        if (!flipHorizontal != !scaleFlipHorizontal) {
                             flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_HORIZONTAL);
                         }
-                        if (flipVertical) {
+                        if (!flipVertical != !scaleFlipVertical) {
                             flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
                         }
 

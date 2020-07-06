@@ -22,6 +22,8 @@ namespace Amara {
 			bool held = false;
             bool activated = false;
 
+            int downTime = 0;
+
             Amara::Key* lastKeyDown = nullptr;
 
             Control(Amara::GameProperties* gProperties, std::string givenId) {
@@ -104,6 +106,8 @@ namespace Amara {
                 held = false;
                 activated = false;
 
+                downTime = 0;
+
                 for (Amara::Key* key : keys) {
                     isDown = isDown || key->isDown;
                     justDown = justDown || key->justDown;
@@ -115,6 +119,9 @@ namespace Amara {
                     if (justDown) {
                         lastKeyDown = key;
                     }
+                    if (key->downTime > downTime) {
+                        downTime = key->downTime;
+                    }
                 }
 
                 for (Amara::Buttoncode bcode: buttons) {
@@ -124,6 +131,10 @@ namespace Amara {
                     justUp = justUp || gamepads->justUp(bcode);
                     held = held || gamepads->held(bcode);
                     activated = activated || gamepads->activated(bcode);
+
+                    if (gamepads->downTime(bcode) > downTime) {
+                        downTime = gamepads->downTime(bcode);
+                    }
                 }
             }
     };
