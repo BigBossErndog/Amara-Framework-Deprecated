@@ -21,7 +21,6 @@ namespace Amara {
             std::vector<Amara::Camera*> cameras;
 
             bool initialLoaded = false;
-            bool initialCreated = false;
 
             Scene(): Actor() {
                 
@@ -209,6 +208,15 @@ namespace Amara {
                 transition = gTransition;
                 transition->init(properties, this);
                 return transition;
+            }
+
+            virtual void removeTransition() {
+                if (transition != nullptr && !initialLoaded && !load->stillLoading && transition->permissionGranted) {
+                    transition->finish();
+                    transition->complete();
+                    transition = nullptr;
+                    initialLoaded = true;
+                }
             }
 
             virtual void preload() {}

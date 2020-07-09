@@ -119,7 +119,7 @@ namespace Amara {
                     if (justDown) {
                         lastKeyDown = key;
                     }
-                    if (key->downTime > downTime) {
+                    if (key->isDown && key->downTime > downTime) {
                         downTime = key->downTime;
                     }
                 }
@@ -132,7 +132,7 @@ namespace Amara {
                     held = held || gamepads->held(bcode);
                     activated = activated || gamepads->activated(bcode);
 
-                    if (gamepads->downTime(bcode) > downTime) {
+                    if (gamepads->isDown(bcode) && gamepads->downTime(bcode) > downTime) {
                         downTime = gamepads->downTime(bcode);
                     }
                 }

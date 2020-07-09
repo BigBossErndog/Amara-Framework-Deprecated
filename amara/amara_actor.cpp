@@ -22,8 +22,10 @@ namespace Amara {
 
             void reciteScripts() {
                 for (Amara::Script* script: scripts) {
-                    script->script();
-                    script->script(this);
+                    if (!script->finished) {
+                        script->script();
+                        script->script(this);
+                    }
                 }
 
                 Amara::Script* script;

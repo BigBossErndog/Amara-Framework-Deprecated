@@ -37,6 +37,10 @@ namespace Amara {
             bool wordWrap = false;
             Uint16 wordWrapWidth = 0;
 
+            int outline = 0;
+            bool outlineCorners = true;
+            Amara::Color outlineColor = FC_MakeColor(255, 255, 255, 255);
+
             TrueTypeFont(): Amara::Actor() {}
 
             TrueTypeFont(float gx, float gy): TrueTypeFont() {
@@ -70,6 +74,22 @@ namespace Amara {
                 data["entityType"] = "trueTypeFont";
 			}
 
+            virtual void configure(nlohmann::json config) {
+                Amara::Actor::configure(config);
+                if (config.find("text") != config.end()) {
+                    setText(config["text"]);
+                }
+                if (config.find("font") != config.end()) {
+                    setFont(config["font"]);
+                }
+                if (config.find("outline") != config.end()) {
+                    outline = config["outline"];
+                }
+                if (config.find("outlineCorners") != config.end()) {
+                    outlineCorners = config["outlineCorners"];
+                }
+            }
+
             bool setFont(std::string gFontKey) {
                 fontAsset = (Amara::TTFAsset*)(load->get(gFontKey));
                 if (fontAsset != nullptr) {
@@ -96,6 +116,24 @@ namespace Amara {
             }
             void setColor(Amara::Color gColor) {
                 color = gColor;
+            }
+
+            void setOutlineColor(int r, int g, int b, int a) {
+                outlineColor.r = r;
+                outlineColor.g = g;
+                outlineColor.b = b;
+                outlineColor.a = a;
+            }
+            void setOutlineColor(int r, int g, int b) {
+                setOutlineColor(r, g, b, 255);
+            }
+
+            void setOutline(int size, int r, int g, int b, int a) {
+                outline = size;
+                setOutlineColor(r, g, b, a);
+            }
+            void setOutline(int size, int r, int g, int b) {
+                setOutline(size, r, g, b, 255);
             }
 
             void setOrigin(float gx, float gy) {
@@ -141,6 +179,7 @@ namespace Amara {
             void findDimensions() {
                 const char* txt = text.c_str();
                 if (fontAsset == nullptr) return;
+
                 if (wordWrap) {
                     width = wordWrapWidth * scaleX;
                     height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt) * scaleY;
@@ -155,24 +194,16 @@ namespace Amara {
                 Amara::Actor::run();
             }
 
-            void draw(int vx, int vy, int vw, int vh) {
-                viewport.x = vx;
-                viewport.y = vy;
-                viewport.w = vw;
-                viewport.h = vh;
-                SDL_RenderSetViewport(gRenderer, &viewport);
+            void drawText(float dx, float dy) {
+                effect.alignment = (FC_AlignEnum)alignment;
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
-                effect.alignment = (FC_AlignEnum)alignment;
                 effect.scale.x = scaleX * nzoomX;
                 effect.scale.y = scaleY * nzoomY;
-                color.a = alpha * properties->alpha * 255;
-                effect.color = color;
 
                 const char* txt = text.c_str();
-
                 if (fontAsset != nullptr) {
                     if (wordWrap) {
                         int offsetX = 0;
@@ -186,8 +217,8 @@ namespace Amara {
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor((x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor((y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
+                            floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             wordWrapWidth,
                             effect,
                             txt
@@ -201,16 +232,45 @@ namespace Amara {
                         else if (alignment == ALIGN_RIGHT) {
                             offsetX = width;
                         }
+
                         FC_DrawEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor((x - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor((y-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
+                            floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
                             effect,
                             txt
                         );
                     }
                 }
+            }
+
+            void draw(int vx, int vy, int vw, int vh) {
+                viewport.x = vx;
+                viewport.y = vy;
+                viewport.w = vw;
+                viewport.h = vh;
+                SDL_RenderSetViewport(gRenderer, &viewport);
+
+                color.a = alpha * properties->alpha * 255;
+
+                if (outline) {
+                    effect.color = outlineColor;
+                    for (int i = 0; i < outline+1; i++) {
+                        drawText(x+i,y);
+                        drawText(x-i,y);
+                        for (int j = 0; j < outline+1; j++) {
+                            if (outlineCorners || i != j || i != outline) {
+                                drawText(x+i,y+j);
+                                drawText(x-i,y-j);
+                                drawText(x+i,y-j);
+                                drawText(x-i,y+j);
+                            }
+                        }
+                    }
+                }
+                effect.color = color;
+                drawText(x, y);
 
                 Amara::Entity::draw(vx, vy, vw, vh);
             }

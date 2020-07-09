@@ -160,6 +160,11 @@ namespace Amara {
                 return (justDown(id) || (isDown(id) && control->downTime > gTime));
             }
 
+            int downTime(std::string id) {
+                Amara::Control* control = get(id);
+                return control->downTime;
+            }
+
             bool activated(std::string id) {
                 Amara::Control* control = get(id);
                 if (control != nullptr) {

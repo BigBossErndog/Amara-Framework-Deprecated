@@ -51,6 +51,7 @@ namespace Amara {
             void manage() {
                 justUp = false;
 				justDown = false;
+				tapped = false;
 				if (isDown) {
 					downTime += 1;
 					if (downTime > tapTime) {

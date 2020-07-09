@@ -76,6 +76,9 @@ namespace Amara {
                 if (config.find("text") != config.end()) {
                     setText(config["text"]);
                 }
+                if (config.find("textConfig") != config.end()) {
+                    txt->configure(config["textConfig"]);
+                }
                 if (config.find("progressDelay") != config.end()) {
                     progressDelay = config["progressDelay"];
                 }
