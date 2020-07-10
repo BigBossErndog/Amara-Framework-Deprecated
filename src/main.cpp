@@ -74,7 +74,7 @@ class TestScene: public Scene {
             }
 
             if (controls->justDown("confirm")) {
-                startTransition(new FillTransition(scenePlugin->key));
+                startTransition(new FillTransition(scenes->key));
             }
 
             if (controls->justDown("full")) {

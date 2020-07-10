@@ -94,6 +94,10 @@ namespace Amara {
             float startX;
             float startY;
             float maxShake;
+
+            Actor* ent;
+
+            RNG rng;
             
             Tween_Shake(float gMaxShake, float tt, Amara::Easing gEasing) {
                 maxShake = gMaxShake;
@@ -105,28 +109,36 @@ namespace Amara {
             void prepare(Amara::Actor* actor) {
                 startX = actor->x;
                 startY = actor->y;
+                ent = actor;
+
+                rng.randomize();
+            }
+
+            void finish() {
+                Tween::finish();
+                ent->x = startX;
+                ent->y = startY;
             }
 
             void script(Amara::Actor* actor) {
                 Amara::Tween::progressFurther();
+                float shakeAmount;
                 switch (easing) {
                     case LINEAR:
-                        actor->x = startX + (Random()*linearEase(maxShake, 0, progress))-maxShake/2.0;
-                        actor->y = startY + (Random()*linearEase(maxShake, 0, progress))-maxShake/2.0;
+                        shakeAmount = linearEase(maxShake, 0, progress);
                         break;
                     case SINE_INOUT:
-                        actor->x = startX + (Random()*sineInOutEase(maxShake, 0, progress))-maxShake/2.0;
-                        actor->y = startY + (Random()*sineInOutEase(maxShake, 0, progress))-maxShake/2.0;
+                        shakeAmount = sineInOutEase(maxShake, 0, progress);
                         break;
                     case SINE_IN:
-                        actor->x = startX + (Random()*sineInEase(maxShake, 0, progress))-maxShake/2.0;
-                        actor->y = startY + (Random()*sineInEase(maxShake, 0, progress))-maxShake/2.0;
+                        shakeAmount = sineInEase(maxShake, 0, progress);
                         break;
                     case SINE_OUT:
-                        actor->x = startX + (Random()*sineOutEase(maxShake, 0, progress))-maxShake/2.0;
-                        actor->y = startY + (Random()*sineOutEase(maxShake, 0, progress))-maxShake/2.0;
+                        shakeAmount = sineOutEase(maxShake, 0, progress);
                         break;
                 }
+                actor->x = startX + rng.random()*shakeAmount - shakeAmount/2.0;
+                actor->y = startY + rng.random()*shakeAmount - shakeAmount/2.0;
             }
     };
 }

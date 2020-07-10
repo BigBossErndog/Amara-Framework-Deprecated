@@ -110,6 +110,7 @@ namespace Amara {
 #include "amara_actorGroup.cpp"
 
 #include "amara_textureGeneration.cpp"
+#include "amara_random.cpp"
 
 #include "amara_actor.cpp"
 #include "amara_script.cpp"
