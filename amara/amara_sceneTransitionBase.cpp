@@ -22,6 +22,8 @@ namespace Amara {
 
             bool sleepScene = false;
             bool wakeScene = false;
+            
+            bool fromWake = false;
 
             SceneTransitionBase() {}
 
@@ -53,10 +55,12 @@ namespace Amara {
             virtual void finish() {
                 finished = true;
             }
-            void finishEvt() {
+            bool finishEvt() {
                 if (once()) {
                     finish();
+                    return true;
                 }
+                return false;
             }
 
             virtual void configure(nlohmann::json config) {

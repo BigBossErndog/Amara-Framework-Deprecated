@@ -24,8 +24,10 @@ namespace Amara {
                     }
     
                     if (endScene != nullptr) {
+                        endScene->transition = this;
                         if (wakeScene) {
                             endScene->scenes->wake();
+                            fromWake = true;
                         }
                         else {
                             endScene->scenes->start();
@@ -37,6 +39,8 @@ namespace Amara {
             }
 
             virtual void configure(nlohmann::json config) {
+                Amara::SceneTransitionBase::configure(config);
+
                 if (config.find("nextScene") != config.end()) {
                     nextSceneKey = config["nextScene"];
                     if (endScene) {
@@ -59,12 +63,7 @@ namespace Amara {
                 startScene->transition = this;
 
                 endScene = sceneManager->get(nextSceneKey);
-                if (endScene != nullptr) {
-                    endScene->transition = this;
-                }
-
-                sleepScene = false;
-                wakeScene = false;
+                fromWake = false;
 
                 finished = false;
                 reset();

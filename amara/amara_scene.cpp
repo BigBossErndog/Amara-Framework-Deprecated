@@ -143,6 +143,15 @@ namespace Amara {
                     updateScene();
                     if (transition != nullptr) {
                         transition->update();
+                        if (transition && transition->fromWake) {
+                            if (transition->finished) {
+                                transition->complete();
+                                transition = nullptr;
+                            }
+                            else if (transition->waitingForPermission) {
+                                transition->grantPermission();
+                            }
+                        }
                     }
                 }
             }
@@ -160,7 +169,7 @@ namespace Amara {
                     if (cam->isDestroyed || cam->parent != this) continue;
                     cam->run();
                 }
-
+                
                 afterUpdate();
             }
 
@@ -217,6 +226,15 @@ namespace Amara {
                     transition = nullptr;
                     initialLoaded = true;
                 }
+            }
+
+            virtual void removeEntities() {
+                Amara::Entity::removeEntities();
+                std::vector<Amara::Camera*> list = cameras;
+                for (Amara::Camera* cam: list) {
+                    delete cam;
+                }
+                cameras.clear();
             }
 
             virtual void preload() {}

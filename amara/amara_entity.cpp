@@ -304,6 +304,14 @@ namespace Amara {
 				return nullptr;
 			}
 
+			virtual void removeEntities() {
+				std::vector<Amara::Entity*> list = entities;
+				for (Amara::Entity* entity: list) {
+					entity->destroy();
+				}
+				entities.clear();
+			}
+
 			virtual Amara::Entity* add(Amara::PhysicsBase* gPhysics) {
 				if (physics != nullptr) {
 					delete physics;
