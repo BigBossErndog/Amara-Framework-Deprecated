@@ -99,6 +99,11 @@ namespace Amara {
                     return audio;
                 }
 
+                audio = (Amara::AudioBase*)load->get(fKey);
+                if (audio != nullptr) {
+                    return audio;
+                }
+
                 return nullptr;
             }
 

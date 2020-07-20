@@ -443,6 +443,10 @@ namespace Amara {
 				x = attachedTo->x + attachmentOffsetX;
 				y = attachedTo->y + attachmentOffsetY;
 			}
+			virtual void attachTo(Amara::Entity* entity, float gx, float gy) {
+				setAttachmentOffset(gx, gy);
+				attachTo(entity);
+			}
 			virtual void dettach() {
 				attachedTo = nullptr;
 			}
