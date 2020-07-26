@@ -24,6 +24,14 @@ namespace Amara {
                 properties = script->properties;
             }
 
+			int size() {
+				return actors.size();
+			}
+
+			Actor* get(int index) {
+				return actors[index];
+			}
+
             Amara::Actor* add(Amara::Actor* actor) {
                 actors.push_back(actor);
                 return actor;
@@ -41,7 +49,7 @@ namespace Amara {
                     callback(actor);
                 }
             }
-            
+
             virtual void recite(Amara::Script* script) {
                 for (Amara::Actor* actor: actors) {
                     actor->recite(script);
@@ -54,7 +62,7 @@ namespace Amara {
                 }
                 actors.clear();
             }
-            
+
             virtual void destroy() {
                 destroyActors();
                 delete this;
