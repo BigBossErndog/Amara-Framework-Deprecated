@@ -48,6 +48,57 @@ namespace Amara {
             }
     };
 
+	class Tween_XYZ: public Tween {
+        public:
+            float startX = 0;
+            float startY = 0;
+			float startZ = 0;
+            float targetX = 0;
+            float targetY = 0;
+			float targetZ = 0;
+
+            Tween_XYZ(float tx, float ty, float tz, double tt, Amara::Easing gEasing) {
+                targetX = tx;
+                targetY = ty;
+				targetZ = tz;
+                time = tt;
+                easing = gEasing;
+            }
+            Tween_XYZ(float tx, float ty, float tz, double tt): Tween_XYZ(tx, ty, tz, tt, LINEAR) {}
+
+            void prepare(Amara::Actor* actor) {
+                startX = actor->x;
+                startY = actor->y;
+				startZ = actor->z;
+            }
+
+            void script(Amara::Actor* actor) {
+                Amara::Tween::progressFurther();
+                switch (easing) {
+                    case LINEAR:
+                        actor->x = linearEase(startX, targetX, progress);
+                        actor->y = linearEase(startY, targetY, progress);
+						actor->z = linearEase(startZ, targetZ, progress);
+                        break;
+                    case SINE_INOUT:
+                        actor->x = sineInOutEase(startX, targetX, progress);
+                        actor->y = sineInOutEase(startY, targetY, progress);
+						actor->z = sineInOutEase(startZ, targetZ, progress);
+                        break;
+                    case SINE_IN:
+                        actor->x = sineInEase(startX, targetX, progress);
+                        actor->y = sineInEase(startY, targetY, progress);
+						actor->z = sineInEase(startZ, targetZ, progress);
+                        break;
+                    case SINE_OUT:
+                        actor->x = sineOutEase(startX, targetX, progress);
+                        actor->y = sineOutEase(startY, targetY, progress);
+						actor->z = sineOutEase(startZ, targetZ, progress);
+                        break;
+                }
+            }
+    };
+
     class Tween_Scale: public Tween {
         public:
             float startScaleX;
@@ -98,7 +149,7 @@ namespace Amara {
             Actor* ent;
 
             RNG rng;
-            
+
             Tween_Shake(float gMaxShake, float tt, Amara::Easing gEasing) {
                 maxShake = gMaxShake;
                 time = tt;

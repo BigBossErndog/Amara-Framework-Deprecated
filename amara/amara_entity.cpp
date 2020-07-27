@@ -13,7 +13,7 @@ namespace Amara {
 	class PhysicsBase: public Amara::FloatRect {
 		public:
 			bool deleteWithParent = true;
-			
+
 			virtual void run() {}
 	};
 
@@ -27,7 +27,7 @@ namespace Amara {
 			return (entity1->depth < entity2->depth);
 		}
 	};
-	
+
 	class Entity : public Amara::SortedEntity, public Amara::Interactable {
 		public:
 			Amara::GameProperties* properties = nullptr;
@@ -67,7 +67,7 @@ namespace Amara {
 			float scrollFactorY = 1;
 			float zoomFactorX = 1;
 			float zoomFactorY = 1;
-			
+
 			float angle = 0;
 			float alpha = 1;
 
@@ -82,7 +82,7 @@ namespace Amara {
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
 				Amara::Interactable::init(gameProperties);
-				
+
 				properties = gameProperties;
 				game = properties->game;
 				scene = givenScene;
@@ -220,9 +220,9 @@ namespace Amara {
 				float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
 				float recAngle = properties->angle + angle;
 				float recAlpha = properties->alpha * alpha;
-				
+
 				stable_sort(entities.begin(), entities.end(), sortEntities());
-				
+
 				Amara::Entity* entity;
 				for (auto it = entities.begin(); it != entities.end(); it++) {
                     entity = *it;
@@ -232,7 +232,7 @@ namespace Amara {
                         continue;
                     }
 					if (!entity->isVisible) continue;
-					
+
 					properties->scrollX = recScrollX;
 					properties->scrollY = recScrollY;
 					properties->offsetX = recOffsetX;
@@ -274,7 +274,7 @@ namespace Amara {
 				for (Amara::Entity* entity : entities) {
 					if (entity->id.compare(find) == 0) {
 						return entity;
-					} 
+					}
 				}
 				return nullptr;
 			}
