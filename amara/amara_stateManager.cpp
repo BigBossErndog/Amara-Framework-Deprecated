@@ -7,6 +7,7 @@
 namespace Amara {
     struct StateRecord {
         std::string name;
+		nlohmann::json data;
         int event = 0;
     };
 
@@ -23,7 +24,9 @@ namespace Amara {
             int waitCounter = 0;
 
             bool skipEvent = false;
-            
+
+			nlohmann::json data;
+
             std::string jumpFlag;
 
             StateManager() {
@@ -72,12 +75,13 @@ namespace Amara {
 
             void switchState(std::string key) {
                 if (!currentState.empty()) {
-                    Amara::StateRecord record = {currentState, currentEvent};
+                    Amara::StateRecord record = {currentState, data, currentEvent};
                     stateRecords.push_back(record);
                 }
 
                 currentState = key;
                 currentEvent = 1;
+				data.clear();
             }
 
             bool switchStateEvt(std::string key) {
@@ -96,6 +100,7 @@ namespace Amara {
                     Amara::StateRecord record = stateRecords.back();
                     currentState = record.name;
                     currentEvent = record.event;
+					data = record.data;
                     stateRecords.pop_back();
                 }
             }

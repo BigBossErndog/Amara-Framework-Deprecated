@@ -20,7 +20,7 @@
     #include <math.h>
     #include <random>
     #include <nlohmann/json.hpp>
-#endif 
+#endif
 
 #ifndef AMARA_SDL
 #define AMARA_SDL
@@ -79,6 +79,8 @@ namespace Amara {
 #include "amara_charaTextBox.cpp"
 #include "amara_textBox.cpp"
 #include "amara_uiBox.cpp"
+
+#include "amara_filLRect.cpp"
 
 #include "amara_controlScheme.cpp"
 #include "amara_control.cpp"

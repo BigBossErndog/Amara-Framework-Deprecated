@@ -120,7 +120,7 @@ namespace Amara {
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
-                
+
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
@@ -137,7 +137,7 @@ namespace Amara {
                     scaleFlipVertical = true;
                     scaleY = abs(scaleY);
                 }
-                
+
                 destRect.x = floor((x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
                 destRect.y = floor((y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
                 destRect.w = ceil(((imageWidth-cropLeft-cropRight) * scaleX) * nzoomX);
