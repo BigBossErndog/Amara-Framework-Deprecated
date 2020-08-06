@@ -59,9 +59,9 @@ namespace Amara {
                 parent = parentActor;
                 reset();
             }
-            
+
             bool finished = false;
-            
+
             virtual void finish() {
                 finished = true;
             }
@@ -72,10 +72,13 @@ namespace Amara {
             }
 
             virtual void prepare() {}
-            virtual void prepare(Amara::Actor* entity) {}
-            
+            virtual void prepare(Amara::Actor* actor) {}
+
             virtual void script() {}
-            virtual void script(Amara::Actor* entity) {}
+            virtual void script(Amara::Actor* actor) {}
+
+			virtual void cancel() {}
+			virtual void cancel(Amara::Actor* actor) {}
     };
 }
 

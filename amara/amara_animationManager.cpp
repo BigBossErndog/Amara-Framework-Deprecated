@@ -17,7 +17,7 @@ namespace Amara {
             int currentIndex = 0;
             int currentFrame = 0;
 
-            int frameCounter = 0;
+            float frameCounter = 0;
 
             AnimationManager(Amara::GameProperties* gameProperties, Amara::Image* givenParent) {
                 properties = gameProperties;
@@ -67,7 +67,7 @@ namespace Amara {
                 if (currentAnim == nullptr) {
                     return 1;
                 }
-                float frameDelay = properties->lps/currentAnim->frameRate;
+                float frameDelay = properties->lps/(float)currentAnim->frameRate;
                 float p = ((float)currentIndex)/((float)currentAnim->length());
                 float e = (1/((float)currentAnim->length()));
                 float f = (((float)frameCounter)/frameDelay);
@@ -80,7 +80,7 @@ namespace Amara {
 				if (currentAnim == nullptr) {
 					return;
 				}
-				float frameDelay = properties->lps/currentAnim->frameRate;
+				float frameDelay = properties->lps/(float)currentAnim->frameRate;
 				currentIndex = floor(p*currentAnim->length());
                 float oldP = ((float)currentIndex)/((float)currentAnim->length());
                 float e = 1/((float)currentAnim->length());
@@ -107,7 +107,7 @@ namespace Amara {
                 }
                 isActive = true;
 
-                float frameDelay = properties->lps/currentAnim->frameRate;
+                float frameDelay = properties->lps/(float)currentAnim->frameRate;
                 frameCounter += 1;
                 if (frameCounter >= frameDelay) {
                     currentIndex += 1;
@@ -124,7 +124,7 @@ namespace Amara {
                         currentFrame = currentAnim->frameAt(currentIndex);
                     }
                     parent->frame = currentFrame;
-                    frameCounter = 0;
+                    frameCounter -= frameDelay;
                 }
             }
     };

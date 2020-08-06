@@ -65,6 +65,17 @@ namespace Amara {
                 scripts.clear();
             }
 
+			void cancelScripts() {
+				for (Amara::Script* script: scripts) {
+					script->cancel();
+					script->cancel(this);
+                    if (script->deleteOnFinish) {
+                        delete script;
+                    }
+                }
+                scripts.clear();
+			}
+
             ~Actor() {
                 clearScripts();
             }

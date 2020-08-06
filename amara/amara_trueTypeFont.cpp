@@ -40,6 +40,7 @@ namespace Amara {
             int outline = 0;
             bool outlineCorners = true;
             Amara::Color outlineColor = FC_MakeColor(255, 255, 255, 255);
+			float outlineAlpha = 1;
 
             TrueTypeFont(): Amara::Actor() {}
 
@@ -170,7 +171,7 @@ namespace Amara {
             void setWordWrap(int w) {
                 wordWrapWidth = w;
                 setWordWrap();
-            } 
+            }
             void setWordWrap(bool g) {
                 wordWrap = g;
                 findDimensions();
@@ -213,7 +214,7 @@ namespace Amara {
                         else if (alignment == ALIGN_RIGHT) {
                             offsetX = width;
                         }
-                        
+
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,

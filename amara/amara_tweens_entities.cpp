@@ -191,6 +191,11 @@ namespace Amara {
                 actor->x = startX + rng.random()*shakeAmount - shakeAmount/2.0;
                 actor->y = startY + rng.random()*shakeAmount - shakeAmount/2.0;
             }
+
+			void cancel(Amara::Actor* actor) {
+				actor->x = startX;
+				actor->y = startY;
+			}
     };
 }
 
