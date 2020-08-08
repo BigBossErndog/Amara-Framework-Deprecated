@@ -9,7 +9,7 @@ namespace Amara {
 
     enum AudioFade {
         NOFADE,
-        FADEIN, 
+        FADEIN,
         FADEOUT
     };
 
@@ -21,17 +21,22 @@ namespace Amara {
             Amara::AudioFade fadeDirection = NOFADE;
             float fadeSpeed = 0;
             float fadeEnd = 0;
+			bool fadeStopOnEnd = false;
 
             bool isPlaying = false;
             bool isPaused = false;
-            
+
+			Amara::AudioGroup* group = nullptr;
+			Amara::AudioBase* parent = nullptr;
+
+			Amara::AudioBase* currentlyPlaying = nullptr;
+			Amara::AudioBase* lastPlayed = nullptr;
+
+            std::string nextInChain = "";
+
             AudioBase(): Amara::Asset() {}
             AudioBase(std::string gKey, Amara::AssetType gType, void* gAsset): Amara::Asset(gKey, gType, gAsset) {}
 
-            Amara::AudioGroup* group = nullptr;
-            
-            std::string nextInChain = "";
-            
             void setVolume(float vol) {
                 volume = vol;
             }
@@ -39,22 +44,26 @@ namespace Amara {
                 volume += c;
             }
 
-            void fade(Amara::AudioFade fadeDir, float speed, float end) {
+            void fade(Amara::AudioFade fadeDir, float speed, float end, bool stopOnEnd) {
                 fadeDirection = fadeDir;
                 fadeSpeed = speed;
                 fadeEnd = end;
+				fadeStopOnEnd = stopOnEnd;
             }
 
-            void fadeIn(float speed, float end) { fade(FADEIN, speed, end); }
+			void fadeIn(float speed, float end, bool stopOnEnd) { fade(FADEIN, speed, end, stopOnEnd); }
+            void fadeIn(float speed, float end) { fadeIn(speed, end, false); }
             void fadeIn(float speed) { fadeIn(speed, 1); }
             void fadeIn() { fadeIn(0.01); }
 
-            void fadeOut(float speed, float end) { fade(FADEOUT, speed, end); }
-            void fadeOut(float speed) { fadeOut(speed, 0); }
-            void fadeOut() { fadeOut(0.01); } 
+			void fadeOut(float speed, float end, bool stopOnEnd) { fade(FADEOUT, speed, end, stopOnEnd); }
+            void fadeOut(float speed, float end) { fadeOut(speed, end, false); }
+            void fadeOut(float speed) { fadeOut(speed, 0, true); }
+            void fadeOut() { fadeOut(0.01); }
 
             void stopFade() {
                 fadeDirection = NOFADE;
+				fadeStopOnEnd = false;
             }
 
 
@@ -69,6 +78,11 @@ namespace Amara {
                         if (masterVolume >= fadeEnd) {
                             masterVolume = fadeEnd;
                             fadeDirection = NOFADE;
+							if (fadeStopOnEnd) {
+								fadeStopOnEnd = false;
+								masterVolume = 1;
+								stop();
+							}
                         }
                         break;
                     case FADEOUT:
@@ -76,6 +90,11 @@ namespace Amara {
                         if (masterVolume <= fadeEnd) {
                             masterVolume = fadeEnd;
                             fadeDirection = NOFADE;
+							if (fadeStopOnEnd) {
+								fadeStopOnEnd = false;
+								masterVolume = 1;
+								stop();
+							}
                         }
                         break;
                 }

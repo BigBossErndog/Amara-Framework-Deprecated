@@ -69,6 +69,9 @@ namespace Amara {
 						Mix_HaltMusic();
 						isPaused = false;
 						isPlaying = false;
+						if (parent && parent->currentlyPlaying == this) {
+							parent->currentlyPlaying = nullptr;
+						}
 					}
 				}
 			}
@@ -81,6 +84,9 @@ namespace Amara {
 				}
 				else {
 					isPlaying = false;
+					if (parent && parent->currentlyPlaying == this) {
+						parent->currentlyPlaying = nullptr;
+					}
 				}
             }
     };

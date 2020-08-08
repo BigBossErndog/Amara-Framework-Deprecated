@@ -31,13 +31,16 @@ namespace Amara {
 
 			virtual void run(float parentVolume) {
                 Amara::AudioBase::run(parentVolume);
-                
+
 				if (channel != -1 && Mix_Playing(channel)) {
 					Mix_Volume(channel, floor(volume * masterVolume * parentVolume * 128));
 				}
 				else {
 					isPlaying = false;
 					channel = -1;
+					if (parent && parent->currentlyPlaying == this) {
+						parent->currentlyPlaying = nullptr;
+					}
 				}
 			}
     };
