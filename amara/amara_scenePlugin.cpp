@@ -166,7 +166,7 @@ namespace Amara {
                             isSleeping = false;
                             scene->clearScripts();
                             scene->onStop();
-                            scene->removeEntities();
+                            scene->destroyEntities();
                             break;
                         case RESTART:
                             isActive = true;
@@ -200,7 +200,7 @@ namespace Amara {
                             break;
                         case WAKE:
                             if (isActive && isSleeping) {
-                                isPaused = false; 
+                                isPaused = false;
                                 isSleeping = false;
                                 scene->onWake();
                             }

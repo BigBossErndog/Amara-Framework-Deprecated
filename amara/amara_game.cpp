@@ -196,7 +196,7 @@ namespace Amara {
 				properties->input = input;
 
 				globalData.clear();
-				
+
 
 				// Check connected gamepads
 				for (int i = 0; i < SDL_NumJoysticks(); i++) {
@@ -220,6 +220,7 @@ namespace Amara {
 
 				audio = new Amara::AudioGroup(properties, "root");
 				properties->audio = audio;
+				audio->rootGroup = true;
 
 				writeProperties();
 
@@ -290,7 +291,7 @@ namespace Amara {
                 }
                 deleteQueue.clear();
 			}
- 
+
 			void start(std::string startKey) {
 				// Start a specific scene
 				scenes->start(startKey);
@@ -503,7 +504,7 @@ namespace Amara {
 						int vx, vy = 0;
 						float ratioRes = ((float)properties->resolution->width / (float)properties->resolution->height);
 						float ratioWin = ((float)properties->window->width / (float)properties->window->height);
-						
+
 						if (ratioRes < ratioWin) {
 							upScale = ((float)properties->window->height/(float)properties->resolution->height);
 							offset = ((float)properties->window->width - ((float)properties->resolution->width * upScale))/2;
@@ -556,7 +557,7 @@ namespace Amara {
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEADDED) {
 						SDL_GameController* controller = SDL_GameControllerOpen(e.cdevice.which);
-						input->gamepads->connectGamepad(controller);					
+						input->gamepads->connectGamepad(controller);
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
@@ -578,7 +579,7 @@ namespace Amara {
 						if (gamepad != nullptr) gamepad->push(e.caxis.axis, e.caxis.value);
 					}
 				}
-				
+
 				controls->run();
 			}
 	};

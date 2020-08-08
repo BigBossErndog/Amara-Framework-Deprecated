@@ -23,7 +23,7 @@ namespace Amara {
             bool initialLoaded = false;
 
             Scene(): Actor() {
-                
+
             }
 
             virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* gScenePlugin) final {
@@ -50,7 +50,7 @@ namespace Amara {
             }
 
             virtual void init() {
-                initialLoaded = false; 
+                initialLoaded = false;
 
                 setLoader(loadManager);
                 load->reset();
@@ -65,7 +65,7 @@ namespace Amara {
                     entity->destroy();
                 }
                 entities.clear();
-                
+
                 add(mainCamera = new Amara::Camera());
                 preload();
                 std::cout << "START LOADING TASKS: " << load->numTasks() << " loading tasks." << std::endl;
@@ -110,7 +110,7 @@ namespace Amara {
 
                 if (!initialLoaded) {
                     if (transition != nullptr) {
-                        transition->update();
+                        transition->run();
                     }
 
                     load->run();
@@ -142,7 +142,7 @@ namespace Amara {
                 else {
                     updateScene();
                     if (transition != nullptr) {
-                        transition->update();
+                        transition->run();
                         if (transition && transition->fromWake) {
                             if (transition->finished) {
                                 transition->complete();
@@ -159,7 +159,7 @@ namespace Amara {
             virtual void updateScene() {
                 update();
                 reciteScripts();
-                
+
                 for (Amara::Entity* entity : entities) {
                     if (entity->isDestroyed || entity->parent != this) continue;
                     entity->run();
@@ -169,7 +169,7 @@ namespace Amara {
                     if (cam->isDestroyed || cam->parent != this) continue;
                     cam->run();
                 }
-                
+
                 afterUpdate();
             }
 
@@ -185,7 +185,7 @@ namespace Amara {
                 int vx, vy = 0;
                 float ratioRes = ((float)properties->resolution->width / (float)properties->resolution->height);
                 float ratioWin = ((float)properties->window->width / (float)properties->window->height);
-                
+
                 if (ratioRes < ratioWin) {
                     upScale = ((float)properties->window->height/(float)properties->resolution->height);
                     offset = ((float)properties->window->width - ((float)properties->resolution->width * upScale))/2;
@@ -228,10 +228,9 @@ namespace Amara {
                 }
             }
 
-            virtual void removeEntities() {
-                Amara::Entity::removeEntities();
-                std::vector<Amara::Camera*> list = cameras;
-                for (Amara::Camera* cam: list) {
+            virtual void destroyEntities() {
+                Amara::Entity::destroyEntities();
+                for (Amara::Camera* cam: cameras) {
                     delete cam;
                 }
                 cameras.clear();

@@ -305,10 +305,6 @@ namespace Amara {
 			}
 
 			virtual void removeEntities() {
-				std::vector<Amara::Entity*> list = entities;
-				for (Amara::Entity* entity: list) {
-					entity->destroy();
-				}
 				entities.clear();
 			}
 
@@ -336,13 +332,8 @@ namespace Amara {
 				entities.clear();
 			}
 
-			virtual void destroy(bool recursiveDestroy) {
-				parent = nullptr;
-
-				Amara::Entity* child;
-				int numChildren = entities.size();
-				for (size_t i = 0; i < numChildren; i++) {
-					child = entities.at(i);
+			virtual void destroyEntities(bool recursiveDestroy) {
+				for (Amara::Entity* child: entities) {
 					if (recursiveDestroy) {
 						child->destroy();
 					}
@@ -350,9 +341,17 @@ namespace Amara {
 						child->parent = nullptr;
 					}
 				}
-				if (!recursiveDestroy) {
-					entities.clear();
-				}
+				entities.clear();
+			}
+
+			virtual void destroyEntities() {
+				destroyEntities(true);
+			}
+
+			virtual void destroy(bool recursiveDestroy) {
+				parent = nullptr;
+
+				destroyEntities(recursiveDestroy);
 
 				isDestroyed = true;
 				isActive = false;

@@ -16,6 +16,8 @@ namespace Amara {
             Amara::AudioBase* lastPlayed = nullptr;
             Amara::AudioBase* currentlyPlaying = nullptr;
 
+			bool rootGroup = false;
+
             AudioGroup(std::string gKey) {
                 key = gKey;
             }
@@ -99,10 +101,19 @@ namespace Amara {
                     return audio;
                 }
 
-                audio = (Amara::AudioBase*)load->get(fKey);
-                if (audio != nullptr) {
-                    return audio;
-                }
+				for (Amara::AudioGroup* group: groups) {
+					audio = group->get(fKey);
+					if (audio != nullptr) {
+						return audio;
+					}
+				}
+
+				if (rootGroup) {
+	                audio = (Amara::AudioBase*)load->get(fKey);
+	                if (audio != nullptr) {
+	                    return audio;
+	                }
+				}
 
                 return nullptr;
             }
@@ -133,7 +144,7 @@ namespace Amara {
                         currentlyPlaying = nullptr;
                     }
                 }
-            } 
+            }
     };
 }
 
