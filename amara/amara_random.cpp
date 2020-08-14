@@ -11,11 +11,19 @@ namespace Amara {
             std::default_random_engine e;
 
             void randomize() {
-                e.seed(rd());
+                e.seed(time(0));
             }
-            
-            float between(float min, float max) {
-                std::uniform_real_distribution<float> dist(0, 1);
+
+			void seed(int s) {
+				e.seed(s);
+			}
+
+			void seed(std::string s) {
+				seed(std::hash<std::string>{}(s));
+			}
+
+            double between(double min, double max) {
+                std::uniform_real_distribution<double> dist(0, 1);
                 return dist(e);
             }
 
