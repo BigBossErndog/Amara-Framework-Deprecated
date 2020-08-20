@@ -27,6 +27,7 @@ namespace Amara {
             bool autoProgress = false;
             int autoProgressDelay = 60;
             int autoProgressCounter = 0;
+			bool autoProgressSkip = false;
 
             std::string fontKey;
             Amara::TrueTypeFont* txt;
@@ -61,7 +62,7 @@ namespace Amara {
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
 				Amara::UIBox::init(gameProperties, givenScene, givenParent);
-                
+
                 txt = new TrueTypeFont(0, 0);
                 add(txt);
                 if (!fontKey.empty()) {
@@ -146,7 +147,7 @@ namespace Amara {
                     recWrapWidth = wrapWidth;
                     setText(text);
                 }
-                
+
                 if (!isProgressive) {
                     txtProgress = wrappedText;
                     finishedProgress = true;
@@ -155,7 +156,7 @@ namespace Amara {
                     if (!progressControl.empty() && controls->justDown(progressControl) && allowSkip) {
                         progress = wrappedText.length();
                     }
-                    
+
                     timeCounter += 1;
                     if (timeCounter >= progressDelay) {
                         timeCounter = 0;
@@ -172,7 +173,7 @@ namespace Amara {
                         txtProgress = wrappedText.substr(0, progress);
                     }
                 }
-                
+
                 txt->color = textColor;
                 txt->alignment = horizontalAlignment;
                 txt->setWordWrap(false);
@@ -206,7 +207,7 @@ namespace Amara {
                         break;
                 }
                 txt->y -= height*originY;
-                    
+
                 if (txtProgress.compare(txt->text) != 0) {
                     txt->setText(txtProgress);
                 }
@@ -278,9 +279,9 @@ namespace Amara {
                 else {
                     fText += word;
                 }
-                
+
                 txt->setText(recText);
-                
+
                 return fText;
             }
 
@@ -359,7 +360,7 @@ namespace Amara {
                 if (sm.evt()) {
                     if (autoProgress) {
                         autoProgressCounter += 1;
-                        if (autoProgressCounter >= autoProgressDelay) {
+                        if (autoProgressCounter >= autoProgressDelay || (autoProgressSkip && controls->justDown(progressControl))) {
                             sm.nextEvt();
                         }
                     }
@@ -375,7 +376,7 @@ namespace Amara {
             virtual bool close() {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
-                
+
                 if (sm.once()) {
                     setText("");
                     toReturn = true;
@@ -391,6 +392,11 @@ namespace Amara {
             virtual void setProgressControl(std::string gControl) {
                 progressControl = gControl;
             }
+
+			void setAutoProgressDelay(float s) {
+				autoProgress = true;
+				autoProgressDelay = ceil(properties->lps*s);
+			}
     };
 }
 

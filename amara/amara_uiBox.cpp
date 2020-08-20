@@ -36,7 +36,7 @@ namespace Amara {
             int openSpeedY = 0;
             int closeSpeedX = 0;
             int closeSpeedY = 0;
-            
+
             int boxTextureWidth = 0;
             int boxTextureHeight = 0;
             int imageWidth = 0;
@@ -106,7 +106,7 @@ namespace Amara {
                     x = properties->resolution->width - width - xFromRight;
                 }
                 if (config.find("yFromBottom") != config.end()) {
-                    int yFromBottom = config["yFromBottom"];        
+                    int yFromBottom = config["yFromBottom"];
                     y = properties->resolution->height - height - yFromBottom;
                 }
                 if (config.find("minWidth") != config.end()) {
@@ -169,7 +169,7 @@ namespace Amara {
                         verticalAlignmentFactor = 1;
                         break;
                 }
-                
+
                 partX = floor((part % 3) * boxTextureWidth/(float)3);
                 partY = floor(floor(part/(float)3) * boxTextureHeight/(float)3);
                 partWidth = ceil((float)boxTextureWidth/(float)3);
@@ -226,7 +226,7 @@ namespace Amara {
                                 srcRect.h = partHeight;
                                 break;
                         }
-                        
+
                         SDL_RenderCopy(
                             gRenderer,
                             (SDL_Texture*)(texture->asset),
@@ -276,8 +276,8 @@ namespace Amara {
                 SDL_RenderSetViewport(properties->gRenderer, &viewport);
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
-                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
-                
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
+
                 destRect.x = floor((x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
                 destRect.y = floor((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
                 destRect.w = ceil((width * scaleX) * nzoomX);
