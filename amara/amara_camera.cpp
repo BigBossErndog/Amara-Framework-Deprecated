@@ -332,8 +332,22 @@ namespace Amara {
                 return scrollTo(tx, ty, tt, gEasing, true);
             }
             Amara::Script* scrollTo(float tx, float ty, double tt) {
-                return scrollTo(tx, ty, tt, LINEAR, true);
+                return scrollTo(tx, ty, tt, LINEAR);
             }
+			Amara::Script* scrollTo(Entity* target, double tt, Amara::Easing gEasing, bool center) {
+				return scrollTo(
+					target->x + target->cameraOffsetX,
+					target->y + target->cameraOffsetY,
+					tt, gEasing, center
+				);
+			}
+			Amara::Script* scrollTo(Entity* target, double tt, Amara::Easing gEasing) {
+				return scrollTo(target, tt, gEasing, true);
+			}
+			Amara::Script* scrollTo(Entity* target, double tt) {
+				return scrollTo(target, tt, LINEAR);
+			}
+
 
             Amara::Script* zoomTo(float zt, float tt, Amara::Easing gEasing) {
                 return recite(createTween_CameraZoom(zt, tt, gEasing));
