@@ -100,9 +100,6 @@ namespace Amara {
                         float tx = followTarget->x + followTarget->cameraOffsetX;
                         float ty = followTarget->y + followTarget->cameraOffsetY;
 
-                        float cx = (width/(zoomX*zoomScale))/2 - (width/(oldZoomX*zoomScale))/2;
-                        float cy = (height/(zoomY*zoomScale))/2 - (height/(oldZoomY*zoomScale))/2;
-
                         float nx = (oldCenterX - tx) * (1 - lerpX) + tx;
                         float ny = (oldCenterY - ty) * (1 - lerpY) + ty;
 
@@ -328,9 +325,10 @@ namespace Amara {
             Amara::Script* scrollTo(float gx, float gy, double tt, Amara::Easing gEasing, bool center) {
 				float tx = gx;
 				float ty = gy;
+
 				if (center) {
-					tx -= width/2;
-					ty -= height/2;
+					tx -= (width/(zoomX*zoomScale))/2;
+					ty -= (height/(zoomY*zoomScale))/2;
 				}
 
 				if (lockedToBounds) {
@@ -356,8 +354,8 @@ namespace Amara {
                 }
 
 				if (center) {
-					tx += width/2;
-					ty += height/2;
+					tx += (width/(zoomX*zoomScale))/2;
+					ty += (height/(zoomY*zoomScale))/2;
 				}
 
                 return recite(createTween_ScrollCamera(tx, ty, tt, gEasing, center));
@@ -381,7 +379,6 @@ namespace Amara {
 			Amara::Script* scrollTo(Entity* target, double tt) {
 				return scrollTo(target, tt, LINEAR);
 			}
-
 
             Amara::Script* zoomTo(float zt, float tt, Amara::Easing gEasing) {
                 return recite(createTween_CameraZoom(zt, tt, gEasing));

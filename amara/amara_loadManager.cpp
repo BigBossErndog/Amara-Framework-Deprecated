@@ -25,7 +25,6 @@ namespace Amara {
             Amara::Loader* load = nullptr;
 
             std::deque<Amara::LoadTask*> tasks;
-            bool stillLoading = false;
 
             LoadManager(Amara::GameProperties* gameProperties): Amara::Loader(gameProperties) {
                 load = properties->loader;
@@ -69,7 +68,7 @@ namespace Amara {
                 stillLoading = false;
                 Amara::LoadTask* task;
                 int count = 0;
-                bool success;
+                bool success = false;
                 while (tasks.size() > 0 && count < load->loadSpeed) {
                     task = tasks.front();
                     success = false;

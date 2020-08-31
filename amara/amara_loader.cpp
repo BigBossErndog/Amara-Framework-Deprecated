@@ -296,7 +296,7 @@ namespace Amara {
 					in.close();
 
 					std::cout << "Loaded JSON asset config file: " << path << std::endl;
-					
+
 					nlohmann::json config = nlohmann::json::parse(contents);
 					if (config.find("surface") != config.end()) {
 						loadSurfacesFromJSON(config["surface"]);
@@ -329,7 +329,7 @@ namespace Amara {
 				}
 				return success;
 			}
-			
+
 			virtual void reset() {}
 			virtual void run() {}
 			virtual int numTasks() {}

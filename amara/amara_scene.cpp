@@ -114,7 +114,7 @@ namespace Amara {
                     }
 
                     load->run();
-
+					
                     if (!load->stillLoading) {
                         if (transition != nullptr) {
                             if (transition->finished) {
