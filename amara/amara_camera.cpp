@@ -325,7 +325,41 @@ namespace Amara {
 				}
             }
 
-            Amara::Script* scrollTo(float tx, float ty, double tt, Amara::Easing gEasing, bool center) {
+            Amara::Script* scrollTo(float gx, float gy, double tt, Amara::Easing gEasing, bool center) {
+				float tx = gx;
+				float ty = gy;
+				if (center) {
+					tx -= width/2;
+					ty -= height/2;
+				}
+
+				if (lockedToBounds) {
+                    if (width/(zoomX*zoomScale) > boundW) {
+                        tx = boundX - ((width/(zoomX*zoomScale)) - (boundW))/2;
+                    }
+                    else if (tx < boundX) {
+                        tx = boundX;
+                    }
+                    else if (tx + width/(zoomX*zoomScale) > boundX + boundW) {
+                        tx = (boundX + boundW) - (width/(zoomX*zoomScale));
+                    }
+
+                    if (height/(zoomY*zoomScale) > boundH) {
+                        ty = boundY - ((height/(zoomY*zoomScale)) - (boundH))/2;
+                    }
+                    else if (ty < boundY) {
+                        ty = boundY;
+                    }
+                    else if (ty + height/(zoomY*zoomScale) > boundY + boundH) {
+                        ty = (boundY + boundH) - (height/(zoomY*zoomScale));
+                    }
+                }
+
+				if (center) {
+					tx += width/2;
+					ty += height/2;
+				}
+
                 return recite(createTween_ScrollCamera(tx, ty, tt, gEasing, center));
             }
             Amara::Script* scrollTo(float tx, float ty, double tt, Amara::Easing gEasing) {
