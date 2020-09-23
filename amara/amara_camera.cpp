@@ -326,6 +326,8 @@ namespace Amara {
 				float tx = gx;
 				float ty = gy;
 
+				stopFollow();
+
 				if (center) {
 					tx -= (width/(zoomX*zoomScale))/2;
 					ty -= (height/(zoomY*zoomScale))/2;

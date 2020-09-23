@@ -13,6 +13,7 @@ namespace Amara {
 			Amara::GameProperties* properties = nullptr;
 			std::unordered_map<std::string, Amara::Scene*> sceneMap;
 			std::vector<Amara::Scene*> sceneList;
+			std::vector<Amara::Scene*> copySceneList;
 
 			SceneManager(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
@@ -61,7 +62,7 @@ namespace Amara {
 			void draw() {
 				Amara::Scene* scene;
 				Amara::ScenePlugin* scenes;
-				
+
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
 					scenes = scene->scenes;
@@ -94,9 +95,10 @@ namespace Amara {
 			void manageTasks() {
 				Amara::Scene* scene;
 				Amara::ScenePlugin* scenes;
+				copySceneList = sceneList;
 
-				for (size_t i = 0; i < sceneList.size(); i++) {
-					scene = sceneList.at(i);
+				for (size_t i = 0; i < copySceneList.size(); i++) {
+					scene = copySceneList.at(i);
 					scenes = scene->scenes;
 
 					scenes->manageTasks();

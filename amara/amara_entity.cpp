@@ -123,6 +123,24 @@ namespace Amara {
 					y = properties->resolution->height - yFromBottom;
 				}
 
+				if (config.find("relativeX") != config.end()) {
+					float relativeX = config["relativeX"];
+					x = properties->resolution->width * relativeX;
+				}
+				if (config.find("relativeY") != config.end()) {
+					float relativeY = config["relativeY"];
+					y = properties->resolution->height * relativeY;
+				}
+
+				if (config.find("relativeXFromCenter") != config.end()) {
+					float relativeX = config["relativeXFromCenter"];
+					x = properties->resolution->width/2.0 + properties->resolution->width*relativeX/2.0;
+				}
+				if (config.find("relativeYFromCenter") != config.end()) {
+					float relativeY = config["relativeYFromCenter"];
+					y = properties->resolution->height/2.0 + properties->resolution->height*relativeY/2.0;
+				}
+
 				if (config.find("scaleX") != config.end()) {
 					scaleX = config["scaleX"];
 				}

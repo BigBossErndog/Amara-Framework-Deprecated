@@ -119,6 +119,34 @@ namespace Amara {
                 if (config.find("font") != config.end()) {
                     setFont(config["font"]);
                 }
+				if (config.find("textAlignHorizontal") != config.end()) {
+					int a = config["textAlignHorizontal"];
+					switch (a) {
+						case 0:
+							horizontalAlignment = ALIGN_LEFT;
+							break;
+						case 1:
+							horizontalAlignment = ALIGN_RIGHT;
+							break;
+						case 2:
+							horizontalAlignment = ALIGN_CENTER;
+							break;
+					}
+				}
+				if (config.find("textAlignVertical") != config.end()) {
+					int a = config["textAlignVertical"];
+					switch (a) {
+						case 0:
+							verticalAlignment = ALIGN_TOP;
+							break;
+						case 1:
+							verticalAlignment = ALIGN_BOTTOM;
+							break;
+						case 2:
+							verticalAlignment = ALIGN_CENTER;
+							break;
+					}
+				}
             }
 
             void clearExtraMargins() {
@@ -174,40 +202,6 @@ namespace Amara {
                     }
                 }
 
-                txt->color = textColor;
-                txt->alignment = horizontalAlignment;
-                txt->setWordWrap(false);
-                txt->setText(wrappedText);
-
-                switch (horizontalAlignment) {
-                    case ALIGN_LEFT:
-                        txt->originX = 0;
-                        txt->x = nMarginLeft;
-                        break;
-                    case ALIGN_CENTER:
-                        txt->originX = 0;
-                        txt->x = (nMarginLeft + (width - nMarginRight))/2 - txt->width/2;
-                        break;
-                    case ALIGN_RIGHT:
-                        txt->originX = 1;
-                        txt->x = width - nMarginRight;
-                        break;
-                }
-                txt->x -= width*originX;
-
-                switch (verticalAlignment) {
-                    case ALIGN_TOP:
-                        txt->y = nMarginTop;
-                        break;
-                    case ALIGN_CENTER:
-                        txt->y = (nMarginTop + (height - nMarginBottom))/2 - txt->height/2;
-                        break;
-                    case ALIGN_BOTTOM:
-                        txt->y = height - nMarginBottom - txt->height;
-                        break;
-                }
-                txt->y -= height*originY;
-
                 if (txtProgress.compare(txt->text) != 0) {
                     txt->setText(txtProgress);
                 }
@@ -230,6 +224,8 @@ namespace Amara {
 
                 timeCounter = 0;
                 progress = 0;
+
+				fixText();
             }
 
             std::string adjustText(std::string gText, float wrapWidth) {
@@ -284,6 +280,48 @@ namespace Amara {
 
                 return fText;
             }
+
+			void fixText() {
+				int nMarginTop = marginTop + extraMarginTop;
+                int nMarginBottom = marginBottom + extraMarginBottom;
+                int nMarginLeft = marginLeft + extraMarginLeft;
+                int nMarginRight = marginRight + extraMarginRight;
+
+                int wrapWidth = width - nMarginLeft - nMarginRight;
+
+				txt->color = textColor;
+                txt->setWordWrap(false);
+                txt->setText(wrappedText);
+
+                switch (horizontalAlignment) {
+                    case ALIGN_LEFT:
+                        txt->originX = 0;
+                        txt->x = nMarginLeft;
+                        break;
+                    case ALIGN_CENTER:
+                        txt->originX = 0;
+                        txt->x = (nMarginLeft + (width - nMarginRight))/2 - txt->width/2;
+                        break;
+                    case ALIGN_RIGHT:
+                        txt->originX = 1;
+                        txt->x = width - nMarginRight - txt->width;
+                        break;
+                }
+                txt->x -= width*originX;
+
+                switch (verticalAlignment) {
+                    case ALIGN_TOP:
+                        txt->y = nMarginTop;
+                        break;
+                    case ALIGN_CENTER:
+                        txt->y = (nMarginTop + (height - nMarginBottom))/2 - txt->height/2;
+                        break;
+                    case ALIGN_BOTTOM:
+                        txt->y = height - nMarginBottom - txt->height;
+                        break;
+                }
+                txt->y -= height*originY;
+			}
 
             void setFont(std::string gFontKey) {
                 fontKey = gFontKey;

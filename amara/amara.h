@@ -67,6 +67,10 @@ namespace Amara {
 #include "amara_transitions.cpp"
 #include "amara_sceneTransition.cpp"
 
+#include "amara_charaTextBox.cpp"
+#include "amara_textBox.cpp"
+#include "amara_uiBox.cpp"
+
 #include "amara_sceneManager.cpp"
 #include "amara_scenePlugin.cpp"
 #include "amara_scene.cpp"
@@ -75,10 +79,6 @@ namespace Amara {
 #include "amara_tweens_entities.cpp"
 #include "amara_tweens_camera.cpp"
 #include "amara_tween.cpp"
-
-#include "amara_charaTextBox.cpp"
-#include "amara_textBox.cpp"
-#include "amara_uiBox.cpp"
 
 #include "amara_filLRect.cpp"
 

@@ -15,7 +15,7 @@ namespace Amara {
             IntVector2(int nx, int ny) {
                 x = nx;
                 y = ny;
-            } 
+            }
     };
 
     class FloatVector2 {
@@ -28,7 +28,7 @@ namespace Amara {
             FloatVector2(float nx, float ny) {
                 x = nx;
                 y = ny;
-            } 
+            }
     };
 
     class IntRect {
@@ -151,6 +151,18 @@ namespace Amara {
         }
         return 0;
     }
+
+	Amara::Direction getDirection(std::string dir) {
+		if (dir.compare("up") == 0) return Up;
+		if (dir.compare("down") == 0) return Down;
+		if (dir.compare("left") == 0) return Left;
+		if (dir.compare("right") == 0) return Right;
+		if (dir.compare("upLeft") == 0) return UpLeft;
+		if (dir.compare("upRight") == 0) return UpRight;
+		if (dir.compare("downLeft") == 0) return DownLeft;
+		if (dir.compare("downRight") == 0) return DownRight;
+		return NoDir;
+	}
 }
 
 #endif

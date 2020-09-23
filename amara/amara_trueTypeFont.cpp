@@ -89,6 +89,20 @@ namespace Amara {
                 if (config.find("outlineCorners") != config.end()) {
                     outlineCorners = config["outlineCorners"];
                 }
+				if (config.find("align") != config.end()) {
+					int a = config["align"];
+					switch (a) {
+						case 0:
+							alignment = ALIGN_LEFT;
+							break;
+						case 1:
+							alignment = ALIGN_RIGHT;
+							break;
+						case 2:
+							alignment = ALIGN_CENTER;
+							break;
+					}
+				}
             }
 
             bool setFont(std::string gFontKey) {

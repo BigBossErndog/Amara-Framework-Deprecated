@@ -103,12 +103,28 @@ namespace Amara {
                 }
                 if (config.find("xFromRight") != config.end()) {
                     int xFromRight = config["xFromRight"];
-                    x = properties->resolution->width - width - xFromRight;
+                    x = scene->mainCamera->width - width - xFromRight;
                 }
                 if (config.find("yFromBottom") != config.end()) {
                     int yFromBottom = config["yFromBottom"];
-                    y = properties->resolution->height - height - yFromBottom;
+                    y = scene->mainCamera->height - height - yFromBottom;
                 }
+				if (config.find("relativeXFromRight") != config.end()) {
+					float relativeX = config["relativeXFromRight"];
+					x = scene->mainCamera->width - scene->mainCamera->width*relativeX - width;
+				}
+				if (config.find("relativeYFromBottom") != config.end()) {
+					float relativeY = config["relativeYFromBottom"];
+					y = scene->mainCamera->height - scene->mainCamera->height*relativeY - height;
+				}
+				if (config.find("relativeXFromCenter") != config.end()) {
+					float relativeX = config["relativeXFromCenter"];
+					x = scene->mainCamera->width/2.0 + scene->mainCamera->width*relativeX/2.0 - width/2.0;
+				}
+				if (config.find("relativeYFromCenter") != config.end()) {
+					float relativeY = config["relativeYFromCenter"];
+					y = scene->mainCamera->height/2.0 + scene->mainCamera->height*relativeY/2.0 - height/2.0;
+				}
                 if (config.find("minWidth") != config.end()) {
                     minWidth = config["minWidth"];
                 }
@@ -141,6 +157,16 @@ namespace Amara {
                 if (config.find("openCloseSpeed") != config.end()) {
                     setOpenCloseSpeed(config["openCloseSpeed"], config["openCloseSpeed"]);
                 }
+				if (config.find("fixedWithinBounds") != config.end() && config["fixedWithinBounds"]) {
+					if (x < 0) x = 0;
+					if (y < 0) y = 0;
+					if (x + width > scene->mainCamera->width) {
+						x = scene->mainCamera->width - width;
+					}
+					if (y + height > scene->mainCamera->height) {
+						y = scene->mainCamera->height - height;
+					}
+				}
 
                 setOpenSpeed(openSpeedX, openSpeedY);
                 setCloseSpeed(closeSpeedX, closeSpeedY);

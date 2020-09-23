@@ -10,16 +10,19 @@ namespace Amara {
             std::random_device rd;
             std::default_random_engine e;
 
-            void randomize() {
+            RNG* randomize() {
                 e.seed(time(0));
+				return this;
             }
 
-			void seed(int s) {
+			RNG* seed(int s) {
 				e.seed(s);
+				return this;
 			}
 
-			void seed(std::string s) {
+			RNG* seed(std::string s) {
 				seed(std::hash<std::string>{}(s));
+				return this;
 			}
 
             double between(double min, double max) {

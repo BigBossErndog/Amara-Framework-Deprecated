@@ -26,7 +26,7 @@ namespace Amara {
                 container->add(portrait = new Sprite(0, 0));
                 container->setVisible(false);
                 portrait->setOrigin(0.5);
-                
+
                 data["entityType"] = "charaTextBox";
             }
 
@@ -58,7 +58,7 @@ namespace Amara {
                 if (config.find("portraitContainerHeight") != config.end()) {
                     container->height = config["portraitContainerHeight"];
                 }
-                
+
                 if (config.find("portraitContainerX") != config.end()) {
                     container->x = config["portraitContainerX"];
                 }

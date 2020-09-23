@@ -15,7 +15,8 @@ namespace Amara {
         PAUSE,
         RESUME,
         SLEEP,
-        WAKE
+        WAKE,
+		BRINGTOFRONT
     };
 
     class ScenePlugin {
@@ -118,6 +119,13 @@ namespace Amara {
                 }
             }
 
+			void bringToFront(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
+                if (got != sceneMap->end()) {
+                    got->second->scenes->bringToFront();
+                }
+            }
+
             void stop() {
                 tasks.push_back(STOP);
             }
@@ -141,6 +149,10 @@ namespace Amara {
             void wake() {
                 tasks.push_back(WAKE);
             }
+
+			void bringToFront() {
+				tasks.push_back(BRINGTOFRONT);
+			}
 
             void manageTasks() {
                 for (size_t i = 0; i < tasks.size(); i++) {
@@ -205,6 +217,15 @@ namespace Amara {
                                 scene->onWake();
                             }
                             break;
+						case BRINGTOFRONT:
+							for (int i = 0; i < sceneList->size(); i++) {
+								Scene* s = sceneList->at(i);
+								if (s == scene) {
+									sceneList->erase(sceneList->begin() + i);
+									sceneList->push_back(s);
+								}
+							}
+							break;
                     }
                 }
                 tasks.clear();

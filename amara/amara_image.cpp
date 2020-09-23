@@ -155,7 +155,7 @@ namespace Amara {
                 if (destRect.y >= vh) skipDrawing = true;
                 if (destRect.w <= 0) skipDrawing = true;
                 if (destRect.h <= 0) skipDrawing = true;
-
+				
                 if (!skipDrawing) {
                     int hx, hy, hw, hh = 0;
                     hw = destRect.w;
@@ -248,8 +248,6 @@ namespace Amara {
 
                     imageWidth = width;
                     imageHeight = height;
-
-                    frame = 0;
 
                     return true;
                 }

@@ -65,6 +65,32 @@ namespace Amara {
                 scripts.clear();
             }
 
+			void clearScript(std::string gid) {
+				Amara::Script* script;
+                for (auto it = scripts.begin(); it != scripts.end(); ++it) {
+                    script = *it;
+                    if (script->id.compare(gid) == 0) {
+                        if (script->chainedScript != nullptr) {
+                            recite(script->chainedScript);
+                        }
+                        scripts.erase(it--);
+                        if (script->deleteOnFinish) {
+                            delete script;
+                        }
+						return;
+                    }
+                }
+			}
+
+			Amara::Script* getScript(std::string gid) {
+				for (Amara::Script* script: scripts) {
+					if (script->id.compare(gid) == 0) {
+						return script;
+					}
+				}
+				return nullptr;
+			}
+
 			void cancelScripts() {
 				for (Amara::Script* script: scripts) {
 					script->cancel();
@@ -76,7 +102,7 @@ namespace Amara {
                 scripts.clear();
 			}
 
-            ~Actor() {
+            virtual ~Actor() {
                 clearScripts();
             }
     };

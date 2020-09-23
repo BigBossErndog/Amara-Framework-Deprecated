@@ -178,6 +178,14 @@ namespace Amara {
                 return ret;
             }
 
+            bool waitUntil(bool condition) {
+                if (evt()) {
+                    if (condition) nextEvt();
+                    return true;
+                }
+                return false;
+            }
+
             bool repeat(int num) {
                 bool ret = false;
                 for (int i = 0; i < num; i++) {
