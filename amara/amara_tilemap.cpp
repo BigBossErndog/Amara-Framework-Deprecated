@@ -111,6 +111,8 @@ namespace Amara {
                 if (newLayer->width > width) width = newLayer->width;
                 if (newLayer->height > height) height = newLayer->height;
 
+                newLayer->id = layerKey;
+
                 newLayer->x = x;
                 newLayer->y = y;
                 newLayer->setTilemap(this, this);

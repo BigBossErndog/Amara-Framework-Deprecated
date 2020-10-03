@@ -42,6 +42,11 @@ namespace Amara {
             int imageWidth = 0;
             int imageHeight = 0;
 
+            int partitionTop = 0;
+            int partitionBottom = 0;
+            int partitionLeft = 0;
+            int partitionRight = 0;
+
             int frame = 0;
 
             float originX = 0;
@@ -167,6 +172,18 @@ namespace Amara {
 						y = scene->mainCamera->height - height;
 					}
 				}
+                if (config.find("partitionTop") != config.end()) {
+                    partitionTop = config["partitionTop"];
+                }
+                if (config.find("partitionBottom") != config.end()) {
+                    partitionBottom = config["partitionBottom"];
+                }
+                if (config.find("partitionLeft") != config.end()) {
+                    partitionLeft = config["partitionLeft"];
+                }
+                if (config.find("partitionRight") != config.end()) {
+                    partitionRight = config["partitionRight"];
+                }
 
                 setOpenSpeed(openSpeedX, openSpeedY);
                 setCloseSpeed(closeSpeedX, closeSpeedY);
@@ -196,39 +213,49 @@ namespace Amara {
                         break;
                 }
 
-                partX = floor((part % 3) * boxTextureWidth/(float)3);
-                partY = floor(floor(part/(float)3) * boxTextureHeight/(float)3);
-                partWidth = ceil((float)boxTextureWidth/(float)3);
-                partHeight = ceil((float)boxTextureHeight/(float)3);
-
                 switch (part % 3) {
                     case 0:
+                        partX = 0;
+                        partWidth = partitionLeft;
                         destRect.x = (width - openWidth)*horizontalAlignmentFactor;
                         destRect.w = partWidth;
                         break;
                     case 1:
-                        destRect.x = (width - openWidth)*horizontalAlignmentFactor + partWidth;
-                        destRect.w = openWidth - partWidth*2;
+                        partX = partitionLeft;
+                        partWidth = boxTextureWidth - partitionLeft - partitionRight;
+                        destRect.x = (width - openWidth)*horizontalAlignmentFactor + partitionLeft;
+                        destRect.w = openWidth - partitionLeft - partitionRight;
                         break;
                     case 2:
-                        destRect.x = (width - openWidth)*horizontalAlignmentFactor + openWidth - partWidth;
+                        partX = boxTextureWidth - partitionRight;
+                        partWidth = partitionRight;
+                        destRect.x = (width - openWidth)*horizontalAlignmentFactor + openWidth - partitionRight;
                         destRect.w = partWidth;
                         break;
                 }
                 switch ((int)floor(part/(float)3)) {
                     case 0:
+                        partY = 0;
+                        partHeight = partitionTop;
                         destRect.y = (height - openHeight)*verticalAlignmentFactor;
                         destRect.h = partHeight;
                         break;
                     case 1:
-                        destRect.y = (height - openHeight)*verticalAlignmentFactor + partHeight;
-                        destRect.h = openHeight - partHeight*2;
+                        partY = partitionTop;
+                        partHeight = boxTextureHeight - partitionTop - partitionBottom;
+                        destRect.y = (height - openHeight)*verticalAlignmentFactor + partitionTop;
+                        destRect.h = openHeight - partitionTop - partitionBottom;
                         break;
                     case 2:
-                        destRect.y = (height - openHeight)*verticalAlignmentFactor + openHeight - partHeight;
+                        partY = boxTextureHeight - partitionBottom;
+                        partHeight = partitionBottom;
+                        destRect.y = (height - openHeight)*verticalAlignmentFactor + openHeight - partitionBottom;
                         destRect.h = partHeight;
                         break;
                 }
+
+                if (destRect.w <= 0) skipDrawing = true;
+                if (destRect.h <= 0) skipDrawing = true;
 
                 if (!skipDrawing) {
                     if (texture != nullptr) {
@@ -393,6 +420,11 @@ namespace Amara {
 
                     imageWidth = boxTextureWidth;
                     imageHeight = boxTextureHeight;
+
+                    partitionLeft = imageWidth/3.0;
+                    partitionRight = imageWidth/3.0;
+                    partitionTop = imageHeight/3.0;
+                    partitionBottom = imageHeight/3.0;
 
                     return true;
                 }
