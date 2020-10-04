@@ -40,6 +40,22 @@ namespace Amara {
 
             Tilemap(std::string gTextureKey, std::string gTiledJsonKey): Tilemap(0, 0, gTextureKey, gTiledJsonKey) {}
 
+            void configure(nlohmann::json mapping) {
+                int mapWidth = mapping["mapWidth"];
+                int mapHeight = mapping["mapHeight"];
+                int tileWidth = mapping["tileWidth"];
+                int tileHeight = mapping["tileHeight"];
+
+                nlohmann::json& jlayers = mapping["layers"];
+                for (nlohmann::json& jlayer: jlayers) {
+                    TilemapLayer* tilemapLayer = createLayer(jlayer["key"], mapWidth, mapHeight, tileWidth, tileHeight);
+                    nlohmann::json& jtiles = jlayer["tiles"];
+                    for (int i = 0; i < jtiles.size(); i++) {
+                        tilemapLayer->setTile(i, jtiles[i]);
+                    }
+                }
+            }
+
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
                 if (!tiledJsonKey.empty()) {
@@ -94,10 +110,16 @@ namespace Amara {
                 return gLayer;
             }
 
-            Amara::TilemapLayer* createLayer(int mapWidth, int mapHeight, int tileWidth, int tileHeight) {
+            Amara::TilemapLayer* createLayer(std::string layerKey, int mapWidth, int mapHeight, int tileWidth, int tileHeight) {
                 Amara::TilemapLayer* newLayer;
                 ((Amara::Entity*)scene)->add(newLayer = new Amara::TilemapLayer(mapWidth, mapHeight, tileWidth, tileHeight));
+
+                newLayer->id = layerKey;
                 newLayer->setTexture(textureKey);
+                newLayer->setTilemap(this, this);
+
+                layers[layerKey] = newLayer;
+
                 if (newLayer->width > width) width = newLayer->width;
                 if (newLayer->height > height) height = newLayer->height;
                 return newLayer;

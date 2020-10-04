@@ -226,6 +226,12 @@ namespace Amara {
                 return tile;
             }
 
+            Amara::Tile& setTile(int index, int nid) {
+                Amara::Tile& tile = tiles[index];
+                tile.id = nid;
+                return tile;
+            }
+
             void run() {
                 std::unordered_map<int, Amara::TileAnimation>::iterator it = animations.begin();
 

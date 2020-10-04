@@ -44,6 +44,8 @@ namespace Amara {
 
             int recWrapWidth = -1;
 
+            Amara::TrueTypeFont* nameText = nullptr;
+
             Amara::Alignment horizontalAlignment = ALIGN_LEFT;
             Amara::Alignment verticalAlignment = ALIGN_TOP;
 
@@ -147,6 +149,12 @@ namespace Amara {
 							break;
 					}
 				}
+                if (config.find("name") != config.end()) {
+                    if (nameText) nameText->setText(config["name"]);
+                }
+                if (config.find("nameColor") != config.end()) {
+                    if (nameText) nameText->setColor(config["nameColor"][0], config["nameColor"][1], config["nameColor"][2]);
+                }
             }
 
             void clearExtraMargins() {
