@@ -31,6 +31,32 @@ namespace Amara {
             }
     };
 
+    class IntVector3: public Amara::IntVector2 {
+        public:
+            int z = 0;
+
+            IntVector3() {}
+
+            IntVector3(int nx, int ny, int nz) {
+                x = nx;
+                y = ny;
+                z = nz;
+            }
+    };
+
+    class FloatVector3: public Amara::FloatVector2 {
+        public:
+            float z = 0;
+
+            FloatVector3() {}
+
+            FloatVector3(float nx, float ny, float nz) {
+                x = nx;
+                y = ny;
+                z = nz;
+            }
+    };
+
     class IntRect {
         public:
             int x = 0;
@@ -90,6 +116,18 @@ namespace Amara {
                 height = rect.height;
             }
     };
+
+    float distanceBetween(float sx, float sy, float ex, float ey) {
+        return sqrt(sx*sx + sy*sy);
+    }
+
+    float distanceBetween(IntVector2 s, IntVector2 e) {
+        return distanceBetween(s.x, s.y, e.x, e.y);
+    }
+
+    float distanceBetween(FloatVector2 s, FloatVector2 e) {
+        return distanceBetween(s.x, s.y, e.x, e.y);
+    }
 
     int getOffsetX(Amara::Direction dir) {
         switch (dir) {
