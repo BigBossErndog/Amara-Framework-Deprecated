@@ -22,6 +22,9 @@ namespace Amara {
             int dx = 0;
             int dy = 0;
 
+            int scrollX = 0;
+            int scrollY = 0;
+
 			Mouse(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
 
@@ -37,6 +40,9 @@ namespace Amara {
 
                 isDown = left->isDown || right->isDown || middle->isDown;
                 justDown = left->justDown || right->justDown || middle->justDown;
+
+                scrollX = 0;
+                scrollY = 0;
 			}
     };
 }

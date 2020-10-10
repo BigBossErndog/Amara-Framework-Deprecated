@@ -75,6 +75,11 @@ namespace Amara {
 
                 Amara::Tile tile;
                 tiles.resize(width*height, tile);
+                for (int t = 0; t < tiles.size(); t++) {
+                    Tile& tile = tiles[t];
+                    tile.x = (t % width);
+                    tile.y = floor(((float)t) / (float)width);
+                }
             }
 
             TilemapLayer(std::string gTextureKey, std::string gTiledJsonKey) {
@@ -365,7 +370,6 @@ namespace Amara {
                             auto got = animations.find(frame);
                             if (got != animations.end()) {
                                 frame = got->second.currentTileId;
-                                // std::cout << frame << std::endl;
                             }
 
                             if (texture != nullptr) {

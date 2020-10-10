@@ -30,7 +30,7 @@ namespace Amara {
                 return dist(e);
             }
 
-            float random() {
+            double random() {
                 return between(0, 1);
             }
     };

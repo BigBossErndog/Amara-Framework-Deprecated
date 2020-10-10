@@ -86,6 +86,7 @@ namespace Amara {
                     properties->zoomFactorY = recZoomFactorY;
                     properties->alpha = recAlpha;
 					if (entity->isDestroyed || entity->parent != this) continue;
+                    if (!entity->isVisible) continue;
 					entity->draw(vx + dx, vy + dy, dw, dh);
 				}
             }

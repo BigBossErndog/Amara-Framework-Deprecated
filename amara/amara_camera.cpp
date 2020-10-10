@@ -66,6 +66,9 @@ namespace Amara {
                 parent = gParent;
                 scene = givenScene;
 
+                updateValues();
+                recordValues();
+
                 if (!definedDimensions) {
                     width = properties->resolution->width;
                     height = properties->resolution->height;

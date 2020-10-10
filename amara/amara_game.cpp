@@ -52,6 +52,8 @@ namespace Amara {
 			Amara::EventManager* events = nullptr;
 			Amara::TaskManager* taskManager = nullptr;
 
+			Amara::FileWriter* writer = nullptr;
+
 			bool vsync = false;
 			int fps = 60;
 			int tps = 1000 / fps;
@@ -194,6 +196,8 @@ namespace Amara {
 				input->mouse = new Amara::Mouse(properties);
 				input->gamepads = new Amara::GamepadManager(properties);
 				properties->input = input;
+
+				writer = new FileWriter();
 
 				globalData.clear();
 
@@ -525,6 +529,9 @@ namespace Amara {
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
 								input->mouse->right->press();
 							}
+							else if (e.button.button == SDL_BUTTON_MIDDLE) {
+								input->mouse->middle->press();
+							}
 						}
 						else if (e.type == SDL_MOUSEBUTTONUP) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
@@ -533,7 +540,15 @@ namespace Amara {
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
 								input->mouse->right->release();
 							}
+							else if (e.button.button == SDL_BUTTON_MIDDLE) {
+								input->mouse->middle->release();
+							}
 						}
+					}
+					else if (e.type == SDL_MOUSEWHEEL) {
+						int mul = (e.wheel.direction == SDL_MOUSEWHEEL_FLIPPED) ? -1 : 1;
+						input->mouse->scrollX = e.wheel.x * mul;
+						input->mouse->scrollY = e.wheel.y * mul;
 					}
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_MOVED)) {
 						dragged = true;

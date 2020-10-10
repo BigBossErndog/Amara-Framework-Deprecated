@@ -78,6 +78,7 @@ namespace Amara {
 			}
 
 			void draw(int vx, int vy, int vw, int vh) {
+				if (!isVisible) return;
 				bool skipDrawing = false;
 
 				if (alpha < 0) alpha = 0;

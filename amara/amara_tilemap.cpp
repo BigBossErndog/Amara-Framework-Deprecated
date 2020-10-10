@@ -118,10 +118,12 @@ namespace Amara {
                 newLayer->setTexture(textureKey);
                 newLayer->setTilemap(this, this);
 
-                layers[layerKey] = newLayer;
+                tileWidth = newLayer->tileWidth;
+                tileHeight = newLayer->tileHeight;
+                widthInPixels = tileWidth * width;
+                heightInPixels = tileHeight * height;
 
-                if (newLayer->width > width) width = newLayer->width;
-                if (newLayer->height > height) height = newLayer->height;
+                layers[layerKey] = newLayer;
                 return newLayer;
             }
 

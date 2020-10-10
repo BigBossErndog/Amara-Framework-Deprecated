@@ -18,7 +18,7 @@ namespace Amara {
 
             Amara::Image drawImage;
 
-            bool clearEveryFrame = true;
+            bool clearEveryFrame = false;
 
             SDL_Color recColor;
             SDL_Rect drawnRect;
