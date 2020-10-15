@@ -43,8 +43,11 @@ namespace Amara {
             void configure(nlohmann::json mapping) {
                 int mapWidth = mapping["mapWidth"];
                 int mapHeight = mapping["mapHeight"];
-                int tileWidth = mapping["tileWidth"];
-                int tileHeight = mapping["tileHeight"];
+                tileWidth = mapping["tileWidth"];
+                tileHeight = mapping["tileHeight"];
+
+                width = mapWidth;
+                height = mapHeight;
 
                 nlohmann::json& jlayers = mapping["layers"];
                 for (nlohmann::json& jlayer: jlayers) {
@@ -105,8 +108,18 @@ namespace Amara {
                 return false;
             }
 
-            Amara::TilemapLayer* add(Amara::TilemapLayer* gLayer) {
-                Amara::Actor::add(gLayer);
+            Amara::TilemapLayer* add(std::string gid, Amara::TilemapLayer* gLayer) {
+                ((Amara::Entity*)scene)->add(gLayer);
+                gLayer->setTexture(textureKey);
+                gLayer->setTilemap(this, this);
+
+                tileWidth = gLayer->tileWidth;
+                tileHeight = gLayer->tileHeight;
+                widthInPixels = gLayer->tileWidth*gLayer->width;
+                heightInPixels = gLayer->tileHeight*gLayer->height;
+
+                gLayer->id = gid;
+                layers[gid] = gLayer;
                 return gLayer;
             }
 

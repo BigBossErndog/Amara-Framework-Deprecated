@@ -231,6 +231,23 @@ namespace Amara {
                 return tile;
             }
 
+            Amara::Tile& getTileAtXY(float gx, float gy) {
+                float px = 0;
+                float py = 0;
+                if (tilemapEntity) {
+                    px = tilemapEntity->x;
+                    py = tilemapEntity->y;
+                }
+
+                int fx = floor((gx - x - px)/tileWidth);
+                int fy = floor((gy - y - py)/tileHeight);
+                if (fx < 0) fx = 0;
+                if (fx >= width) fx = width - 1;
+                if (fy < 0) fy = 0;
+                if (fy >= height) fy = height - 1;
+                return getTileAt(fx, fy);
+            }
+
             Amara::Tile& setTile(int index, int nid) {
                 Amara::Tile& tile = tiles[index];
                 tile.id = nid;
@@ -267,10 +284,8 @@ namespace Amara {
                     SDL_SetTextureAlphaMod(tex, alpha * properties->alpha * 255);
                 }
 
-                int startX = 0;
-                int startY = 0;
-                int endX = width - 1;
-                int endY = height - 1;
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
                 float px = 0;
                 float py = 0;
@@ -279,10 +294,21 @@ namespace Amara {
                     py = tilemapEntity->y;
                 }
 
+                Amara::Camera* cam = properties->currentCamera;
+                Amara::Tile& startTile = getTileAtXY(properties->scrollX, properties->scrollY);
+                Amara::Tile& endTile = getTileAtXY(properties->scrollX+(vw/nzoomX), properties->scrollY+(vh/nzoomY));
+                int startX = startTile.x;
+                int startY = startTile.y;
+                int endX = endTile.x;
+                int endY = endTile.y;
+
                 if (startX < 0) startX = 0;
                 if (startY < 0) startY = 0;
                 if (endX >= width) endX = width - 1;
                 if (endY >= height) endY = height - 1;
+
+                destRect.w = ceil((tileWidth * scaleX) * nzoomX);
+                destRect.h = ceil((tileHeight * scaleY) * nzoomY);
                 
                 for (int i = startX; i <= endX; i++) {
                     for (int j = startY; j <= endY ; j++) {
@@ -326,12 +352,8 @@ namespace Amara {
 
                         bool skipDrawing = false;
                         
-                        float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
-                        float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
                         destRect.x = floor((x + tx - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth)) * nzoomX);
                         destRect.y = floor((y-z + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
-                        destRect.w = ceil((tileWidth * scaleX) * nzoomX);
-                        destRect.h = ceil((tileHeight * scaleY) * nzoomY);
 
                         origin.x = destRect.w * originX + destRect.w/2;
                         origin.y = destRect.h * originY + destRect.h/2;
