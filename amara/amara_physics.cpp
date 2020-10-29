@@ -233,6 +233,7 @@ namespace Amara {
 
         bool collidesWith(Amara::Entity* other) {
             for (Amara::Entity* entity: members) {
+                if (entity == other) continue;
                 if (entity->physics->collidesWith(other)) {
                     return true;
                 }
