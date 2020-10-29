@@ -5,9 +5,6 @@
 namespace Amara {
     class PhysicsBody: public Amara::PhysicsBase {
     public:
-        int checkDivision = 5;
-        int correctionDivision = 1;
-
         bool hasCollided() {
             for (Entity* entity: collisionTargets) {
                 if (collidesWith(entity)) {
@@ -79,7 +76,7 @@ namespace Amara {
             properties.rect.height = height;
         }
 
-        bool collidesWith(Entity* other) {
+        bool collidesWith(Amara::Entity* other) {
             PhysicsBase* body = other->physics;
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
@@ -112,7 +109,7 @@ namespace Amara {
             y = gy;
         }
 
-        bool collidesWith(Entity* other) {
+        bool collidesWith(Amara::Entity* other) {
             PhysicsBase* body = other->physics;
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
@@ -152,9 +149,9 @@ namespace Amara {
             properties.tilemapLayer = (Amara::TilemapLayer*)parent;
         }
 
-        bool collidesWith(Entity* other) {
-            PhysicsBase* body = other->physics;
-            TilemapLayer* tilemapLayer = properties.tilemapLayer;
+        bool collidesWith(Amara::Entity* other) {
+            Amara::PhysicsBase* body = other->physics;
+            Amara::TilemapLayer* tilemapLayer = properties.tilemapLayer;
 
             float sx, sy, ex, ey, tx, ty;
             other->physics->updateProperties();
@@ -207,5 +204,42 @@ namespace Amara {
 
             return false;
         }
+    };
+
+    class PhysicsCollisionGroup: public PhysicsBody {
+    public:
+        std::vector<Amara::Entity*>members;
+
+        PhysicsCollisionGroup() {
+            members.clear();
+        }
+
+        Amara::Entity* add(Amara::Entity* gEntity) {
+            members.push_back(gEntity);
+            return gEntity;
+        }
+        Amara::Entity* remove(Amara::Entity* gEntity) {
+            for (int i = 0; i < members.size(); i++) {
+                if (members[i] == gEntity) {
+                    members.erase(members.begin() + i);
+                    return gEntity;
+                }
+            }
+            return nullptr;
+        }
+        void clear() {
+            members.clear();
+        }
+
+        bool collidesWith(Amara::Entity* other) {
+            for (Amara::Entity* entity: members) {
+                if (entity->physics->collidesWith(other)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        void run() {}
     };
 }
