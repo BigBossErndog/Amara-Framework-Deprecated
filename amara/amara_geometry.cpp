@@ -5,128 +5,88 @@
 #include "amara.h"
 
 namespace Amara {
-    class IntVector2 {
-        public:
-            int x = 0;
-            int y = 0;
+    typedef struct IntVector2 {
+        int x = 0;
+        int y = 0;
+    } IntVector2;
 
-            IntVector2() {}
+    typedef struct FloatVector2 {
+        float x = 0;
+        float y = 0;
+    } FloatVector2;
 
-            IntVector2(int nx, int ny) {
-                x = nx;
-                y = ny;
-            }
-    };
+    typedef struct IntVector3 {
+        int x = 0;
+        int y = 0;
+        int z = 0;
+    } IntVector;
 
-    class FloatVector2 {
-        public:
-            float x = 0;
-            float y = 0;
-
-            FloatVector2() {}
-
-            FloatVector2(float nx, float ny) {
-                x = nx;
-                y = ny;
-            }
-    };
-
-    class IntVector3: public Amara::IntVector2 {
-        public:
-            int z = 0;
-
-            IntVector3() {}
-
-            IntVector3(int nx, int ny, int nz) {
-                x = nx;
-                y = ny;
-                z = nz;
-            }
-    };
-
-    class FloatVector3: public Amara::FloatVector2 {
-        public:
-            float z = 0;
-
-            FloatVector3() {}
-
-            FloatVector3(float nx, float ny, float nz) {
-                x = nx;
-                y = ny;
-                z = nz;
-            }
-    };
-
-    class IntRect {
-        public:
-            int x = 0;
-            int y = 0;
-            int width = 0;
-            int height = 0;
-
-            IntRect() {}
-
-            IntRect(int nx, int ny, int nw, int nh) {
-                x = nx;
-                y = ny;
-                width = nw;
-                height = nh;
-            }
-
-            bool overlaps(IntRect rect) {
-                bool overlapX = Amara::valueInRange(x, rect.x, rect.x + rect.width) || Amara::valueInRange(rect.x, x, x + width);
-                bool overlapY = Amara::valueInRange(y, rect.y, rect.y + rect.height) || Amara::valueInRange(rect.y, y, y + height);
-                return overlapX && overlapY;
-            }
-
-            void copy(IntRect rect) {
-                x = rect.x;
-                y = rect.y;
-                width = rect.width;
-                height = rect.height;
-            }
-    };
-
-    class FloatRect {
-        public:
-            float x = 0;
-            float y = 0;
-            float width = 0;
-            float height = 0;
-
-            FloatRect() {}
-
-            FloatRect(float nx, float ny, float nw, float nh) {
-                x = nx;
-                y = ny;
-                width = nw;
-                height = nh;
-            }
-
-            bool overlaps(FloatRect rect) {
-                bool overlapX = Amara::valueInRange(x, rect.x, rect.x + rect.width) || Amara::valueInRange(rect.x, x, x + width);
-                bool overlapY = Amara::valueInRange(y, rect.y, rect.y + rect.height) || Amara::valueInRange(rect.y, y, y + height);
-                return overlapX && overlapY;
-            }
-
-            void copy(FloatRect rect) {
-                x = rect.x;
-                y = rect.y;
-                width = rect.width;
-                height = rect.height;
-            }
-    };
+    typedef struct FloatVector3{
+        float x = 0;
+        float y = 0;
+        float z = 0;
+    } FloatVector3;
 
     float distanceBetween(float sx, float sy, float ex, float ey) {
-        return sqrt(sx*sx + sy*sy);
+        float xDist = ex-sx;
+        float yDist = ey-sy;
+        return sqrt(xDist*xDist + yDist*yDist);
     }
-
     float distanceBetween(IntVector2 s, IntVector2 e) {
         return distanceBetween(s.x, s.y, e.x, e.y);
     }
-
     float distanceBetween(FloatVector2 s, FloatVector2 e) {
         return distanceBetween(s.x, s.y, e.x, e.y);
+    }
+
+    typedef struct IntRect {
+        int x = 0;
+        int y = 0;
+        int width = 0;
+        int height = 0;
+    } IntRect;
+
+    typedef struct FloatRect {
+        float x = 0;
+        float y = 0;
+        float width = 0;
+        float height = 0;
+    } FloatRect;
+
+    typedef struct FloatCircle {
+        float x = 0;
+        float y = 0;
+        float radius = 0;
+    } FloatCircle;
+
+    bool overlapping(IntRect* rect1, IntRect* rect2) {
+        bool overlapX = abs((rect1->x + rect1->width/2.0) - (rect2->x + rect2->width/2.0)) < (rect1->width/2.0 + rect2->width/2.0);
+        bool overlapY = abs((rect1->y + rect1->height/2.0) - (rect2->y + rect2->height/2.0)) < (rect1->height/2.0 + rect2->height/2.0);
+        return overlapX && overlapY;
+    }
+    bool overlapping(FloatRect* rect1, FloatRect* rect2) {
+        bool overlapX = abs((rect1->x + rect1->width/2.0) - (rect2->x + rect2->width/2.0)) < (rect1->width/2.0 + rect2->width/2.0);
+        bool overlapY = abs((rect1->y + rect1->height/2.0) - (rect2->y + rect2->height/2.0)) < (rect1->height/2.0 + rect2->height/2.0);
+        return overlapX && overlapY;
+    }
+    bool overlapping(FloatRect* rect, FloatCircle* circle) {
+        float cx = circle->x;
+        float cy = circle->y;
+
+        if (cx < rect->x) cx = rect->x;
+        if (cx > rect->x + rect->width) cx = rect->x + rect->width;
+        if (cy < rect->y) cy = rect->y;
+        if (cy > rect->y + rect->height) cy = rect->y + rect->height;
+        if (Amara::distanceBetween(cx, cy, circle->x, circle->y) < circle->radius) {
+            return true;
+        }
+        return false;
+    }
+    bool overlapping(FloatCircle* circle, FloatRect* rect) {
+        return Amara::overlapping(rect, circle);
+    }
+    bool overlapping(FloatCircle* circle1, FloatCircle* circle2) {
+        return Amara::distanceBetween(circle1->x, circle1->y, circle2->x, circle2->y) < (circle1->radius + circle2->radius);
     }
 
     int getOffsetX(Amara::Direction dir) {

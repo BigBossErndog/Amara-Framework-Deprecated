@@ -9,12 +9,56 @@ namespace Amara {
 	class Scene;
 	class InputManager;
 	class ControlScheme;
+	class TilemapLayer;
+	class Entity;
 
-	class PhysicsBase: public Amara::FloatRect {
+	enum PhysicsShape {
+		PHYSICS_RECTANGLE = 0,
+		PHYSICS_CIRCLE = 1,
+		PHYSICS_TILEMAP_LAYER = 2
+	};
+
+	typedef struct PhysicsProperties {
+		FloatRect rect;
+		FloatCircle circle;
+		TilemapLayer* tilemapLayer;
+	} PhysicsProperties;
+
+	class PhysicsBase {
 		public:
+			Entity* parent = nullptr;
 			bool deleteWithParent = true;
+			std::vector<Entity*> collisionTargets;
 
+			int shape = -1;
+			PhysicsProperties properties;
+
+			float x = 0;
+			float y = 0;
+			float accelerationX = 0;
+			float accelerationY = 0;
+			float velocityX = 0;
+			float velocityY = 0;
+			float frictionX = 0;
+			float frictionY = 0;
+
+			virtual void create() {}
 			virtual void run() {}
+			virtual void updateProperties() {}
+ 			virtual bool collidesWith(Entity* other) {}
+
+			void addCollisionTarget(Entity* gEntity) {
+				collisionTargets.push_back(gEntity);
+			}
+
+			void removeCollisionTarget(Entity* gEntity) {
+				for (int i = 0; i < collisionTargets.size(); i++) {
+					if (collisionTargets[i] == gEntity) {
+						collisionTargets.erase(collisionTargets.begin() + i);
+						return;
+					}
+				}
+			}
 	};
 
 	class SortedEntity {
@@ -326,15 +370,15 @@ namespace Amara {
 				entities.clear();
 			}
 
-			virtual Amara::Entity* add(Amara::PhysicsBase* gPhysics) {
-				if (physics != nullptr) {
-					delete physics;
-				}
+			virtual void addPhysics(Amara::PhysicsBase* gPhysics) {
 				physics = gPhysics;
+				physics->parent = this;
+				physics->updateProperties();
+				physics->create();
 			}
 
-			virtual void remove(Amara::PhysicsBase* fPhysics) {
-				if (physics == fPhysics) {
+			virtual void removePhysics() {
+				if (physics) {
 					delete physics;
 					physics = nullptr;
 				}

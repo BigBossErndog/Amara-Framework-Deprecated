@@ -173,13 +173,13 @@ namespace Amara {
 				// Setting game logical size
 				SDL_RenderSetLogicalSize(gRenderer, width, height);
 
-				display = new Amara::IntRect(0, 0, dm.w, dm.h);
+				display = new Amara::IntRect{ 0, 0, dm.w, dm.h };
 				properties->display = display;
 
-				resolution = new Amara::IntRect(0, 0, width, height);
+				resolution = new Amara::IntRect{ 0, 0, width, height };
 				properties->resolution = resolution;
 
-				window = new Amara::IntRect(0, 0, width, height);
+				window = new Amara::IntRect{ 0, 0, width, height };
 				properties->window = window;
 
 				SDL_GetWindowPosition(gWindow, &window->x, &window->y);

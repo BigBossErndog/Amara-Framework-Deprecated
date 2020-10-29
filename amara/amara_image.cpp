@@ -257,6 +257,11 @@ namespace Amara {
                 return false;
             }
 
+            bool removeTexture() {
+                textureKey.clear();
+                texture = nullptr;
+            }
+
             void setOrigin(float gx, float gy) {
                 originX = gx;
                 originY = gy;

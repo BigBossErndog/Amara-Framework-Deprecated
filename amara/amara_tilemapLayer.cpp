@@ -18,7 +18,6 @@ namespace Amara {
         return tileId;
     }
 
-
     class TilemapLayer: public Amara::Actor {
         public:
             SDL_Renderer* gRenderer = nullptr;
@@ -221,6 +220,10 @@ namespace Amara {
             }
 
             Amara::Tile& getTileAt(int gx, int gy) {
+                if (gx < 0) gx  = 0;
+                if (gy < 0) gy = 0;
+                if (gx >= width) gx = width - 1;
+                if (gy >= height) gy = height - 1;
                 int index = (gy * width) + gx;
                 return tiles[index];
             }
