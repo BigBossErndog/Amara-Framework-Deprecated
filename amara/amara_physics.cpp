@@ -5,9 +5,19 @@
 namespace Amara {
     class PhysicsBody: public Amara::PhysicsBase {
     public:
+        using Amara::PhysicsBase::addCollisionTarget;
+        void addCollisionTarget(Amara::Entity* other) {
+            addCollisionTarget(other->physics);
+        }
+
+        using Amara::PhysicsBase::collidesWith;
+        bool collidesWith(Amara::Entity* other) {
+            return collidesWith(other->physics);
+        }
+
         bool hasCollided() {
-            for (Entity* entity: collisionTargets) {
-                if (collidesWith(entity)) {
+            for (Amara::PhysicsBase* body: collisionTargets) {
+                if (collidesWith(body)) {
                     return true;
                 }
             }
@@ -76,20 +86,19 @@ namespace Amara {
             properties.rect.height = height;
         }
 
-        bool collidesWith(Amara::Entity* other) {
-            PhysicsBase* body = other->physics;
+        bool collidesWith(Amara::PhysicsBase* body) {
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
-                    other->physics->updateProperties();
+                    body->updateProperties();
                     return Amara::overlapping(&properties.rect, &body->properties.rect);
                     break;
                 case PHYSICS_CIRCLE:
-                    other->physics->updateProperties();
+                    body->updateProperties();
                     return Amara::overlapping(&properties.rect, &body->properties.circle);
                     break;
             }
 
-            return other->physics->collidesWith(parent);
+            return body->collidesWith(this);
         }
     };
 
@@ -109,20 +118,19 @@ namespace Amara {
             y = gy;
         }
 
-        bool collidesWith(Amara::Entity* other) {
-            PhysicsBase* body = other->physics;
+        bool collidesWith(Amara::PhysicsBase* body) {
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
-                    other->physics->updateProperties();
+                    body->updateProperties();
                     return Amara::overlapping(&properties.circle, &body->properties.rect);
                     break;
                 case PHYSICS_CIRCLE:
-                    other->physics->updateProperties();
+                    body->updateProperties();
                     return Amara::overlapping(&properties.circle, &body->properties.circle);
                     break;
             }
 
-            return other->physics->collidesWith(parent);
+            return body->collidesWith(this);
         }
         
         void updateProperties() {
@@ -149,12 +157,11 @@ namespace Amara {
             properties.tilemapLayer = (Amara::TilemapLayer*)parent;
         }
 
-        bool collidesWith(Amara::Entity* other) {
-            Amara::PhysicsBase* body = other->physics;
+        bool collidesWith(Amara::PhysicsBase* body) {
             Amara::TilemapLayer* tilemapLayer = properties.tilemapLayer;
 
             float sx, sy, ex, ey, tx, ty;
-            other->physics->updateProperties();
+            body->updateProperties();
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
                     sx = body->properties.rect.x + body->properties.rect.width/2.0;
@@ -208,21 +215,29 @@ namespace Amara {
 
     class PhysicsCollisionGroup: public PhysicsBody {
     public:
-        std::vector<Amara::Entity*>members;
+        std::vector<Amara::PhysicsBase*>members;
 
         PhysicsCollisionGroup() {
             members.clear();
         }
 
-        Amara::Entity* add(Amara::Entity* gEntity) {
-            members.push_back(gEntity);
-            return gEntity;
+        Amara::PhysicsBase* add(Amara::Entity* gEntity) {
+            if (gEntity->physics == nullptr) return nullptr;
+            members.push_back(gEntity->physics);
+            return gEntity->physics;
         }
-        Amara::Entity* remove(Amara::Entity* gEntity) {
+        Amara::PhysicsBase* add(Amara::PhysicsBase* other) {
+            if (other) members.push_back(other);
+            return other;
+        }
+        Amara::PhysicsBase* remove(Amara::Entity* gEntity) {
+            return remove(gEntity->physics);
+        }
+        Amara::PhysicsBase* remove(Amara::PhysicsBase* gBody) {
             for (int i = 0; i < members.size(); i++) {
-                if (members[i] == gEntity) {
+                if (members[i] == gBody) {
                     members.erase(members.begin() + i);
-                    return gEntity;
+                    return gBody;
                 }
             }
             return nullptr;
@@ -231,10 +246,10 @@ namespace Amara {
             members.clear();
         }
 
-        bool collidesWith(Amara::Entity* other) {
-            for (Amara::Entity* entity: members) {
-                if (entity == other) continue;
-                if (entity->physics->collidesWith(other)) {
+        bool collidesWith(Amara::PhysicsBase* other) {
+            for (Amara::PhysicsBase* body: members) {
+                if (body == other) continue;
+                if (body->collidesWith(other)) {
                     return true;
                 }
             }

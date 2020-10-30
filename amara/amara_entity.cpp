@@ -28,7 +28,7 @@ namespace Amara {
 		public:
 			Entity* parent = nullptr;
 			bool deleteWithParent = true;
-			std::vector<Entity*> collisionTargets;
+			std::vector<PhysicsBase*> collisionTargets;
 
 			int shape = -1;
 			PhysicsProperties properties;
@@ -45,15 +45,18 @@ namespace Amara {
 			virtual void create() {}
 			virtual void run() {}
 			virtual void updateProperties() {}
- 			virtual bool collidesWith(Entity* other) {}
 
-			void addCollisionTarget(Entity* gEntity) {
-				collisionTargets.push_back(gEntity);
+			virtual bool collidesWith(Amara::Entity* other) {}
+			virtual bool collidesWith(Amara::PhysicsBase* other) {}
+
+			virtual void addCollisionTarget(Amara::Entity* other) {}
+			virtual void addCollisionTarget(Amara::PhysicsBase* gBody) {
+				if (gBody != nullptr) collisionTargets.push_back(gBody);
 			}
 
-			void removeCollisionTarget(Entity* gEntity) {
+			void removeCollisionTarget(Amara::PhysicsBase* gBody) {
 				for (int i = 0; i < collisionTargets.size(); i++) {
-					if (collisionTargets[i] == gEntity) {
+					if (collisionTargets[i] == gBody) {
 						collisionTargets.erase(collisionTargets.begin() + i);
 						return;
 					}
