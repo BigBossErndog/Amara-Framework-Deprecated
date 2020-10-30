@@ -37,7 +37,7 @@ namespace Amara {
                 updateProperties();
                 if (hasCollided()) {
                     while (hasCollided()) {
-                        int xDir = velocityX/abs(velocityX);
+                        float xDir = velocityX/abs(velocityX) * correctionRate;
                         parent->x -= xDir;
                         updateProperties();
                     }
@@ -48,7 +48,7 @@ namespace Amara {
                 updateProperties();
                 if (hasCollided()) {
                     while (hasCollided()) {
-                        int yDir = velocityY/abs(velocityY);
+                        float yDir = velocityY/abs(velocityY) * correctionRate;
                         parent->y -= yDir;
                         updateProperties();
                     }

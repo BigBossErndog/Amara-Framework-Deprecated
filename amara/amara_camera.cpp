@@ -105,7 +105,6 @@ namespace Amara {
 
                         float nx = (oldCenterX - tx) * (1 - lerpX) + tx;
                         float ny = (oldCenterY - ty) * (1 - lerpY) + ty;
-
                         centerOn(nx, ny);
                     }
                 }

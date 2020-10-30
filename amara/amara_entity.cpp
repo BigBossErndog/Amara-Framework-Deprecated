@@ -41,6 +41,8 @@ namespace Amara {
 			float velocityY = 0;
 			float frictionX = 0;
 			float frictionY = 0;
+			
+			float correctionRate = 0.2;
 
 			virtual void create() {}
 			virtual void run() {}
