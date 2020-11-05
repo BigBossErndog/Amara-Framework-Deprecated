@@ -151,7 +151,7 @@ namespace Amara {
         float closestX = line->p1.x + (dot * (line->p2.x-line->p1.x));
         float closestY = line->p1.y + (dot * (line->p2.y-line->p1.y));
 
-        boolean onSegment = linePoint(x1,y1,x2,y2, closestX,closestY);
+        bool onSegment = linePoint(x1,y1,x2,y2, closestX,closestY);
         if (!onSegment) return false;
     }
 
