@@ -15,12 +15,14 @@ namespace Amara {
 	enum PhysicsShape {
 		PHYSICS_RECTANGLE = 0,
 		PHYSICS_CIRCLE = 1,
-		PHYSICS_TILEMAP_LAYER = 2
+		PHYSICS_LINE = 2,
+		PHYSICS_TILEMAP_LAYER = 3
 	};
 
 	typedef struct PhysicsProperties {
 		FloatRect rect;
 		FloatCircle circle;
+		FloatLine line;
 		TilemapLayer* tilemapLayer;
 	} PhysicsProperties;
 

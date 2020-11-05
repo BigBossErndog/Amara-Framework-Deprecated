@@ -41,6 +41,10 @@ namespace Amara {
             Tilemap(std::string gTextureKey, std::string gTiledJsonKey): Tilemap(0, 0, gTextureKey, gTiledJsonKey) {}
 
             void configure(nlohmann::json mapping) {
+                if (mapping.find("texture") != mapping.end()) {
+                    setTexture(mapping["texture"]);
+                }
+
                 int mapWidth = mapping["mapWidth"];
                 int mapHeight = mapping["mapHeight"];
                 tileWidth = mapping["tileWidth"];

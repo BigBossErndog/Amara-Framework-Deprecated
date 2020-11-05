@@ -27,29 +27,31 @@ namespace Amara {
         void run() {
             velocityX += accelerationX;
             velocityY += accelerationY;
-            float recX = parent->x;
-            float recY = parent->y;
+            float recX = (parent) ? parent->x : x;
+            float recY = (parent) ? parent->y : y;
             float targetX = recX + velocityX;
             float targetY = recY + velocityY;
 
             if (!hasCollided()) {
-                parent->x = targetX;
+                if (parent) parent->x = targetX;
                 updateProperties();
                 if (hasCollided()) {
                     while (hasCollided()) {
                         float xDir = velocityX/abs(velocityX) * correctionRate;
-                        parent->x -= xDir;
+                        if (parent) parent->x -= xDir;
+                        else x -= xDir;
                         updateProperties();
                     }
                     velocityX = 0;
                 }
 
-                parent->y = targetY;
+                if (parent != nullptr) parent->y = targetY;
                 updateProperties();
                 if (hasCollided()) {
                     while (hasCollided()) {
                         float yDir = velocityY/abs(velocityY) * correctionRate;
-                        parent->y -= yDir;
+                        if (parent) parent->y -= yDir;
+                        else y -= yDir;
                         updateProperties();
                     }
                     velocityY = 0;
@@ -80,8 +82,8 @@ namespace Amara {
         }
 
         void updateProperties() {
-            properties.rect.x = parent->x + x;
-            properties.rect.y = parent->y + y;
+            properties.rect.x = ((parent) ? parent->x : 0) + x;
+            properties.rect.y = ((parent) ? parent->y : 0) + y;
             properties.rect.width = width;
             properties.rect.height = height;
         }
@@ -134,23 +136,50 @@ namespace Amara {
         }
         
         void updateProperties() {
-            properties.circle.x = parent->x + x;
-            properties.circle.y = parent->y + y;
+            properties.circle.x = ((parent) ? parent->x : 0) + x;
+            properties.circle.y = ((parent) ? parent->y : 0) + y;
             properties.circle.radius = radius;
         }
 
 
     };
 
+    class PhysicsLine: public Amara::PhysicsBody {
+    public:
+        FloatVector2 p1 = {0, 0};
+        FloatVector2 p2 = {0, 0};
+
+        PhysicsLine() {
+            properties.line = {{0, 0}, {0, 0}};
+            shape = PHYSICS_LINE;
+        }
+        PhysicsLine(float p1x, float p1y, float p2x, float p2y): PhysicsLine() {
+            p1 = {p1x, p1y};
+            p2 = {p2x, p2y};
+        }
+
+        bool collidesWith(Amara::PhysicsBody* body) {
+            switch (body->shape) {
+
+            }
+        }
+
+        void updateProperties() {
+            properties.line.p1 = p1;
+            properties.line.p2 = p2;
+        }
+    };
+
     class PhysicsTilemapLayer: public Amara::PhysicsBody {
     public:
-        float offsetX = 0;
-        float offsetY = 0;
-
         int checkPadding = 1;
 
         PhysicsTilemapLayer() {
             shape = PHYSICS_TILEMAP_LAYER;
+        }
+        PhysicsTilemapLayer(float gx, float gy): PhysicsTilemapLayer() {
+            x = gx;
+            y = gy;
         }
 
         void create() {
@@ -173,11 +202,11 @@ namespace Amara {
                     break;
             }
 
-            float px = 0;
-            float py = 0;
+            float px = x;
+            float py = y;
             if (tilemapLayer->tilemapEntity) {
-                px = tilemapLayer->tilemapEntity->x;
-                py = tilemapLayer->tilemapEntity->y;
+                px += tilemapLayer->tilemapEntity->x;
+                py += tilemapLayer->tilemapEntity->y;
             }
 
             Tile& centerTile = tilemapLayer->getTileAtXY(sx, sy);

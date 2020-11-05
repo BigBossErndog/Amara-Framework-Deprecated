@@ -58,6 +58,29 @@ namespace Amara {
         float y = 0;
         float radius = 0;
     } FloatCircle;
+    
+    typedef struct FloatLine {
+        FloatVector2 p1 = {0, 0};
+        FloatVector2 p2 = {0, 0};
+    } FloatLine;
+
+    bool overlapping(float px, float py, FloatCircle* circle) {
+        return (Amara::distanceBetween(px, py, circle->x, circle->y) <= circle->radius);
+    }
+    bool overlapping(FloatVector2* p, FloatCircle* circle) {
+        return overlapping(p->x, py.y, circle);
+    }
+    
+    bool overlapping(float px, float py, FloatRect* rect) {
+        if (px < rect->x) return false;
+        if (px > rect->x+rect->width) return false;
+        if (py < rect->y) return false;
+        if (py > rect->y+rect->width) return false;
+        return true;
+    }
+    bool overlapping(FloatVector2* p, FloatRect* rect) {
+        return overlapping(p->x, p->y, rect);
+    }
 
     bool overlapping(IntRect* rect1, IntRect* rect2) {
         bool overlapX = abs((rect1->x + rect1->width/2.0) - (rect2->x + rect2->width/2.0)) < (rect1->width/2.0 + rect2->width/2.0);
@@ -87,6 +110,49 @@ namespace Amara {
     }
     bool overlapping(FloatCircle* circle1, FloatCircle* circle2) {
         return Amara::distanceBetween(circle1->x, circle1->y, circle2->x, circle2->y) < (circle1->radius + circle2->radius);
+    }
+
+    bool overlapping(float x1, float y1, float x2, float y2, float x3, float y3, float x3, float y4) {
+        float uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+        float uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+        if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+            return true;
+        }
+        return false;
+    }
+    bool overlapping(FloatLine* line1, FloatLine* line2) {
+        return overlapping(
+            line1->p1.x, line1->p1.y, line1->p2.x, line1->p2.y,
+            line2->p1.x, line2->p1.y, line2->p2.x, line2->p2.y
+        );
+    }
+    bool overlapping(FloatLine* line, FloatRect* rect) {
+        FloatLine rectLine = {{rect->x, rect->y},{rect->x+rect->width, rect->y}};
+        if (overlapping(line, &rectLine)) return true;
+        rectLine = {{rect->x, rect->y},{rect->x, rect->y+rect->height}};
+        if (overlapping(line, &rectLine)) return true;
+        rectLine = {{rect->x+rect->width, rect->y},{rect->x+rect->width, rect->y+rect->height}};
+        if (overlapping(line, &rectLine)) return true;
+        rectLine = {{rect->x, rect->y+rect->height},{rect->x+rect->width, rect->y+rect->height}};
+        return false;
+    }
+    bool overlapping(FloatRect* rect, FloatLine* line) {
+        return overlapping(line, rect);
+    }
+    bool overlapping(FloatLine* line, FloatCircle* circle) {
+        if (overlapping(&line->p1, circle) || overlapping(&line->p2, circle)) return true;
+
+        float distX = line->p1.x - line->p2.x;
+        float distY = line->p1.y - line->p2.y;
+        float len = sqrt((distX*distX) + (distY*distY));
+
+        float dot = ( ((circle->x-line->p1.x)*(line->p2.x-line->p1.x)) + ((circle->y-line->p1.y)*(line->p2.y-line->p1.y)) ) / pow(len,2);
+
+        float closestX = line->p1.x + (dot * (line->p2.x-line->p1.x));
+        float closestY = line->p1.y + (dot * (line->p2.y-line->p1.y));
+
+        boolean onSegment = linePoint(x1,y1,x2,y2, closestX,closestY);
+        if (!onSegment) return false;
     }
 
     int getOffsetX(Amara::Direction dir) {
