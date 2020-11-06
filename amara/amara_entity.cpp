@@ -46,6 +46,12 @@ namespace Amara {
 			
 			float correctionRate = 0.2;
 
+			bool isPushable = true;
+			bool isPushing = false;
+
+			float pushFrictionX = 1;
+			float pushFrictionY = 1;
+
 			virtual void create() {}
 			virtual void run() {}
 			virtual void updateProperties() {}
@@ -56,6 +62,22 @@ namespace Amara {
 			virtual void addCollisionTarget(Amara::Entity* other) {}
 			virtual void addCollisionTarget(Amara::PhysicsBase* gBody) {
 				if (gBody != nullptr) collisionTargets.push_back(gBody);
+			}
+
+			void makePushable() {
+				isPushable = true;
+			}
+			void makePushable(float pfx, float pfy) {
+				if (pfx == 0 && pfy == 0) {
+					isPushable = false;
+					return;
+				}
+				makePushable();
+				pushFrictionX = pfx;
+				pushFrictionY = pfy;
+			}
+			void makePushable(float pf) {
+				makePushable(pf, pf);
 			}
 
 			void removeCollisionTarget(Amara::PhysicsBase* gBody) {

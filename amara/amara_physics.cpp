@@ -17,17 +17,31 @@ namespace Amara {
             return collidesWith(other->physics);
         }
 
-        bool hasCollided() {
+        bool hasCollided(bool pushingX, bool pushingY) {
+            bool col = false;
             for (Amara::PhysicsBase* body: collisionTargets) {
                 if (collidesWith(body)) {
+                    if (body->isPushable) {
+                        if (pushingX) body->velocityX += velocityX * body->pushFrictionX;
+                        if (pushingY) body->velocityY += velocityY * body->pushFrictionY;
+                    }
+                    if (pushingX || pushingY) {
+                        col = true;
+                        continue;
+                    }
                     return true;
                 }
             }
-            return false;
+            return col;
+        }
+
+        bool hasCollided() {
+            return hasCollided(false, false);
         }
 
         void run() {
             bumpDirections = 0;
+            isPushing = false;
 
             velocityX += accelerationX;
             velocityY += accelerationY;
@@ -39,7 +53,7 @@ namespace Amara {
             if (!hasCollided()) {
                 if (parent) parent->x = targetX;
                 updateProperties();
-                if (hasCollided()) {
+                if (hasCollided(true, false)) {
                     if (velocityX > 0) bumpDirections += Right;
                     else if (velocityX < 0) bumpDirections += Left;
                     else bumpDirections += Right + Left;
@@ -55,7 +69,7 @@ namespace Amara {
 
                 if (parent != nullptr) parent->y = targetY;
                 updateProperties();
-                if (hasCollided()) {
+                if (hasCollided(false, true)) {
                     if (velocityY > 0) bumpDirections += Down;
                     else if (velocityY < 0) bumpDirections += Up;
                     else bumpDirections += Down + Up;
@@ -67,6 +81,15 @@ namespace Amara {
                         updateProperties();
                     }
                     velocityY = 0;
+                }
+
+                if (bumpDirections & Up) {
+                    if (bumpDirections & Left) bumpDirections += UpLeft;
+                    if (bumpDirections & Right) bumpDirections += UpRight;
+                }
+                if (bumpDirections & Down) {
+                    if (bumpDirections & Left) bumpDirections += DownLeft;
+                    if (bumpDirections & Right) bumpDirections += DownRight;
                 }
 
                 velocityX = velocityX * frictionX;
