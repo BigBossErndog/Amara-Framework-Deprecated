@@ -308,6 +308,19 @@ namespace Amara {
                 }
                 return -1;
             }
+
+            float getTileX(int tx) {
+                return tx * tileWidth;
+            }
+            float getTileY(int ty) {
+                return ty * tileHeight;
+            }
+            float getMidTileX(int tx) {
+                return (tx + 0.5) * tileWidth;
+            }
+            float getMidTileY(int ty) {
+                return (ty + 0.5) * tileHeight; 
+            }
     };
 }
 

@@ -46,7 +46,7 @@ namespace Amara {
 			
 			float correctionRate = 0.2;
 
-			bool isPushable = true;
+			bool isPushable = false;
 			bool isPushing = false;
 
 			float pushFrictionX = 1;

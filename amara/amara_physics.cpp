@@ -26,6 +26,7 @@ namespace Amara {
                         if (pushingY) body->velocityY += velocityY * body->pushFrictionY;
                     }
                     if (pushingX || pushingY) {
+                        if (body->isPushable) isPushing = true;
                         col = true;
                         continue;
                     }

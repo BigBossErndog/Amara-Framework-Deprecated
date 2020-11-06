@@ -82,6 +82,8 @@ namespace Amara {
 #include "amara_tweens_camera.cpp"
 #include "amara_tween.cpp"
 
+#include "amara_freeWalker.cpp"
+
 #include "amara_fillRect.cpp"
 
 #include "amara_controlScheme.cpp"
