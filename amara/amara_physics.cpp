@@ -5,6 +5,8 @@
 namespace Amara {
     class PhysicsBody: public Amara::PhysicsBase {
     public:
+        int bumpDirections = 0;
+
         using Amara::PhysicsBase::addCollisionTarget;
         void addCollisionTarget(Amara::Entity* other) {
             addCollisionTarget(other->physics);
@@ -25,6 +27,8 @@ namespace Amara {
         }
 
         void run() {
+            bumpDirections = 0;
+
             velocityX += accelerationX;
             velocityY += accelerationY;
             float recX = (parent) ? parent->x : x;
@@ -36,6 +40,10 @@ namespace Amara {
                 if (parent) parent->x = targetX;
                 updateProperties();
                 if (hasCollided()) {
+                    if (velocityX > 0) bumpDirections += Right;
+                    else if (velocityX < 0) bumpDirections += Left;
+                    else bumpDirections += Right + Left;
+
                     while (hasCollided()) {
                         float xDir = velocityX/abs(velocityX) * correctionRate;
                         if (parent) parent->x -= xDir;
@@ -48,6 +56,10 @@ namespace Amara {
                 if (parent != nullptr) parent->y = targetY;
                 updateProperties();
                 if (hasCollided()) {
+                    if (velocityY > 0) bumpDirections += Down;
+                    else if (velocityY < 0) bumpDirections += Up;
+                    else bumpDirections += Down + Up;
+
                     while (hasCollided()) {
                         float yDir = velocityY/abs(velocityY) * correctionRate;
                         if (parent) parent->y -= yDir;
@@ -162,8 +174,10 @@ namespace Amara {
             shape = PHYSICS_LINE;
         }
         PhysicsLine(float p1x, float p1y, float p2x, float p2y): PhysicsLine() {
-            p1 = {p1x, p1y};
-            p2 = {p2x, p2y};
+            float ex = ((parent) ? parent->x : 0);
+            float ey = ((parent) ? parent->y : 0);
+            p1 = {p1x + ex, p1y + ey};
+            p2 = {p2x + ex, p2y + ey};
         }
 
         bool collidesWith(Amara::PhysicsBody* body) {
