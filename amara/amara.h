@@ -37,15 +37,15 @@
 
 namespace Amara {
     enum Direction {
-        NoDir,
-        Up,
-        UpLeft,
-        UpRight,
-        Down,
-        DownLeft,
-        DownRight,
-        Left,
-        Right
+        NoDir = 0,
+        Up = 1,
+        UpLeft = 2,
+        UpRight = 4,
+        Down = 8,
+        DownLeft = 16,
+        DownRight = 32,
+        Left = 64,
+        Right = 128
     };
 
     std::vector<Amara::Direction> DirectionsInOrder = { Right, DownRight, Down, DownLeft, Left, UpLeft, Up, UpRight };
