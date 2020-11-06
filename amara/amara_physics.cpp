@@ -98,6 +98,10 @@ namespace Amara {
                     body->updateProperties();
                     return Amara::overlapping(&properties.rect, &body->properties.circle);
                     break;
+                case PHYSICS_LINE:
+                    body->updateProperties();
+                    return Amara::overlapping(&properties.rect, &body->properties.line);
+                    break;
             }
 
             return body->collidesWith(this);
@@ -130,6 +134,10 @@ namespace Amara {
                     body->updateProperties();
                     return Amara::overlapping(&properties.circle, &body->properties.circle);
                     break;
+                case PHYSICS_LINE:
+                    body->updateProperties();
+                    return Amara::overlapping(&properties.circle, &body->properties.line);
+                    break;
             }
 
             return body->collidesWith(this);
@@ -160,18 +168,32 @@ namespace Amara {
 
         bool collidesWith(Amara::PhysicsBody* body) {
             switch (body->shape) {
-
+                case PHYSICS_RECTANGLE:
+                    body->updateProperties();
+                    return Amara::overlapping(&properties.line, &body->properties.rect);
+                    break;
+                case PHYSICS_CIRCLE:
+                    body->updateProperties();
+                    return Amara::overlapping(&properties.line, &body->properties.circle);
+                    break;
+                case PHYSICS_LINE:
+                    body->updateProperties();
+                    return Amara::overlapping(&properties.line, &body->properties.line);
+                    break;
             }
+
+            return body->collidesWith(this);
         }
 
         void updateProperties() {
-            properties.line.p1 = p1;
-            properties.line.p2 = p2;
+            properties.line.p1 = {p1.x + x, p1.y + y};
+            properties.line.p2 = {p2.x + x, p2.y + y};
         }
     };
 
     class PhysicsTilemapLayer: public Amara::PhysicsBody {
     public:
+        float defaultProgressRate = 0.1;
         int checkPadding = 1;
 
         PhysicsTilemapLayer() {
@@ -184,6 +206,38 @@ namespace Amara {
 
         void create() {
             properties.tilemapLayer = (Amara::TilemapLayer*)parent;
+        }
+
+        bool lineCollision(Amara::PhysicsBase* body, float progRate) {
+            Amara::TilemapLayer* tilemapLayer = properties.tilemapLayer;
+
+            float sx, sy, tx, ty;
+            float px = x;
+            float py = y;
+            if (tilemapLayer->tilemapEntity) {
+                px += tilemapLayer->tilemapEntity->x;
+                py += tilemapLayer->tilemapEntity->y;
+            }
+
+            for (float prog = 0; prog <= 1; prog += progRate) {
+                sx = body->properties.line.p1.x + (body->properties.line.p2.x - body->properties.line.p1.x)*prog;
+                sy = body->properties.line.p1.y + (body->properties.line.p2.y - body->properties.line.p1.y)*prog;
+
+                Tile& tile = tilemapLayer->getTileAtXY(sx, sy);
+                if (tile.id == -1) continue;
+                tx = tile.x * tilemapLayer->tileWidth + px;
+                ty = tile.y * tilemapLayer->tileHeight + py;
+
+                properties.rect = { tilemapLayer->x + tx, tilemapLayer->y + ty, tilemapLayer->tileWidth, tilemapLayer->tileHeight };
+
+                if (Amara::overlapping(&properties.rect, &body->properties.line)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        bool lineCollision(Amara::PhysicsBase* body) {
+            return lineCollision(body, defaultProgressRate);
         }
 
         bool collidesWith(Amara::PhysicsBase* body) {
@@ -199,6 +253,9 @@ namespace Amara {
                 case PHYSICS_CIRCLE:
                     sx = body->properties.circle.x;
                     sy = body->properties.circle.y;
+                    break;
+                case PHYSICS_LINE:
+                    return lineCollision(body);
                     break;
             }
 
@@ -236,7 +293,6 @@ namespace Amara {
                     }
                 }
             }
-
 
             return false;
         }
