@@ -18,7 +18,7 @@ SDL_INCLUDE_PATHS_LINUX = `sdl2-config --cflags` -I ext_lib/SDL_FontCache
 
 LINKER_FLAGS = -l SDL2main -l SDL2 -l SDL2_image -l SDL2_ttf -l SDL2_mixer -l SDL2_net
 
-OTHER_LIB_PATHS = -I ext_lib/nlohmann/include -I ./src
+OTHER_LIB_PATHS = -I ext_lib/nlohmann/include -I ./src -I ext_lib/murmurhash3
 
 AMARA_PATH = -I ./amara
 

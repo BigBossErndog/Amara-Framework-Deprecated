@@ -20,6 +20,7 @@
     #include <math.h>
     #include <random>
     #include <nlohmann/json.hpp>
+    #include <MurmurHash3.cpp>
 #endif
 
 #ifndef AMARA_SDL

@@ -20,9 +20,16 @@ namespace Amara {
 				return this;
 			}
 
-			RNG* seed(std::string s) {
-				seed(std::hash<std::string>{}(s));
+            RNG* seed(std::string s, uint32_t st) {
+                uint32_t sn; 
+                MurmurHash3_x86_32(s.c_str(), s.size(), st, &sn);
+                std::cout << sn << std::endl;
+				seed(sn);
 				return this;
+            }
+
+			RNG* seed(std::string s) {
+                return seed(s, 0);
 			}
 
             double between(double min, double max) {
