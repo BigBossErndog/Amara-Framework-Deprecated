@@ -36,6 +36,9 @@ namespace Amara {
             if (config.find("runSpeed") != config.end()) {
                 runSpeed = config["runSpeed"];
             }
+            if (config.find("controlsEnabled") != config.end()) {
+                controlsEnabled = config["controlsEnabled"];
+            }
         }
 
         virtual nlohmann::json toData() {
@@ -43,6 +46,7 @@ namespace Amara {
             config["direction"] = direction;
             config["walkSpeed"] = walkSpeed;
             config["runSpeed"] = runSpeed;
+            config["controlsEnabled"] = controlsEnabled;
             return config;
         }
 

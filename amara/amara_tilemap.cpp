@@ -56,10 +56,7 @@ namespace Amara {
                 nlohmann::json& jlayers = mapping["layers"];
                 for (nlohmann::json& jlayer: jlayers) {
                     TilemapLayer* tilemapLayer = createLayer(jlayer["key"], mapWidth, mapHeight, tileWidth, tileHeight);
-                    nlohmann::json& jtiles = jlayer["tiles"];
-                    for (int i = 0; i < jtiles.size(); i++) {
-                        tilemapLayer->setTile(i, jtiles[i]);
-                    }
+                    tilemapLayer->configure(jlayer);
                 }
             }
 

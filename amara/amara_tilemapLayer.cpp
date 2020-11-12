@@ -107,6 +107,17 @@ namespace Amara {
                 data["entityType"] = "tilemapLayer";
             }
 
+            void configure(nlohmann::json config) {
+                Amara::Actor::configure(config);
+
+                if (config.find("tiles") != config.end()) {
+                    nlohmann::json& jtiles = config["tiles"];
+                    for (int i = 0; i < jtiles.size(); i++) {
+                        setTile(i, jtiles[i]);
+                    }
+                }
+            }
+
             void setupLayer(std::string gTextureKey, std::string gTiledJsonKey, std::string gLayerKey) {
                 textureKey = gTextureKey;
                 tiledJsonKey = gTiledJsonKey;
