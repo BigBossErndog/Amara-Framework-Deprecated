@@ -230,6 +230,10 @@ namespace Amara {
                 return false;
             }
 
+            int getTileIdAt(int gx, int gy) {
+                return getTileAt(gx, gy).id;
+            }
+
             Amara::Tile& getTileAt(int gx, int gy) {
                 if (gx < 0) gx  = 0;
                 if (gy < 0) gy = 0;
@@ -445,6 +449,23 @@ namespace Amara {
                     return tiledGID2ID(id, firstgid);
                 }
                 return -1;
+            }
+
+            bool isBlockingPath(int gx, int gy, bool allowDiagonal) {
+                if (getTileIdAt(gx-1,gy) != -1 && getTileIdAt(gx+1,gy) != -1) return true;
+                if (getTileIdAt(gx,gy-1) != -1 && getTileIdAt(gx,gy+1) != -1) return true;
+
+                if (!allowDiagonal) {
+                    if (getTileIdAt(gx-1,gy-1) != -1 && getTileIdAt(gx+1,gy-1) != -1) return true;
+                    if (getTileIdAt(gx+1,gy-1) != -1 && getTileIdAt(gx+1,gy+1) != -1) return true;
+                    if (getTileIdAt(gx+1,gy+1) != -1 && getTileIdAt(gx-1,gy+1) != -1) return true;
+                    if (getTileIdAt(gx-1,gy+1) != -1 && getTileIdAt(gx-1,gy-1) != -1) return true;
+                }
+                return false;
+            }
+
+            bool isBlockingPath(int gx, int gy) {
+                return isBlockingPath(gx, gy, false);
             }
     };
 }
