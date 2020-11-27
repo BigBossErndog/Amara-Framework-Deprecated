@@ -28,9 +28,12 @@ namespace Amara {
 
 	class PhysicsBase {
 		public:
+			Amara::GameProperties* gameProperties = nullptr;
 			Entity* parent = nullptr;
 			bool deleteWithParent = true;
 			std::vector<PhysicsBase*> collisionTargets;
+
+			bool isDestroyed = false;
 
 			int shape = -1;
 			PhysicsProperties properties;
@@ -80,13 +83,31 @@ namespace Amara {
 				makePushable(pf, pf);
 			}
 
-			void removeCollisionTarget(Amara::PhysicsBase* gBody) {
-				for (int i = 0; i < collisionTargets.size(); i++) {
-					if (collisionTargets[i] == gBody) {
-						collisionTargets.erase(collisionTargets.begin() + i);
-						return;
+			Amara::PhysicsBase* removeCollisionTarget(Amara::PhysicsBase* gBody) {
+				Amara::PhysicsBase* other;
+				for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+					other = *it;
+					if (other == gBody) {
+						collisionTargets.erase(it--);
 					}
 				}
+				return gBody;
+			}
+			virtual Amara::PhysicsBase* removeCollisionTarget(Amara::Entity* other) {}
+
+			void checkActiveCollisionTargets() {
+				Amara::PhysicsBase* other;
+				for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+					other = *it;
+					if (other->isDestroyed) {
+						collisionTargets.erase(it--);
+					}
+				}
+			}
+
+			void destroy() {
+				isDestroyed = true;
+				gameProperties->taskManager->queueDeletion(this);
 			}
 	};
 
@@ -297,6 +318,9 @@ namespace Amara {
 
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
+				if (physics) {
+					physics->checkActiveCollisionTargets();
+				}
 
 				if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
@@ -315,7 +339,7 @@ namespace Amara {
 				stable_sort(entities.begin(), entities.end(), sortEntities());
 
 				Amara::Entity* entity;
-				for (auto it = entities.begin(); it != entities.end(); it++) {
+				for (auto it = entities.begin(); it != entities.end(); ++it) {
                     entity = *it;
 
                     if (entity->isDestroyed || entity->parent != this) {
@@ -343,6 +367,10 @@ namespace Amara {
 				update();
 				if (physics != nullptr) {
 					physics->run();
+
+					if (physics->isDestroyed) {
+						removePhysics();
+					}
 				}
 
 				if (attachedTo != nullptr) {
@@ -385,11 +413,10 @@ namespace Amara {
 
 			virtual Amara::Entity* remove(Amara::Entity* entity) {
 				Amara::Entity* child;
-				int numChildren = entities.size();
-				for (size_t i = 0; i < numChildren; i++) {
-					child = entities.at(i);
+				for (auto it = entities.begin(); it != entities.end(); ++it) {
+					child = *it;
 					if (child == entity) {
-						return remove(i);
+						entities.erase(it--);
 					}
 				}
 				return nullptr;
@@ -402,14 +429,22 @@ namespace Amara {
 			virtual void addPhysics(Amara::PhysicsBase* gPhysics) {
 				physics = gPhysics;
 				physics->parent = this;
+				physics->gameProperties = properties;
 				physics->updateProperties();
 				physics->create();
 			}
 
-			virtual void removePhysics() {
+			virtual Amara::PhysicsBase* removePhysics() {
+				Amara::PhysicsBase* rec = physics;
 				if (physics) {
-					delete physics;
 					physics = nullptr;
+				}
+				return rec;
+			}
+			virtual Amara::PhysicsBase* destroyPhysics() {
+				Amara::PhysicsBase* rec = removePhysics();
+				if (rec) {
+					rec->destroy();
 				}
 			}
 
@@ -448,6 +483,10 @@ namespace Amara {
 				isActive = false;
 
 				properties->taskManager->queueDeletion(this);
+
+				if (physics) {
+					physics->destroy();
+				}
 			}
 
 			virtual void destroy() {

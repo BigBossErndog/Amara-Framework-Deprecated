@@ -262,6 +262,7 @@ namespace Amara {
 					// Manage frame catch up and slow down
 					manageFPSEnd();
 
+					deleteEntities();
 					deleteObjects();
 					deleteTransitions();
 					taskManager->run();
@@ -269,9 +270,23 @@ namespace Amara {
 				close();
 			}
 
-			void deleteObjects() {
+			void deleteEntities() {
 				std::vector<Amara::Entity*>& deleteQueue = taskManager->getEntityQueue();
 				Amara::Entity* obj;
+                int size = deleteQueue.size();
+                if (testing && size > 0) {
+                    std::cout << "TaskManager: Deleting " << size << " entities." << std::endl;
+                }
+                for (size_t i = 0; i < size; i++) {
+                    obj = deleteQueue.at(i);
+                    delete obj;
+                }
+                deleteQueue.clear();
+			}
+
+			void deleteObjects() {
+				std::vector<void*>& deleteQueue = taskManager->getObjectQueue();
+				void* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
                     std::cout << "TaskManager: Deleting " << size << " objects." << std::endl;

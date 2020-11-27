@@ -12,6 +12,11 @@ namespace Amara {
             addCollisionTarget(other->physics);
         }
 
+        using Amara::PhysicsBase::removeCollisionTarget;
+        Amara::PhysicsBase* removeCollisionTarget(Amara::Entity* other) {
+            return removeCollisionTarget(other->physics);
+        }
+
         using Amara::PhysicsBase::collidesWith;
         bool collidesWith(Amara::Entity* other) {
             return collidesWith(other->physics);
@@ -19,8 +24,13 @@ namespace Amara {
 
         bool hasCollided(bool pushingX, bool pushingY) {
             bool col = false;
-            for (Amara::PhysicsBase* body: collisionTargets) {
-                if (collidesWith(body)) {
+            Amara::PhysicsBase* body;
+            for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+                body = *it;
+                if (body->isDestroyed) {
+                    collisionTargets.erase(it--);
+                }
+                else if (collidesWith(body)) {
                     if (body->isPushable) {
                         if (pushingX) body->velocityX += velocityX * body->pushFrictionX;
                         if (pushingY) body->velocityY += velocityY * body->pushFrictionY;
