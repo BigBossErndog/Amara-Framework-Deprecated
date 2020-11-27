@@ -37,7 +37,9 @@ namespace Amara {
             std::vector<Amara::SceneTransitionBase*>& getTransitionQueue() {
                 return transitionDeletionQueue;
             }
-            std::vector<void*>& getObjectQueue() {}
+            std::vector<void*>& getObjectQueue() {
+                return objectDeletionQueue;
+            }
 
             void run() {}
     };
