@@ -49,6 +49,9 @@ namespace Amara {
 			
 			float correctionRate = 0.2;
 
+			int bumpDirections = 0;
+			Amara::PhysicsBase* bumped = nullptr;
+
 			bool isPushable = false;
 			bool isPushing = false;
 

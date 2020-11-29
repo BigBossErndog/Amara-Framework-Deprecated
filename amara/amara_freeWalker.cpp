@@ -85,7 +85,8 @@ namespace Amara {
                 y += oy;
             }
 
-            walkDirections = dir;
+            walkDirection = dir;
+            walkDirections |= dir;
             direction = dir;
         }
 
@@ -109,33 +110,33 @@ namespace Amara {
 
                 if (controls->isDown("up") && !controls->isDown("down")) {
                     walkDirection = Up;
-                    walkDirections += Up;
+                    walkDirections |= Up;
                 }
                 if (controls->isDown("down") && !controls->isDown("up")) {
                     walkDirection = Down;
-                    walkDirections += Down;
+                    walkDirections |= Down;
                 }
                 if (controls->isDown("left") && !controls->isDown("right")) {
-                    walkDirections += Left;
+                    walkDirections |= Left;
                     if (walkDirection == Up) {
                         walkDirection = UpLeft;
-                        walkDirections += UpLeft;
+                        walkDirections |= UpLeft;
                     }
                     else if (walkDirection == Down) {
                         walkDirection = DownLeft;
-                        walkDirections += DownLeft;
+                        walkDirections |= DownLeft;
                     }
                     else walkDirection = Left;
                 }
                 if (controls->isDown("right") && !controls->isDown("left")) {
-                    walkDirections += Right;
+                    walkDirections |= Right;
                     if (walkDirection == Up) {
                         walkDirection = UpRight;
-                        walkDirections += UpRight;
+                        walkDirections |= UpRight;
                     }
                     else if (walkDirection == Down) {
                         walkDirection = DownRight;
-                        walkDirections += DownRight;
+                        walkDirections |= DownRight;
                     }
                     else walkDirection = Right;
                 }

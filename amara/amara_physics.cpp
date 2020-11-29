@@ -5,8 +5,6 @@
 namespace Amara {
     class PhysicsBody: public Amara::PhysicsBase {
     public:
-        int bumpDirections = 0;
-
         using Amara::PhysicsBase::addCollisionTarget;
         void addCollisionTarget(Amara::Entity* other) {
             addCollisionTarget(other->physics);
@@ -31,6 +29,7 @@ namespace Amara {
                     collisionTargets.erase(it--);
                 }
                 else if (collidesWith(body)) {
+                    bumped = body;
                     if (body->isPushable) {
                         if (pushingX) body->velocityX += velocityX * body->pushFrictionX;
                         if (pushingY) body->velocityY += velocityY * body->pushFrictionY;
@@ -51,6 +50,7 @@ namespace Amara {
         }
 
         void run() {
+            bumped = nullptr;
             bumpDirections = 0;
             isPushing = false;
 
