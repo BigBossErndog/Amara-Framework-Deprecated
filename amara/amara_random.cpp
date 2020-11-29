@@ -23,7 +23,6 @@ namespace Amara {
             RNG* seed(std::string s, uint32_t st) {
                 uint32_t sn; 
                 MurmurHash3_x86_32(s.c_str(), s.size(), st, &sn);
-                std::cout << sn << std::endl;
 				seed(sn);
 				return this;
             }

@@ -243,6 +243,24 @@ namespace Amara {
         return 0;
     }
 
+    Amara::Direction turnDirection(Amara::Direction dir, bool diagonals) {
+        std::vector<Amara::Direction> list = (diagonals) ? DirectionsInOrder : FourDirections;
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list[i] == dir) {
+                int newIndex = i + list.size()/2;
+                newIndex = newIndex % list.size();
+                return list[newIndex];
+            }
+        }
+        
+        return dir;
+    }
+
+    Amara::Direction turnDirection(Amara::Direction dir) {
+        return turnDirection(dir, true);
+    }
+
 	Amara::Direction getDirection(std::string dir) {
 		if (dir.compare("up") == 0) return Up;
 		if (dir.compare("down") == 0) return Down;

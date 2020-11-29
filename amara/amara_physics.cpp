@@ -107,6 +107,14 @@ namespace Amara {
                 velocityY = velocityY * frictionY;
             }
 		}
+
+        void destroy() {
+            Amara::PhysicsBase::destroy();
+            if (parent) {
+                parent->physics = nullptr;
+                parent = nullptr;
+            }
+        }
     };
 
     class PhysicsRectangle: public Amara::PhysicsBody {
