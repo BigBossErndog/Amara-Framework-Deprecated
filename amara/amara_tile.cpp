@@ -13,9 +13,9 @@ namespace Amara {
         int x = 0;
         int y = 0;
 
-        bool fhorizontal;
-        bool fvertical;
-        bool fdiagonal;
+        bool fhorizontal = false;
+        bool fvertical = false;
+        bool fdiagonal = false;
 
         float tileWidth = 0;
         float tileHeight = 0;
