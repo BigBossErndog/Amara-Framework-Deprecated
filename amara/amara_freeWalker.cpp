@@ -13,6 +13,8 @@ namespace Amara {
         float walkSpeed = 1;
         float runSpeed = 4;
 
+        bool isRunning = false;
+
         bool justFinishedWalking = false;
 
         bool controlsEnabled = false;
@@ -68,7 +70,14 @@ namespace Amara {
         }
 
         virtual void walk(Direction dir, bool shouldRun) {
+            if (dir == NoDir) {
+                face(direction);
+                return;
+            }
+
             movementSpeed = shouldRun ? runSpeed : walkSpeed;
+            isRunning = shouldRun;
+
             float ox = Amara::getOffsetX(dir) * movementSpeed;
             float oy = Amara::getOffsetY(dir) * movementSpeed;
             if (abs(ox) && abs(oy)) {
@@ -87,6 +96,24 @@ namespace Amara {
 
             walkDirection = dir;
             walkDirections |= dir;
+            switch (dir) {
+                case UpLeft:
+                    walkDirections |= Up;
+                    walkDirections |= Left;
+                    break;
+                case UpRight:
+                    walkDirections |= Up;
+                    walkDirections |= Right;
+                    break;
+                case DownLeft:
+                    walkDirections |= Down;
+                    walkDirections |= Left;
+                    break;
+                case DownRight:
+                    walkDirections |= Down;
+                    walkDirections |= Right;
+                    break;
+            }
             direction = dir;
         }
 
@@ -96,6 +123,51 @@ namespace Amara {
 
         virtual void run(Direction dir) {
             walk(dir, true);
+        }
+
+        virtual bool walkTo(int gx, int gy, bool shouldRun) {
+            Direction toWalk = NoDir;
+
+            movementSpeed = shouldRun ? runSpeed : walkSpeed;
+            isRunning = shouldRun;
+
+            if (abs(gx - x) < movementSpeed) {
+                x = gx;
+            }
+            else {
+                if (x < gx) {
+                    toWalk = Right;
+                }
+                else {
+                    toWalk = Left;
+                }
+            }
+
+            if (abs(gy - y) < movementSpeed) {
+                y = gy;
+            }
+            else {
+                if (y < gy) {
+                    if (toWalk == Right) toWalk = DownRight;
+                    else if (toWalk == Left) toWalk = DownLeft;
+                    else toWalk = Down;
+                }
+                else {
+                    if (toWalk == Right) toWalk = UpRight;
+                    else if (toWalk == Left) toWalk = UpLeft;
+                    else toWalk = Up;
+                }
+            }
+
+            walk(toWalk);
+
+            return (toWalk == NoDir);
+        }
+        virtual bool walkTo(int gx, int gy) {
+            return walkTo(gx, gy, false);
+        }
+        virtual bool runTo(int gx, int gy) {
+            return walkTo(gx, gy, true);
         }
 
         void run() {
