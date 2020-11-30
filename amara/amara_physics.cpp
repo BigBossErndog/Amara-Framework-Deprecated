@@ -20,6 +20,58 @@ namespace Amara {
             return collidesWith(other->physics);
         }
 
+        using Amara::PhysicsBase::willCollideWith;
+        bool willCollideWith(Amara::Entity* other) {
+            return willCollideWith(other->physics);
+        }
+        bool willCollideWith(Amara::PhysicsBase* other) {
+            bool collided = false;
+
+            float recVelX = velocityX + accelerationX;
+            float recVelY = velocityY + accelerationY;
+
+            float recX = (parent) ? parent->x : x;
+            float recY = (parent) ? parent->y : y;
+
+            if (parent) {
+                parent->x += recVelX;
+                parent->y += recVelY;
+            }
+            else {
+                x += recVelX;
+                y += recVelY;
+            }
+
+            updateProperties();
+            collided = collidesWith(other);
+
+            if (parent) {
+                parent->x = recX;
+                parent->y = recY;
+            }
+            else {
+                x = recX;
+                y = recY;
+            }
+
+            return collided;
+        }
+
+        bool willCollide() {
+            Amara::PhysicsBase* body;
+            for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+                body = *it;
+                if (body->isDestroyed) {
+                    collisionTargets.erase(it--);
+                }
+                else if (willCollideWith(body)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        using Amara::PhysicsBase::hasCollided;
         bool hasCollided(bool pushingX, bool pushingY) {
             bool col = false;
             Amara::PhysicsBase* body;
@@ -45,10 +97,6 @@ namespace Amara {
             return col;
         }
 
-        bool hasCollided() {
-            return hasCollided(false, false);
-        }
-
         void run() {
             bumped = nullptr;
             bumpDirections = 0;
@@ -63,6 +111,7 @@ namespace Amara {
 
             if (!hasCollided()) {
                 if (parent) parent->x = targetX;
+                else x = targetX;
                 updateProperties();
                 if (hasCollided(true, false)) {
                     if (velocityX > 0) bumpDirections += Right;
@@ -78,7 +127,8 @@ namespace Amara {
                     velocityX = 0;
                 }
 
-                if (parent != nullptr) parent->y = targetY;
+                if (parent) parent->y = targetY;
+                else y = targetY;
                 updateProperties();
                 if (hasCollided(false, true)) {
                     if (velocityY > 0) bumpDirections += Down;

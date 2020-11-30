@@ -65,6 +65,16 @@ namespace Amara {
 			virtual bool collidesWith(Amara::Entity* other) {}
 			virtual bool collidesWith(Amara::PhysicsBase* other) {}
 
+			virtual bool willCollideWith(Amara::Entity* other) {}
+			virtual bool willCollideWith(Amara::PhysicsBase* other) {}
+
+			virtual bool willCollide() {}
+
+			virtual bool hasCollided(bool pushingX, bool pushingY) {}
+			bool hasCollided() {
+				return hasCollided(false, false);
+			}
+
 			virtual void addCollisionTarget(Amara::Entity* other) {}
 			virtual void addCollisionTarget(Amara::PhysicsBase* gBody) {
 				if (gBody != nullptr) collisionTargets.push_back(gBody);
