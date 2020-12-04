@@ -388,7 +388,7 @@ namespace Amara {
 				Amara::Interactable::run();
 				update();
 				if (physics != nullptr) {
-					physics->run();
+					if (physics->isActive) physics->run();
 
 					if (physics->isDestroyed) {
 						removePhysics();
