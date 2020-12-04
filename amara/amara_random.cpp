@@ -39,6 +39,20 @@ namespace Amara {
             double random() {
                 return between(0, 1);
             }
+
+            std::string randomString(char min, char max, int length) {
+                std::string toReturn = "";
+                char c;
+                for (int i = 0; i < length; i++) {
+                    c = floor(min + random() * (max+1 - min));
+                    toReturn += c;
+                }
+                return toReturn;
+            }
+
+            std::string randomString(int length) {
+                return randomString('a', 'z', length);
+            }
     };
 }
 
