@@ -193,6 +193,7 @@ namespace Amara {
         }
 
         bool collidesWith(Amara::PhysicsBase* body) {
+            if (!body->isActive) return false;
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
                     body->updateProperties();
@@ -229,6 +230,7 @@ namespace Amara {
         }
 
         bool collidesWith(Amara::PhysicsBase* body) {
+            if (!body->isActive) return false;
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
                     body->updateProperties();
@@ -273,6 +275,7 @@ namespace Amara {
         }
 
         bool collidesWith(Amara::PhysicsBody* body) {
+            if (!body->isActive) return false;
             switch (body->shape) {
                 case PHYSICS_RECTANGLE:
                     body->updateProperties();
@@ -347,6 +350,7 @@ namespace Amara {
         }
 
         bool collidesWith(Amara::PhysicsBase* body) {
+            if (!body->isActive) return false;
             Amara::TilemapLayer* tilemapLayer = properties.tilemapLayer;
 
             float sx, sy, ex, ey, tx, ty;
@@ -438,8 +442,13 @@ namespace Amara {
         }
 
         bool collidesWith(Amara::PhysicsBase* other) {
-            for (Amara::PhysicsBase* body: members) {
+            for (auto it = members.begin(); it != members.end(); ++it) {
+                Amara::PhysicsBase* body = *it;
+                if (body->isDestroyed) {
+                    members.erase(it--);
+                }
                 if (body == other) continue;
+                if (!body->isActive) continue;
                 if (body->collidesWith(other)) {
                     return true;
                 }

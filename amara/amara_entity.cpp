@@ -33,6 +33,7 @@ namespace Amara {
 			bool deleteWithParent = true;
 			std::vector<PhysicsBase*> collisionTargets;
 
+			bool isActive = false;
 			bool isDestroyed = false;
 
 			int shape = -1;
@@ -118,7 +119,15 @@ namespace Amara {
 				}
 			}
 
+			void activate() {
+				isActive = true;
+			}
+			void deactivate() {
+				isActive = false;
+			}
+
 			virtual void destroy() {
+				isActive = false;
 				isDestroyed = true;
 				gameProperties->taskManager->queueDeletion(this);
 			}
@@ -391,7 +400,7 @@ namespace Amara {
 				Amara::Interactable::run();
 				update();
 				if (physics != nullptr) {
-					physics->run();
+					if (physics->isActive) physics->run();
 
 					if (physics->isDestroyed) {
 						removePhysics();
@@ -453,6 +462,7 @@ namespace Amara {
 
 			virtual void addPhysics(Amara::PhysicsBase* gPhysics) {
 				physics = gPhysics;
+				physics->isActive = true;
 				physics->parent = this;
 				physics->gameProperties = properties;
 				physics->updateProperties();
