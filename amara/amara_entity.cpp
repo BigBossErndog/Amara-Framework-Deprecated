@@ -155,6 +155,7 @@ namespace Amara {
 			std::vector<Amara::Entity*> entities;
 
 			Amara::PhysicsBase* physics = nullptr;
+			bool pushedMessages = false;
 
 			nlohmann::json data;
 
@@ -376,6 +377,17 @@ namespace Amara {
 			}
 
 			virtual void run() {
+				if (pushedMessages) {
+					Amara::MessageQueue& messages = *(properties->messages);
+					for (auto it = messages.begin(); it != messages.end(); ++it) {
+						Message msg = *it;
+						if (msg.parent == this) {
+							messages.queue.erase(it--);
+						}
+					}
+					pushedMessages = false;
+				}
+
 				Amara::Interactable::run();
 				update();
 				if (physics != nullptr) {
@@ -612,6 +624,11 @@ namespace Amara {
 
 			virtual void setLoader(Amara::Loader* gLoader) {
 				setLoader(gLoader, true);
+			}
+
+			void broadcast(std::string key, nlohmann::json gData) {
+				properties->messages->broadcast(this, key, gData);
+				pushedMessages = true;
 			}
 
 			virtual void create() {}

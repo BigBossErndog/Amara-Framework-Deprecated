@@ -20,6 +20,7 @@ namespace Amara {
     class Music;
     class AudioGroup;
     class Assets;
+    class MessageQueue;
 
     class GameProperties {
         public:
@@ -84,6 +85,8 @@ namespace Amara {
             Amara::TaskManager* taskManager = nullptr;
             Amara::EventManager* events = nullptr;
             Amara::AudioGroup* audio = nullptr;
+
+            Amara::MessageQueue* messages = nullptr;
 
             GameProperties() {}
     };

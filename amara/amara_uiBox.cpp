@@ -493,6 +493,9 @@ namespace Amara {
                 return false;
             }
 
+            virtual onOpen(bool alreadyOpen) {}
+            virtual onClose(bool alreadyClosed) {}
+
             virtual bool open() {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;

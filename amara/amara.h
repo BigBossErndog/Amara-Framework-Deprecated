@@ -158,6 +158,8 @@ namespace Amara {
 #include "amara_taskManager.cpp"
 #include "amara_stateManager.cpp"
 
+#include "amara_messages.cpp"
+
 #include "amara_gameProperties.cpp"
 
 #include "amara_fileWriter.cpp"

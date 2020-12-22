@@ -15,6 +15,8 @@ namespace Amara {
 			nlohmann::json globalData;
 			std::unordered_map<std::string, void*> globalObjects;
 
+			Amara::MessageQueue messages = MessageQueue();
+
 			std::string name;
 			bool quit = false;
 			bool dragged = false;
@@ -197,6 +199,9 @@ namespace Amara {
 				input->mouse = new Amara::Mouse(properties);
 				input->gamepads = new Amara::GamepadManager(properties);
 				properties->input = input;
+
+				messages.clear();
+				properties->messages = &messages;
 
 				writer = new FileWriter();
 
@@ -459,6 +464,7 @@ namespace Amara {
 				if (quit) return;
 				handleEvents();
 				if (quit) return;
+				messages.update();
 				events->manage();
 				scenes->run();
 				scenes->manageTasks();
