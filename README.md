@@ -21,7 +21,7 @@ Some design decisions are also borrowed from the Phaser.io Javascript framework,
 
 ## No GUI?
 The focus right now is to make a commercial game with it, meaning making a GUI for this engine is a job for another day.
-
+I'm not personally a fan of game engine GUIs, so keeping it as a library framework is suitable for me right now.
 ## Setting Up
 Clone the repository then follow the instructions for setting up Amara on your development platform of choice.
 ```
