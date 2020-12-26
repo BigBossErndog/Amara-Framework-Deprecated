@@ -16,6 +16,8 @@ namespace Amara {
     public:
         std::vector<Message> queue;
 
+        Message nullMessage = { nullptr, "null", {} };
+
         MessageQueue() {
 
         }
@@ -39,6 +41,20 @@ namespace Amara {
 
         void clear() {
             queue.clear();
+        }
+
+        bool empty() {
+            return queue.size();
+        }
+
+        Message& get(std::string gKey) {
+            for (auto it = queue.begin(); it != queue.end(); ++it) {
+                Message& msg = *it;
+                if (gKey.compare(msg.key) == 0) {
+                    return msg;
+                }
+            }
+            return nullMessage;
         }
 
         void broadcast(std::string key, nlohmann::json gData) {

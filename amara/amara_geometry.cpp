@@ -243,7 +243,7 @@ namespace Amara {
         return 0;
     }
 
-    Amara::Direction turnDirection(Amara::Direction dir, bool diagonals) {
+    Amara::Direction flipDirection(Amara::Direction dir, bool diagonals) {
         std::vector<Amara::Direction> list = (diagonals) ? DirectionsInOrder : FourDirections;
 
         for (int i = 0; i < list.size(); i++) {
@@ -257,8 +257,8 @@ namespace Amara {
         return dir;
     }
 
-    Amara::Direction turnDirection(Amara::Direction dir) {
-        return turnDirection(dir, true);
+    Amara::Direction flipDirection(Amara::Direction dir) {
+        return flipDirection(dir, true);
     }
 
 	Amara::Direction getDirection(std::string dir) {

@@ -59,6 +59,15 @@ namespace Amara {
                 return nullptr;
             }
 
+            bool playingAnim(std::string gKey) {
+                if (isActive && currentAnim) {
+                    if (gKey.compare(currentAnim->key) == 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
             void stop() {
                 currentAnim = nullptr;
             }

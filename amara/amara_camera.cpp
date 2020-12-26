@@ -189,6 +189,7 @@ namespace Amara {
                     entity = *it;
                     if (entity->isDestroyed || entity->scene != scene) {
                         rSceneEntities.erase(it--);
+                        continue;
                     }
                     if (!entity->isVisible) continue;
                     assignAttributes();

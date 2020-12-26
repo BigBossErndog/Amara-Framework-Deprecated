@@ -339,6 +339,20 @@ namespace Amara {
 				return this;
 			}
 
+			bool hasDataProperty(std::string gKey) {
+				if (data.find(gKey) != data.end()) {
+					return true;
+				} 
+				return false;
+			}
+
+			bool isDataProperty(std::string gKey) {
+				if (hasDataProperty(gKey) && data[gKey].is_boolean() && data[gKey]) {
+					return true;
+				}
+				return false;
+			}
+
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
 				if (physics) {

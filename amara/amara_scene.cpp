@@ -61,7 +61,8 @@ namespace Amara {
                 cameras.clear();
                 mainCamera = nullptr;
 
-                for (Amara::Entity* entity : entities) {
+                std::vector<Entity*> toDestroy = entities;
+                for (Amara::Entity* entity: toDestroy) {
                     entity->destroy();
                 }
                 entities.clear();
@@ -160,14 +161,29 @@ namespace Amara {
                 update();
                 reciteScripts();
 
-                for (Amara::Entity* entity : entities) {
-                    if (entity->isDestroyed || entity->parent != this) continue;
-                    entity->run();
-                }
+                Amara::Entity* entity;
+                for (auto it = entities.begin(); it != entities.end(); ++it) {
+                    entity = *it;
+                    if (entity->isDestroyed || entity->parent != this) {
+                        entities.erase(it--);
+                    }
+                    else {
+                        entity->run();
+                        if (entity->isDestroyed || entity->parent != this) {
+                            entities.erase(it--);
+                        }
+                    }
+                }  
 
-                for (Amara::Camera* cam : cameras) {
-                    if (cam->isDestroyed || cam->parent != this) continue;
-                    cam->run();
+                Amara::Camera* cam;
+                for (auto it = cameras.begin(); it != cameras.end(); ++it) {
+                    cam = *it;
+                    if (cam->isDestroyed || cam->parent != this) {
+                        cameras.erase(it--);
+                    }
+                    else {
+                        cam->run();
+                    }
                 }
 
                 afterUpdate();
