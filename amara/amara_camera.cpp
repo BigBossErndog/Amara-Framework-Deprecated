@@ -37,6 +37,7 @@ namespace Amara {
             float offsetY = 0;
 
             Amara::Entity* followTarget = nullptr;
+            bool followEnabled = true;
             float lerpX = 1;
             float lerpY = 1;
 
@@ -95,7 +96,7 @@ namespace Amara {
 				update();
                 updateValues();
 
-                if (followTarget != nullptr) {
+                if (followTarget != nullptr && followEnabled) {
                     if (followTarget->isDestroyed || !followTarget->isActive) {
                         stopFollow();
                     }
@@ -227,6 +228,7 @@ namespace Amara {
 
             void startFollow(Amara::Entity* entity, float lx, float ly) {
                 followTarget = entity;
+                followEnabled = true;
                 lerpX = lx;
                 lerpY = ly;
             }

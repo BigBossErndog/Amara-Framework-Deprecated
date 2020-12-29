@@ -261,6 +261,39 @@ namespace Amara {
         return flipDirection(dir, true);
     }
 
+    Amara::Direction turnDirection(Amara::Direction dir, std::vector<Direction> list, int turn) {
+        int num = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list[i] == dir) {
+                num = i;
+                break;
+            }
+        }
+        num += turn;
+        num = num % list.size();
+        if (num < 0) num += list.size();
+
+        return list[num];
+    }
+
+    Amara::Direction getDirectionBetween(int x1, int y1, int x2, int y2) {
+        if (x1 == x2 && y1 == y2) {
+            return NoDir;
+        }
+
+        double angle = atan2(y2 - y1, x2 - x1);
+        int dirNum = floor(fmod(round(angle/(M_PI/4)), DirectionsInOrder.size()));
+        if (dirNum < 0) {
+            dirNum += 8;
+        }
+        Amara::Direction direction = DirectionsInOrder[dirNum];
+
+        return direction;
+    }
+    Amara::Direction getDirectionBetween(IntVector2 p1, IntVector2 p2) {
+        return getDirectionBetween(p1.x, p1.y, p2.x, p2.y);
+    }
+
 	Amara::Direction getDirection(std::string dir) {
 		if (dir.compare("up") == 0) return Up;
 		if (dir.compare("down") == 0) return Down;

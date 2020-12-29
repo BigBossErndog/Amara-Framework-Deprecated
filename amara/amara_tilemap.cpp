@@ -166,6 +166,24 @@ namespace Amara {
                 return createLayer(layerKey, 0, 0);
             }
 
+            Amara::TilemapLayer* createEmptyLayer(std::string layerKey) {
+                Amara::TilemapLayer* newLayer;
+                ((Amara::Entity*)scene)->add(newLayer = new Amara::TilemapLayer(width, height, tileWidth, tileHeight));
+                layers[layerKey] = newLayer;
+
+                if (!textureKey.empty()) {
+                    newLayer->setTexture(textureKey);
+                }
+
+                newLayer->id = layerKey;
+
+                newLayer->x = x;
+                newLayer->y = y;
+                newLayer->setTilemap(this, this);
+
+                return newLayer;
+            }
+
             void createAllLayers() {
                 if (tiledJsonKey.empty()) return;
                 int numLayers = tiledJson["layers"].size();
