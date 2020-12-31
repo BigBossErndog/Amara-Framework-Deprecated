@@ -21,6 +21,7 @@ namespace Amara {
             }
 
             void reciteScripts() {
+                if (scripts.size() == 0) return;
                 for (Amara::Script* script: scripts) {
                     if (!script->finished) {
                         script->script();
@@ -28,18 +29,24 @@ namespace Amara {
                     }
                 }
 
+                std::vector<Script*> chained;
+                chained.clear();
+
                 Amara::Script* script;
                 for (auto it = scripts.begin(); it != scripts.end(); ++it) {
                     script = *it;
                     if (script->finished) {
                         if (script->chainedScript != nullptr) {
-                            recite(script->chainedScript);
+                            chained.push_back(script->chainedScript);
                         }
                         scripts.erase(it--);
                         if (script->deleteOnFinish) {
                             delete script;
                         }
                     }
+                }
+                for (Amara::Script* chain: chained) {
+                    recite(chain);
                 }
             }
 

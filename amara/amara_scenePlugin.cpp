@@ -38,6 +38,7 @@ namespace Amara {
 
             ScenePlugin(std::string givenKey, Amara::GameProperties* gameProperties, Amara::Scene* givenScene, std::unordered_map<std::string, Amara::Scene*>* givenSceneMap, std::vector<Amara::Scene*>* givenSceneList) {
                 key = givenKey;
+                givenScene->id = key;
 
                 properties = gameProperties;
                 game = properties->game;

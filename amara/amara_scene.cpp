@@ -63,6 +63,7 @@ namespace Amara {
 
                 std::vector<Entity*> toDestroy = entities;
                 for (Amara::Entity* entity: toDestroy) {
+                    if (entity->isDestroyed || entity->scene != this) continue;
                     entity->destroy();
                 }
                 entities.clear();

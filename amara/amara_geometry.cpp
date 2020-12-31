@@ -39,6 +39,22 @@ namespace Amara {
         return distanceBetween(s.x, s.y, e.x, e.y);
     }
 
+    float radiansToDegrees(float rads) {
+        return rads*180/M_PI;
+    }
+    float degreesToRadians(float degrees) {
+        return degrees*M_PI/180;
+    }
+
+    float angleBetween(FloatVector2 p1, FloatVector2 p2) {
+        float angle = -atan2(p2.y-p1.y, p2.x-p1.x) + M_PI/2.0;
+        angle = fmod(angle, 2*M_PI);
+        while (angle < 0) {
+            angle += 2*M_PI;
+        }
+        return angle;
+    }
+
     typedef struct IntRect {
         int x = 0;
         int y = 0;
@@ -63,6 +79,56 @@ namespace Amara {
         FloatVector2 p1 = {0, 0};
         FloatVector2 p2 = {0, 0};
     } FloatLine;
+
+    std::vector<FloatVector2> getPointsAlongLine(FloatLine line, int divisions) {
+        std::vector<FloatVector2> points;
+        points.clear();
+        
+        float step;
+        for (int i = 0; i <= divisions; i++) {
+            step = i/(float)divisions;
+            FloatVector2 point = {
+                line.p1.x + (line.p2.x - line.p1.x)*step,
+                line.p1.y + (line.p2.y - line.p1.y)*step
+            };
+            points.push_back(point);
+        }
+
+        return points;
+    }
+    std::vector<FloatVector2> getPointsAlongLine(FloatVector2 start, FloatVector2 end, int divisions) {
+        return getPointsAlongLine({start, end}, divisions);
+    }
+    std::vector<FloatVector2> getPointsAlongLine(float x1, float y1, float x2, float y2, float divisions) {
+        return getPointsAlongLine({{x1, y1}, {x2, y2}}, divisions);
+    }
+
+    std::vector<FloatVector2> travelAlongLine(FloatLine line, float step) {
+        std::vector<FloatVector2> points;
+        points.clear();
+
+        float angle = angleBetween(line.p1, line.p2);
+        float fullDist = distanceBetween(line.p1, line.p2);
+
+        bool nowExit = false;
+        float curDist = 0;
+        while (true) {
+            FloatVector2 point = {
+                line.p1.x + sin(angle)*curDist,
+                line.p1.y + cos(angle)*curDist
+            };
+            points.push_back(point);
+            curDist += step;
+            if (nowExit) {
+                break;
+            }
+            else if (curDist >= fullDist) {
+                curDist = fullDist;
+                nowExit = true;
+            }
+        }
+        return points;
+    }
 
     bool overlapping(float px, float py, FloatCircle* circle) {
         return (Amara::distanceBetween(px, py, circle->x, circle->y) <= circle->radius);
@@ -274,6 +340,9 @@ namespace Amara {
         if (num < 0) num += list.size();
 
         return list[num];
+    }
+    Amara::Direction turnDirection(Amara::Direction dir, int turn) {
+        return turnDirection(dir, DirectionsInOrder, turn);
     }
 
     Amara::Direction getDirectionBetween(int x1, int y1, int x2, int y2) {

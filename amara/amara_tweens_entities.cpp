@@ -303,6 +303,47 @@ namespace Amara {
 				actor->y = startY;
 			}
     };
+
+    class Tween_Alpha: public Tween {
+        public:
+            float startAlpha = 0;
+            float targetAlpha = 0;
+
+            Tween_Alpha(float gTarget, float gTime, Amara::Easing gEasing) {
+                targetAlpha = gTarget;
+                time = gTime;
+                easing = gEasing;
+            }
+            Tween_Alpha(float gTarget, float gTime): Tween_Alpha(gTarget, gTime, LINEAR) {}
+            Tween_Alpha(float gTime): Tween_Alpha(0, gTime) {}
+
+            void prepare(Amara::Actor* actor) {
+                startAlpha = actor->alpha;
+            }
+
+            void script(Amara::Actor* actor) {
+                Amara::Tween::progressFurther();
+                switch (easing) {
+                    case LINEAR:
+                        actor->alpha = linearEase(startAlpha, targetAlpha, progress);
+                        break;
+                    case SINE_INOUT:
+                        actor->alpha = sineInOutEase(startAlpha, targetAlpha, progress);
+                        break;
+                    case SINE_IN:
+                        actor->alpha = sineInEase(startAlpha, targetAlpha, progress);
+                        break;
+                    case SINE_OUT:
+                        actor->alpha = sineOutEase(startAlpha, targetAlpha, progress);
+                        break;
+                }
+            }
+
+            void finish() {
+                Tween::finish();
+                parent->alpha = targetAlpha;
+            }
+    };
 }
 
 #endif

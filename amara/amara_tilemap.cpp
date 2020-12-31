@@ -174,7 +174,7 @@ namespace Amara {
                 if (!textureKey.empty()) {
                     newLayer->setTexture(textureKey);
                 }
-
+                
                 newLayer->id = layerKey;
 
                 newLayer->x = x;
@@ -267,6 +267,17 @@ namespace Amara {
                 Amara::Tile tile;
                 for (Amara::TilemapLayer* layer: walls) {
                     tile = layer->getTileAt(gx, gy);
+                    if (tile.id >= 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            bool isWallAtXY(int gx, int gy) {
+                Amara::Tile tile;
+                for (Amara::TilemapLayer* layer: walls) {
+                    tile = layer->getTileAtXY(gx, gy);
                     if (tile.id >= 0) {
                         return true;
                     }

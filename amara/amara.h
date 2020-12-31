@@ -163,6 +163,7 @@ namespace Amara {
 #include "amara_gameProperties.cpp"
 
 #include "amara_fileWriter.cpp"
+#include "amara_fileReader.cpp"
 
 #include "amara_fdeclarations.cpp"
 

@@ -52,6 +52,20 @@ class TestScene: public Scene {
             exCam->centerOn(game->width/(float)2, game->height/(float)2);
             exCam->setZoom(1/(float)5);
             box->bringToFront();
+
+            float testAngle = 0;
+            while (testAngle <= 360) {
+                float rads = testAngle*M_PI/(float)180;
+                float ox = sin(rads);
+                float oy = cos(rads);
+
+                cout << testAngle << ", " << ox << ", " << oy << " | ";
+
+                float newAngle = angleBetween({0, 0}, {ox, oy});
+                cout << round(newAngle*180/M_PI) << ", " << sin(newAngle) << ", " << cos(newAngle) << endl;
+
+                testAngle += 45;
+            }
         }
 
         void update() {
