@@ -87,6 +87,16 @@ class TestScene: public Scene {
                 box->width += 1;
             }
 
+            if (input->mouse->isActivated) {
+                log("MOUSE ACTIVE");
+            }
+            if (input->keyboard->isActivated) {
+                log("KEYBOARD ACTIVE");
+            }
+            if (input->gamepads->isActivated) {
+                log("GAMEPAD ACTIVE");
+            }
+
             if (controls->justDown("confirm")) {
                 startTransition(new FillTransition(scenes->key));
             }

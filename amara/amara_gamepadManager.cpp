@@ -12,6 +12,8 @@ namespace Amara {
             std::vector<Amara::Gamepad*> connected;
             std::vector<Amara::Gamepad*> disconnected;
 
+            bool isActivated = false;
+
             GamepadManager(Amara::GameProperties* gProperties) {
                 for (Amara::Gamepad* gamepad: gamepads) {
                     delete gamepad;
@@ -175,6 +177,7 @@ namespace Amara {
                 for (Amara::Gamepad* gamepad: gamepads) {
                     gamepad->manage();
                 }
+                isActivated = false;
             }
     };
 }

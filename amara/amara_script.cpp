@@ -34,7 +34,8 @@ namespace Amara {
             Script(): Script(true) {}
 
             Amara::Script* chain(Amara::Script* gScript) {
-                chainedScript = gScript;
+                if (chainedScript) chainedScript->chain(gScript);
+                else chainedScript = gScript;
                 return chainedScript;
             }
 

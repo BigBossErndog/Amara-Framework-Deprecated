@@ -11,6 +11,12 @@ namespace Amara {
             int y = 0;
             bool isDown = false;
             bool justDown = false;
+
+            bool isActivated = false;
+
+            virtual void manage() {
+                isActivated = false;
+            }
     };
 }
 

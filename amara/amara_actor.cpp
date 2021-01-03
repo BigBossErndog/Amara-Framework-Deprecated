@@ -9,6 +9,7 @@ namespace Amara {
     class Actor: public Amara::Entity {
         public:
             std::vector<Amara::Script*> scripts;
+            bool actingPaused = false;
 
             Actor(): Amara::Entity() {}
 
@@ -21,7 +22,7 @@ namespace Amara {
             }
 
             void reciteScripts() {
-                if (scripts.size() == 0) return;
+                if (scripts.size() == 0 || actingPaused) return;
                 for (Amara::Script* script: scripts) {
                     if (!script->finished) {
                         script->script();
@@ -108,6 +109,13 @@ namespace Amara {
                 }
                 scripts.clear();
 			}
+
+            void pauseActing() {
+                actingPaused = true;
+            }
+            void resumeActing() {
+                actingPaused = false;
+            }
 
             virtual ~Actor() {
                 clearScripts();

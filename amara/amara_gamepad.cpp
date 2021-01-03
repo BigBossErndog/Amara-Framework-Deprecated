@@ -28,6 +28,8 @@ namespace Amara {
             bool isConnected = false;
             bool justConnected = false;
             bool justDisconnected = false;
+
+            bool isActivated = false;
             
             Gamepad() {
                 buttons.clear();
@@ -194,11 +196,13 @@ namespace Amara {
                     btn = it->second;
                     btn->manage();
                 }
+                isActivated = false;
             }
 
             void press(Amara::Buttoncode bcode) {
                 Amara::Button* button = getButton(bcode);
                 if (button != nullptr) {
+                    isActivated = true;
                     return button->press();
                 }
             }

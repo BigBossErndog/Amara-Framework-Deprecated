@@ -17,6 +17,8 @@ namespace Amara {
             Amara::Key* lastKeyDown = nullptr;
 			Amara::Keycode lastKeycodeDown;
 
+            bool isActivated = false;
+
             Keyboard(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 tappedKeycodes.clear();
@@ -79,6 +81,8 @@ namespace Amara {
                     key->manage();
                 }
                 tappedKeycodes.clear();
+
+                isActivated = false;
             }
 
             ~Keyboard() {

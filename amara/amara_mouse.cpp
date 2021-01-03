@@ -11,7 +11,7 @@ namespace Amara {
             MouseButton(): Amara::Key() {}
     };
 
-    class Mouse: public Pointer {
+    class Mouse: public Amara::Pointer {
         public:
             Amara::GameProperties* properties = nullptr;
 
@@ -38,12 +38,16 @@ namespace Amara {
 				right->manage();
                 middle->manage();
 
-                isDown = left->isDown || right->isDown || middle->isDown;
-                justDown = left->justDown || right->justDown || middle->justDown;
-
                 scrollX = 0;
                 scrollY = 0;
+
+                isActivated = false;
 			}
+
+            void afterManage() {
+                isDown = left->isDown || right->isDown || middle->isDown;
+                justDown = left->justDown || right->justDown || middle->justDown;
+            }
     };
 }
 
