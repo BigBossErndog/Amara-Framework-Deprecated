@@ -42,6 +42,8 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
+            bool temp = false;
+
             SDL_Texture* asset = nullptr;
 
             ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType, givenAsset) {

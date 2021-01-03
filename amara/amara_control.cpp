@@ -15,6 +15,8 @@ namespace Amara {
             std::vector<Amara::Key*> keys;
             std::vector<Amara::Buttoncode> buttons;
 
+            Button virtualButton;
+
             bool isDown = false;
             bool justDown = false;
             bool tapped = false;
@@ -136,6 +138,17 @@ namespace Amara {
                         downTime = gamepads->downTime(bcode);
                     }
                 }
+
+                isDown = isDown || virtualButton.isDown;
+                justDown = justDown || virtualButton.justDown;
+                tapped = tapped || virtualButton.tapped;
+                justUp = justUp || virtualButton.justUp;
+                held = held || virtualButton.held;
+                activated = activated || virtualButton.activated;
+                if (virtualButton.isDown && virtualButton.downTime > downTime) {
+                    downTime = virtualButton.downTime;
+                }
+                virtualButton.manage();
             }
     };
 }

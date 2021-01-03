@@ -233,6 +233,7 @@ namespace Amara {
             }
 
             bool setTexture(std::string gTextureKey) {
+                if (texture) removeTexture();
                 texture = (Amara::ImageTexture*)(load->get(gTextureKey));
                 if (texture != nullptr) {
                    textureKey = texture->key;
@@ -257,8 +258,56 @@ namespace Amara {
                 return false;
             }
 
+            bool setTexture(SDL_Texture* tx) {
+                if (texture) removeTexture();
+                texture = new ImageTexture("temp", IMAGE, tx);
+                texture->temp = true;
+                width = texture->width;
+                height = texture->height;
+                imageWidth = texture->width;
+                imageWidth = texture->height;
+                textureKey = "temp";
+
+                return true;
+            }
+
+            bool setTexture(SDL_Texture* tx, int frw, int frh) {
+                if (texture) removeTexture();
+                texture = new Spritesheet("temp", SPRITESHEET, tx, frw, frh);
+                texture->temp = true;
+                width = ((Amara::Spritesheet*)texture)->frameWidth;
+                height = ((Amara::Spritesheet*)texture)->frameHeight;
+                imageWidth = texture->width;
+                imageWidth = texture->height;
+                textureKey = "temp";
+                
+                return true;
+            }
+
+            bool setTexture(ImageTexture* tx) {
+                if (texture) removeTexture();
+                texture = tx;
+
+                textureKey = texture->key;
+
+                if (texture->type == SPRITESHEET) {
+                    width = ((Amara::Spritesheet*)texture)->frameWidth;
+                    height = ((Amara::Spritesheet*)texture)->frameHeight;
+                }
+                else {
+                    width = texture->width;
+                    height = texture->height;
+                }
+
+                imageWidth = width;
+                imageHeight = height;
+
+                return true;
+            }
+
             bool removeTexture() {
                 textureKey.clear();
+                if (texture && texture->temp) delete texture;
                 texture = nullptr;
             }
 
