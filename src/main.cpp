@@ -7,6 +7,7 @@ class TestScene: public Scene {
     public:
         TextBox* box;
         Camera* exCam;
+        Image* pointBox;
 
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
@@ -66,6 +67,10 @@ class TestScene: public Scene {
 
                 testAngle += 45;
             }
+
+            add(pointBox = new Image(0, 0, "box"));
+            pointBox->setOrigin(0.5);
+            pointBox->setScale(4);
         }
 
         void update() {
@@ -87,14 +92,10 @@ class TestScene: public Scene {
                 box->width += 1;
             }
 
-            if (input->mouse->isActivated) {
-                log("MOUSE ACTIVE");
-            }
-            if (input->keyboard->isActivated) {
-                log("KEYBOARD ACTIVE");
-            }
-            if (input->gamepads->isActivated) {
-                log("GAMEPAD ACTIVE");
+            if (input->touches->isActivated) {
+                TouchPointer* p = input->touches->pointers[0];
+                pointBox->x = p->x;
+                pointBox->y = p->y;
             }
 
             if (controls->justDown("confirm")) {

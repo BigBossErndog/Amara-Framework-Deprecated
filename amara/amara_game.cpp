@@ -198,6 +198,7 @@ namespace Amara {
 				input->keyboard = new Amara::Keyboard(properties);
 				input->mouse = new Amara::Mouse(properties);
 				input->gamepads = new Amara::GamepadManager(properties);
+				input->touches = new Amara::TouchManager(properties);
 				properties->input = input;
 
 				messages.clear();
@@ -526,6 +527,7 @@ namespace Amara {
 				input->keyboard->manage();
 				input->mouse->manage();
 				input->gamepads->manage();
+				input->touches->manage();
 
 				renderTargetsReset = false;
 				renderDeviceReset = false;
@@ -652,10 +654,56 @@ namespace Amara {
 						if (gamepad != nullptr) gamepad->push(e.caxis.axis, e.caxis.value);
 						input->gamepads->isActivated = true;
 					}
+					if (e.type == SDL_FINGERDOWN) {
+						Amara::TouchPointer* pointer = input->touches->newPointer(e.tfinger.fingerId);
+						if (pointer) {
+							pointer->press();
+							pointer->virtualizeXY(e);
+						}
+
+						input->touches->isActivated = true;
+					}
+					else if (e.type == SDL_FINGERMOTION) {
+						Amara::TouchPointer* pointer = input->touches->getPointer(e.tfinger.fingerId);
+						if (pointer) {
+							pointer->virtualizeXY(e);
+						}
+
+						input->touches->isActivated = true;
+					}
+					else if (e.type == SDL_FINGERUP) {
+						Amara::TouchPointer* pointer = input->touches->getPointer(e.tfinger.fingerId);
+						if (pointer) {
+							pointer->release();
+							pointer->virtualizeXY(e);
+
+							input->touches->removePointer(pointer->id);
+						}
+
+						input->touches->isActivated = true;
+					}
 				}
 
 				controls->run();
 				input->mouse->afterManage();
+				
+				input->mode = InputMode_None;
+				if (input->keyboard->isActivated) {
+					input->mode |= InputMode_Keyboard;
+					input->lastMode = InputMode_Keyboard;
+				}
+				if (input->mouse->isActivated) {
+					input->mode |= InputMode_Mouse;
+					input->lastMode = InputMode_Mouse;
+				}
+				if (input->gamepads->isActivated) {
+					input->mode |= InputMode_Gamepad;
+					input->lastMode = InputMode_Gamepad;
+				}
+				if (input->touches->isActivated) {
+					input->mode |= InputMode_Touch;
+					input->lastMode = InputMode_Touch;
+				}
 			}
 	};
 }
