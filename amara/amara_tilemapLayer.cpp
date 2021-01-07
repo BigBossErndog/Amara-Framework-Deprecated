@@ -61,6 +61,8 @@ namespace Amara {
             int widthInPixels = 0;
             int heightInPixels = 0;
 
+            bool extruded = false;
+
             std::unordered_map<int, Amara::TileAnimation> animations;
 
             TilemapLayer(float gw, float gh, float tw, float th): Amara::Actor() {
@@ -115,6 +117,9 @@ namespace Amara {
                     for (int i = 0; i < jtiles.size(); i++) {
                         setTile(i, jtiles[i]);
                     }
+                }
+                if (config.find("extruded") != config.end()) {
+                    extruded = config["extruded"];
                 }
             }
 
@@ -325,8 +330,11 @@ namespace Amara {
                 if (endX >= width) endX = width - 1;
                 if (endY >= height) endY = height - 1;
 
-                destRect.w = ceil((tileWidth * scaleX) * nzoomX);
-                destRect.h = ceil((tileHeight * scaleY) * nzoomY);
+                float extrusionX = (extruded && nzoomX > 1) ? ceil(fmod(nzoomX, 1)) : 0;
+                float extrusionY = (extruded && nzoomY > 1) ? ceil(fmod(nzoomY, 1)) : 0;
+
+                destRect.w = ceil((tileWidth * scaleX) * nzoomX + extrusionX);
+                destRect.h = ceil((tileHeight * scaleY) * nzoomY + extrusionY);
                 
                 for (int i = startX; i <= endX; i++) {
                     for (int j = startY; j <= endY ; j++) {

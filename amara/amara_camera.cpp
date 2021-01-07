@@ -404,6 +404,22 @@ namespace Amara {
                 return zoomTo(zt, tt, LINEAR);
             }
 
+            float getXAfterScrolling(float gx) {
+                float nzoomX = 1 + (zoomX-1)*zoomFactorX;
+                return nzoomX * (gx - scrollX);
+            }
+            float getYAfterScrolling(float gy) {
+                float nzoomY = 1 + (zoomY-1)*zoomFactorY;
+                return nzoomY * (gy - scrollY);
+            }
+
+            float getXAfterScrolling(Amara::Entity* entity) {
+                return getXAfterScrolling(entity->x);
+            }
+            float getYAfterScrolling(Amara::Entity* entity) {
+                return getYAfterScrolling(entity->y);
+            }
+
             ~Camera() {
 
             }

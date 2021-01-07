@@ -218,7 +218,7 @@ namespace Amara {
 						if (colorSize >= 4) color.a = jsonColor[3];
 					}
 
-					ttf(key, path, size, color, replace);
+					ttf(key, path, size, color, style, replace);
 				}
 			}
 			void loadSoundsFromJSON(nlohmann::json& config) {

@@ -1,5 +1,5 @@
 /*
-SDL_FontCache v0.9.0: A font cache for SDL and SDL_ttf
+SDL_FontCache v0.10.0: A font cache for SDL and SDL_ttf
 by Jonathan Dearborn
 Dedicated to the memory of Florian Hufsky
 
@@ -9,7 +9,7 @@ License:
     whenever these files or parts of them are distributed in uncompiled form.
 
     The long:
-Copyright (c) 2016 Jonathan Dearborn
+Copyright (c) 2019 Jonathan Dearborn
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -143,6 +143,11 @@ Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* renderer, TTF_Font* ttf, S
 Uint8 FC_LoadFont_RW(FC_Font* font, SDL_Renderer* renderer, SDL_RWops* file_rwops_ttf, Uint8 own_rwops, Uint32 pointSize, SDL_Color color, int style);
 #endif
 
+#ifndef FC_USE_SDL_GPU
+// note: handle SDL event types SDL_RENDER_TARGETS_RESET(>= SDL 2.0.2) and SDL_RENDER_DEVICE_RESET(>= SDL 2.0.4)
+void FC_ResetFontFromRendererReset(FC_Font* font, SDL_Renderer* renderer, Uint32 evType);
+#endif
+
 void FC_ClearFont(FC_Font* font);
 
 void FC_FreeFont(FC_Font* font);
@@ -215,6 +220,12 @@ unsigned int FC_GetBufferSize(void);
 
 /*! Changes the size of the internal buffer which is used for unpacking variadic text data.  This buffer is shared by all FC_Fonts. */
 void FC_SetBufferSize(unsigned int size);
+
+/*! Returns the width of a single horizontal tab in multiples of the width of a space (default: 4) */
+unsigned int FC_GetTabWidth(void);
+
+/*! Changes the width of a horizontal tab in multiples of the width of a space (default: 4) */
+void FC_SetTabWidth(unsigned int width_in_spaces);
 
 void FC_SetRenderCallback(FC_Rect (*callback)(FC_Image* src, FC_Rect* srcrect, FC_Target* dest, float x, float y, float xscale, float yscale));
 
@@ -290,9 +301,14 @@ int FC_GetLineSpacing(FC_Font* font);
 Uint16 FC_GetMaxWidth(FC_Font* font);
 SDL_Color FC_GetDefaultColor(FC_Font* font);
 
+FC_Rect FC_GetBounds(FC_Font* font, float x, float y, FC_AlignEnum align, FC_Scale scale, const char* formatted_text, ...);
+
 Uint8 FC_InRect(float x, float y, FC_Rect input_rect);
 // Given an offset (x,y) from the text draw position (the upper-left corner), returns the character position (UTF-8 index)
 Uint16 FC_GetPositionFromOffset(FC_Font* font, float x, float y, int column_width, FC_AlignEnum align, const char* formatted_text, ...);
+
+// Returns the number of characters in the new wrapped text written into `result`.
+int FC_GetWrappedText(FC_Font* font, char* result, int max_result_size, Uint16 width, const char* formatted_text, ...);
 
 // Setters
 

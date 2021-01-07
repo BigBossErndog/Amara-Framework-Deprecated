@@ -48,6 +48,51 @@ namespace Amara {
             }
     };
 
+    class Tween_RelativeXY: public Tween {
+        public:
+            float startX = 0;
+            float startY = 0;
+            float targetX = 0;
+            float targetY = 0;
+
+            Tween_RelativeXY(float tx, int ty, double tt, Amara::Easing gEasing) {
+                targetX = tx;
+                targetY = ty;
+                time = tt;
+                easing = gEasing;
+            }
+            Tween_RelativeXY(float tx, float ty, double tt): Tween_RelativeXY(tx, ty, tt, LINEAR) {}
+
+            void prepare(Amara::Actor* actor) {
+                startX = actor->x;
+                startY = actor->y;
+                targetX += actor->x;
+                targetY += actor->y;
+            }
+
+            void script(Amara::Actor* actor) {
+                Amara::Tween::progressFurther();
+                switch (easing) {
+                    case LINEAR:
+                        actor->x = linearEase(startX, targetX, progress);
+                        actor->y = linearEase(startY, targetY, progress);
+                        break;
+                    case SINE_INOUT:
+                        actor->x = sineInOutEase(startX, targetX, progress);
+                        actor->y = sineInOutEase(startY, targetY, progress);
+                        break;
+                    case SINE_IN:
+                        actor->x = sineInEase(startX, targetX, progress);
+                        actor->y = sineInEase(startY, targetY, progress);
+                        break;
+                    case SINE_OUT:
+                        actor->x = sineOutEase(startX, targetX, progress);
+                        actor->y = sineOutEase(startY, targetY, progress);
+                        break;
+                }
+            }
+    };
+
 	class Tween_XYZ: public Tween {
         public:
             float startX = 0;
