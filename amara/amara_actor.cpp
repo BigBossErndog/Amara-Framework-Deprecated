@@ -21,6 +21,14 @@ namespace Amara {
                 return script;
             }
 
+            virtual Amara::Script* chain(Amara::Script* script) {
+                if (scripts.size() > 0) {
+                    Amara::Script* lastScript = scripts.back();
+                    return lastScript->chain(script);
+                }
+                return recite(script);
+            }
+
             void reciteScripts() {
                 if (scripts.size() == 0 || actingPaused) return;
                 for (Amara::Script* script: scripts) {

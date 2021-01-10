@@ -95,8 +95,8 @@ namespace Amara {
 
 				destRect.x = floor((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
 				destRect.y = floor((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
-				destRect.w = ceil((width * scaleX) * nzoomX);
-				destRect.h = ceil((height * scaleY) * nzoomY);
+				destRect.w = ceil(ceil(width * scaleX) * nzoomX);
+				destRect.h = ceil(ceil(height * scaleY) * nzoomY);
 
 				origin.x = destRect.w * originX;
 				origin.y = destRect.h * originY;
@@ -131,8 +131,8 @@ namespace Amara {
 					if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
 
 					checkForHover(hx, hy, hw, hh);
-
-					int newAlpha = (float)color.a * alpha;
+					
+					int newAlpha = (float)color.a * alpha * properties->alpha;
 
 					SDL_GetRenderDrawColor(properties->gRenderer, &recColor.r, &recColor.g, &recColor.b, &recColor.a);
 

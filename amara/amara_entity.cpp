@@ -333,7 +333,7 @@ namespace Amara {
 				config["data"] = data;
 				return config;
 			}
-
+			
 			Amara::Entity* setId(std::string newId) {
 				id = newId;
 				return this;
@@ -400,16 +400,7 @@ namespace Amara {
 			}
 
 			virtual void run() {
-				if (pushedMessages) {
-					Amara::MessageQueue& messages = *(properties->messages);
-					for (auto it = messages.begin(); it != messages.end(); ++it) {
-						Message msg = *it;
-						if (msg.parent == this) {
-							messages.queue.erase(it--);
-						}
-					}
-					pushedMessages = false;
-				}
+				updateMessages();
 
 				Amara::Interactable::run();
 				update();
@@ -650,9 +641,24 @@ namespace Amara {
 				setLoader(gLoader, true);
 			}
 
-			void broadcast(std::string key, nlohmann::json gData) {
+			void updateMessages() {
+				if (pushedMessages) {
+					Amara::MessageQueue& messages = *(properties->messages);
+					for (auto it = messages.begin(); it != messages.end(); ++it) {
+						Message msg = *it;
+						if (msg.parent == this) {
+							messages.queue.erase(it--);
+						}
+					}
+					pushedMessages = false;
+				}
+			}
+			void broadcastMessage(std::string key, nlohmann::json gData) {
 				properties->messages->broadcast(this, key, gData);
 				pushedMessages = true;
+			}
+			Message& getMessage(std::string key) {
+				return properties->messages->get(key);
 			}
 
 			virtual void create() {}

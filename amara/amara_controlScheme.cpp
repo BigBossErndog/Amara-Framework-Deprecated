@@ -160,6 +160,16 @@ namespace Amara {
                 return (justDown(id) || (isDown(id) && control->downTime > gTime));
             }
 
+            bool justDownOrPeriodic(std::string id, int gTime) {
+                Amara::Control* control = get(id);
+                return (justDown(id) || (isDown(id) && control->downTime % gTime == 0));
+            }
+
+            bool justDownOrHeldPeriodic(std::string id, int gTimeHeld, int gTimePeriodic) {
+                Amara::Control* control = get(id);
+                return (justDown(id) || (isDown(id) && control->downTime > gTimeHeld && control->downTime % gTimePeriodic == 0));
+            }
+
             int downTime(std::string id) {
                 Amara::Control* control = get(id);
                 return control->downTime;

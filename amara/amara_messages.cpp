@@ -9,7 +9,7 @@ namespace Amara {
         Entity* parent = nullptr;
         std::string key;
         nlohmann::json data;
-
+        bool isActive = true;
     } Message;
 
     class MessageQueue {
@@ -25,7 +25,7 @@ namespace Amara {
         void update() {
             for (auto it = queue.begin(); it != queue.end(); ++it) {
                 Message msg = *it;
-                if (msg.parent == nullptr) {
+                if (msg.parent == nullptr || !msg.isActive) {
                     queue.erase(it--);
                     continue;
                 }
@@ -50,19 +50,21 @@ namespace Amara {
         Message& get(std::string gKey) {
             for (auto it = queue.begin(); it != queue.end(); ++it) {
                 Message& msg = *it;
-                if (gKey.compare(msg.key) == 0) {
+                if (msg.isActive && gKey.compare(msg.key) == 0) {
                     return msg;
                 }
             }
             return nullMessage;
         }
 
-        void broadcast(std::string key, nlohmann::json gData) {
+        Message& broadcast(std::string key, nlohmann::json gData) {
             queue.push_back({ nullptr, key, gData });
+            return queue.back();
         }
 
-        void broadcast(Amara::Entity* gParent, std::string key, nlohmann::json gData) {
+        Message& broadcast(Amara::Entity* gParent, std::string key, nlohmann::json gData) {
             queue.push_back({ gParent, key, gData });
+            return queue.back();
         }
     };
 }

@@ -378,8 +378,8 @@ namespace Amara {
 
                         bool skipDrawing = false;
                         
-                        destRect.x = floor((x + tx - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth)) * nzoomX);
-                        destRect.y = floor((y-z + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
+                        destRect.x = floor(floor(x + tx - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth)) * nzoomX);
+                        destRect.y = floor(floor(y-z + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
 
                         origin.x = destRect.w * originX + destRect.w/2;
                         origin.y = destRect.h * originY + destRect.h/2;
