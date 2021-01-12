@@ -562,6 +562,7 @@ namespace Amara {
 						float ratioWin = ((float)properties->window->width / (float)properties->window->height);
 
 						input->mouse->isActivated = true;
+						if (e.type == SDL_MOUSEMOTION) input->mouse->moved = true;
 
 						if (ratioRes < ratioWin) {
 							upScale = ((float)properties->window->height/(float)properties->resolution->height);

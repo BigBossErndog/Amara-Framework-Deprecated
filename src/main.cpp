@@ -97,6 +97,9 @@ class TestScene: public Scene {
                 pointBox->x = p->x;
                 pointBox->y = p->y;
             }
+            if (input->touches->isActivated) {
+                cout << input->touches->pointers[0]->dx << ", " << input->touches->pointers[0]->dy << endl; 
+            }
 
             if (controls->justDown("confirm")) {
                 startTransition(new FillTransition(scenes->key));
@@ -118,7 +121,7 @@ class TestScene: public Scene {
 int main(int argc, char** args) {
     Game* game = new Game("Amara Game");
     game->init(480, 360);
-    game->setWindowSize(960, 720);
+    game->setWindowSize(900, 600);
     // game->setBackgroundColor(255, 255, 255);
 
     game->scenes->add("test", new TestScene());

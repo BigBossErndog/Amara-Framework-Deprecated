@@ -102,7 +102,7 @@ namespace Amara {
 
     class TextureLayer: public Amara::Layer {
     public:
-        SDL_Texture* tx;
+        SDL_Texture* tx = nullptr;
         int textureWidth;
         int textureHeight;
 
@@ -142,12 +142,16 @@ namespace Amara {
             if (textureWidth != properties->resolution->width || textureHeight != properties->resolution->height) {
                 createTexture();
             }
+            if (!tx) return;
             recTarget = SDL_GetRenderTarget(properties->gRenderer);
             SDL_SetRenderTarget(properties->gRenderer, tx);
-
+            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+            SDL_RenderClear(properties->gRenderer);
             float recAlpha = properties->alpha;
             
             Amara::Layer::draw(vx, vy, vw, vh);
+
+            SDL_SetRenderTarget(properties->gRenderer, recTarget);
 
             bool skipDrawing = false;
 
@@ -188,15 +192,12 @@ namespace Amara {
                     );
                 }
             }
-
-            SDL_SetRenderTarget(properties->gRenderer, recTarget);
         }
 
-        void destroy() {
+        ~TextureLayer() {
             if (tx) {
                 SDL_DestroyTexture(tx);
             }
-            Amara::Layer::destroy();
         }
     };
 }

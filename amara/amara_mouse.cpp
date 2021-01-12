@@ -25,6 +25,8 @@ namespace Amara {
             int scrollX = 0;
             int scrollY = 0;
 
+            bool moved = false;
+
 			Mouse(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
 
@@ -42,6 +44,7 @@ namespace Amara {
                 scrollY = 0;
 
                 isActivated = false;
+                moved = false;
 			}
 
             void afterManage() {
