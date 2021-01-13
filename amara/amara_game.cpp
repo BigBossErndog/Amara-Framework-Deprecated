@@ -146,7 +146,7 @@ namespace Amara {
 					SDL_Log("Started on Hardware Accelerated Rendering.");
 				}
 				else {
-					gRenderer = SDL_CreateSoftwareRenderer(gSurface);
+					gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE);
 					SDL_Log("Started on Software Rendering.");
 				}
 				if (gRenderer == NULL) {

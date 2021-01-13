@@ -119,7 +119,7 @@ class TestScene: public Scene {
 };
 
 int main(int argc, char** args) {
-    Game* game = new Game("Amara Game");
+    Game* game = new Game("Amara Game", false);
     game->init(480, 360);
     game->setWindowSize(900, 600);
     // game->setBackgroundColor(255, 255, 255);
