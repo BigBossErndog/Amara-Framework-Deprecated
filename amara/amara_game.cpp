@@ -71,13 +71,18 @@ namespace Amara {
 			SDL_Event e;
 
 			bool testing = true;
+			bool hardwareRendering = true;
 
-			Game(std::string givenName) {
+			Game(std::string givenName, bool gRendering) {
 				name = givenName;
 
 				properties = new Amara::GameProperties();
 				properties->game = this;
+
+				hardwareRendering = gRendering;
 			}
+
+			Game(std::string givenName): Game(givenName, true) {}
 
 			bool init(int startWidth, int startHeight) {
 				SDL_SetMainReady();
@@ -109,13 +114,11 @@ namespace Amara {
 				// Setting up joy sticks
 				if (SDL_Init(SDL_INIT_JOYSTICK) < 0) {
 					SDL_Log("Game Error: Failed to initialize Joystick.");
-					return false;
 				}
 
 				// Setting up controllers
 				if (controllerEnabled && SDL_Init(SDL_INIT_GAMECONTROLLER) < 0) {
 					SDL_Log("Game Error: Failed to initialize Game Controller.");
-					return false;
 				}
 
 				// Creating the window
@@ -138,7 +141,14 @@ namespace Amara {
 				SDL_UpdateWindowSurface(gWindow);
 
 				// Setting up the Renderer
-				gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
+				if (hardwareRendering) {
+					gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
+					SDL_Log("Started on Hardware Accelerated Rendering.");
+				}
+				else {
+					gRenderer = SDL_CreateSoftwareRenderer(gSurface);
+					SDL_Log("Started on Software Rendering.");
+				}
 				if (gRenderer == NULL) {
 					SDL_Log("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
 					return false;
@@ -487,6 +497,9 @@ namespace Amara {
 
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
+				if (!hardwareRendering) {
+					SDL_UpdateWindowSurface(gWindow);
+				}
 			}
 
 			void manageFPSStart() {
