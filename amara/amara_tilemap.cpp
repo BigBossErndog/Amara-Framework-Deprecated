@@ -91,7 +91,7 @@ namespace Amara {
                         heightInPixels = tileHeight * height;
                     }
                     else {
-                        SDL_Log("Tiled JSON \"%s\" was not found.", gTiledJsonKey);
+                        SDL_Log("Tiled JSON \"%s\" was not found.", gTiledJsonKey.c_str());
                     }
                 }
             }

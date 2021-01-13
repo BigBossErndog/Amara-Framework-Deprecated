@@ -5,6 +5,7 @@ BUILD_PATH = build
 
 BUILD_EXECUTABLE_WIN = $(BUILD_PATH)/$(BUILD_NAME).exe
 BUILD_EXECUTABLE_LINUX = $(BUILD_PATH)/$(BUILD_NAME).game
+BUILD_HTML = $(BUILD_PATH)/index.html
 
 COMPILER = g++
 
@@ -23,6 +24,9 @@ OTHER_LIB_PATHS = -I ext_lib/nlohmann/include -I ./src -I ext_lib/murmurhash3
 AMARA_PATH = -I ./amara
 
 COMPILER_FLAGS = -w
+
+
+WEB_FLAGS = -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]' -s USE_SDL_IMAGE=2 -s USE_SDL_MIXER=2 -s USE_SDL_TTF=2 --preload-file $(BUILD_PATH)/assets -I ext_lib/SDL_FontCache -I ./amaraWeb -w
 
 all:
 	@echo "Usage: make (option)"
@@ -56,6 +60,13 @@ linux:
 	cp -R assets/ build/
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_LINUX) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_LINUX)
 
+web:
+	cls
+	rm -rf build/*.dll
+	rm -rf build/assets/*
+	cp -R assets/ build/
+	emcc $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(WEB_FLAGS) -o $(BUILD_HTML)
+
 playwin:
 	rm -rf build/assets/*
 	cp -R assets/ build/
@@ -65,6 +76,7 @@ playlinux:
 	rm -rf build/assets/*
 	cp -R assets/ build/
 	./$(BUILD_EXECUTABLE_LINUX)
+
 
 
 setup-apt64:

@@ -29,8 +29,10 @@
     #include <SDL_image.h>
     #include <SDL_ttf.h>
     #include <SDL_mixer.h>
-    #include <SDL_net.h>
     #include <SDL_FontCache.c>
+    #ifndef AMARA_WEB
+        #include <SDL_net.h>
+    #endif
 #endif
 
 #ifndef AMARA_DIRECTIONS

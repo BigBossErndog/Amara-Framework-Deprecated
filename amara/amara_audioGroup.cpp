@@ -53,7 +53,7 @@ namespace Amara {
                     }
                     return add(sound);
                 }
-				SDL_Log("Audio not found: \"%s\"", fKey);
+				SDL_Log("Audio not found: \"%s\"", fKey.c_str());
                 return nullptr;
             }
 
@@ -69,7 +69,7 @@ namespace Amara {
                         return group;
                     }
                 }
-				SDL_Log("AudioGroup not found: \"%s\"", fKey);
+				SDL_Log("AudioGroup not found: \"%s\"", fKey.c_str());
                 return nullptr;
             }
 

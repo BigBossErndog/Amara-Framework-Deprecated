@@ -236,7 +236,7 @@ char* FC_GetStringASCII_Latin1(void)
 
 FC_Rect FC_MakeRect(float x, float y, float w, float h)
 {
-    FC_Rect r = {x, y, w, h};
+    FC_Rect r = {(int)x, (int)y, (int)w, (int)h};
     return r;
 }
 
@@ -622,7 +622,7 @@ static_inline FC_Rect FC_RectUnion(FC_Rect A, FC_Rect B)
     x2 = FC_MAX(A.x+A.w, B.x+B.w);
     y2 = FC_MAX(A.y+A.h, B.y+B.h);
     {
-        FC_Rect result = {x, y, FC_MAX(0, x2 - x), FC_MAX(0, y2 - y)};
+        FC_Rect result = {(int)x, (int)y, (int)FC_MAX(0, x2 - x), (int)FC_MAX(0, y2 - y)};
         return result;
     }
 }
@@ -2209,7 +2209,7 @@ FC_Rect FC_DrawBoxEffect(FC_Font* font, FC_Target* dest, FC_Rect box, FC_Effect 
 
 FC_Rect FC_DrawColumn(FC_Font* font, FC_Target* dest, float x, float y, Uint16 width, const char* formatted_text, ...)
 {
-    FC_Rect box = {x, y, width, 0};
+    FC_Rect box = {(int)x, (int)y, width, 0};
     int total_height;
 
     if(formatted_text == NULL || font == NULL)
@@ -2226,7 +2226,7 @@ FC_Rect FC_DrawColumn(FC_Font* font, FC_Target* dest, float x, float y, Uint16 w
 
 FC_Rect FC_DrawColumnAlign(FC_Font* font, FC_Target* dest, float x, float y, Uint16 width, FC_AlignEnum align, const char* formatted_text, ...)
 {
-    FC_Rect box = {x, y, width, 0};
+    FC_Rect box = {(int)x, (int)y, width, 0};
     int total_height;
 
     if(formatted_text == NULL || font == NULL)
@@ -2255,7 +2255,7 @@ FC_Rect FC_DrawColumnAlign(FC_Font* font, FC_Target* dest, float x, float y, Uin
 
 FC_Rect FC_DrawColumnScale(FC_Font* font, FC_Target* dest, float x, float y, Uint16 width, FC_Scale scale, const char* formatted_text, ...)
 {
-    FC_Rect box = {x, y, width, 0};
+    FC_Rect box = {(int)x, (int)y, width, 0};
     int total_height;
 
     if(formatted_text == NULL || font == NULL)
@@ -2272,7 +2272,7 @@ FC_Rect FC_DrawColumnScale(FC_Font* font, FC_Target* dest, float x, float y, Uin
 
 FC_Rect FC_DrawColumnColor(FC_Font* font, FC_Target* dest, float x, float y, Uint16 width, SDL_Color color, const char* formatted_text, ...)
 {
-    FC_Rect box = {x, y, width, 0};
+    FC_Rect box = {(int)x, (int)y, width, 0};
     int total_height;
 
     if(formatted_text == NULL || font == NULL)
@@ -2289,7 +2289,7 @@ FC_Rect FC_DrawColumnColor(FC_Font* font, FC_Target* dest, float x, float y, Uin
 
 FC_Rect FC_DrawColumnEffect(FC_Font* font, FC_Target* dest, float x, float y, Uint16 width, FC_Effect effect, const char* formatted_text, ...)
 {
-    FC_Rect box = {x, y, width, 0};
+    FC_Rect box = {(int)x, (int)y, width, 0};
     int total_height;
 
     if(formatted_text == NULL || font == NULL)
@@ -2318,7 +2318,7 @@ FC_Rect FC_DrawColumnEffect(FC_Font* font, FC_Target* dest, float x, float y, Ui
 
 static FC_Rect FC_RenderCenter(FC_Font* font, FC_Target* dest, float x, float y, FC_Scale scale, const char* text)
 {
-    FC_Rect result = {x, y, 0, 0};
+    FC_Rect result = {(int)x, (int)y, 0, 0};
     if(text == NULL || font == NULL)
         return result;
 
@@ -2351,7 +2351,7 @@ static FC_Rect FC_RenderCenter(FC_Font* font, FC_Target* dest, float x, float y,
 
 static FC_Rect FC_RenderRight(FC_Font* font, FC_Target* dest, float x, float y, FC_Scale scale, const char* text)
 {
-    FC_Rect result = {x, y, 0, 0};
+    FC_Rect result = {(int)x, (int)y, 0, 0};
     if(text == NULL || font == NULL)
         return result;
 
@@ -2746,7 +2746,7 @@ SDL_Color FC_GetDefaultColor(FC_Font* font)
 
 FC_Rect FC_GetBounds(FC_Font* font, float x, float y, FC_AlignEnum align, FC_Scale scale, const char* formatted_text, ...)
 {
-    FC_Rect result = {x, y, 0, 0};
+    FC_Rect result = {(int)x, (int)y, 0, 0};
 
     if(formatted_text == NULL)
         return result;

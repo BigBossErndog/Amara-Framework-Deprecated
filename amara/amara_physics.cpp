@@ -337,7 +337,7 @@ namespace Amara {
                 tx = tile.x * tilemapLayer->tileWidth + px;
                 ty = tile.y * tilemapLayer->tileHeight + py;
 
-                properties.rect = { tilemapLayer->x + tx, tilemapLayer->y + ty, tilemapLayer->tileWidth, tilemapLayer->tileHeight };
+                properties.rect = { tilemapLayer->x + tx, tilemapLayer->y + ty, (float)tilemapLayer->tileWidth, (float)tilemapLayer->tileHeight };
 
                 if (Amara::overlapping(&properties.rect, &body->properties.line)) {
                     return true;
@@ -388,7 +388,7 @@ namespace Amara {
                     tx = tile.x * tilemapLayer->tileWidth + px;
                     ty = tile.y * tilemapLayer->tileHeight + py;
 
-                    properties.rect = { tilemapLayer->x + tx, tilemapLayer->y + ty, tilemapLayer->tileWidth, tilemapLayer->tileHeight };
+                    properties.rect = { tilemapLayer->x + tx, tilemapLayer->y + ty, (float)tilemapLayer->tileWidth, (float)tilemapLayer->tileHeight };
                     switch (body->shape) {
                         case PHYSICS_RECTANGLE:
                             if (Amara::overlapping(&properties.rect, &body->properties.rect)) {

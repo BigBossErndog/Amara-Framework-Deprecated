@@ -91,7 +91,7 @@ namespace Amara {
             int imageHeight = 0;
 
             LightLayer(int r, int g, int b, int a) {
-                fillColor = {r, g, b, a};
+                fillColor = {(Uint8)r, (Uint8)g, (Uint8)b, (Uint8)a};
             }
 
             LightLayer(int r, int g, int b): LightLayer(r, g, b, 255) {}

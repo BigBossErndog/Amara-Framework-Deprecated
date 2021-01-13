@@ -1,4 +1,4 @@
-#include <amara.h>
+#include <amaraWeb.hpp>
 
 using namespace Amara;
 using namespace std;
@@ -119,7 +119,11 @@ class TestScene: public Scene {
 };
 
 int main(int argc, char** args) {
-    Game* game = new Game("Amara Game", false);
+    #ifndef AMARA_WEB
+        Game* game = new Game("Amara Game", false);
+    #else
+        WebGame* game = new WebGame("Amara Game");
+    #endif
     game->init(480, 360);
     game->setWindowSize(900, 600);
     // game->setBackgroundColor(255, 255, 255);

@@ -268,22 +268,32 @@ namespace Amara {
 			void start() {
 				// Game Loop
 				while (!quit) {
-					manageFPSStart();
-
-					writeProperties();
-
-					// Draw Screen
-					draw();
-
-					// Manage frame catch up and slow down
-					manageFPSEnd();
-
-					deleteEntities();
-					deleteObjects();
-					deleteTransitions();
-					taskManager->run();
+					gameLoop();
 				}
 				close();
+			}
+
+			void start(std::string startKey) {
+				// Start a specific scene
+				scenes->start(startKey);
+				start();
+			}
+
+			void gameLoop() {
+				manageFPSStart();
+
+				writeProperties();
+
+				// Draw Screen
+				draw();
+
+				// Manage frame catch up and slow down
+				manageFPSEnd();
+
+				deleteEntities();
+				deleteObjects();
+				deleteTransitions();
+				taskManager->run();
 			}
 
 			void deleteEntities() {
@@ -326,12 +336,6 @@ namespace Amara {
                     delete obj;
                 }
                 deleteQueue.clear();
-			}
-
-			void start(std::string startKey) {
-				// Start a specific scene
-				scenes->start(startKey);
-				start();
 			}
 
 			void addGlobalObject(std::string gKey, void* gObj) {
@@ -443,8 +447,6 @@ namespace Amara {
 				SDL_SetWindowFullscreen(gWindow, 0);
 				isFullscreen = false;
 			}
-
-		protected:
 
 			void writeProperties() {
 				properties->gWindow = gWindow;
