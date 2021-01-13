@@ -75,6 +75,12 @@ namespace Amara {
                     addEvent(SCENEMIDDLECLICK);
                     addEvent(OBJECTMIDDLECLICK);
                 }
+
+                std::vector<TouchPointer*>& fingers = input->touches->pointers;
+                for (TouchPointer* finger: fingers) {
+                    if (finger->justDown) addEvent(OBJECTTOUCHDOWN);
+                    if (finger->justUp) addEvent(OBJECTTOUCHUP);
+                }
             }
     };
 }

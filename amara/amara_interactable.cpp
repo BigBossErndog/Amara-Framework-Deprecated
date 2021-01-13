@@ -39,6 +39,8 @@ namespace Amara {
             bool isDraggable = false;
             bool dragged = false;
 
+            bool checkTouchDown = false;
+
             virtual void init(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 events = properties->events;
@@ -102,15 +104,14 @@ namespace Amara {
                             isHovered = true;
                             isTouchHovered = true;
 
-                            if (finger->justDown) {
+                            if (checkTouchDown) {
                                 justTouchDown = true;
-                            }
-                            if (finger->justUp) {
-                                justTouchUp = true;
                             }
                         }
                     }
                 }
+
+                checkTouchDown = false;
             }
 
             virtual void run() {
@@ -183,13 +184,11 @@ namespace Amara {
                                 }
                                 break;
                             case OBJECTTOUCHDOWN:
-                                if (isTouchHovered) {
-                                    
-                                }
+                                checkTouchDown = true;
                                 break;
                             case OBJECTTOUCHUP:
                                 if (isTouchHovered) {
-
+                                    justTouchUp = true;
                                 }
                                 break;
                         }

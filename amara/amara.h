@@ -138,9 +138,8 @@ namespace Amara {
 #include "amara_asset.cpp"
 #include "amara_animation.cpp"
 
-#include "amara_touches.cpp"
-
 #include "amara_events.cpp"
+#include "amara_touches.cpp"
 #include "amara_mouse.cpp"
 #include "amara_pointer.cpp"
 
