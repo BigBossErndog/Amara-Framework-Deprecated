@@ -645,12 +645,10 @@ namespace Amara {
 					else if (e.type == SDL_CONTROLLERDEVICEADDED) {
 						SDL_GameController* controller = SDL_GameControllerOpen(e.cdevice.which);
 						input->gamepads->connectGamepad(controller);
-						input->gamepads->isActivated = true;
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
 						input->gamepads->disconnectGamepad(controller);
-						input->gamepads->isActivated = true;
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);

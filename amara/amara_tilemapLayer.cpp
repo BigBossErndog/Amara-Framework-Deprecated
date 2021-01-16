@@ -22,6 +22,7 @@ namespace Amara {
         public:
             SDL_Renderer* gRenderer = nullptr;
             Amara::ImageTexture* texture = nullptr;
+            SDL_Texture* drawTexture = nullptr;
             std::string textureKey;
 
             bool givenTiledJson = false;
@@ -73,6 +74,8 @@ namespace Amara {
 
                 widthInPixels = width * tileWidth;
                 heightInPixels = height * tileHeight;
+                imageWidth = widthInPixels;
+                imageHeight = heightInPixels;
 
                 Amara::Tile tile;
                 tiles.resize(width*height, tile);
@@ -105,6 +108,8 @@ namespace Amara {
                 if (!tiledLayerKey.empty()) {
                     setupTiledLayer(tiledLayerKey);
                 }
+
+                createDrawTexture();
 
                 data["entityType"] = "tilemapLayer";
             }
@@ -151,9 +156,12 @@ namespace Amara {
 
                         widthInPixels = width * tileWidth;
                         heightInPixels = height * tileHeight;
+                        imageWidth = widthInPixels;
+                        imageHeight = heightInPixels;
 
                         Amara::Tile tile;
                         tiles.resize(width*height, tile);
+                        createDrawTexture();
 
                         animations.clear();
                         if (tiledJson.find("tilesets") != tiledJson.end()) {
@@ -224,9 +232,6 @@ namespace Amara {
                 texture = (Amara::ImageTexture*)(load->get(gTextureKey));
                 if (texture != nullptr) {
                     textureKey = texture->key;
-
-                    imageWidth = width;
-                    imageHeight = height;
                     return true;
                 }
                 else {
@@ -277,6 +282,23 @@ namespace Amara {
                 return tile;
             }
 
+            void clear() {
+                for (Amara::Tile& tile: tiles) {
+                    tile.id = -1;
+                }
+            }
+
+            void createDrawTexture() {
+                if (drawTexture) SDL_DestroyTexture(drawTexture);
+                drawTexture = SDL_CreateTexture(
+                    properties->gRenderer,
+                    SDL_GetWindowPixelFormat(properties->gWindow),
+                    SDL_TEXTUREACCESS_TARGET,
+                    widthInPixels,
+                    heightInPixels
+                );
+            }
+
             void run() {
                 std::unordered_map<int, Amara::TileAnimation>::iterator it = animations.begin();
 
@@ -295,17 +317,11 @@ namespace Amara {
                 int tx, ty, frame, maxFrame = 0;
                 float tileAngle = 0;
 
-                viewport.x = vx;
-                viewport.y = vy;
-                viewport.w = vw;
-                viewport.h = vh;
-                SDL_RenderSetViewport(gRenderer, &viewport);
-
-                if (texture != nullptr) {
-                    SDL_Texture* tex = (SDL_Texture*)texture->asset;
-                    SDL_SetTextureBlendMode(tex, blendMode);
-                    SDL_SetTextureAlphaMod(tex, alpha * properties->alpha * 255);
-                }
+                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
+                 SDL_RenderSetViewport(gRenderer, NULL);
+                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(properties->gRenderer);
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
@@ -330,11 +346,10 @@ namespace Amara {
                 if (endX >= width) endX = width - 1;
                 if (endY >= height) endY = height - 1;
 
-                float extrusionX = (extruded && nzoomX > 1) ? ceil(fmod(nzoomX, 1)) : 0;
-                float extrusionY = (extruded && nzoomY > 1) ? ceil(fmod(nzoomY, 1)) : 0;
-
-                destRect.w = ceil((tileWidth * scaleX) * nzoomX + extrusionX);
-                destRect.h = ceil((tileHeight * scaleY) * nzoomY + extrusionY);
+                origin.x = 0;
+                origin.y = 0;
+                destRect.w = tileWidth;
+                destRect.h = tileHeight;
                 
                 for (int i = startX; i <= endX; i++) {
                     for (int j = startY; j <= endY ; j++) {
@@ -373,21 +388,18 @@ namespace Amara {
                             }
                         }
                         
-                        tx = tile.x * tileWidth + px;
-                        ty = tile.y * tileHeight + py;
+                        tx = tile.x * tileWidth;
+                        ty = tile.y * tileHeight;
 
                         bool skipDrawing = false;
                         
-                        destRect.x = floor(floor(x + tx - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth)) * nzoomX);
-                        destRect.y = floor(floor(y-z + ty - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight)) * nzoomY);
-
-                        origin.x = destRect.w * originX + destRect.w/2;
-                        origin.y = destRect.h * originY + destRect.h/2;
+                        destRect.x = tx;
+                        destRect.y = ty;
 
                         if (destRect.x + destRect.w <= 0) skipDrawing = true;
                         if (destRect.y + destRect.h <= 0) skipDrawing = true;
-                        if (destRect.x >= vw) skipDrawing = true;
-                        if (destRect.y >= vh) skipDrawing = true;
+                        if (destRect.x >= imageWidth) skipDrawing = true;
+                        if (destRect.y >= imageHeight) skipDrawing = true;
                         if (destRect.w <= 0) skipDrawing = true;
                         if (destRect.h <= 0) skipDrawing = true;
 
@@ -442,9 +454,38 @@ namespace Amara {
                             }
                         }
                     }
-                    
-                    Amara::Actor::draw(vx, vy, vw, vh);
                 }
+
+                destRect.x = floor((x+px - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = floor((y-z+py - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRect.w = ceil(widthInPixels*scaleX*nzoomX);
+                destRect.h = ceil(heightInPixels*scaleY*nzoomY);
+
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
+
+                viewport.x = vx;
+                viewport.y = vy;
+                viewport.w = vw;
+                viewport.h = vh;
+                SDL_RenderSetViewport(gRenderer, &viewport);
+
+                origin.x = destRect.w * originX;
+                origin.y = destRect.h * originY;
+
+                SDL_SetTextureBlendMode(drawTexture, blendMode);
+                SDL_SetTextureAlphaMod(drawTexture, properties->alpha * alpha * 255);
+
+                SDL_RenderCopyEx(
+                    properties->gRenderer,
+                    drawTexture,
+                    NULL,
+                    &destRect,
+                    0,
+                    &origin,
+                    SDL_FLIP_NONE
+                );
+
+                Amara::Actor::draw(vx, vy, vw, vh);
             }
 
             void setCameraBounds(Amara::Camera* cam) {
@@ -474,6 +515,10 @@ namespace Amara {
 
             bool isBlockingPath(int gx, int gy) {
                 return isBlockingPath(gx, gy, false);
+            }
+
+            ~TilemapLayer() {
+                if (drawTexture) SDL_DestroyTexture(drawTexture);
             }
     };
 }
