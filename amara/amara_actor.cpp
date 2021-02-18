@@ -47,6 +47,7 @@ namespace Amara {
                     if (script->finished) {
                         if (script->chainedScript != nullptr) {
                             chained.push_back(script->chainedScript);
+                            script->chainedScript = nullptr;
                         }
                         scripts.erase(it--);
                         if (script->deleteOnFinish) {

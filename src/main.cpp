@@ -1,4 +1,4 @@
-#include <amaraWeb.hpp>
+#include <amara.h>
 
 using namespace Amara;
 using namespace std;

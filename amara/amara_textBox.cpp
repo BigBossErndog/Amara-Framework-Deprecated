@@ -424,7 +424,7 @@ namespace Amara {
                 bool toReturn = false;
 
                 if (sm.once()) {
-                    onClose(false);
+                    onClose();
                     setText("");
                     toReturn = true;
                 }

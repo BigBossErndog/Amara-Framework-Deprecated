@@ -493,8 +493,8 @@ namespace Amara {
                 return false;
             }
 
-            virtual void onOpen(bool alreadyOpen) {}
-            virtual void onClose(bool alreadyClosed) {}
+            virtual void onOpen() {}
+            virtual void onClose() {}
 
             virtual bool open() {
                 Amara::StateManager& sm = checkSm();
@@ -540,11 +540,23 @@ namespace Amara {
 
                     toReturn = true;
                 }
+
+                if (sm.once()) {
+                    onOpen();
+                    toReturn = true;
+                }
+
+                return toReturn;
             }
 
             virtual bool close() {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
+
+                if (sm.once()) {
+                    onClose();
+                    toReturn = true;
+                }
 
                 if (sm.evt()) {
                     bool complete = true;
@@ -607,6 +619,9 @@ namespace Amara {
 
                 if (closeSpeedX < 0) closeSpeedX = 0;
                 if (closeSpeedY < 0) closeSpeedY = 0;
+
+                if (openWidth < minWidth) openWidth = minWidth;
+                if (openHeight < minHeight) openHeight = minHeight;
 
                 lockOpen = false;
             }
