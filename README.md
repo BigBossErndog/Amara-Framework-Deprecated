@@ -31,6 +31,8 @@ cd amara-framework
 
 ### Windows
 You will find that the project is already set up for Windows, complete with all the necessary headers and dlls :)
+You just need to have MinGW set up with the g++ compiler.
+https://sourceforge.net/projects/mingw/
 
 ### Linux
 The following `make` commands will set up Amara depending on which package management system you use.
