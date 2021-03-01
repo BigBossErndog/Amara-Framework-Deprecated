@@ -15,11 +15,15 @@ namespace Amara {
 
             float fadeInSpeed = 0.1;
             float fadeOutSpeed = 0.1;
+            float waitBetween = 0;
 
             FillTransition(): Amara::SceneTransition() {}
             FillTransition(float inSpeed, float outSpeed): FillTransition() {
                 fadeInSpeed = inSpeed;
                 fadeOutSpeed = outSpeed;
+            }
+            FillTransition(float inSpeed, float outSpeed, float gWaitBetween): FillTransition(inSpeed, outSpeed) {
+                waitBetween = gWaitBetween;
             }
             FillTransition(float speed): FillTransition(speed, speed) {}
 
@@ -28,6 +32,11 @@ namespace Amara {
             FillTransition(std::string gNextScene, float inSpeed, float outSpeed): Amara::FillTransition(gNextScene) {
                 fadeInSpeed = inSpeed;
                 fadeOutSpeed = outSpeed;
+            }
+            FillTransition(std::string gNextScene, float inSpeed, float outSpeed, float gWaitBetween): Amara::FillTransition(gNextScene) {
+                fadeInSpeed = inSpeed;
+                fadeOutSpeed = outSpeed;
+                waitBetween = gWaitBetween;
             }
 
             FillTransition(std::string gNextScene, float speed): FillTransition(gNextScene, speed, speed) {}
@@ -42,6 +51,9 @@ namespace Amara {
                 }
                 if (config.find("fadeSpeed") != config.end()) {
                     setSpeed(config["fadeSpeed"]);
+                }
+                if (config.find("waitBetween") != config.end()) {
+                    waitBetween = config["waitBetween"];
                 }
             }
 
@@ -76,6 +88,7 @@ namespace Amara {
                         nextEvt();
                     }
                 }
+                wait(waitBetween);
                 startNextScene();
                 waitForPermission();
                 if (evt()) {

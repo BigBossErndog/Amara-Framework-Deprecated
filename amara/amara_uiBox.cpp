@@ -60,6 +60,8 @@ namespace Amara {
 
             bool keepOpen = false;
 
+            Entity* content = nullptr;
+
             UIBox() {}
 
             UIBox(Amara::StateManager* gsm) {
@@ -307,7 +309,8 @@ namespace Amara {
                     openWidth = width;
                     openHeight = height;
                 }
-
+                
+                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
                 SDL_SetRenderTarget(properties->gRenderer, canvas);
                 SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
                 SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
@@ -315,7 +318,7 @@ namespace Amara {
                 for (int i = 0; i < 9; i++) {
                     drawBoxPart(i);
                 }
-                SDL_SetRenderTarget(properties->gRenderer, NULL);
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
 
                 bool skipDrawing = false;
 
@@ -542,6 +545,7 @@ namespace Amara {
                 }
 
                 if (sm.once()) {
+                    if (content) content->setVisible(true);
                     onOpen();
                     toReturn = true;
                 }
@@ -554,6 +558,7 @@ namespace Amara {
                 bool toReturn = false;
 
                 if (sm.once()) {
+                    if (content) content->setVisible(false);
                     onClose();
                     toReturn = true;
                 }

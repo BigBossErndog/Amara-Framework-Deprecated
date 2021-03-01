@@ -77,6 +77,14 @@ namespace Amara {
 				setRenderOffset(gi, gi);
 			}
 
+			void setOrigin(float gx, float gy) {
+				originX = gx;
+				originY = gy;
+			}
+			void setOrigin(float go) {
+				setOrigin(go, go);
+			}
+
 			void draw(int vx, int vy, int vw, int vh) {
 				if (!isVisible) return;
 				bool skipDrawing = false;

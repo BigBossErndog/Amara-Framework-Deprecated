@@ -149,7 +149,7 @@ namespace Amara {
             SDL_RenderClear(properties->gRenderer);
             float recAlpha = properties->alpha;
             
-            Amara::Layer::draw(vx, vy, vw, vh);
+            drawEntities(vx, vy, vw, vh);
 
             SDL_SetRenderTarget(properties->gRenderer, recTarget);
 
@@ -192,6 +192,54 @@ namespace Amara {
                     );
                 }
             }
+        }
+
+        void drawEntities(int vx, int vy, int vw, int vh) {
+            if (properties->quit) return;
+            if (physics) {
+                physics->checkActiveCollisionTargets();
+            }
+
+            if (alpha < 0) alpha = 0;
+            if (alpha > 1) alpha = 1;
+
+            float recScrollX = properties->scrollX * scrollFactorX;
+            float recScrollY = properties->scrollY * scrollFactorY;
+            float recOffsetX = properties->offsetX + x;
+            float recOffsetY = properties->offsetY + y;
+            float recZoomX = properties->zoomX * scaleX;
+            float recZoomY = properties->zoomY * scaleY;
+            float recZoomFactorX = properties->zoomFactorX * zoomFactorX;
+            float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
+            float recAngle = properties->angle + angle;
+            float recAlpha = properties->alpha;
+            properties->alpha = 1;
+
+            stable_sort(entities.begin(), entities.end(), sortEntities());
+
+            Amara::Entity* entity;
+            for (auto it = entities.begin(); it != entities.end(); ++it) {
+                entity = *it;
+
+                if (entity->isDestroyed || entity->parent != this) {
+                    entities.erase(it--);
+                    continue;
+                }
+                if (!entity->isVisible) continue;
+
+                properties->scrollX = recScrollX;
+                properties->scrollY = recScrollY;
+                properties->offsetX = recOffsetX;
+                properties->offsetY = recOffsetY;
+                properties->zoomX = recZoomX;
+                properties->zoomY = recZoomY;
+                properties->zoomFactorX = recZoomFactorX;
+                properties->zoomFactorY = recZoomFactorY;
+                properties->angle = recAngle;
+                properties->alpha = 1;
+                entity->draw(vx, vy, vw, vh);
+            }
+            properties->alpha = recAlpha;
         }
 
         ~TextureLayer() {

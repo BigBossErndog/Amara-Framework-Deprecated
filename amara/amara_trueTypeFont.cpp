@@ -124,10 +124,14 @@ namespace Amara {
                 findDimensions();
             }
 
-            void setColor(int r, int g, int b) {
+            void setColor(int r, int g, int b, int a) {
                 color.r = r;
                 color.g = g;
                 color.b = b;
+                color.a = a;
+            }
+            void setColor(int r, int g, int b) {
+                setColor(r, g, b, 255);
             }
             void setColor(Amara::Color gColor) {
                 color = gColor;
