@@ -70,7 +70,6 @@ namespace Amara {
 #include "amara_transitions.cpp"
 #include "amara_sceneTransition.cpp"
 
-#include "amara_charaTextBox.cpp"
 #include "amara_textBox.cpp"
 #include "amara_uiBox.cpp"
 
@@ -93,6 +92,8 @@ namespace Amara {
 #include "amara_control.cpp"
 
 #include "amara_scene.cpp"
+
+#include "amara_uiBar.cpp"
 
 #include "amara_layerContainer.cpp"
 #include "amara_canvas.cpp"

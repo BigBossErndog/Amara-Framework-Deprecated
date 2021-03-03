@@ -193,9 +193,6 @@ namespace Amara {
 			bool isVisible = true;
 
 			Entity() {}
-			Entity(nlohmann::json config) {
-				configure(config);
-			}
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
 				Amara::Interactable::init(gameProperties);
@@ -213,12 +210,16 @@ namespace Amara {
 
 				isActive = true;
 				data["entityType"] = "entity";
+
+				init();
 				create();
 			}
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene) {
 				init(gameProperties, givenScene, nullptr);
 			}
+
+			virtual void init() {}
 
 			virtual void configure(nlohmann::json config) {
 				if (config.find("id") != config.end()) {
@@ -515,6 +516,7 @@ namespace Amara {
 			}
 
 			virtual void destroy(bool recursiveDestroy) {
+				if (isDestroyed) return;
 				parent = nullptr;
 
 				destroyEntities(recursiveDestroy);
