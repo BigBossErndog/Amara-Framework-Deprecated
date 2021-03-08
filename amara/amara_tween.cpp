@@ -20,9 +20,9 @@ namespace Amara {
             }
     };
 
-    class WaitTween: public Tween {
+    class Tween_Wait: public Tween {
     public:
-        WaitTween(double gt) {
+        Tween_Wait(double gt) {
             time = gt;
         }
         

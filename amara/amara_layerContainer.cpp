@@ -114,6 +114,8 @@ namespace Amara {
 
         SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
+        bool textureLocked = false;
+
         TextureLayer(): Layer() {}
         TextureLayer(float gx, float gy): Layer(gx, gy) {}
 
@@ -139,19 +141,25 @@ namespace Amara {
         }
 
         void draw(int vx, int vy, int vw, int vh) {
-            if (textureWidth != properties->resolution->width || textureHeight != properties->resolution->height) {
-                createTexture();
-            }
-            if (!tx) return;
-            recTarget = SDL_GetRenderTarget(properties->gRenderer);
-            SDL_SetRenderTarget(properties->gRenderer, tx);
-            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-            SDL_RenderClear(properties->gRenderer);
             float recAlpha = properties->alpha;
-            
-            drawEntities(vx, vy, vw, vh);
+            if (!textureLocked) {
+                if (textureWidth != properties->resolution->width || textureHeight != properties->resolution->height) {
+                    createTexture();
+                }
+                if (!tx) return;
 
-            SDL_SetRenderTarget(properties->gRenderer, recTarget);
+                recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, tx);
+                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(properties->gRenderer);
+                
+                drawEntities(vx, vy, vw, vh);
+
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
+            }
+            else {
+                if (!tx) return;
+            }
 
             bool skipDrawing = false;
 

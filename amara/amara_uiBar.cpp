@@ -29,7 +29,7 @@ namespace Amara {
             y = gy;
         }
 
-        UIBar(float gx, float gy, std::string gkey): UIBar() {
+        UIBar(float gx, float gy, std::string gkey): UIBar(gx, gy) {
             textureKey = gkey;
         }
 
@@ -43,6 +43,12 @@ namespace Amara {
             }
             if (config.find("maxValue") != config.end()) {
                 maxValue = config["maxValue"];
+            }
+            if (config.find("frontPaddingLeft") != config.end()) {
+                frontPaddingLeft = config["frontPaddingLeft"];
+            }
+            if (config.find("frontPaddingRight") != config.end()) {
+                frontPaddingLeft = config["frontPaddingRight"];
             }
         }
 
@@ -62,9 +68,13 @@ namespace Amara {
 
         void setValue(int gVal) {
             value = gVal;
+            if (value > maxValue) {
+                maxValue = value;
+            }
         }
         void setValueInstantly(int gVal) {
-            value = gVal;
+            displayValue = gVal;
+            setValue(gVal);
         }
 
         TrueTypeFont* addTextDisplay(TrueTypeFont* gTxt) {
@@ -91,7 +101,9 @@ namespace Amara {
                     }
                 }
             }
-            if (textDisplay) textDisplay->setText(std::to_string(displayValue));
+            if (textDisplay) {
+                textDisplay->setText(std::to_string(displayValue));
+            }
 
             frontBar->cropLeft = frontPaddingLeft;
             frontBar->cropRight = frontBar->imageWidth - ceil((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/(float)maxValue)) - frontPaddingLeft;

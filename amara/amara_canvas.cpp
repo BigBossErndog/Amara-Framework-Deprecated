@@ -42,17 +42,16 @@ namespace Amara {
             }
 
             void init(Amara::GameProperties* gameProperties, Amara::Scene* gScene, Amara::Entity* gParent) {
+                drawImage.init(gameProperties, gScene, this);
+                properties = gameProperties;
+                if (canvas == nullptr) {
+                    createNewCanvasTexture();
+                }
                 Amara::Actor::init(gameProperties, gScene, gParent);
                 if (getLogicalDimensions) {
                     width = properties->resolution->width;
                     height = properties->resolution->height;
                 }
-
-                if (canvas == nullptr) {
-                    createNewCanvasTexture();
-                }
-
-                drawImage.init(properties, scene, this);
             }
 
             void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a, SDL_BlendMode gBlendMode) {
@@ -151,7 +150,7 @@ namespace Amara {
             }
 
             void copy(Amara::Image* img, int gx, int gy, int gFrame, float gOriginX, float gOriginY, float gScaleX, float gScaleY) {
-                drawImage.setTexture(img->textureKey);
+                drawImage.setTexture(img->texture->key);
                 drawImage.x = gx;
                 drawImage.y = gy;
                 drawImage.frame = gFrame;
@@ -183,6 +182,14 @@ namespace Amara {
                     createNewCanvasTexture();
                 }
                 Amara::Actor::run();
+            }
+
+            void setOrigin(float gx, float gy) {
+                originX = gx;
+                originY = gy;
+            }
+            void setOrigin(float go) {
+                setOrigin(go, go);
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {

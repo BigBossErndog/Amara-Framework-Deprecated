@@ -42,12 +42,12 @@ namespace Amara {
                         currentFrame = anim->frameAt(currentIndex);
                         parent->frame = currentFrame;
 
+                        isFinished = false;
+                        isActive = true;
+                        isPaused = false;
+
                         return true;
                     }
-
-                    isFinished = false;
-                    isActive = true;
-                    isPaused = false;
                 }
                 return false;
             }
@@ -126,6 +126,7 @@ namespace Amara {
                             currentFrame = currentAnim->frameAt(currentIndex);
                         }
                         else {
+                            currentFrame = currentAnim->frameAt(currentAnim->length() - 1);
                             currentAnim = nullptr;
                         }
                     }

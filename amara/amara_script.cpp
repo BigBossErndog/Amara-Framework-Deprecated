@@ -58,12 +58,15 @@ namespace Amara {
 
                 finished = false;
                 reset();
+                init();
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
                 init(gameProperties);
                 parent = parentActor;
             }
+
+            virtual void init() {}
 
             bool finished = false;
 
