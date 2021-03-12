@@ -476,6 +476,7 @@ namespace Amara {
 			void update() {
 				if (quit) return;
 				handleEvents();
+				writeProperties();
 				if (quit) return;
 				messages.update();
 				events->manage();
