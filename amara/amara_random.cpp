@@ -32,7 +32,7 @@ namespace Amara {
 			}
 
             double between(double min, double max) {
-                std::uniform_real_distribution<double> dist(0, 1);
+                std::uniform_real_distribution<double> dist(min, max);
                 return dist(e);
             }
 

@@ -196,6 +196,7 @@ namespace Amara {
                 for (size_t l = 0; l < numLayers; l++) {
                     if (tiledLayerKey.compare(layers[l]["name"]) != 0) continue;
                     alpha = layers[l]["opacity"];
+                    isVisible = layers[l]["visible"];
 
                     for (size_t t = 0; t < layers[l]["data"].size(); t++) {
                         tileId = (unsigned long)layers[l]["data"][t];

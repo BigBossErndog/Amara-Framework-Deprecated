@@ -49,11 +49,17 @@ namespace Amara {
             bool add(std::string key, SDL_Texture* tx, bool replace) {
                 return load->add(key, tx, replace);
             }
+            bool add(std::string key, SDL_Texture* tx) {
+                return load->add(key, tx, false);
+            }
             bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight, bool replace) {
                 return load->add(key, tx, frwidth, frheight, replace);
             }
             bool add(std::string key, Amara::Asset* newAsset, bool replace) {
                 return load->add(key, newAsset, replace);
+            }
+            bool add(std::string key, Amara::Asset* newAsset) {
+                return load->add(key, newAsset, false);
             }
 
             void regenerateAssets() {

@@ -653,6 +653,41 @@ namespace Amara {
 				json(key, path, false);
 			}
 
+			virtual bool lineByLine(std::string key, std::string path, bool replace) {
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
+					return false;
+				}
+				bool success = true;
+
+				std::ifstream in(path, std::ios::in | std::ios::binary);
+				if (in) {
+					std::vector<std::string> contents;
+					std::string temp;
+					while (std::getline(in, temp)) {
+						contents.push_back(temp);
+					}
+
+					std::cout << "Loaded: " << key << std::endl;
+					Amara::Asset* newAsset = new Amara::LineByLine(key, LINEBYLINE, contents);
+					assets[key] = newAsset;
+					if (got != nullptr) {
+						delete got;
+					}
+				}
+				else {
+					std::cout << "Loader: Failed to read file \"" << path << "\"" << std::endl;
+					success = false;
+				}
+
+				return success;
+			}
+
+			bool lineByLine(std::string key, std::string path) {
+				return lineByLine(key, path, false);
+			}
+
 			virtual void regenerateAssets() {
 				std::unordered_map<std::string, Amara::Asset*>::iterator it = assets.begin();
 				while (it != assets.end()) {

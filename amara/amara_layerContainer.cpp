@@ -313,6 +313,14 @@ namespace Amara {
             textureHeight = height;
         }
 
+        void setOrigin(float gx, float gy) {
+            originX = gx;
+            originY = gy;
+        }
+        void setOrigin(float go) {
+            setOrigin(go, go);
+        }
+
         void draw(int vx, int vy, int vw, int vh) {
             float recAlpha = properties->alpha;
             if (!textureLocked) {

@@ -15,7 +15,8 @@ namespace Amara {
         SOUND,
         MUSIC,
         JSONFILE,
-        STRINGFILE
+        STRINGFILE,
+        LINEBYLINE
     };
 
     class Asset {
@@ -178,6 +179,35 @@ namespace Amara {
             void regenerate(SDL_Renderer* gRenderer) {
                 reloadFontCache(gRenderer);
             }
+    };
+
+    class LineByLine: public Amara::Asset {
+    public:
+        int index = 0;
+        std::vector<std::string> contents;
+
+        LineByLine(std::string givenKey, AssetType givenType, std::vector<std::string> givenContents): Amara::Asset(givenKey, LINEBYLINE, nullptr){
+            contents = givenContents;
+        }
+
+        void reset() {
+            index = 0;
+        }
+
+        std::string get() {
+            index += 1;
+            if (index > contents.size()) {
+                index -= 1;
+                return "EOF";
+            }
+            else {
+                return contents[index];
+            }
+        }
+
+        std::string get(int i) {
+            return contents[i];
+        }
     };
 }
 
