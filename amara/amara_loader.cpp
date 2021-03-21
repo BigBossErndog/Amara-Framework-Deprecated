@@ -684,7 +684,7 @@ namespace Amara {
 				return success;
 			}
 
-			bool lineByLine(std::string key, std::string path) {
+			virtual bool lineByLine(std::string key, std::string path) {
 				return lineByLine(key, path, false);
 			}
 

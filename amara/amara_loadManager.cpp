@@ -102,6 +102,9 @@ namespace Amara {
                         case MUSIC:
                             success = load->music(task->key, task->path, task->replace);
                             break;
+                        case LINEBYLINE:
+                            success = load->lineByLine(task->key, task->path, task->replace);
+                            break;
                     }
 
                     delete task;
@@ -186,6 +189,15 @@ namespace Amara {
                 t->size = size;
                 t->color = color;
                 t->style = style;
+                pushTask(key, t);
+                return true;
+            }
+
+            bool lineByLine(std::string key, std::string path, bool replace) {
+                Amara::LoadTask* t  = new Amara::LoadTask();
+                t->type = LINEBYLINE;
+                t->path = path;
+                t->replace = replace;
                 pushTask(key, t);
                 return true;
             }
