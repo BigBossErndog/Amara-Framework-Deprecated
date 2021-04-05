@@ -10,7 +10,7 @@ namespace Amara {
             SDL_Color recColor;
             SDL_Color color = {0, 0, 0, 255};
 
-            SDL_Rect drawnRect;
+            SDL_FRect drawnRect;
             SDL_Rect viewport;
 
             float fadeInSpeed = 0.1;
@@ -122,7 +122,7 @@ namespace Amara {
                 int newAlpha = (float)color.a * alpha;
                 SDL_SetRenderDrawBlendMode(properties->gRenderer, SDL_BLENDMODE_BLEND);
                 SDL_SetRenderDrawColor(properties->gRenderer, color.r, color.g, color.b, newAlpha);
-                SDL_RenderFillRect(properties->gRenderer, &drawnRect);
+                SDL_RenderFillRectF(properties->gRenderer, &drawnRect);
 
                 SDL_SetRenderDrawColor(properties->gRenderer, recColor.r, recColor.g, recColor.b, recColor.a);
                 Amara::Actor::draw(vx, vy, vw, vh);

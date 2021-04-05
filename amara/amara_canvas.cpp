@@ -22,10 +22,12 @@ namespace Amara {
 
             SDL_Color recColor;
             SDL_Rect drawnRect;
-            SDL_Rect destRect;
+            SDL_FRect destRect;
             SDL_Rect viewport;
-            SDL_Point origin;
+            SDL_FPoint origin;
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
+
+            bool pixelLocked = false;
 
             float originX = 0;
             float originY = 0;
@@ -206,10 +208,17 @@ namespace Amara {
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
-                destRect.x = floor((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = floor((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
-                destRect.w = ceil((imageWidth * scaleX) * properties->zoomX);
-                destRect.h = ceil((imageHeight * scaleY) * properties->zoomY);
+                destRect.x = ((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = ((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRect.w = ((imageWidth * scaleX) * properties->zoomX);
+                destRect.h = ((imageHeight * scaleY) * properties->zoomY);
+
+                if (pixelLocked) {
+                    destRect.x = floor(destRect.x);
+                    destRect.y = floor(destRect.y);
+                    destRect.w = ceil(destRect.w);
+                    destRect.h = ceil(destRect.h);
+                }
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
@@ -249,7 +258,7 @@ namespace Amara {
                         SDL_SetTextureBlendMode(canvas, blendMode);
 				        SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);
 
-                        SDL_RenderCopyEx(
+                        SDL_RenderCopyExF(
                             properties->gRenderer,
                             canvas,
                             NULL,

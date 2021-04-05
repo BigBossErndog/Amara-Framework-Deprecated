@@ -675,6 +675,7 @@ namespace Amara {
 					if (got != nullptr) {
 						delete got;
 					}
+					in.close();
 				}
 				else {
 					std::cout << "Loader: Failed to read file \"" << path << "\"" << std::endl;

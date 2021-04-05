@@ -14,8 +14,10 @@ namespace Amara {
 
             SDL_Rect viewport;
             SDL_Rect srcRect;
-            SDL_Rect destRect;
-            SDL_Point origin;
+            SDL_FRect destRect;
+            SDL_FPoint origin;
+
+            bool pixelLocked = false;
 
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
@@ -138,10 +140,17 @@ namespace Amara {
                     scaleY = abs(scaleY);
                 }
 
-                destRect.x = floor((x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = floor((y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
-                destRect.w = ceil(((imageWidth-cropLeft-cropRight) * scaleX) * nzoomX);
-                destRect.h = ceil(((imageHeight-cropTop-cropBottom) * scaleY) * nzoomY);
+                destRect.x = ((x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRect.y = ((y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRect.w = (((imageWidth-cropLeft-cropRight) * scaleX) * nzoomX);
+                destRect.h = (((imageHeight-cropTop-cropBottom) * scaleY) * nzoomY);
+
+                if (pixelLocked) {
+                    destRect.x = floor(destRect.x);
+                    destRect.y = floor(destRect.y);
+                    destRect.w = ceil(destRect.w);
+                    destRect.h = ceil(destRect.h);
+                }
 
                 scaleX = recScaleX;
                 scaleY = recScaleY;
@@ -213,7 +222,7 @@ namespace Amara {
                             flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
                         }
 
-                        SDL_RenderCopyEx(
+                        SDL_RenderCopyExF(
                             gRenderer,
                             (SDL_Texture*)(texture->asset),
                             &srcRect,

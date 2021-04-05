@@ -194,19 +194,23 @@ namespace Amara {
             index = 0;
         }
 
-        std::string get() {
+        std::string getLine() {
             index += 1;
             if (index > contents.size()) {
                 index -= 1;
                 return "EOF";
             }
             else {
-                return contents[index];
+                return contents[index - 1];
             }
         }
 
-        std::string get(int i) {
+        std::string getLine(int i) {
             return contents[i];
+        }
+
+        bool eof() {
+            return index >= contents.size();
         }
     };
 }

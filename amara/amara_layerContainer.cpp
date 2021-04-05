@@ -109,8 +109,8 @@ namespace Amara {
         SDL_Texture* recTarget;
         SDL_Rect viewport;
         SDL_Rect srcRect;
-        SDL_Rect destRect;
-        SDL_Point origin = { 0, 0 };
+        SDL_FRect destRect;
+        SDL_FPoint origin = { 0, 0 };
 
         SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
@@ -189,7 +189,7 @@ namespace Amara {
                     SDL_SetTextureBlendMode(tx, blendMode);
                     SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
 
-                    SDL_RenderCopyEx(
+                    SDL_RenderCopyExF(
                         properties->gRenderer,
                         tx,
                         NULL,
@@ -273,8 +273,10 @@ namespace Amara {
         SDL_Texture* recTarget;
         SDL_Rect viewport;
         SDL_Rect srcRect;
-        SDL_Rect destRect;
-        SDL_Point origin = { 0, 0 };
+        SDL_FRect destRect;
+        SDL_FPoint origin = { 0, 0 };
+
+        bool pixelLocked = false;
 
         SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
@@ -370,10 +372,17 @@ namespace Amara {
                 scaleY = abs(scaleY);
             }
 
-            destRect.x = floor((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-            destRect.y = floor((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
-            destRect.w = ceil((width * scaleX) * nzoomX);
-            destRect.h = ceil((height * scaleY) * nzoomY);
+            destRect.x = ((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+            destRect.y = ((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+            destRect.w = ((width * scaleX) * nzoomX);
+            destRect.h = ((height * scaleY) * nzoomY);
+
+            if (pixelLocked) {
+                destRect.x = floor(destRect.x);
+                destRect.y = floor(destRect.y);
+                destRect.w = ceil(destRect.w);
+                destRect.h = ceil(destRect.h);
+            }
 
             scaleX = recScaleX;
             scaleY = recScaleY;
@@ -402,7 +411,7 @@ namespace Amara {
                         flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
                     }
 
-                    SDL_RenderCopyEx(
+                    SDL_RenderCopyExF(
                         properties->gRenderer,
                         tx,
                         NULL,

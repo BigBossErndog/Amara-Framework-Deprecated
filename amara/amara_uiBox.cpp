@@ -15,8 +15,10 @@ namespace Amara {
 
             SDL_Rect viewport;
             SDL_Rect srcRect;
-            SDL_Rect destRect;
-            SDL_Point origin;
+            SDL_FRect destRect;
+            SDL_FPoint origin;
+
+            bool pixelLocked = false;
 
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
@@ -282,7 +284,7 @@ namespace Amara {
                                 break;
                         }
 
-                        SDL_RenderCopy(
+                        SDL_RenderCopyF(
                             gRenderer,
                             (SDL_Texture*)(texture->asset),
                             &srcRect,
@@ -334,10 +336,17 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
-                destRect.x = floor((x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-                destRect.y = floor((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
-                destRect.w = ceil((width * scaleX) * nzoomX);
-                destRect.h = ceil((height * scaleY) * nzoomY);
+                destRect.x = ((x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+                destRect.y = ((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+                destRect.w = ((width * scaleX) * nzoomX);
+                destRect.h = ((height * scaleY) * nzoomY);
+
+                if (pixelLocked) {
+                    destRect.x = floor(destRect.x);
+                    destRect.y = floor(destRect.y);
+                    destRect.w = ceil(destRect.w);
+                    destRect.h = ceil(destRect.h);
+                }
 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
@@ -377,7 +386,7 @@ namespace Amara {
                         SDL_SetTextureBlendMode(canvas, blendMode);
 				        SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);
 
-                        SDL_RenderCopyEx(
+                        SDL_RenderCopyExF(
                             properties->gRenderer,
                             canvas,
                             NULL,
