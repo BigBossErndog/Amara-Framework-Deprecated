@@ -131,7 +131,7 @@ namespace Amara {
             }
             tx = SDL_CreateTexture(
                 properties->gRenderer,
-                SDL_GetWindowPixelFormat(properties->gWindow),
+                SDL_PIXELFORMAT_RGBA8888,
                 SDL_TEXTUREACCESS_TARGET,
                 properties->resolution->width,
                 properties->resolution->height
@@ -257,7 +257,7 @@ namespace Amara {
         }
     };
 
-    class TextureLayerContainer: public Amara::Layer {
+    class TextureContainer: public Amara::Layer {
     public:
         SDL_Texture* tx = nullptr;
         int textureWidth;
@@ -282,12 +282,12 @@ namespace Amara {
 
         bool textureLocked = false;
 
-        TextureLayerContainer(): Layer() {}
-        TextureLayerContainer(float gw, float gh) {
+        TextureContainer(): Layer() {}
+        TextureContainer(float gw, float gh) {
             width = gw;
             height = gh;
         }
-        TextureLayerContainer(float gx, float gy, float gw, float gh) {
+        TextureContainer(float gx, float gy, float gw, float gh) {
             x = gx;
             y = gy;
             width = gw;
@@ -306,7 +306,7 @@ namespace Amara {
             }
             tx = SDL_CreateTexture(
                 properties->gRenderer,
-                SDL_GetWindowPixelFormat(properties->gWindow),
+                SDL_PIXELFORMAT_RGBA8888,
                 SDL_TEXTUREACCESS_TARGET,
                 width,
                 height
@@ -482,7 +482,7 @@ namespace Amara {
             properties->angle = recAngle;
         }
 
-        ~TextureLayerContainer() {
+        ~TextureContainer() {
             if (tx) {
                 SDL_DestroyTexture(tx);
             }

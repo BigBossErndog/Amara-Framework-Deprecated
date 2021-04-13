@@ -103,7 +103,7 @@ namespace Amara {
                 }
                 canvas = SDL_CreateTexture(
                     properties->gRenderer,
-                    SDL_GetWindowPixelFormat(properties->gWindow),
+                    SDL_PIXELFORMAT_RGBA8888,
                     SDL_TEXTUREACCESS_TARGET,
                     floor(width),
                     floor(height)
