@@ -315,8 +315,10 @@ namespace Amara {
                 SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
                 SDL_SetRenderTarget(properties->gRenderer, canvas);
                 SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
+                SDL_SetTextureAlphaMod(canvas, 255);
                 SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
                 SDL_RenderClear(gRenderer);
+                SDL_RenderSetViewport(properties->gRenderer, NULL);
                 for (int i = 0; i < 9; i++) {
                     drawBoxPart(i);
                 }

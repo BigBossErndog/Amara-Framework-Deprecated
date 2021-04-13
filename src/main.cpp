@@ -8,10 +8,14 @@ class TestScene: public Scene {
         TextBox* box;
         Camera* exCam;
         Image* pointBox;
+        Tilemap* tilemap;
 
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
             load->ttf("pressStart", "assets/press-start.regular.ttf", 8);
+
+            load->json("reeds_home", "assets/reeds_home.json");
+            load->image("tiles", "assets/tiles.png");
         }
 
         void create() {
@@ -49,9 +53,9 @@ class TestScene: public Scene {
 
             controls->addKey("full", KEY_ESC);
 
-            add(exCam = new Camera(10, 10, 96, 72));
-            exCam->centerOn(game->width/(float)2, game->height/(float)2);
-            exCam->setZoom(1/(float)5);
+            // add(exCam = new Camera(10, 10, 96, 72));
+            // exCam->centerOn(game->width/(float)2, game->height/(float)2);
+            // exCam->setZoom(1/(float)5);
             box->bringToFront();
 
             float testAngle = 0;
@@ -60,17 +64,11 @@ class TestScene: public Scene {
                 float ox = sin(rads);
                 float oy = cos(rads);
 
-                cout << testAngle << ", " << ox << ", " << oy << " | ";
-
-                float newAngle = angleBetween({0, 0}, {ox, oy});
-                cout << round(newAngle*180/M_PI) << ", " << sin(newAngle) << ", " << cos(newAngle) << endl;
-
                 testAngle += 45;
             }
 
-            add(pointBox = new Image(0, 0, "box"));
-            pointBox->setOrigin(0.5);
-            pointBox->setScale(4);
+            add(tilemap = new Amara::Tilemap("tiles", "reeds_home"));
+            tilemap->createAllLayers();
         }
 
         void update() {
@@ -125,7 +123,7 @@ int main(int argc, char** args) {
         WebGame* game = new WebGame("Amara Game");
     #endif
     game->init(480, 360);
-    game->setWindowSize(900, 600);
+    game->setWindowSize(960, 720);
     // game->setBackgroundColor(255, 255, 255);
 
     game->scenes->add("test", new TestScene());
