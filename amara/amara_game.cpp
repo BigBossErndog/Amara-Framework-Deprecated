@@ -281,6 +281,9 @@ namespace Amara {
 			}
 
 			void gameLoop() {
+				renderTargetsReset = false;
+				renderDeviceReset = false;
+				
 				manageFPSStart();
 
 				writeProperties();
@@ -545,9 +548,6 @@ namespace Amara {
 				input->mouse->manage();
 				input->gamepads->manage();
 				input->touches->manage();
-
-				renderTargetsReset = false;
-				renderDeviceReset = false;
 
 				// manageControllers();
 

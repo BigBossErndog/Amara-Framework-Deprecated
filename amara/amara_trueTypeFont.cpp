@@ -103,6 +103,10 @@ namespace Amara {
 							break;
 					}
 				}
+                if (config.find("r") != config.end()) color.r = config["r"];
+                if (config.find("g") != config.end()) color.g = config["g"];
+                if (config.find("b") != config.end()) color.b = config["b"];
+                if (config.find("a") != config.end()) color.a = config["a"];
             }
 
             bool setFont(std::string gFontKey) {

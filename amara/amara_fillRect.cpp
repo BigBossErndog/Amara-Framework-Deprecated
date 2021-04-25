@@ -28,7 +28,7 @@ namespace Amara {
 			float renderOffsetX = 0;
 			float renderOffsetY = 0;
 
-			FillRect(float gx, float gy, float gw, int gh, Amara::Color gColor) {
+			FillRect(float gx, float gy, float gw, float gh, Amara::Color gColor) {
 				x = gx;
 				y = gy;
 				width = gw;
@@ -160,7 +160,7 @@ namespace Amara {
 
 					SDL_SetRenderDrawColor(properties->gRenderer, recColor.r, recColor.g, recColor.b, recColor.a);
 				}
-
+ 
 				Amara::Actor::draw(vx, vy, vw, vh);
 			}
 	};

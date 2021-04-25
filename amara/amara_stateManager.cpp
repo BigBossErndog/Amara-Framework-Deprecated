@@ -168,7 +168,7 @@ namespace Amara {
                     }
 
                     waitCounter += 1;
-                    if (waitCounter > t) {
+                    if (waitCounter >= t) {
                         nextEvt();
                     }
 

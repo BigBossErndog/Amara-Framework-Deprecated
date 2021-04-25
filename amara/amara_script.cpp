@@ -24,6 +24,7 @@ namespace Amara {
 			std::string id;
 
             bool deleteOnFinish = true;
+            bool deleteChainOnDelete = true;
 
             Amara::Script* chainedScript = nullptr;
 
@@ -87,6 +88,12 @@ namespace Amara {
 
 			virtual void cancel() {}
 			virtual void cancel(Amara::Actor* actor) {}
+
+            ~Script() {
+                if (deleteChainOnDelete && chainedScript) {
+                    delete chainedScript;
+                }
+            }
     };
 }
 

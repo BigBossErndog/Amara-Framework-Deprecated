@@ -419,6 +419,11 @@ namespace Amara {
             }
 
             bool setTexture(std::string gTextureKey) {
+                if (texture) removeTexture();
+                if (load == nullptr || properties == nullptr) {
+                    textureKey = gTextureKey;
+                    return true;
+                }
                 texture = (Amara::ImageTexture*)(load->get(gTextureKey));
                 if (texture != nullptr) {
                    textureKey = texture->key;
@@ -446,6 +451,12 @@ namespace Amara {
                     std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
                 }
                 return false;
+            }
+
+            bool removeTexture() {
+                textureKey.clear();
+                if (texture && texture->temp) delete texture;
+                texture = nullptr;
             }
 
             void setSize(int nw, int nh) {

@@ -92,6 +92,18 @@ namespace Amara {
                     originX = config["origin"];
                     originY = config["origin"];
                 }
+                if (config.find("originPositionX") != config.end()) {
+                    originX = config["originPositionX"];
+                    originX = originX/imageWidth;
+                }
+                if (config.find("originPositionY") != config.end()) {
+                    originY = config["originPositionY"];
+                    originY = originY/imageHeight;
+                }
+                if (config.find("originPosition") != config.end()) {
+                    originX = config["originPosition"];
+                    setOriginPosition(originX, originX);
+                }
                 if (config.find("flipHorizontal") != config.end()) {
                     flipHorizontal = config["flipHorizontal"];
                 }
@@ -140,8 +152,11 @@ namespace Amara {
                     scaleY = abs(scaleY);
                 }
 
-                destRect.x = ((x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = ((y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                float rotatedX = (x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX));
+                float rotatedY = (y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY));
+
+                destRect.x = (rotatedX * nzoomX);
+                destRect.y = (rotatedY * nzoomY);
                 destRect.w = (((imageWidth-cropLeft-cropRight) * scaleX) * nzoomX);
                 destRect.h = (((imageHeight-cropTop-cropBottom) * scaleY) * nzoomY);
 
@@ -243,6 +258,11 @@ namespace Amara {
 
             bool setTexture(std::string gTextureKey) {
                 if (texture) removeTexture();
+                if (load == nullptr || properties == nullptr) {
+                    textureKey = gTextureKey;
+                    return true;
+                }
+
                 texture = (Amara::ImageTexture*)(load->get(gTextureKey));
                 if (texture != nullptr) {
                    textureKey = texture->key;
@@ -326,6 +346,13 @@ namespace Amara {
             }
             void setOrigin(float g) {
                 setOrigin(g, g);
+            }
+            void setOriginPosition(float gx, float gy) {
+                originX = gx/imageWidth;
+                originY = gy/imageHeight;
+            }
+            void setOriginPosition(float g) {
+                setOriginPosition(g, g);
             }
 
             void setRenderOffset(float gx, float gy) {
