@@ -82,6 +82,14 @@ namespace Amara {
             return textDisplay;
         }
 
+        void setSpeed(int gSpeed, int gDelay) {
+            changeSpeed = gSpeed;
+            pauseTime = gDelay;
+        }
+        void setSpeed(int gDelay) {
+            setSpeed(1, gDelay);
+        }
+
         void run() {
             if (changeSpeed == -1) {
                 displayValue = value;

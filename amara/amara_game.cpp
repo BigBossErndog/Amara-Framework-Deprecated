@@ -218,6 +218,7 @@ namespace Amara {
 				writer = new FileWriter();
 
 				globalData.clear();
+				rng.randomize();
 
 
 				// Check connected gamepads

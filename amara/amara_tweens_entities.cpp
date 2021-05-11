@@ -144,18 +144,18 @@ namespace Amara {
             }
     };
 
-    class Tween_Scale: public Tween {
+    class Tween_ScaleXY: public Tween {
         public:
             float startScaleX;
             float startScaleY;
             float targetScale;
 
-            Tween_Scale(float ts, double tt, Amara::Easing gEasing) {
+            Tween_ScaleXY(float ts, double tt, Amara::Easing gEasing) {
                 targetScale = ts;
                 time = tt;
                 easing = gEasing;
             }
-            Tween_Scale(float ts, double tt): Tween_Scale(ts, tt, LINEAR) {}
+            Tween_ScaleXY(float ts, double tt): Tween_ScaleXY(ts, tt, LINEAR) {}
 
             void prepare(Amara::Actor* actor) {
                 startScaleX = actor->scaleX;

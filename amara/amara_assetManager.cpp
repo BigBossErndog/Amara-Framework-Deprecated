@@ -101,6 +101,22 @@ namespace Amara {
                         int frame = config["frame"];
                         addAnim(textureKeys, animKey, frame);
                     }
+                    else if (config.find("startFrame") != config.end()) {
+                        if (config.find("numFrames") != config.end()) {
+                            std::vector<int> frames;
+                            frames.clear();
+                            int startFrame = config["startFrame"];
+                            int numFrames = config["numFrames"];
+                            int frameRate = config["frameRate"];
+                            for (int i = 0; i < numFrames; i++) {
+                                frames.push_back(startFrame + i);
+                            }
+                            addAnim(textureKeys, animKey, frames, frameRate, loop);
+                        }
+                        else {
+                            SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                        }
+                    }
                 }
                 if (config.find("texture") != config.end()) {
                     std::string textureKey = config["texture"];
@@ -112,6 +128,22 @@ namespace Amara {
                     else if (config.find("frame") != config.end()) {
                         int frame = config["frame"];
                         addAnim(textureKey, animKey, frame);
+                    }
+                    else if (config.find("startFrame") != config.end()) {
+                        if (config.find("numFrames") != config.end()) {
+                            std::vector<int> frames;
+                            frames.clear();
+                            int startFrame = config["startFrame"];
+                            int numFrames = config["numFrames"];
+                            int frameRate = config["frameRate"];
+                            for (int i = 0; i < numFrames; i++) {
+                                frames.push_back(startFrame + i);
+                            }
+                            addAnim(textureKey, animKey, frames, frameRate, loop);
+                        }
+                        else {
+                            SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                        }
                     }
                 }
                 if (config.find("group") != config.end()) {
@@ -127,6 +159,22 @@ namespace Amara {
                         else if (config.find("frame") != config.end()) {
                             int frame = config["frame"];
                             addAnim(textureKeys, animKey, frame);
+                        }
+                        else if (config.find("startFrame") != config.end()) {
+                            if (config.find("numFrames") != config.end()) {
+                                std::vector<int> frames;
+                                frames.clear();
+                                int startFrame = config["startFrame"];
+                                int numFrames = config["numFrames"];
+                                int frameRate = config["frameRate"];
+                                for (int i = 0; i < numFrames; i++) {
+                                    frames.push_back(startFrame + i);
+                                }
+                                addAnim(textureKeys, animKey, frames, frameRate, loop);
+                            }
+                            else {
+                                SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                            }
                         }
                     }
                 }
@@ -144,6 +192,22 @@ namespace Amara {
                             else if (config.find("frame") != config.end()) {
                                 int frame = config["frame"];
                                 addAnim(textureKeys, animKey, frame);
+                            }
+                            else if (config.find("startFrame") != config.end()) {
+                                if (config.find("numFrames") != config.end()) {
+                                    std::vector<int> frames;
+                                    frames.clear();
+                                    int startFrame = config["startFrame"];
+                                    int numFrames = config["numFrames"];
+                                    int frameRate = config["frameRate"];
+                                    for (int i = 0; i < numFrames; i++) {
+                                        frames.push_back(startFrame + i);
+                                    }
+                                    addAnim(textureKeys, animKey, frames, frameRate, loop);
+                                }
+                                else {
+                                    SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                                }
                             }
                         }
                     }
