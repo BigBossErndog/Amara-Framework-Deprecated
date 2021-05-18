@@ -73,6 +73,8 @@ namespace Amara {
 #include "amara_textBox.cpp"
 #include "amara_uiBox.cpp"
 
+#include "amara_actorGroup.cpp"
+
 #include "amara_sceneManager.cpp"
 #include "amara_scenePlugin.cpp"
 #include "amara_scene.cpp"
@@ -116,8 +118,6 @@ namespace Amara {
 
 #include "amara_camera.cpp"
 #include "amara_sceneTransitionBase.cpp"
-
-#include "amara_actorGroup.cpp"
 
 #include "amara_textureGeneration.cpp"
 #include "amara_random.cpp"

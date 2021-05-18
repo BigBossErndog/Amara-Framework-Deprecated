@@ -5,24 +5,11 @@
 #include "amara.h"
 
 namespace Amara {
-    class ActorGroup {
+    class ActorGroup: public Amara::Script {
         public:
-            Amara::GameProperties* properties = nullptr;
-            Amara::Scene* scene = nullptr;
-
             std::vector<Amara::Actor*> actors;
 
-            ActorGroup(Amara::GameProperties* gProperties) {
-                properties = gProperties;
-            }
-
-            ActorGroup(Amara::Actor* gActor) {
-                properties = gActor->properties;
-            }
-
-            ActorGroup(Amara::Script* script) {
-                properties = script->properties;
-            }
+            ActorGroup() {}
 
 			int size() {
 				return actors.size();
@@ -35,6 +22,12 @@ namespace Amara {
             Amara::Actor* add(Amara::Actor* actor) {
                 actors.push_back(actor);
                 return actor;
+            }
+            Amara::Actor* add(bool sceneAdd, Amara::Actor* actor) {
+                if (sceneAdd && scene) {
+                    scene->add(actor);
+                }
+                return add(actor);
             }
 
             virtual void move(int gx, int gy) {
@@ -63,9 +56,23 @@ namespace Amara {
                 actors.clear();
             }
 
-            virtual void destroy() {
+            void destroy() {
+                finish();
+            }
+
+            void script() {
+                Amara::Actor* actor;
+                for (auto it = actors.begin(); it != actors.end(); ++it) {
+                    actor = *it;
+                    if (actor->isDestroyed) {
+                        actors.erase(it--);
+                    }
+                }
+            }
+
+            void finish() {
+                Amara::Script::finish();
                 destroyActors();
-                delete this;
             }
     };
 }

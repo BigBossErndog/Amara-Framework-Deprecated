@@ -193,6 +193,13 @@ namespace Amara {
             void setOrigin(float go) {
                 setOrigin(go, go);
             }
+            void setOriginPosition(float gx, float gy) {
+                originX = gx/imageWidth;
+                originY = gy/imageHeight;
+            }
+            void setOriginPosition(float g) {
+                setOriginPosition(g, g);
+            }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 bool skipDrawing = false;

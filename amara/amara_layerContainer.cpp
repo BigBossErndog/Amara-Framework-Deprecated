@@ -98,6 +98,13 @@ namespace Amara {
         void setOrigin(float g) {
             setOrigin(g, g);
         }
+        void setOriginPosition(float gx, float gy) {
+            originX = gx/width;
+            originY = gy/height;
+        }
+        void setOriginPosition(float g) {
+            setOriginPosition(g, g);
+        }
     };
 
     class TextureLayer: public Amara::Layer {
@@ -321,6 +328,13 @@ namespace Amara {
         }
         void setOrigin(float go) {
             setOrigin(go, go);
+        }
+        void setOriginPosition(float gx, float gy) {
+            originX = gx/width;
+            originY = gy/height;
+        }
+        void setOriginPosition(float g) {
+            setOriginPosition(g, g);
         }
 
         void draw(int vx, int vy, int vw, int vh) {

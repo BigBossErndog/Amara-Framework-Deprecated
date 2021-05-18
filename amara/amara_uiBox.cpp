@@ -483,6 +483,13 @@ namespace Amara {
             void setOrigin(float gi) {
                 setOrigin(gi, gi);
             }
+            void setOriginPosition(float gx, float gy) {
+                originX = gx/width;
+                originY = gy/height;
+            }
+            void setOriginPosition(float g) {
+                setOriginPosition(g, g);
+            }
 
             void copyStateManager(Amara::StateManager* gsm) {
                 copySm = gsm;
