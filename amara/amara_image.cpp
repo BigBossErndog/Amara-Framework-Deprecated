@@ -110,6 +110,24 @@ namespace Amara {
                 if (config.find("flipVertical") != config.end()) {
                     flipVertical = config["flipVertical"];
                 }
+                if (config.find("renderOffsetX") != config.end()) {
+                    renderOffsetX = config["renderOffsetX"];
+                }
+                if (config.find("renderOffsetY") != config.end()) {
+                    renderOffsetY = config["renderOffsetY"];
+                }
+                if (config.find("cropLeft") != config.end()) {
+                    cropLeft = config["cropLeft"];
+                }
+                if (config.find("cropRight") != config.end()) {
+                    cropRight = config["cropRight"];
+                }
+                if (config.find("cropTop") != config.end()) {
+                    cropTop = config["cropTop"];
+                }
+                if (config.find("cropBottom") != config.end()) {
+                    cropBottom = config["cropBottom"];
+                }
             }
 
             virtual nlohmann::json toData() {
