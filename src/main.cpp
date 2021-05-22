@@ -19,8 +19,10 @@ class TestScene: public Scene {
         }
 
         void create() {
+            string format = "Hello %s, what?";
+            string ernie = "Ernie";
             add(box = new TextBox(400, 160, "box", "pressStart"));
-            box->setText("Somebody once told me the world revolved around me.");
+            box->setText(stringWithFormat(format, ernie.c_str()));
             box->setTextColor(0, 0, 0);
             box->setProgressive();
             box->id = "TEXTBOX";
@@ -66,9 +68,6 @@ class TestScene: public Scene {
 
                 testAngle += 45;
             }
-
-            add(tilemap = new Amara::Tilemap("tiles", "reeds_home"));
-            tilemap->createAllLayers();
         }
 
         void update() {

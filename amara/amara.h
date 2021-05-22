@@ -174,3 +174,4 @@ namespace Amara {
 #include "amara_geometry.cpp"
 #include "amara_easing.cpp"
 #include "amara_math.cpp"
+#include "amara_string.cpp"
