@@ -54,6 +54,8 @@ namespace Amara {
                     width = properties->resolution->width;
                     height = properties->resolution->height;
                 }
+
+                entityType = "canvas";
             }
 
             void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a, SDL_BlendMode gBlendMode) {

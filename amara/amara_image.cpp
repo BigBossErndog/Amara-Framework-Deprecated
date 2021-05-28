@@ -59,7 +59,8 @@ namespace Amara {
                 x = gx;
                 y = gy;
             }
-
+            
+            using Amara::Actor::init;
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
 				properties = gameProperties;
                 load = properties->loader;
@@ -71,7 +72,7 @@ namespace Amara {
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
 
-                data["entityType"] = "image";
+                entityType = "image";
 			}
 
             virtual void configure(nlohmann::json config) {

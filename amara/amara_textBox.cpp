@@ -71,7 +71,7 @@ namespace Amara {
                     setFont(fontKey);
                 }
 
-                data["entityType"] = "textBox";
+                entityType = "textBox";
 			}
 
             virtual void configure(nlohmann::json config) {

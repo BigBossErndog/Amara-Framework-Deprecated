@@ -73,7 +73,7 @@ namespace Amara {
                     }
                 }
                 
-                data["entityType"] = "tilemap";
+                entityType = "tilemap";
             }
 
             void setTiledJson(std::string gTiledJsonKey) {

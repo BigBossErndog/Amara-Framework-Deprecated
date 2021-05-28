@@ -18,6 +18,12 @@ namespace Amara {
                     inUse = false;
                 }
             }
+
+            using Amara::Image::init;
+            void init() {
+                Amara::Image::init();
+                entityType = "particle";
+            }
     };
 
     class ParticleSystem: public Amara::Actor {
@@ -30,6 +36,7 @@ namespace Amara {
                 particles.resize(gNumber, particle);
             }
 
+            using Amara::Actor::init;
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
 
@@ -37,6 +44,7 @@ namespace Amara {
                     particle.init(gameProperties, givenScene, this);
                     particle.setTexture(textureKey);
                 }
+                entityType = "particleSystem";
             }
 
             int size() {

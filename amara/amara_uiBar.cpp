@@ -56,6 +56,7 @@ namespace Amara {
             add(backBar = new Image(0, 0));
             add(frontBar = new Image(0, 0));
             setTexture(textureKey);
+            entityType = "uiBar";
         }
 
         bool setTexture(std::string gKey) {

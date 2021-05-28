@@ -34,6 +34,12 @@ namespace Amara {
                 originY = 0.5;
                 blendMode = SDL_BLENDMODE_BLEND;
             }
+            
+            using Amara::Image::init;
+            void init() {
+                Amara::Image::init();
+                entityType = "light";
+            }
 
             void draw(Amara::GameProperties* properties, SDL_Renderer* gRenderer, int vx, int vy, int vw, int vh) {
                 if (texture != nullptr) {
@@ -100,6 +106,7 @@ namespace Amara {
                 fillColor = gColor;
             }
 
+            using Amara::Actor::init;
             void init(Amara::GameProperties* gProperties, Amara::Scene* gScene, Amara::Entity* gParent) {
                 Amara::Actor::init(gProperties, gScene, gParent);
                 gRenderer = properties->gRenderer;
@@ -108,6 +115,7 @@ namespace Amara {
                 destroyLights();
 
                 destroyTexture();
+                entityType = "lightLayer";
             }
 
             Amara::Entity* add(Amara::Entity* entity) {

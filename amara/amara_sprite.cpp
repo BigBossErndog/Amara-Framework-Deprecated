@@ -12,10 +12,11 @@ namespace Amara {
             Sprite(std::string tx): Amara::Image(tx) {}
             Sprite(): Amara::Image() {};
 
+            using Amara::Image::init;
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
                 anims = new Amara::AnimationManager(gameProperties, this);
                 Amara::Image::init(gameProperties, givenScene, givenParent);
-                data["entityType"] = "sprite";
+                entityType = "sprite";
 			}
 
             virtual bool play(std::string animKey) {

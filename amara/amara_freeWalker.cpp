@@ -26,6 +26,11 @@ namespace Amara {
         FreeWalker(int gx, int gy, std::string tKey): Amara::Sprite(gx, gy, tKey) {}
         FreeWalker(): Amara::Sprite() {}
 
+        void init() {
+            Amara::Sprite::init();
+            entityType = "actor";
+        }
+
         virtual void configure(nlohmann::json config) {
             Amara::Sprite::configure(config);
             if (config.find("direction") != config.end()) {

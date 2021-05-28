@@ -169,6 +169,7 @@ namespace Amara {
 			nlohmann::json data;
 
 			std::string id;
+			std::string entityType;
 
 			float x = 0;
 			float y = 0;
@@ -209,7 +210,7 @@ namespace Amara {
 				load = properties->loader;
 
 				isActive = true;
-				data["entityType"] = "entity";
+				entityType = "entity";
 
 				init();
 				create();
@@ -318,6 +319,7 @@ namespace Amara {
 			virtual nlohmann::json toData() {
 				nlohmann::json config;
 				config["id"] = id;
+				config["entityType"] = entityType;
 				config["x"] = x;
 				config["y"] = y;
 				config["scaleX"] = scaleX;

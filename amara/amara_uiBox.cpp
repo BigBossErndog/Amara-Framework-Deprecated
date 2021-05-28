@@ -96,7 +96,7 @@ namespace Amara {
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
 
-                data["entityType"] = "uiBox";
+                entityType = "uiBox";
             }
 
             virtual void configure(nlohmann::json config) {

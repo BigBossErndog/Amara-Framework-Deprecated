@@ -48,7 +48,7 @@ namespace Amara {
 
             int downTime = 0;
             int tapTime = 12;
-
+            
             virtual void init(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 events = properties->events;

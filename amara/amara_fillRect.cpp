@@ -37,6 +37,11 @@ namespace Amara {
 			}
 			FillRect(float gx, float gy, float gw, float gh): FillRect(gx, gy, gw, gh, {0, 0, 0, 255}) {}
 
+			void init() {
+                Amara::Actor::init();
+                entityType = "actor";
+            }
+
 			void configure(nlohmann::json config) {
 				Amara::Actor::configure(config);
 				if (config.find("width") != config.end()) {

@@ -72,7 +72,7 @@ namespace Amara {
                 preload();
                 std::cout << "START LOADING TASKS: " << load->numTasks() << " loading tasks." << std::endl;
 
-                data["entityType"] = "scene";
+                entityType = "scene";
             }
 
             virtual Amara::Entity* add(Amara::Entity* entity) {

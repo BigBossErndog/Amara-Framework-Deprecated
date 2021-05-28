@@ -72,7 +72,7 @@ namespace Amara {
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
 
-                data["entityType"] = "trueTypeFont";
+                entityType = "trueTypeFont";
 			}
 
             virtual void configure(nlohmann::json config) {

@@ -114,7 +114,7 @@ namespace Amara {
                     setupTiledLayer(tiledLayerKey);
                 }
 
-                data["entityType"] = "tilemapLayer";
+                entityType = "tilemapLayer";
             }
 
             void configure(nlohmann::json config) {

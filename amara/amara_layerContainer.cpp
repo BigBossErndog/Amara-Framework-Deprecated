@@ -14,6 +14,12 @@ namespace Amara {
             y = gy;
         }
 
+        using Amara::Actor::init;
+        void init() {
+                Amara::Actor::init();
+                entityType = "layer";
+            }
+
         virtual void draw(int vx, int vy, int vw, int vh) {
             Amara::Actor::draw(vx, vy, vw, vh);
         }
@@ -36,6 +42,12 @@ namespace Amara {
             x = gx;
             y = gy;
         }
+
+        using Amara::Layer::init;
+        void init() {
+                Amara::Layer::init();
+                entityType = "container";
+            }
 
         virtual void draw(int vx, int vy, int vw, int vh) override {
             int dx = 0, dy = 0, dw = 0, dh = 0, ox = 0, oy = 0;
@@ -126,10 +138,12 @@ namespace Amara {
         TextureLayer(): Layer() {}
         TextureLayer(float gx, float gy): Layer(gx, gy) {}
 
+        using Amara::Layer::init;
         virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
             properties = gameProperties;
             createTexture();
             Amara::Layer::init(gameProperties, givenScene, givenParent);
+            entityType = "textureLayer";
         }
 
         void createTexture() {
@@ -301,10 +315,12 @@ namespace Amara {
             height = gh;
         }
 
+        using Amara::Layer::init;
         virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
             properties = gameProperties;
             createTexture();
             Amara::Layer::init(gameProperties, givenScene, givenParent);
+            entityType = "textureContainer";
         }
 
         void createTexture() {
