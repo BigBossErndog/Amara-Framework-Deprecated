@@ -241,6 +241,14 @@ namespace Amara {
 					int yFromBottom = config["yFromBottom"];
 					y = properties->resolution->height - yFromBottom;
 				}
+				if (config.find("xFromCenter") != config.end()) {
+					int xFromCenter = config["xFromCenter"];
+					x = properties->resolution->width/2.0 + xFromCenter;
+				}
+				if (config.find("yFromCenter") != config.end()) {
+					int yFromCenter = config["yFromCenter"];
+					y = properties->resolution->height/2.0 + yFromCenter;
+				}
 
 				if (config.find("relativeX") != config.end()) {
 					float relativeX = config["relativeX"];

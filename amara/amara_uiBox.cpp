@@ -188,6 +188,12 @@ namespace Amara {
                 if (config.find("partitionRight") != config.end()) {
                     partitionRight = config["partitionRight"];
                 }
+                if (config.find("boxHorizontalAlignment") != config.end()) {
+                    boxHorizontalAlignment = config["boxHorizontalAlignment"];
+                }
+                if (config.find("boxVerticalAlignment") != config.end()) {
+                    boxVerticalAlignment = config["boxVerticalAlignment"];
+                }
 
                 setOpenSpeed(openSpeedX, openSpeedY);
                 setCloseSpeed(closeSpeedX, closeSpeedY);
