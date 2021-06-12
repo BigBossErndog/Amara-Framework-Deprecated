@@ -267,7 +267,7 @@ namespace Amara {
 					string(key, path, replace);
 				}
 			}
-			void loadJSONfromJSON(nlohmann::json& config) {
+			void loadJSONFromJSON(nlohmann::json& config) {
 				std::string key;
 				std::string path;
 				int frameWidth, frameHeight;
@@ -280,6 +280,22 @@ namespace Amara {
 						replace = asset["replace"];
 					}
 					json(key, path, replace);
+				}
+			}
+
+			void loadLineByLineFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				int frameWidth, frameHeight;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					lineByLine(key, path, replace);
 				}
 			}
 
@@ -321,7 +337,10 @@ namespace Amara {
 						loadStringFromJSON(config["string"]);
 					}
 					if (config.find("json") != config.end()) {
-						loadJSONfromJSON(config["json"]);
+						loadJSONFromJSON(config["json"]);
+					}
+					if (config.find("lineByLine") != config.end()) {
+						loadLineByLineFromJSON(config["lineByLine"]);
 					}
 				}
 				else {

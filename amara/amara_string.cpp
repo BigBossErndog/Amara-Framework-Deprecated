@@ -19,6 +19,7 @@ namespace Amara {
         StringParser(std::string gContent) {
             set(gContent);
         }
+        StringParser() {}
 
         void reset() {
             index = 0;
@@ -51,6 +52,16 @@ namespace Amara {
                 if (std::find(list.begin(), list.end(), r) != list.end()) {
                     return parsed;
                 }
+                parsed.push_back(r);
+            }
+            return parsed;
+        }
+
+        std::string parseToEnd() {
+            std::string parsed;
+            while (index < content.size()) {
+                char r = content.at(index);
+                index += 1;
                 parsed.push_back(r);
             }
             return parsed;
