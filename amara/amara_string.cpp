@@ -24,6 +24,7 @@ namespace Amara {
 
         void reset() {
             index = 0;
+            recBookmark = 0;
         }
         void set(std::string gContent) {
             content = gContent;
@@ -59,6 +60,7 @@ namespace Amara {
                 char r = content.at(index);
                 index += 1;
 
+                if (r == 13) continue;
                 if (r == c) {
                     return parsed;
                 }
@@ -73,6 +75,7 @@ namespace Amara {
                 char r = content.at(index);
                 index += 1;
 
+                if (r == 13) continue;
                 if (std::find(list.begin(), list.end(), r) != list.end()) {
                     return parsed;
                 }
@@ -87,6 +90,7 @@ namespace Amara {
                 char r = content.at(index);
                 index += 1;
 
+                if (r == 13) continue;
                 if (r != c) {
                     return parsed;
                 }
@@ -101,6 +105,7 @@ namespace Amara {
                 char r = content.at(index);
                 index += 1;
 
+                if (r == 13) continue;
                 if (std::find(list.begin(), list.end(), r) != list.end()) {
                     parsed.push_back(r);
                     continue;
@@ -115,6 +120,7 @@ namespace Amara {
             while (index < content.size()) {
                 char r = content.at(index);
                 index += 1;
+                if (r == 13) continue;
                 parsed.push_back(r);
             }
             return parsed;
