@@ -416,6 +416,19 @@ namespace Amara {
                 return toReturn;
             }
 
+            void setTextColor(int r, int g, int b, int a) {
+                if (txt) txt->setColor(r, g, b, a);
+            }
+            void setTextColor(int r, int g, int b) {
+                setTextColor(r, g, b, 255);
+            }
+            void setTextOutline(int o, int r, int g, int b, int a) {
+                if (txt) txt->setOutline(o, r, g, b, a);
+            }
+            void setTextOutline(int o, int r, int g, int b) {
+                setTextOutline(o, r, g, b, 255);
+            }
+
             virtual bool close() {
                 Amara::StateManager& sm = checkSm();
                 bool toReturn = false;
