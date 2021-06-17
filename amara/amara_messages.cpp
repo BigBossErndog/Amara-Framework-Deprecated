@@ -10,13 +10,15 @@ namespace Amara {
         std::string key;
         nlohmann::json data;
         bool isActive = true;
+        bool isNull = false;
+        bool skip = false;
     } Message;
 
     class MessageQueue {
     public:
         std::vector<Message> queue;
 
-        Message nullMessage = { nullptr, "null", {} };
+        static Message nullMessage;
 
         MessageQueue() {
 
@@ -26,8 +28,11 @@ namespace Amara {
             for (auto it = queue.begin(); it != queue.end(); ++it) {
                 Message msg = *it;
                 if (msg.parent == nullptr || !msg.isActive) {
-                    queue.erase(it--);
-                    continue;
+                    if (msg.skip) msg.skip = false;
+                    else {
+                        queue.erase(it--);
+                        continue;
+                    }
                 }
             }
         }
@@ -44,6 +49,10 @@ namespace Amara {
         }
 
         bool empty() {
+            return (queue.size() == 0);
+        }
+
+        int size() {
             return queue.size();
         }
 
@@ -67,4 +76,5 @@ namespace Amara {
             return queue.back();
         }
     };
+    Message MessageQueue::nullMessage = { nullptr, "null", {}, false, true };
 }

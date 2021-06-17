@@ -49,8 +49,6 @@ namespace Amara {
 
             Amara::Entity* progressIcon = nullptr;
 
-            Amara::Color textColor = {0, 0, 0, 0};
-
             TextBox() : Amara::UIBox() {}
 
             TextBox(float gx, float gy, int gw, int gh, std::string gTextureKey, std::string gFontKey): Amara::UIBox(gx, gy, gw, gh, gTextureKey) {
@@ -61,13 +59,18 @@ namespace Amara {
             TextBox(Amara::StateManager* gsm): UIBox(gsm) {}
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
-				Amara::UIBox::init(gameProperties, givenScene, givenParent);
+                properties = gameProperties;
+                scene = givenScene;
+                parent = givenParent;
+                assets = properties->assets;
 
                 txt = new TrueTypeFont(0, 0);
                 add(txt);
                 if (!fontKey.empty()) {
                     setFont(fontKey);
                 }
+                
+				Amara::UIBox::init(gameProperties, givenScene, givenParent);
 
                 entityType = "textBox";
 			}
@@ -163,7 +166,19 @@ namespace Amara {
                 return icon;
             }
 
-            virtual void update() {
+            virtual void showProgressIcon() {
+                if (progressIcon) progressIcon->setVisible(true);
+            }
+            virtual void hideProgressIcon() {
+                if (progressIcon) progressIcon->setVisible(false);
+            }
+
+            void run() {
+                textboxUpdate();
+                Amara::UIBox::run();
+            }
+
+            virtual void textboxUpdate() {
                 int nMarginTop = marginTop + extraMarginTop;
                 int nMarginBottom = marginBottom + extraMarginBottom;
                 int nMarginLeft = marginLeft + extraMarginLeft;
@@ -288,8 +303,7 @@ namespace Amara {
                 int nMarginRight = marginRight + extraMarginRight;
 
                 int wrapWidth = width - nMarginLeft - nMarginRight;
-
-				txt->color = textColor;
+                
                 txt->setWordWrap(false);
                 txt->setText(wrappedText);
 
@@ -326,15 +340,6 @@ namespace Amara {
             void setFont(std::string gFontKey) {
                 fontKey = gFontKey;
                 txt->setFont(fontKey);
-            }
-
-            void setTextColor(int r, int g, int b) {
-                textColor.r = r;
-                textColor.g = g;
-                textColor.b = b;
-            }
-            void setTextColor(Amara::Color gColor) {
-                textColor = gColor;
             }
 
             void setMargin(int t, int b, int l, int r) {
@@ -387,7 +392,7 @@ namespace Amara {
                     if (finishedProgress) {
                         autoProgressCounter = 0;
                         if (!autoProgress && progressIcon != nullptr) {
-                            progressIcon->setVisible(true);
+                            showProgressIcon();
                         }
                         sm.nextEvt();
                     }
@@ -403,7 +408,7 @@ namespace Amara {
                         }
                     }
                     else if (progressControl.empty() || controls->justDown(progressControl)) {
-                        if (progressIcon != nullptr) progressIcon->setVisible(false);
+                        if (progressIcon != nullptr) hideProgressIcon();
                         sm.nextEvt();
                     }
                 }

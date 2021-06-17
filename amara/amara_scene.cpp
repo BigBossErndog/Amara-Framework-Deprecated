@@ -34,6 +34,7 @@ namespace Amara {
 				controls = properties->controls;
 				audio = properties->audio;
                 assets = properties->assets;
+                messages = properties->messages;
 
                 scene = this;
 
@@ -109,6 +110,8 @@ namespace Amara {
 
             virtual void run() {
                 properties->currentScene = this;
+                receiveMessages();
+                updateMessages();
 
                 if (!initialLoaded) {
                     if (transition != nullptr) {

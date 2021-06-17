@@ -20,6 +20,7 @@ namespace Amara {
             Amara::AudioGroup* audio = nullptr;
             Amara::AssetManager* assets = nullptr;
             Amara::Loader* load = nullptr;
+            Amara::MessageQueue* messages = nullptr;
 
 			std::string id;
 
@@ -56,6 +57,7 @@ namespace Amara {
                 audio = properties->audio;
                 assets = properties->assets;
                 load = properties->loader;
+                messages = properties->messages;
 
                 finished = false;
                 reset();
@@ -88,6 +90,15 @@ namespace Amara {
 
 			virtual void cancel() {}
 			virtual void cancel(Amara::Actor* actor) {}
+
+            Message& broadcastMessage(std::string key, nlohmann::json gData) {
+				Message& msg = ((Entity*)parent)->broadcastMessage(key, gData);
+                return msg;
+			}
+			Message& getMessage(std::string key) {
+				return properties->messages->get(key);
+			}
+            virtual void receiveMessages() {}
 
             ~Script() {
                 if (deleteChainOnDelete && chainedScript) {

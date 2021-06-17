@@ -15,6 +15,7 @@ namespace Amara {
     public:
         std::string content;
         int index = 0;
+        int recBookmark = 0;
 
         StringParser(std::string gContent) {
             set(gContent);
@@ -27,6 +28,29 @@ namespace Amara {
         void set(std::string gContent) {
             content = gContent;
             reset();
+        }
+
+        char next() {
+            if (!finished()) {
+                index += 1;
+                return content.at(index - 1);
+            }
+            return '\0';
+        }
+
+        bool find(char f) {
+            char c;
+            bookmark();
+            while (!finished()) {
+                c = content.at(index);
+                if (c == f) {
+                    rewind();
+                    return true;
+                }
+                index += 1;
+            }
+            rewind();
+            return false;
         }
 
         std::string parseUntil(char c) {
@@ -57,6 +81,35 @@ namespace Amara {
             return parsed;
         }
 
+        std::string parseUntilNot(char c) {
+            std::string parsed;
+            while (index < content.size()) {
+                char r = content.at(index);
+                index += 1;
+
+                if (r != c) {
+                    return parsed;
+                }
+                parsed.push_back(r);
+            }
+            return parsed;
+        }
+
+        std::string parseUntilNot(std::vector<char> list) {
+            std::string parsed;
+            while (index < content.size()) {
+                char r = content.at(index);
+                index += 1;
+
+                if (std::find(list.begin(), list.end(), r) != list.end()) {
+                    parsed.push_back(r);
+                    continue;
+                }
+                return parsed;
+            }
+            return parsed;
+        }
+
         std::string parseToEnd() {
             std::string parsed;
             while (index < content.size()) {
@@ -83,6 +136,13 @@ namespace Amara {
             }
             reset();
             return parsed;
+        }
+
+        void bookmark() {
+            recBookmark = index;
+        }
+        void rewind() {
+            index = recBookmark;
         }
 
         bool finished() {

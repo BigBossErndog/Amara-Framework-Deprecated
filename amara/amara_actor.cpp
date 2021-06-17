@@ -39,6 +39,7 @@ namespace Amara {
                 if (scripts.size() == 0 || actingPaused) return;
                 for (Amara::Script* script: scripts) {
                     if (!script->finished) {
+                        script->receiveMessages();
                         script->script();
                         script->script(this);
                     }

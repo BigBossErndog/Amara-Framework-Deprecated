@@ -23,14 +23,14 @@ class TestScene: public Scene {
             string ernie = "Ernie";
             add(box = new TextBox(400, 160, "box", "pressStart"));
             box->setText(stringWithFormat(format, ernie.c_str()));
-            box->setTextColor(0, 0, 0);
+            box->txt->setColor(0, 0, 0);
             box->setProgressive();
             box->id = "TEXTBOX";
 
             box->setOrigin(0.5);
             box->x = game->resolution->width/2;
             box->y = game->resolution->height/2;
-            box->setTextColor(0, 0, 0);
+            box->txt->setColor(0, 0, 0);
 
             controls->addKey("up", KEY_UP);
             controls->addKey("down", KEY_DOWN);
