@@ -47,6 +47,12 @@ namespace Amara {
 			float velocityY = 0;
 			float frictionX = 0;
 			float frictionY = 0;
+
+			bool lockedToBounds = false;
+			int boundX = 0;
+			int boundY = 0;
+			int boundW = 0;
+			int boundH = 0;
 			
 			float correctionRate = 0.2;
 
@@ -130,6 +136,17 @@ namespace Amara {
 				isActive = false;
 				isDestroyed = true;
 				gameProperties->taskManager->queueDeletion(this);
+			}
+
+			void setBounds(int gx, int gy, int gw, int gh) {
+				lockedToBounds = true;
+				boundX = gx;
+				boundY = gy;
+				boundW = gw;
+				boundH = gh;
+			}
+			void removeBounds() {
+				lockedToBounds = false;
 			}
 	};
 

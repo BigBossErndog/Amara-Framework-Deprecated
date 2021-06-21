@@ -91,8 +91,8 @@ namespace Amara {
             }
             
             if (physics) {
-                physics->velocityX += ox;
-                physics->velocityY += oy;
+                physics->velocityX = ox;
+                physics->velocityY = oy;
             }
             else {
                 x += ox;

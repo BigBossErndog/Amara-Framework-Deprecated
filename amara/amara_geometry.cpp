@@ -54,6 +54,14 @@ namespace Amara {
         }
         return angle;
     }
+    float angleBetween(float p1x, float p1y, float p2x, float p2y) {
+        float angle = -atan2(p2y-p1y, p2x-p1x) + M_PI/2.0;
+        angle = fmod(angle, 2*M_PI);
+        while (angle < 0) {
+            angle += 2*M_PI;
+        }
+        return angle;
+    }
 
     typedef struct IntRect {
         int x = 0;

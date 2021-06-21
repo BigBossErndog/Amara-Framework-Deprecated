@@ -97,6 +97,8 @@ namespace Amara {
             return col;
         }
 
+        virtual bool outOfBounds() { return false; }
+
         void run() {
             bumped = nullptr;
             bumpDirections = 0;
@@ -109,16 +111,16 @@ namespace Amara {
             float targetX = recX + velocityX;
             float targetY = recY + velocityY;
 
-            if (!hasCollided()) {
+            if (!hasCollided() || outOfBounds()) {
                 if (parent) parent->x = targetX;
                 else x = targetX;
                 updateProperties();
-                if (hasCollided(true, false)) {
+                if (hasCollided(true, false) || outOfBounds()) {
                     if (velocityX > 0) bumpDirections += Right;
                     else if (velocityX < 0) bumpDirections += Left;
                     else bumpDirections += Right + Left;
 
-                    while (hasCollided()) {
+                    while (hasCollided() || outOfBounds()) {
                         float xDir = velocityX/abs(velocityX) * correctionRate;
                         if (parent) parent->x -= xDir;
                         else x -= xDir;
@@ -130,12 +132,12 @@ namespace Amara {
                 if (parent) parent->y = targetY;
                 else y = targetY;
                 updateProperties();
-                if (hasCollided(false, true)) {
+                if (hasCollided(false, true) || outOfBounds()) {
                     if (velocityY > 0) bumpDirections += Down;
                     else if (velocityY < 0) bumpDirections += Up;
                     else bumpDirections += Down + Up;
 
-                    while (hasCollided()) {
+                    while (hasCollided() || outOfBounds()) {
                         float yDir = velocityY/abs(velocityY) * correctionRate;
                         if (parent) parent->y -= yDir;
                         else y -= yDir;
@@ -211,6 +213,16 @@ namespace Amara {
 
             return body->collidesWith(this);
         }
+
+        bool outOfBounds() {
+            if (lockedToBounds) {
+                if (properties.rect.x < boundX) return true;
+                if (properties.rect.y < boundY) return true;
+                if (properties.rect.x + properties.rect.width > boundX + boundW) return true;
+                if (properties.rect.y + properties.rect.height > boundY + boundH) return true; 
+            }
+            return false;
+        }
     };
 
     class PhysicsCircle: public Amara::PhysicsBody {
@@ -227,6 +239,12 @@ namespace Amara {
         PhysicsCircle(float gx, float gy, float gRadius): PhysicsCircle(gRadius)  {
             x = gx;
             y = gy;
+        }
+
+        void updateProperties() {
+            properties.circle.x = ((parent) ? parent->x : 0) + x;
+            properties.circle.y = ((parent) ? parent->y : 0) + y;
+            properties.circle.radius = radius;
         }
 
         bool collidesWith(Amara::PhysicsBase* body) {
@@ -248,14 +266,16 @@ namespace Amara {
 
             return body->collidesWith(this);
         }
-        
-        void updateProperties() {
-            properties.circle.x = ((parent) ? parent->x : 0) + x;
-            properties.circle.y = ((parent) ? parent->y : 0) + y;
-            properties.circle.radius = radius;
+
+        bool outOfBounds() {
+            if (lockedToBounds) {
+                if (properties.circle.x - properties.circle.radius < boundX) return true;
+                if (properties.circle.y - properties.circle.radius < boundY) return true;
+                if (properties.circle.x + properties.circle.radius > boundX + boundW) return true;
+                if (properties.circle.y + properties.circle.radius > boundY + boundH) return true;
+            }
+            return false;
         }
-
-
     };
 
     class PhysicsLine: public Amara::PhysicsBody {
@@ -272,6 +292,11 @@ namespace Amara {
             float ey = ((parent) ? parent->y : 0);
             p1 = {p1x + ex, p1y + ey};
             p2 = {p2x + ex, p2y + ey};
+        }
+
+        void updateProperties() {
+            properties.line.p1 = {p1.x + x, p1.y + y};
+            properties.line.p2 = {p2.x + x, p2.y + y};
         }
 
         bool collidesWith(Amara::PhysicsBody* body) {
@@ -294,9 +319,19 @@ namespace Amara {
             return body->collidesWith(this);
         }
 
-        void updateProperties() {
-            properties.line.p1 = {p1.x + x, p1.y + y};
-            properties.line.p2 = {p2.x + x, p2.y + y};
+        bool outOfBounds() {
+            if (lockedToBounds) {
+                if (properties.line.p1.x < boundX) return true;
+                if (properties.line.p1.x > boundX + boundW) return true;
+                if (properties.line.p1.y < boundY) return true;
+                if (properties.line.p1.y > boundY + boundH) return true;
+
+                if (properties.line.p2.x < boundX) return true;
+                if (properties.line.p2.x > boundX + boundW) return true;
+                if (properties.line.p2.y < boundY) return true;
+                if (properties.line.p2.y > boundY + boundH) return true;
+            }
+            return true;
         }
     };
 
