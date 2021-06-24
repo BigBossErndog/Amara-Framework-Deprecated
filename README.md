@@ -81,5 +81,5 @@ make playwin
 ```
 ### Linux
 ```
-make linux
+make playlinux
 ```
