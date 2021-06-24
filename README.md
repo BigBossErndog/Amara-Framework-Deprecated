@@ -36,6 +36,7 @@ Clone the repository then follow the instructions for setting up Amara on your d
 git clone https://github.com/BigBossErndog/Amara-Framework.git
 cd amara-framework
 ```
+A Makefile with many useful commands for setting up Amara, compilation and playing the game are available.
 
 ### Windows
 You will find that the project is already set up for Windows, complete with all the necessary headers and dlls :)
@@ -61,3 +62,24 @@ make setup-pacman64
 ### MacOS
 As I don't have access to a Mac, I cannot provide a way to build for MacOS right now.
 
+## Compilation
+Once you have all your files in the src folder with a main.cpp, you can compile the code.
+### Windows
+```
+make win64
+```
+### Linux
+```
+make linux
+```
+
+## Playing your game
+You can either run your newly compiled executable from the build directory, or you can do the following.
+###Windows
+```
+make playwin
+```
+###Linux
+```
+make linux
+```
