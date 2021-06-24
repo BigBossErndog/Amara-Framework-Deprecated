@@ -22,6 +22,12 @@ Some design decisions are also borrowed from the Phaser.io Javascript framework,
 ## No GUI?
 The focus right now is to make a commercial game with it, meaning making a GUI for this engine is a job for another day.
 I'm not personally a fan of game engine GUIs, so keeping it as a library framework is suitable for me right now.
+
+## Features
+ - Actors which can 'recite' Scripts, which can be started and stopped arbitrarily with multiple Scripts running parallel on the same Actor, chained together and more. Allows for great decoupling of code and their entities, and easy reuse of code.
+ - Support for Tiled tilemaps.
+ - Similar work flow to the Phaser.io framework, which I have used for most of my game development life.
+
 ## Setting Up
 Clone the repository then follow the instructions for setting up Amara on your development platform of choice.
 ```
