@@ -24,7 +24,7 @@ The focus right now is to make a commercial game with it, meaning making a GUI f
 I'm not personally a fan of game engine GUIs, so keeping it as a library framework is suitable for me right now.
 
 ## Features
- - Actors which can 'recite' Scripts, which can be started and stopped arbitrarily with multiple Scripts running parallel on the same Actor, chained together and more. Allows for great decoupling of code and their entities, and easy reuse of code.
+ - Actors which can 'recite' Scripts, which can be started and stopped arbitrarily with multiple Scripts running parallel on the same Actor, chained together and more. Allows for easy decoupling of code and their entities and reuse of code.
  - Data based, nearly every Entity can be converted to and from JSON data with configure() and toData().
  - All your typical stuff for game development, tilemaps, 
  - Support for Tiled tilemaps in the JSON format.
