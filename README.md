@@ -1,5 +1,5 @@
 # Amara
-A C++ game framework built on top of SDL2. Based on Actors and Script recitals, with a scene architecture inspired by the Phaser.io JS framework.
+A C++ game framework built on top of SDL2. Revolves around Actors reciting Scripts, with a flow inspired by the Phaser.io JS framework.
 
 ## State of the project
 
