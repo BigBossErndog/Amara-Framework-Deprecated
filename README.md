@@ -63,7 +63,7 @@ make setup-pacman64
 As I don't have access to a Mac, I cannot provide a way to build for MacOS right now.
 
 ## Compilation
-Once you have all your files in the src folder with a main.cpp, you can compile the code.
+Once you have all your files in the src folder with a main.cpp, you can compile the code. Unfortunately compiling all your code is the only option available right now, there is no way to compile a debug test build.
 ### Windows
 ```
 make win64
