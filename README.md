@@ -75,11 +75,11 @@ make linux
 
 ## Playing your game
 You can either run your newly compiled executable from the build directory, or you can do the following.
-###Windows
+### Windows
 ```
 make playwin
 ```
-###Linux
+### Linux
 ```
 make linux
 ```
