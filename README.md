@@ -25,8 +25,10 @@ I'm not personally a fan of game engine GUIs, so keeping it as a library framewo
 
 ## Features
  - Actors which can 'recite' Scripts, which can be started and stopped arbitrarily with multiple Scripts running parallel on the same Actor, chained together and more. Allows for great decoupling of code and their entities, and easy reuse of code.
- - Support for Tiled tilemaps.
- - Similar work flow to the Phaser.io framework, which I have used for most of my game development life.
+ - Data based, nearly every Entity can be converted to and from JSON data with configure() and toData().
+ - All your typical stuff for game development, tilemaps, 
+ - Support for Tiled tilemaps in the JSON format.
+ - Similar flow to the Phaser.io framework (with Scenes, Entities and Actors), which I have used for most of my game development life.
 
 ## Setting Up
 Clone the repository then follow the instructions for setting up Amara on your development platform of choice.
