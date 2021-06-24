@@ -15,7 +15,7 @@ DMs are open.
 
 ## Why does this exist?
 
-Alternative work flow based on Actors and Scripts which the Actors recite, making it easier to program event based behaviors into the game. An easy to use State Machine is built into Scripts which makes it easy to give sequential instructions to an Actor for things like enemy AI and moving characters in cutscenes.
+Alternative work flow based on Actors reciting Scripts, making it easier to program event based behaviors into the game. An easy to use State Machine is built into Scripts which makes it easy to give sequential instructions to an Actor for things like enemy AI and moving characters in cutscenes. Multiple Scripts can run on the same Actor in parallel, and they can be chained together too.
 
 Some design decisions are also borrowed from the Phaser.io Javascript framework, which I like and became accustomed to. I wanted to emulate the architecture of some of my web games in C++, built on top of SDL2 meaning easy to build native cross-platform games for many devices such as Nintendo Switch which does not currently support web games. I just want to be comfortable making games, and so should you.
 
