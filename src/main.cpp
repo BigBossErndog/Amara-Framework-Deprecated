@@ -3,6 +3,8 @@
 using namespace Amara;
 using namespace std;
 
+// This is all test code and may not be necessarily helpful as an example.
+
 class TestScene: public Scene {
     public:
         TextBox* box;
