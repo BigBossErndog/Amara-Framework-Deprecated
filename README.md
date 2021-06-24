@@ -25,7 +25,7 @@ I'm not personally a fan of game engine GUIs, so keeping it as a library framewo
 
 ## Features
  - Actors which can 'recite' Scripts, which can be started and stopped arbitrarily with multiple Scripts running parallel on the same Actor, chained together and more. Allows for easy decoupling of code and their entities and reuse of code.
- - Data based, nearly every Entity can be converted to and from JSON data with configure() and toData().
+ - Data based, nearly every Entity can be converted to and from JSON data with configure() and toData(), with lots of support for manipulating JSON data thanks to nlohhmann::json (https://github.com/nlohmann/json)
  - All your typical stuff for game development, tilemaps, 
  - Support for Tiled tilemaps in the JSON format.
  - Similar flow to the Phaser.io framework (with Scenes, Entities and Actors), which I have used for most of my game development life.
