@@ -40,7 +40,7 @@ A Makefile with many useful commands for setting up Amara, compilation and playi
 
 ### Windows
 You will find that the project is already set up for Windows, complete with all the necessary headers and dlls :)
-You just need to have MinGW set up with the g++ compiler.
+You just need to have MinGW set up with make and the g++ compiler.
 https://sourceforge.net/projects/mingw/
 
 ### Linux
