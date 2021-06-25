@@ -29,7 +29,7 @@ I'm not personally a fan of game engine GUIs, so keeping it as a library framewo
  - All your typical stuff for game development, tilemaps, 
  - Support for Tiled tilemaps in the JSON format.
  - Similar flow to the Phaser.io framework (with Scenes, Entities and Actors), which I have used for most of my game development life.
- - Manages memory for you. Just call destroy() on your entities and Amara will handle it for you, deleting the object, its children and removing references from its parent entities.
+ - Manages memory for you. Just call the destroy() method on your entities and Amara will handle it for you, deleting the object, its children and removing references from its parent entities.
 
 ## Setting Up
 Clone the repository then follow the instructions for setting up Amara on your development platform of choice.
