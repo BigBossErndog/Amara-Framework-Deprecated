@@ -1,6 +1,9 @@
 # Amara
 A C++ game framework built on top of SDL2. Revolves around Actors reciting Scripts, with a flow inspired by the Phaser.io JS framework.
 
+Being used to make the games for Project: Dying Flower Garden.
+https://twitter.com/DyingFlwrGarden
+
 ## State of the project
 
 Enough features to make a full game, still working on more features to match the capabilities of other frameworks.
