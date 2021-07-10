@@ -24,7 +24,7 @@ The design of Amara is heavily inspired by the Phaser.io Javascript framework, w
 
 ## No GUI?
 The focus right now is to make a commercial game with it, meaning making a GUI for this engine is a job for another day.
-I'm not personally a fan of game engine GUIs, so keeping it as a library framework is suitable for me right now.
+Keeping it as a library framework is sufficient enough for me right now.
 
 ## Features
  - Actors which can 'recite' Scripts, which can be started and stopped arbitrarily with multiple Scripts running parallel on the same Actor, chained together and more. Allows for easy decoupling of code and their entities and reuse of code.
