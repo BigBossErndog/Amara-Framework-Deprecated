@@ -18,7 +18,7 @@ DMs are open.
 
 ## Why does this exist?
 
-Alternative work flow based on Actors reciting Scripts, making it easier to program event based behaviors into the game. An easy to use state machine is built into Scripts which makes it easy to give sequential instructions to an Actor for things like enemy AI and moving characters in cutscenes. Multiple Scripts can run on the same Actor in parallel, and they can be chained together too. This makes decoupling entities from various behaviors very easy.
+Alternative work flow based on Actors reciting Scripts, making it easier to program event based behaviors into the game. An easy to use state machine is built into Scripts which makes it easy to give sequential instructions to an Actor for things like enemy AI and moving characters in cutscenes. Multiple Scripts can run on the same Actor in parallel, and they can be chained together too. This makes decoupling entities from their behaviors very easy.
 
 The design of Amara is heavily inspired by the Phaser.io Javascript framework, with the use of Scenes and Entities. I just found it very intuitive and easy to use, so I wanted to use something similar in native development. 
 
