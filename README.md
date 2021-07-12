@@ -9,6 +9,7 @@ https://twitter.com/DyingFlwrGarden
 Enough features to make a full game, still working on more features to match the capabilities of other frameworks.
 
 This will be updated as the framework becomes more feature complete, documentation will also be in the works eventually.
+
 MinGW is required for building on Windows.
 
 Please reach out to me if you would be interested in learning how to use it.
