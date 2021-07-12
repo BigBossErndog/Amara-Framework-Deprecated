@@ -23,7 +23,7 @@ Alternative work flow based on Actors reciting Scripts, making it easier to prog
 The design of Amara is heavily inspired by the Phaser.io Javascript framework, with the use of Scenes and Entities. I just found it very intuitive and easy to use, so I wanted to use something similar in native development. 
 
 ## No GUI?
-The focus right now is to make a commercial game with it, meaning making a GUI for this engine is a job for another day.
+The focus right now is to make a full game with it, meaning making a GUI for this engine is a job for another day.
 Keeping it as a library framework is sufficient enough for me right now.
 
 ## Features
