@@ -66,6 +66,10 @@ make setup-pacman64
 ### MacOS
 As I don't have access to a Mac, I cannot provide a way to build for MacOS right now.
 
+### Console
+I currently do not have access to any console SDKs. I hope to work on plugins for console support in the future as I gain more experience in commercial game development.
+With this being an open source project abd the legal nature of console SDKs, I don't think I can include any future console plugin in this repository. If console support will be supported in the future, you will have to contact me directly from Twitter (@bigbosserndog)
+
 ## Compilation
 Once you have all your files in the src folder with a main.cpp, you can compile the code. Unfortunately compiling all your code is the only option available right now, there is no way to compile a debug test build.
 ### Windows
