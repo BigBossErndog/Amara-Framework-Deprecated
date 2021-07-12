@@ -29,7 +29,7 @@ Keeping it as a library framework is sufficient enough for me right now.
 ## Features
  - Actors which can 'recite' Scripts, which can be started and stopped arbitrarily with multiple Scripts running parallel on the same Actor, chained together and more. Allows for easy decoupling of code and their entities and reuse of code.
  - Data based, nearly every Entity can be converted to and from JSON data with configure() and toData(), with lots of support for manipulating JSON data thanks to nlohhmann::json (https://github.com/nlohmann/json)
- - All your typical stuff for game development, tilemaps, 
+ - All your typical stuff for game development, sprites, tilemaps, animations, audio, window management and more.
  - Support for Tiled tilemaps in the JSON format.
  - Similar flow to the Phaser.io framework (with Scenes, Entities and Actors), which I have used for most of my game development life.
  - Manages memory for you. Just call the destroy() method on your entities and Amara will handle it for you, deleting the object, its children and removing references from its parent entities. Amara will also handle the deletion of all your entities when you stop a scene.
