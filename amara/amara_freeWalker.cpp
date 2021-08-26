@@ -12,12 +12,13 @@ namespace Amara {
         float movementSpeed = 1;
         float walkSpeed = 1;
         float runSpeed = 4;
+		bool accumulative = false;
 
         bool isRunning = false;
 
         bool justFinishedWalking = false;
 
-        bool controlsEnabled = false;
+        bool controlsEnabled = true;
 
         Amara::PathFindingTask* pathTask = nullptr;
         Amara::PathTile currentPathTile;
@@ -46,6 +47,9 @@ namespace Amara {
             if (config.find("controlsEnabled") != config.end()) {
                 controlsEnabled = config["controlsEnabled"];
             }
+			if (config.find("accumulative") != config.end()) {
+				accumulative = config["accumulative"];
+			}
         }
 
         virtual nlohmann::json toData() {
@@ -54,6 +58,7 @@ namespace Amara {
             config["walkSpeed"] = walkSpeed;
             config["runSpeed"] = runSpeed;
             config["controlsEnabled"] = controlsEnabled;
+			config["accumulative"] = accumulative;
             return config;
         }
 
@@ -91,8 +96,14 @@ namespace Amara {
             }
             
             if (physics) {
-                physics->velocityX = ox;
-                physics->velocityY = oy;
+				if (accumulative) {
+					physics->velocityX += ox;
+					physics->velocityY += oy;
+				}
+				else {
+					physics->velocityX = ox;
+					physics->velocityY = oy;
+				}
             }
             else {
                 x += ox;

@@ -45,19 +45,26 @@ namespace Amara {
                     setTexture(mapping["texture"]);
                 }
 
-                int mapWidth = mapping["mapWidth"];
-                int mapHeight = mapping["mapHeight"];
-                tileWidth = mapping["tileWidth"];
-                tileHeight = mapping["tileHeight"];
+                int mapWidth = 0, mapHeight = 0;
+				if (mapping.find("mapWidth") != mapping.end()) mapWidth = mapping["mapWidth"];
+                if (mapping.find("mapHeight") != mapping.end()) mapHeight =  mapping["mapHeight"];
+                if (mapping.find("tileWidth") != mapping.end()) tileWidth = mapping["tileWidth"] ;
+                if (mapping.find("tileHeight") != mapping.end()) tileHeight = mapping["tileHeight"];
 
                 width = mapWidth;
                 height = mapHeight;
+				
+				if (mapping.find("layers") != mapping.end()) {
+					nlohmann::json& jlayers = mapping["layers"];
+					for (nlohmann::json& jlayer: jlayers) {
+						TilemapLayer* tilemapLayer = createLayer(jlayer["key"], mapWidth, mapHeight, tileWidth, tileHeight);
+						tilemapLayer->configure(jlayer);
+					}
+				}
 
-                nlohmann::json& jlayers = mapping["layers"];
-                for (nlohmann::json& jlayer: jlayers) {
-                    TilemapLayer* tilemapLayer = createLayer(jlayer["key"], mapWidth, mapHeight, tileWidth, tileHeight);
-                    tilemapLayer->configure(jlayer);
-                }
+				if (mapping.find("walls") != mapping.end() && mapping["walls"].is_array()) {
+					setWalls(mapping["walls"]);
+				}
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {

@@ -126,6 +126,8 @@ namespace Amara {
 #include "amara_script.cpp"
 #include "amara_entity.cpp"
 
+#include "amara_physicsBase.cpp"
+
 #include "amara_interactable.cpp"
 #include "amara_wallFinder.cpp"
 
