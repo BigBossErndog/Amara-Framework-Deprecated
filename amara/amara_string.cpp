@@ -39,6 +39,13 @@ namespace Amara {
             return '\0';
         }
 
+		char current() {
+			if (!finished()) {
+				return content.at(index);
+			}
+			return '\0';
+		}
+
         bool find(char f) {
             char c;
             bookmark();

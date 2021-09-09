@@ -692,6 +692,42 @@ namespace Amara {
                 SDL_DestroyTexture(canvas);
             }
     };
+
+	class UIBox_Open: public Script {
+	public:
+		UIBox* box;
+
+		UIBoxOpen() {}
+
+		void prepare() {
+			box = (UIBox*)parent;
+			box->copyStateManager(this);
+		}
+
+		void script() {
+			start();
+			box->open();
+			finishEvt();
+		}
+	};
+
+	class UIBox_Close: public Script {
+	public:
+		UIBox* box;
+
+		UIBoxOpen() {}
+
+		void prepare() {
+			box = (UIBox*)parent;
+			box->copyStateManager(this);
+		}
+
+		void script() {
+			start();
+			box->close();
+			finishEvt();
+		}
+	};
 }
 
 #endif

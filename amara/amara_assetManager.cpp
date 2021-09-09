@@ -25,6 +25,10 @@ namespace Amara {
                 return loader->getJSON(key);
             }
 
+			bool remove(std::string key) {
+				return loader->remove(key);
+			}
+
             bool add(std::string key, SDL_Texture* tx, bool replace) {
                 return loader->add(key, tx, replace);
             }

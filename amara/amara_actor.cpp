@@ -20,6 +20,10 @@ namespace Amara {
             }
 
             virtual Amara::Script* recite(Amara::Script* script) {
+				if (script == nullptr) {
+					SDL_Log("Null script was given.");
+					return nullptr;
+				}
                 scripts.push_back(script);
                 script->init(properties, this);
                 script->prepare();
@@ -35,7 +39,7 @@ namespace Amara {
                 return recite(script);
             }
 
-            void reciteScripts() {
+            virtual void reciteScripts() {
                 if (scripts.size() == 0 || actingPaused) return;
                 for (Amara::Script* script: scripts) {
                     if (!script->finished) {
