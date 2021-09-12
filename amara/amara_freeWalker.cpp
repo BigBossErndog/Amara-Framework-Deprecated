@@ -16,7 +16,7 @@ namespace Amara {
 
         bool isRunning = false;
 
-        bool justFinishedWalking = false;
+        bool justFinishedWalking = true;
 
         bool controlsEnabled = true;
 
@@ -30,6 +30,7 @@ namespace Amara {
         void init() {
             Amara::Sprite::init();
             entityType = "actor";
+			justFinishedWalking = true;
         }
 
         virtual void configure(nlohmann::json config) {
@@ -131,6 +132,8 @@ namespace Amara {
                     break;
             }
             direction = dir;
+
+			justFinishedWalking = false;
         }
 
         virtual void walk(Direction dir) {
@@ -187,13 +190,7 @@ namespace Amara {
         }
 
         void run() {
-            if (walkDirection) {
-                justFinishedWalking = true;
-            }
-
             if (controlsEnabled) {
-                walkDirection = NoDir;
-                walkDirections = 0;
                 movementSpeed = (controls->isDown("run")) ? runSpeed : walkSpeed;
 
                 if (controls->isDown("up") && !controls->isDown("down")) {
@@ -231,7 +228,6 @@ namespace Amara {
 
                 if (walkDirection) {
                     walk(walkDirection);
-                    justFinishedWalking = false;
                 }
                 else {
                     face(direction);
@@ -240,12 +236,19 @@ namespace Amara {
             else if (!walkDirection) {
                 face(direction);
             }
-
+			
             Amara::Sprite::run();
-            if (!controlsEnabled) {
-                walkDirection = NoDir;
-                walkDirections = 0;
+
+			if (walkDirection) {
+                justFinishedWalking = true;
             }
+			else {
+				justFinishedWalking = false;
+			}
+
+			walkDirection = NoDir;
+            walkDirections = 0;
+			movementSpeed = walkSpeed;
         }
     };
 }

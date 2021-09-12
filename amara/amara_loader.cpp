@@ -555,7 +555,7 @@ namespace Amara {
 
 				Mix_Chunk* sound = Mix_LoadWAV(path.c_str());
 				if (sound == NULL) {
-					std::cout << "Failed to load sound effect. SDL_mixer Error: %s\n" <<  Mix_GetError() << std::endl;
+					SDL_Log("Failed to load sound effect: \"%s\". SDL_mixer Error: %s\n", key.c_str(), Mix_GetError());
 					success = false;
 				}
 				else {

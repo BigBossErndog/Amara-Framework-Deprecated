@@ -55,7 +55,7 @@ namespace Amara {
                 }
             }
 
-            virtual void init(Amara::GameProperties* gProperties,Amara::Scene* gStartScene) {
+            virtual void init(Amara::GameProperties* gProperties, Amara::Scene* gStartScene) {
                 Amara::SceneTransitionBase::init(gProperties, gStartScene, this);
                 sceneManager = Amara::Actor::properties->scenes;
 

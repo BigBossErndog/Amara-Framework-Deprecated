@@ -50,7 +50,7 @@ namespace Amara {
             }
 
         virtual void draw(int vx, int vy, int vw, int vh) override {
-            int dx = 0, dy = 0, dw = 0, dh = 0, ox = 0, oy = 0;
+            float dx = 0, dy = 0, dw = 0, dh = 0, ox = 0, oy = 0;
 
             float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
             float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
