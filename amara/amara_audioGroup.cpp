@@ -128,7 +128,18 @@ namespace Amara {
                 return nullptr;
             }
 
-            Amara::AudioBase* play(std::string fKey) {
+            Amara::AudioBase* play(std::string fKey, int loops) {
+                Amara::AudioBase* audio = get(fKey);
+                if (audio != nullptr) {
+                    lastPlayed = audio;
+					currentlyPlaying = audio;
+                    audio->play(loops);
+                }
+
+                return audio;
+            }
+
+			Amara::AudioBase* play(std::string fKey) {
                 Amara::AudioBase* audio = get(fKey);
                 if (audio != nullptr) {
                     lastPlayed = audio;
@@ -138,6 +149,34 @@ namespace Amara {
 
                 return audio;
             }
+
+			void stop() {
+				for (AudioBase* audio: sounds) {
+					if (audio->isPlaying) audio->stop();
+				}
+				for (AudioGroup* group: groups) {
+					group->stop();
+				}
+				currentlyPlaying = nullptr;
+			}
+
+			void pause() {
+				for (AudioBase* audio: sounds) {
+					if (audio->isPlaying) audio->pause();
+				}
+				for (AudioGroup* group: groups) {
+					group->pause();
+				}
+			}
+
+			void resume() {
+				for (AudioBase* audio: sounds) {
+					if (audio->isPlaying) audio->resume();
+				}
+				for (AudioGroup* group: groups) {
+					group->resume();
+				}
+			}
 
             void run(float parentVolume) {
                 Amara::AudioBase::run(parentVolume);

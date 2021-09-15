@@ -53,6 +53,13 @@ namespace Amara {
             std::string randomString(int length) {
                 return randomString('a', 'z', length);
             }
+
+			nlohmann::json randomItem(nlohmann::json list) {
+				if (list.is_array()) {
+					return list[random() * list.size()];
+				}
+				return list;
+			}
     };
 }
 

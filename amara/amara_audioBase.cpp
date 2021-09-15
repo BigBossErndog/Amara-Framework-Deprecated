@@ -66,8 +66,8 @@ namespace Amara {
 				fadeStopOnEnd = false;
             }
 
-
             virtual void play() {}
+			virtual void play(int loops) {}
             virtual void pause() {}
             virtual void resume() {}
             virtual void stop() {}

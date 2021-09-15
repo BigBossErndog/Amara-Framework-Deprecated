@@ -33,10 +33,15 @@ namespace Amara {
 				properties->music = this;
 				isPaused = false;
 				isPlaying = true;
+
+				if (parent) {
+					parent->lastPlayed = this;
+					parent->currentlyPlaying == this;
+				}
 			}
 
 			void play() {
-				play(0);
+				play(-1);
 			}
 
 			void pause() {
@@ -60,7 +65,7 @@ namespace Amara {
 			}
 
 			bool finished() {
-
+				return !isPlaying;
 			}
 
 			void stop() {
@@ -80,10 +85,11 @@ namespace Amara {
                 Amara::AudioBase::run(parentVolume);
 
                 if (Mix_PlayingMusic() && properties->music == this) {
-					Mix_VolumeMusic(floor(volume * masterVolume * parentVolume * 128));
+					Mix_VolumeMusic(floor(volume * masterVolume * parentVolume * MIX_MAX_VOLUME));
 				}
 				else {
 					isPlaying = false;
+					isPaused = false;
 					if (parent && parent->currentlyPlaying == this) {
 						parent->currentlyPlaying = nullptr;
 					}
