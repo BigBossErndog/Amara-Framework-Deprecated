@@ -108,43 +108,62 @@ namespace Amara {
             velocityY += accelerationY;
             float recX = (parent) ? parent->x : x;
             float recY = (parent) ? parent->y : y;
-            float targetX = recX + velocityX;
-            float targetY = recY + velocityY;
+			double correctionTotal, correctionChange;
 
             if (!hasCollided() || outOfBounds()) {
-                if (parent) parent->x = targetX;
-                else x = targetX;
-                updateProperties();
-                if (hasCollided(true, false) || outOfBounds()) {
-                    if (velocityX > 0) bumpDirections += Right;
-                    else if (velocityX < 0) bumpDirections += Left;
-                    else bumpDirections += Right + Left;
+				if (abs(velocityX) > 0) {
+					correctionTotal = 0;
+					correctionChange = correctionRate * (velocityX/abs(velocityX));
+					while (abs(correctionTotal) < abs(velocityX)) {
+						correctionTotal += correctionChange;
+						if (abs(correctionTotal) > abs(velocityX)) correctionTotal = velocityX;
+						if (parent) parent->x = recX + correctionTotal;
+						else x = recX + correctionTotal;
+						updateProperties();
+						if (hasCollided(true, false) || outOfBounds()) {
+							correctionTotal -= correctionChange;
+							if (correctionChange > 0 && correctionTotal < 0) correctionTotal = 0;
+							if (correctionChange < 0 && correctionTotal > 0) correctionTotal = 0;
 
-                    while (hasCollided() || outOfBounds()) {
-                        float xDir = velocityX/abs(velocityX) * correctionRate;
-                        if (parent) parent->x -= xDir;
-                        else x -= xDir;
-                        updateProperties();
-                    }
-                    velocityX = -velocityX * bounceX;
-                }
+							if (correctionTotal > 0) bumpDirections += Right;
+							else if (correctionTotal < 0) bumpDirections += Left;
+							else bumpDirections += Left + Right;
 
-                if (parent) parent->y = targetY;
-                else y = targetY;
-                updateProperties();
-                if (hasCollided(false, true) || outOfBounds()) {
-                    if (velocityY > 0) bumpDirections += Down;
-                    else if (velocityY < 0) bumpDirections += Up;
-                    else bumpDirections += Down + Up;
+							velocityX = -velocityX * bounceX;
+							break;
+						}
+					}
+					if (parent) parent->x = recX + correctionTotal;
+					else x = recX + correctionTotal;
+					updateProperties();
+				}
 
-                    while (hasCollided() || outOfBounds()) {
-                        float yDir = velocityY/abs(velocityY) * correctionRate;
-                        if (parent) parent->y -= yDir;
-                        else y -= yDir;
-                        updateProperties();
-                    }
-                    velocityY = -velocityY * bounceY;
-                }
+				if (abs(velocityY) > 0) {
+					correctionTotal = 0;
+					correctionChange = correctionRate * (velocityY/abs(velocityY));
+					while (abs(correctionTotal) < abs(velocityY)) {
+						correctionTotal += correctionChange;
+						if (abs(correctionTotal) > abs(velocityY)) correctionTotal = velocityY;
+						if (parent) parent->y = recY + correctionTotal;
+						else y = recY + correctionTotal;
+						updateProperties();
+						if (hasCollided(false, true) || outOfBounds()) {
+							correctionTotal -= correctionChange;
+							if (correctionChange > 0 && correctionTotal < 0) correctionTotal = 0;
+							if (correctionChange < 0 && correctionTotal > 0) correctionTotal = 0;
+
+							if (correctionTotal > 0) bumpDirections += Down;
+							else if (correctionTotal < 0) bumpDirections += Up;
+							else bumpDirections += Down + Up;
+
+							velocityY = -velocityY * bounceY;
+							break;
+						}
+					}
+					if (parent) parent->y = recY + correctionTotal;
+					else y = recY + correctionTotal;
+					updateProperties();
+				}
 
                 if (bumpDirections & Up) {
                     if (bumpDirections & Left) bumpDirections += UpLeft;

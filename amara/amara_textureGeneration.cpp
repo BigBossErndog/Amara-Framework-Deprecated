@@ -98,7 +98,7 @@ namespace Amara {
 		float dist;
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                dist = distanceBetween(x, y, floor(width/2), floor(height/2));
+                dist = distanceBetween(x, y, (width/2 - 0.5), (height/2 - 0.5));
 				if (dist <= radius) {
 					SDL_SetRenderDrawColor(gRenderer, color.r, color.g, color.b, color.a);
                 	SDL_RenderDrawPoint(gRenderer, gx + x, gy + y);
