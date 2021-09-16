@@ -87,6 +87,61 @@ namespace Amara {
     Amara::RadialGradientTexture* createRadialGradient(Amara::Loader* loader, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart) {
         return createRadialGradient(loader->properties->gRenderer, width, height, innerColor, outerColor, fadeStart);
     }
+
+
+	void drawCircle(SDL_Renderer* gRenderer, int gx, int gy, float radius, SDL_Color color, SDL_BlendMode blendMode) {
+        SDL_SetRenderDrawBlendMode(gRenderer, blendMode);
+
+        int width = ceil(radius*2);
+		int height = ceil(radius*2);
+        
+		float dist;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                dist = distanceBetween(x, y, floor(width/2), floor(height/2));
+				if (dist <= radius) {
+					SDL_SetRenderDrawColor(gRenderer, color.r, color.g, color.b, color.a);
+                	SDL_RenderDrawPoint(gRenderer, gx + x, gy + y);
+				}
+            }
+        }
+    }
+	void drawCircle(SDL_Renderer* gRenderer, int gx, int gy, float radius, SDL_Color color) {
+		drawCircle(gRenderer, gx, gy, radius, color, SDL_BLENDMODE_BLEND);
+	}
+	void drawCircle(Amara::Entity* entity, int gx, int gy, float radius, SDL_Color color) {
+		drawCircle(entity->properties->gRenderer, gx, gy, radius, color);
+	}
+	void drawCircle(Amara::Loader* loader, int gx, int gy, float radius, SDL_Color color) {
+		drawCircle(loader->properties->gRenderer, gx, gy, radius, color);
+	}
+
+	SDL_Texture* createCircleTexture(SDL_Renderer* gRenderer, float radius, SDL_Color color) {
+		int width = ceil(radius*2);
+		int height = ceil(radius*2);
+
+		SDL_Texture* texture = SDL_CreateTexture(
+                                    gRenderer,
+                                    SDL_PIXELFORMAT_RGBA8888,
+                                    SDL_TEXTUREACCESS_TARGET,
+                                    width,
+                                    height
+                                );
+
+		SDL_SetRenderTarget(gRenderer, texture);
+		SDL_RenderClear(gRenderer);
+        drawCircle(gRenderer, 0, 0, radius, color, SDL_BLENDMODE_NONE);
+	}
+	SDL_Texture* createCircleTexture(Amara::Entity* entity, float radius, SDL_Color color) {
+		return createCircleTexture(entity->properties->gRenderer, radius, color);
+	}
+
+	Amara::CircleTexture* createCircle(SDL_Renderer* gRenderer, float radius, SDL_Color color) {
+		SDL_Texture* tx = createCircleTexture(gRenderer, radius, color);
+        Amara::CircleTexture* circle = new CircleTexture("", IMAGE, tx);
+        circle->configure(radius, color);
+        return circle;
+	}
 }
 
 #endif

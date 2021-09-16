@@ -353,25 +353,31 @@ namespace Amara {
         return turnDirection(dir, DirectionsInOrder, turn);
     }
 
-    Amara::Direction getDirectionBetween(int x1, int y1, int x2, int y2) {
+    Amara::Direction getDirectionBetween(int x1, int y1, int x2, int y2, std::vector<Amara::Direction> list) {
         if (x1 == x2 && y1 == y2) {
             return NoDir;
         }
 
         double angle = atan2(y2 - y1, x2 - x1);
-        int dirNum = floor(fmod(round(angle/(M_PI/4)), DirectionsInOrder.size()));
+        int dirNum = floor(fmod(round(angle/(2*M_PI/list.size())), list.size()));
         if (dirNum < 0) {
-            dirNum += 8;
+            dirNum += list.size();
         }
-        Amara::Direction direction = DirectionsInOrder[dirNum];
+        Amara::Direction direction = list[dirNum];
 
         return direction;
+    }
+	Amara::Direction getDirectionBetween(int x1, int y1, int x2, int y2) {
+        return getDirectionBetween(x1, y1, x2, y2, DirectionsInOrder);
+    }
+	Amara::Direction getDirectionBetween(IntVector2 p1, IntVector2 p2, std::vector<Amara::Direction> list) {
+        return getDirectionBetween(p1.x, p1.y, p2.x, p2.y, list);
     }
     Amara::Direction getDirectionBetween(IntVector2 p1, IntVector2 p2) {
         return getDirectionBetween(p1.x, p1.y, p2.x, p2.y);
     }
 
-	Amara::Direction getDirection(std::string dir) {
+	Amara::Direction getDirectionFromString(std::string dir) {
 		if (dir.compare("up") == 0) return Up;
 		if (dir.compare("down") == 0) return Down;
 		if (dir.compare("left") == 0) return Left;
@@ -381,6 +387,35 @@ namespace Amara {
 		if (dir.compare("downLeft") == 0) return DownLeft;
 		if (dir.compare("downRight") == 0) return DownRight;
 		return NoDir;
+	}
+	std::string getStringFromDirection(Amara::Direction dir) {
+		switch (dir) {
+			case Up:
+				return "up";
+				break;
+			case Down:
+				return "down";
+				break;
+			case Left:
+				return "left";
+				break;
+			case Right:
+				return "right";
+				break;
+			case UpLeft:
+				return "upLeft";
+				break;
+			case UpRight:
+				return "upRight";
+				break;
+			case DownLeft:
+				return "downLeft";
+				break;
+			case DownRight:
+				return "downRight";
+				break;
+		}
+		return "noDir";
 	}
 }
 

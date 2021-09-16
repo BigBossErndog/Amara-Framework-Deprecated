@@ -9,6 +9,7 @@ namespace Amara {
         JSONCONFIG,
         SURFACE,
         IMAGE,
+		CIRCLETEXTURE,
         RADIALGRADIENTTEXTURE,
         SPRITESHEET,
         TTF,
@@ -78,6 +79,24 @@ namespace Amara {
                 Amara::ImageTexture::asset = createRadialGradientTexture(gRenderer, width, height, innerColor, outerColor, fadeStart);
             }
     };
+
+	class CircleTexture: public Amara::ImageTexture {
+		public:
+			SDL_Color color;
+			float radius;
+
+			CircleTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
+
+			void configure(float gRadius, SDL_Color gColor) {
+				color = gColor;
+				radius = gRadius;
+			}
+
+			void regenerate(SDL_Renderer* gRenderer) {
+				SDL_DestroyTexture(Amara::ImageTexture::asset);
+				Amara::ImageTexture::asset = createCircleTexture(gRenderer, radius, color);
+			}
+	};
 
     class Spritesheet : public Amara::ImageTexture {
         public:

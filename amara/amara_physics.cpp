@@ -61,7 +61,7 @@ namespace Amara {
             Amara::PhysicsBase* body;
             for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
                 body = *it;
-                if (body->isDestroyed) {
+                if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
                     collisionTargets.erase(it--);
                 }
                 else if (willCollideWith(body)) {
@@ -77,7 +77,7 @@ namespace Amara {
             Amara::PhysicsBase* body;
             for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
                 body = *it;
-                if (body->isDestroyed) {
+                if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
                     collisionTargets.erase(it--);
                 }
                 else if (collidesWith(body)) {
@@ -126,7 +126,7 @@ namespace Amara {
                         else x -= xDir;
                         updateProperties();
                     }
-                    velocityX = 0;
+                    velocityX = -velocityX * bounceX;
                 }
 
                 if (parent) parent->y = targetY;
@@ -143,7 +143,7 @@ namespace Amara {
                         else y -= yDir;
                         updateProperties();
                     }
-                    velocityY = 0;
+                    velocityY = -velocityY * bounceY;
                 }
 
                 if (bumpDirections & Up) {
@@ -479,7 +479,7 @@ namespace Amara {
         bool collidesWith(Amara::PhysicsBase* other) {
             for (auto it = members.begin(); it != members.end(); ++it) {
                 Amara::PhysicsBase* body = *it;
-                if (body->isDestroyed) {
+                if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
                     members.erase(it--);
                 }
                 if (body == other) continue;
