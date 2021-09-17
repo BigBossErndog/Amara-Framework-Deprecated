@@ -194,8 +194,6 @@ namespace Amara {
                 dh = (y + height > vh) ? ceil(vh - y) : height;
                 dh -= oh;
 
-                SDL_SetRenderTarget(properties->gRenderer, NULL);
-
                 std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
                 Amara::Entity* entity;
                 for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {
@@ -213,28 +211,6 @@ namespace Amara {
                     transition->draw(dx, dy, dw, dh);
                 }
             }
-			void drawToTexture(SDL_Texture* tx, int gx, int gy) {
-				SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-				SDL_SetRenderTarget(properties->gRenderer, tx);
-
-				std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
-                Amara::Entity* entity;
-                for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {
-                    entity = *it;
-                    if (entity->isDestroyed || entity->scene != scene) {
-                        rSceneEntities.erase(it--);
-                        continue;
-                    }
-                    if (!entity->isVisible) continue;
-                    assignAttributes();
-                    entity->draw(gx, gy, width, height);
-                }
-
-				SDL_SetRenderTarget(properties->gRenderer, recTarget);
-			}
-			void drawToTexture(SDL_Texture* tx) {
-				drawToTexture(tx, 0, 0);
-			}
 
             void assignAttributes() {
                 resetPassOnProperties();

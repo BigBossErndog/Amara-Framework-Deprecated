@@ -189,8 +189,6 @@ namespace Amara {
                         cam->run();
                     }
                 }
-
-                afterUpdate();
             }
 
             virtual void draw() {
@@ -224,10 +222,9 @@ namespace Amara {
                         cameras.erase(it--);
                     }
                     cam->transition = transition;
+					SDL_SetRenderTarget(properties->gRenderer, NULL);
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
-
-                afterDraw();
             }
 
             virtual Amara::SceneTransitionBase* startTransition(Amara::SceneTransitionBase* gTransition) {
@@ -266,9 +263,6 @@ namespace Amara {
             virtual void onResume() {}
             virtual void onSleep() {}
             virtual void onWake() {}
-
-            virtual void afterUpdate() {}
-            virtual void afterDraw() {}
 
             ~Scene() {
                 delete load;

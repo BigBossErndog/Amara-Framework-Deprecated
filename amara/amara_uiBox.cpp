@@ -695,12 +695,13 @@ namespace Amara {
 
 	class UIBox_Open: public Script {
 	public:
-		UIBox* box;
+		UIBox* box = nullptr;
 
-		UIBoxOpen() {}
+		UIBox_Open() {}
+		UIBox_Open(UIBox* gBox) { box = gBox; }
 
 		void prepare() {
-			box = (UIBox*)parent;
+			if (box == nullptr) box = (UIBox*)parent;
 			box->copyStateManager(this);
 		}
 
@@ -713,12 +714,13 @@ namespace Amara {
 
 	class UIBox_Close: public Script {
 	public:
-		UIBox* box;
+		UIBox* box = nullptr;
 
-		UIBoxOpen() {}
+		UIBox_Close() {}
+		UIBox_Close(UIBox* gBox) { box = gBox; }
 
 		void prepare() {
-			box = (UIBox*)parent;
+			if (box == nullptr) box = (UIBox*)parent;
 			box->copyStateManager(this);
 		}
 

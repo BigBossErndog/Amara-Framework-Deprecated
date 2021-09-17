@@ -291,6 +291,25 @@ namespace Amara {
                 }
 			}
 
+			virtual void drawToTexture(SDL_Texture* tx, int gx, int gy) {
+				SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+				SDL_SetRenderTarget(properties->gRenderer, tx);
+				float recX = x, recY = y;
+				int vw, vh;
+				x = gx;
+				y = gy;
+
+				SDL_QueryTexture(tx, NULL, NULL, &vw, &vh);
+				draw(0, 0, vw, vh);
+
+				SDL_SetRenderTarget(properties->gRenderer, recTarget);
+				x = recX;
+				y = recY;
+			}
+			void drawToTexture(SDL_Texture* tx) {
+				drawToTexture(tx, x, y);
+			}
+
 			virtual void run() {
 				receiveMessages();
 				updateMessages();
