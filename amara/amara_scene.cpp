@@ -71,7 +71,7 @@ namespace Amara {
 
                 add(mainCamera = new Amara::Camera());
                 preload();
-                std::cout << "START LOADING TASKS: " << load->numTasks() << " loading tasks." << std::endl;
+                SDL_Log("START LOADING TASKS: %d loading tasks.", load->numTasks());
 
                 entityType = "scene";
             }
@@ -110,6 +110,7 @@ namespace Amara {
 
             virtual void run() {
                 properties->currentScene = this;
+				properties->currentCamera = mainCamera;
                 receiveMessages();
                 updateMessages();
 
@@ -193,6 +194,7 @@ namespace Amara {
 
             virtual void draw() {
                 properties->currentScene = this;
+				properties->currentCamera = mainCamera;
 				properties->scrollX = 0;
 				properties->scrollY = 0;
 

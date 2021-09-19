@@ -94,7 +94,7 @@ namespace Amara {
 				entityType = "entity";
 
 				init();
-				create();
+				if (!isDestroyed) create();
 			}
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene) {
@@ -504,7 +504,7 @@ namespace Amara {
 			virtual void bringToFront() {
 				std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
 				for (Amara::Entity* entity: rSceneEntities) {
-					if (entity != this && depth <= entity->depth) {
+					if (entity != this && !entity->isDestroyed && depth <= entity->depth) {
 						depth = entity->depth + 1;
 					}
 				}

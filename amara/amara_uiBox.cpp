@@ -706,6 +706,11 @@ namespace Amara {
 		}
 
 		void script() {
+			if (box->isDestroyed) {
+				finish();
+				return;
+			}
+			box->copyStateManager(this);
 			start();
 			box->open();
 			finishEvt();
@@ -721,10 +726,14 @@ namespace Amara {
 
 		void prepare() {
 			if (box == nullptr) box = (UIBox*)parent;
-			box->copyStateManager(this);
 		}
 
 		void script() {
+			if (box->isDestroyed) {
+				finish();
+				return;
+			}
+			box->copyStateManager(this);
 			start();
 			box->close();
 			finishEvt();

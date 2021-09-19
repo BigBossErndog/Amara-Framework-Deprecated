@@ -7,7 +7,7 @@ namespace Amara {
     public:
         using Amara::PhysicsBase::addCollisionTarget;
         void addCollisionTarget(Amara::Entity* other) {
-            addCollisionTarget(other->physics);
+            if (other->physics) addCollisionTarget(other->physics);
         }
 
         using Amara::PhysicsBase::removeCollisionTarget;

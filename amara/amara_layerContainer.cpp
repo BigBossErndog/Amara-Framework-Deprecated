@@ -45,9 +45,36 @@ namespace Amara {
 
         using Amara::Layer::init;
         void init() {
-                Amara::Layer::init();
-                entityType = "container";
-            }
+			Amara::Layer::init();
+			entityType = "container";
+		}
+
+		void configure(nlohmann::json config) {
+			Amara::Layer::configure(config);
+			
+			if (config.find("originX") != config.end()) {
+				originX = config["originX"];
+			}
+			if (config.find("originY") != config.end()) {
+				originY = config["originY"];
+			}
+			if (config.find("origin") != config.end()) {
+				originX = config["origin"];
+				originY = config["origin"];
+			}
+			if (config.find("originPositionX") != config.end()) {
+				originX = config["originPositionX"];
+				originX = originX/width;
+			}
+			if (config.find("originPositionY") != config.end()) {
+				originY = config["originPositionY"];
+				originY = originY/height;
+			}
+			if (config.find("originPosition") != config.end()) {
+				originX = config["originPosition"];
+				setOriginPosition(originX, originX);
+			}
+		}
 
         virtual void draw(int vx, int vy, int vw, int vh) override {
             float dx = 0, dy = 0, dw = 0, dh = 0, ox = 0, oy = 0;
@@ -154,17 +181,17 @@ namespace Amara {
                 properties->gRenderer,
                 SDL_PIXELFORMAT_RGBA8888,
                 SDL_TEXTUREACCESS_TARGET,
-                properties->resolution->width,
-                properties->resolution->height
+                properties->currentCamera->width,
+                properties->currentCamera->height
             );
-            textureWidth = properties->resolution->width;
-            textureHeight = properties->resolution->height;
+            textureWidth = properties->currentCamera->width;
+            textureHeight = properties->currentCamera->height;
         }
 
         void draw(int vx, int vy, int vw, int vh) {
             float recAlpha = properties->alpha;
             if (!textureLocked) {
-                if (textureWidth != properties->resolution->width || textureHeight != properties->resolution->height) {
+                if (textureWidth != properties->currentCamera->width || textureHeight != properties->currentCamera->height) {
                     createTexture();
                 }
                 if (!tx) return;
@@ -200,8 +227,8 @@ namespace Amara {
             
             if (destRect.x + destRect.w <= 0) skipDrawing = true;
             if (destRect.y + destRect.h <= 0) skipDrawing = true;
-            if (destRect.x >= properties->resolution->width) skipDrawing = true;
-            if (destRect.y >= properties->resolution->height) skipDrawing = true;
+            if (destRect.x >= properties->currentCamera->width) skipDrawing = true;
+            if (destRect.y >= properties->currentCamera->height) skipDrawing = true;
             if (destRect.w <= 0) skipDrawing = true;
             if (destRect.h <= 0) skipDrawing = true;
 
@@ -322,6 +349,33 @@ namespace Amara {
             Amara::Layer::init(gameProperties, givenScene, givenParent);
             entityType = "textureContainer";
         }
+
+		void configure(nlohmann::json config) {
+			Amara::Layer::configure(config);
+
+			if (config.find("originX") != config.end()) {
+				originX = config["originX"];
+			}
+			if (config.find("originY") != config.end()) {
+				originY = config["originY"];
+			}
+			if (config.find("origin") != config.end()) {
+				originX = config["origin"];
+				originY = config["origin"];
+			}
+			if (config.find("originPositionX") != config.end()) {
+				originX = config["originPositionX"];
+				originX = originX/width;
+			}
+			if (config.find("originPositionY") != config.end()) {
+				originY = config["originPositionY"];
+				originY = originY/height;
+			}
+			if (config.find("originPosition") != config.end()) {
+				originX = config["originPosition"];
+				setOriginPosition(originX, originX);
+			}
+		}
 
         void createTexture() {
             if (tx) {

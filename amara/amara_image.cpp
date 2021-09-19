@@ -391,6 +391,10 @@ namespace Amara {
                 scaleX = gw/imageWidth;
                 scaleY = gh/imageHeight;
             }
+
+			~Image() {
+				removeTexture();
+			}
     };
 }
 
