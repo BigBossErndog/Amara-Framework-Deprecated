@@ -128,6 +128,7 @@ namespace Amara {
                         else {
                             currentFrame = currentAnim->frameAt(currentAnim->length() - 1);
                             currentAnim = nullptr;
+							isFinished = true;
                         }
                     }
                     else {

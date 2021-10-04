@@ -95,13 +95,13 @@ namespace Amara {
             std::string parsed;
             while (index < content.size()) {
                 char r = content.at(index);
-                index += 1;
 
                 if (r == 13) continue;
                 if (r != c) {
                     return parsed;
                 }
                 parsed.push_back(r);
+				index += 1;
             }
             return parsed;
         }
@@ -110,14 +110,13 @@ namespace Amara {
             std::string parsed;
             while (index < content.size()) {
                 char r = content.at(index);
-                index += 1;
-
+				
                 if (r == 13) continue;
                 if (std::find(list.begin(), list.end(), r) != list.end()) {
-                    parsed.push_back(r);
-                    continue;
+                    return parsed;
                 }
-                return parsed;
+				parsed.push_back(r);
+				index += 1;
             }
             return parsed;
         }

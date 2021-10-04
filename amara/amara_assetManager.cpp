@@ -21,6 +21,10 @@ namespace Amara {
                 return loader->get(key);
             }
 
+			bool has(std::string key) {
+				return loader->has(key);
+			}
+
             nlohmann::json& getJSON(std::string key) {
                 return loader->getJSON(key);
             }

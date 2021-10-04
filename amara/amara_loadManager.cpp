@@ -42,6 +42,10 @@ namespace Amara {
                 return load->get(key);
             }
 
+			bool has(std::string key) {
+				return load->has(key);
+			}
+
             bool remove(std::string key) {
                 return load->remove(key);
             }

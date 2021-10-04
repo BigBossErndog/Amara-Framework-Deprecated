@@ -64,6 +64,7 @@ namespace Amara {
                 if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
                     collisionTargets.erase(it--);
                 }
+				else if (!body->isActive) continue;
                 else if (willCollideWith(body)) {
                     return true;
                 }
@@ -80,6 +81,7 @@ namespace Amara {
                 if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
                     collisionTargets.erase(it--);
                 }
+				else if (!body->isActive) continue;
                 else if (collidesWith(body)) {
                     bumped = body;
                     if (body->isPushable) {

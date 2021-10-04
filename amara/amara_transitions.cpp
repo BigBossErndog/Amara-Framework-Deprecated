@@ -92,7 +92,7 @@ namespace Amara {
                 startNextScene();
                 waitForPermission();
                 if (evt()) {
-                    alpha -= fadeOutSpeed;
+					alpha -= fadeOutSpeed;
                     if (alpha <= 0) {
                         alpha = 0;
                         nextEvt();

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "amara.h"
 
 namespace Amara {
@@ -9,9 +8,16 @@ namespace Amara {
 
         bool write(std::string input, std::string path) {
             std::ofstream file(path);
-            file << input;
-            file.close();
-            return true;
+			if (file.fail()) {
+				SDL_Log("Failed to write to path: %s", path.c_str());
+				return false;
+			}
+			else {
+				SDL_Log("Written file: %s", path.c_str());
+				file << input;
+				file.close();
+				return true;
+			}
         }
     };
 }

@@ -404,11 +404,13 @@ namespace Amara {
                     if (autoProgress) {
                         autoProgressCounter += 1;
                         if (autoProgressCounter >= autoProgressDelay || (autoProgressSkip && controls->justDown(progressControl))) {
+							onProgress();
                             sm.nextEvt();
                         }
                     }
                     else if (progressControl.empty() || controls->justDown(progressControl)) {
                         if (progressIcon != nullptr) hideProgressIcon();
+						onProgress();
                         sm.nextEvt();
                     }
                 }
@@ -453,6 +455,8 @@ namespace Amara {
 				autoProgress = true;
 				autoProgressDelay = ceil(properties->lps*s);
 			}
+
+			virtual void onProgress() {}
     };
 }
 

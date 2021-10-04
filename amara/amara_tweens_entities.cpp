@@ -12,7 +12,7 @@ namespace Amara {
             float targetX = 0;
             float targetY = 0;
 
-            Tween_XY(float tx, int ty, double tt, Amara::Easing gEasing) {
+            Tween_XY(float tx, float ty, double tt, Amara::Easing gEasing) {
                 targetX = tx;
                 targetY = ty;
                 time = tt;
@@ -55,7 +55,7 @@ namespace Amara {
             float targetX = 0;
             float targetY = 0;
 
-            Tween_RelativeXY(float tx, int ty, double tt, Amara::Easing gEasing) {
+            Tween_RelativeXY(float tx, float ty, double tt, Amara::Easing gEasing) {
                 targetX = tx;
                 targetY = ty;
                 time = tt;
@@ -148,13 +148,16 @@ namespace Amara {
         public:
             float startScaleX;
             float startScaleY;
-            float targetScale;
+            float targetScaleX;
+			float targetScaleY;
 
-            Tween_ScaleXY(float ts, double tt, Amara::Easing gEasing) {
-                targetScale = ts;
+            Tween_ScaleXY(float tx, float ty, double tt, Amara::Easing gEasing) {
+                targetScaleX = tx;
+				targetScaleY = ty;
                 time = tt;
                 easing = gEasing;
             }
+			Tween_ScaleXY(float ts, double tt, Amara::Easing gEasing): Tween_ScaleXY(ts, ts, tt, gEasing) {}
             Tween_ScaleXY(float ts, double tt): Tween_ScaleXY(ts, tt, LINEAR) {}
 
             void prepare(Amara::Actor* actor) {
@@ -166,20 +169,20 @@ namespace Amara {
                 Amara::Tween::progressFurther();
                 switch (easing) {
                     case LINEAR:
-                        actor->scaleX = linearEase(startScaleX, targetScale, progress);
-                        actor->scaleY = linearEase(startScaleY, targetScale, progress);
+                        actor->scaleX = linearEase(startScaleX, targetScaleX, progress);
+                        actor->scaleY = linearEase(startScaleY, targetScaleY, progress);
                         break;
                     case SINE_INOUT:
-                        actor->scaleX = sineInOutEase(startScaleX, targetScale, progress);
-                        actor->scaleY = sineInOutEase(startScaleY, targetScale, progress);
+                        actor->scaleX = sineInOutEase(startScaleX, targetScaleX, progress);
+                        actor->scaleY = sineInOutEase(startScaleY, targetScaleY, progress);
                         break;
                     case SINE_IN:
-                        actor->scaleX = sineInEase(startScaleX, targetScale, progress);
-                        actor->scaleY = sineInEase(startScaleY, targetScale, progress);
+                        actor->scaleX = sineInEase(startScaleX, targetScaleX, progress);
+                        actor->scaleY = sineInEase(startScaleY, targetScaleY, progress);
                         break;
                     case SINE_OUT:
-                        actor->scaleX = sineOutEase(startScaleX, targetScale, progress);
-                        actor->scaleY = sineOutEase(startScaleY, targetScale, progress);
+                        actor->scaleX = sineOutEase(startScaleX, targetScaleX, progress);
+                        actor->scaleY = sineOutEase(startScaleY, targetScaleY, progress);
                         break;
                 }
             }

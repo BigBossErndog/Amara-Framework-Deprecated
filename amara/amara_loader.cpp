@@ -44,6 +44,13 @@ namespace Amara {
                 return nullptr;
             }
 
+			virtual bool has(std::string key) {
+				if (assets.find(key) != assets.end()) {
+					return true;
+				}
+				return false;
+			}
+
 			nlohmann::json& getJSON(std::string key) {
 				Amara::JsonFile* jf = (Amara::JsonFile*)(get(key));
 				if (jf != nullptr) {
@@ -68,6 +75,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				if (tx == nullptr) {
 					std::cout << "No texture was given for key: \"" << key << "\"" <<  std::endl;
 					return false;
@@ -75,9 +83,6 @@ namespace Amara {
 				std::cout << "Added Asset: " << key << std::endl;
 				Amara::Asset* newAsset = new Amara::ImageTexture(key, IMAGE, tx);
 				assets[key] = newAsset;
-				if (got != nullptr) {
-					delete got;
-				}
 				return true;
 			}
 			virtual bool add(std::string key, SDL_Texture* tx) {
@@ -90,6 +95,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				if (tx == nullptr) {
 					std::cout << "No texture was given for key: \"" << key << "\"" <<  std::endl;
 					return false;
@@ -97,9 +103,6 @@ namespace Amara {
 				std::cout << "Loaded: " << key << std::endl;
 				Amara::Spritesheet* newAsset = new Amara::Spritesheet(key, SPRITESHEET, tx, frwidth, frheight);
 				assets[key] = newAsset;
-				if (got != nullptr) {
-					delete got;
-				}
 				return true;
 			}
 			virtual bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight) {
@@ -112,12 +115,10 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				std::cout << "Asset added: " << key << std::endl;
 				assets[key] = newAsset;
 				newAsset->key = key;
-				if (got != nullptr) {
-					delete got;
-				}
 			}
 			virtual bool add(std::string key, Amara::Asset* newAsset) {
 				return add(key, newAsset, true);
@@ -363,6 +364,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 				// Final optimized image.
 				SDL_Surface* optimizedSurface = NULL;
@@ -390,9 +392,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Asset* newAsset = new Amara::Asset(key, SURFACE, optimizedSurface);
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 
 				return success;
@@ -411,6 +410,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				SDL_Texture* newTexture = NULL;
@@ -439,9 +439,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Asset* newAsset = new Amara::ImageTexture(key, IMAGE, newTexture);
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 
 				return success;
@@ -460,6 +457,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				SDL_Texture* newTexture = NULL;
@@ -485,9 +483,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Spritesheet* newAsset = new Amara::Spritesheet(key, SPRITESHEET, newTexture, frwidth, frheight);
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 
 				return success;
@@ -506,6 +501,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				// Creating the font
@@ -525,9 +521,6 @@ namespace Amara {
 					newAsset->style = style;
 
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 
 				return success;
@@ -551,6 +544,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				Mix_Chunk* sound = Mix_LoadWAV(path.c_str());
@@ -562,9 +556,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Asset* newAsset = new Amara::Sound(key, SOUND, sound);
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 
 				return success;
@@ -581,6 +572,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				Mix_Music* music = Mix_LoadMUS(path.c_str());
@@ -592,9 +584,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Asset* newAsset = new Amara::Music(key, MUSIC, music, properties);
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 
 				return success;
@@ -610,6 +599,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				std::ifstream in(path, std::ios::in | std::ios::binary);
@@ -625,9 +615,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Asset* newAsset = new Amara::StringFile(key, STRINGFILE, contents);
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 				else {
 					std::cout << "Loader: Failed to read file \"" << path << "\"" << std::endl;
@@ -642,6 +629,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				std::ifstream in(path, std::ios::in | std::ios::binary);
@@ -657,9 +645,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Asset* newAsset = new Amara::JsonFile(key, JSONFILE, nlohmann::json::parse(contents));
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 				}
 				else {
 					std::cout << "Loader: Failed to read file \"" << path << "\"" << std::endl;
@@ -678,6 +663,7 @@ namespace Amara {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
 				}
+				remove(key);
 				bool success = true;
 
 				std::ifstream in(path, std::ios::in | std::ios::binary);
@@ -691,9 +677,6 @@ namespace Amara {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Asset* newAsset = new Amara::LineByLine(key, LINEBYLINE, contents);
 					assets[key] = newAsset;
-					if (got != nullptr) {
-						delete got;
-					}
 					in.close();
 				}
 				else {

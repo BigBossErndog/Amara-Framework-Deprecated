@@ -92,6 +92,13 @@ namespace Amara {
                 }
             }
 
+			void pause(std::string key) {
+                std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
+                if (got != sceneMap->end()) {
+                    got->second->scenes->pause();
+                }
+            }
+
             void resume(std::string key) {
                 std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
@@ -224,6 +231,7 @@ namespace Amara {
 								if (s == scene) {
 									sceneList->erase(sceneList->begin() + i);
 									sceneList->push_back(s);
+									break;
 								}
 							}
 							break;

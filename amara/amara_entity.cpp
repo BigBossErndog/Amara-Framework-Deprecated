@@ -350,6 +350,9 @@ namespace Amara {
 			}
 
 			virtual Amara::Entity* add(Amara::Entity* entity) {
+				if (entity && entity->parent != nullptr) {
+					entity->parent->remove(entity);
+				}
 				entities.push_back(entity);
 				entity->init(properties, scene, this);
 				return entity;
@@ -367,6 +370,7 @@ namespace Amara {
 				for (auto it = entities.begin(); it != entities.end(); ++it) {
 					child = *it;
 					if (child == entity) {
+						if (entity->parent == this) entity->parent = nullptr;
 						entities.erase(it--);
 					}
 				}
