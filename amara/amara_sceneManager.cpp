@@ -88,6 +88,9 @@ namespace Amara {
 					scene->scenes->start();
 					return scene;
 				}
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be started.", key.c_str());
+				}
 
 				return nullptr;
 			}

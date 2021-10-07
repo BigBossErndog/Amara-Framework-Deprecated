@@ -59,22 +59,14 @@ namespace Amara {
                 return nullptr;
             }
 
-            void run() {
-                tasks.push_back(RUN);
-            }
-
             void run(std::string key) {
                 std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
                     got->second->scenes->run();
                 }
                 else {
-                    std::cout << "Scene \"" << key << "\" was not found." << std::endl;
-                }
-            }
-
-            void start() {
-                tasks.push_back(START);
+					SDL_Log("Scene with key \"%s\" not found. Could not be run.", key);
+				}
             }
 
             void start(std::string key) {
@@ -83,6 +75,9 @@ namespace Amara {
                     stop(this->key);
                     got->second->scenes->start();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be started.", key.c_str());
+				}
             }
 
             void stop(std::string key) {
@@ -90,6 +85,9 @@ namespace Amara {
                 if (got != sceneMap->end()) {
                     got->second->scenes->stop();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be stopped.", key.c_str());
+				}
             }
 
 			void pause(std::string key) {
@@ -97,6 +95,9 @@ namespace Amara {
                 if (got != sceneMap->end()) {
                     got->second->scenes->pause();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be paused.", key);
+				}
             }
 
             void resume(std::string key) {
@@ -104,6 +105,9 @@ namespace Amara {
                 if (got != sceneMap->end()) {
                     got->second->scenes->resume();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be resumed.", key);
+				}
             }
 
             void restart(std::string key) {
@@ -111,6 +115,9 @@ namespace Amara {
                 if (got != sceneMap->end()) {
                     got->second->scenes->restart();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be restarted.", key);
+				}
             }
 
             void sleep(std::string key) {
@@ -118,6 +125,9 @@ namespace Amara {
                 if (got != sceneMap->end()) {
                     got->second->scenes->sleep();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be snoozed.", key);
+				}
             }
 
             void wake(std::string key) {
@@ -125,6 +135,9 @@ namespace Amara {
                 if (got != sceneMap->end()) {
                     got->second->scenes->wake();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be woken.", key);
+				}
             }
 
 			void bringToFront(std::string key) {
@@ -132,6 +145,17 @@ namespace Amara {
                 if (got != sceneMap->end()) {
                     got->second->scenes->bringToFront();
                 }
+				else {
+					SDL_Log("Scene with key \"%s\" not found. Could not be brought to front.", key);
+				}
+            }
+
+			void run() {
+                tasks.push_back(RUN);
+            }
+
+			void start() {
+                tasks.push_back(START);
             }
 
             void stop() {

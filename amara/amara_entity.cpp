@@ -19,6 +19,8 @@ namespace Amara {
 
 	struct sortEntities {
 		inline bool operator() (Amara::SortedEntity* entity1, Amara::SortedEntity* entity2) {
+			if (entity1 == nullptr) return false;
+			if (entity2 == nullptr) return false;
 			return (entity1->depth < entity2->depth);
 		}
 	};
@@ -271,7 +273,7 @@ namespace Amara {
 				for (auto it = entities.begin(); it != entities.end(); ++it) {
                     entity = *it;
 
-                    if (entity->isDestroyed || entity->parent != this) {
+                    if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
                         entities.erase(it--);
                         continue;
                     }
@@ -334,8 +336,13 @@ namespace Amara {
                     }
 				}
 
-				for (Amara::Entity* entity : entities) {
-					if (entity->isDestroyed || entity->parent != this) continue;
+				Amara::Entity* entity;
+				for (auto it = entities.begin(); it != entities.end(); ++it) {
+					entity = *it;
+					if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
+						entities.erase(it--);
+						continue;
+					}
 					entity->run();
 				}
 			}
