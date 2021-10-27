@@ -30,6 +30,7 @@ namespace Amara {
 
             void prepare(Amara::Actor* gCam) {
                 cam = (Amara::Camera*)gCam;
+				cam->stopFollow();
                 if (center) {
                     startX = cam->centerX;
                     startY = cam->centerY;
@@ -133,6 +134,92 @@ namespace Amara {
     Amara::Script* createTween_CameraZoom(float tz, double tt, Amara::Easing gEasing) {
         return (new Tween_CameraZoom(tz, tt, gEasing));
     };
+
+	class Tween_CameraShake: public Amara::Tween {
+	public:
+		Amara::Camera* cam;
+
+		float startX = 0;
+		float startY = 0;
+
+		float shakeStartX;
+		float shakeStartY;
+		float shakeEndX;
+		float shakeEndY;
+
+		bool center = false;
+
+		RNG rng;
+
+		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt, Amara::Easing gEasing, bool gCenter) {
+			shakeStartX = sx;
+			shakeStartY = sy;
+			shakeEndX = ex;
+			shakeEndY = ey;
+			time = tt;
+			easing = gEasing;
+			center = gCenter;
+		}
+		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt, Amara::Easing gEasing): Tween_CameraShake(sx, sy, ex, ey, tt, gEasing, true) {}
+		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt): Tween_CameraShake(sx, sy, ex, ey, tt, LINEAR) {}
+
+		Tween_CameraShake(float tx, float ty, float tt, Amara::Easing gEasing, bool gCenter): Tween_CameraShake(tx, ty, 0, 0, tt, gEasing, gCenter) {}
+		Tween_CameraShake(float tx, float ty, float tt, Amara::Easing gEasing): Tween_CameraShake(tx, ty, 0, 0, tt, gEasing, true) {}
+		Tween_CameraShake(float tx, float ty, float tt): Tween_CameraShake(tx, ty, tt, LINEAR) {}
+		Tween_CameraShake(float tx, float ty): Tween_CameraShake(tx, ty, 1) {}
+
+		void prepare(Amara::Actor* actor) {
+			cam = (Amara::Camera*)actor;
+			cam->stopFollow();
+			if (center) {
+				startX = cam->centerX;
+				startY = cam->centerY;
+			}
+			else {
+				startX = cam->scrollX;
+				startY = cam->scrollY;
+			}
+
+			if (shakeEndX == -1) shakeEndX = shakeStartX;
+			if (shakeEndY == -1) shakeEndY = shakeStartY;
+
+			rng.randomize();
+		}
+
+		void script() {
+			Amara::Tween::progressFurther();
+			float nx = 0, ny = 0;
+
+			switch (easing) {
+				case LINEAR:
+					nx = linearEase(shakeStartX, shakeEndX, progress);
+					ny = linearEase(shakeStartY, shakeEndY, progress);
+					break;
+				case SINE_INOUT:
+					nx = sineInOutEase(shakeStartX, shakeEndX, progress);
+					ny = sineInOutEase(shakeStartY, shakeEndY, progress);
+					break;
+				case SINE_IN:
+					nx = sineInEase(shakeStartX, shakeEndX, progress);
+					ny = sineInEase(shakeStartY, shakeEndY, progress);
+					break;
+				case SINE_OUT:
+					nx = sineOutEase(shakeStartX, shakeEndX, progress);
+					ny = sineOutEase(shakeStartY, shakeEndY, progress);
+					break;
+			}
+
+			float shakeX = startX + rng.random()*nx - nx/2.0;
+			float shakeY = startY + rng.random()*ny - ny/2.0;
+
+			if (center) {
+				cam->centerOn(shakeX, shakeY);
+			}
+			else {
+				cam->setScroll(shakeX, shakeY);
+			}
+		}
+	};
 }
 
 #endif

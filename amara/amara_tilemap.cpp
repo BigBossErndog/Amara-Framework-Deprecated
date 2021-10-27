@@ -45,25 +45,49 @@ namespace Amara {
                     setTexture(mapping["texture"]);
                 }
 
-                int mapWidth = 0, mapHeight = 0;
-				if (mapping.find("mapWidth") != mapping.end()) mapWidth = mapping["mapWidth"];
-                if (mapping.find("mapHeight") != mapping.end()) mapHeight =  mapping["mapHeight"];
+				if (mapping.find("json") != mapping.end()) {
+					setTiledJson(mapping["json"]);
+					createAllLayers();
+				}
+
+				if (mapping.find("mapWidth") != mapping.end()) width = mapping["mapWidth"];
+                if (mapping.find("mapHeight") != mapping.end()) height =  mapping["mapHeight"];
                 if (mapping.find("tileWidth") != mapping.end()) tileWidth = mapping["tileWidth"] ;
                 if (mapping.find("tileHeight") != mapping.end()) tileHeight = mapping["tileHeight"];
-
-                width = mapWidth;
-                height = mapHeight;
+				widthInPixels = width * tileWidth;
+				heightInPixels = height * tileHeight;
 				
-				if (mapping.find("layers") != mapping.end()) {
+				if (mapping.find("layers") != mapping.end() && mapping["layers"].is_array()) {
 					nlohmann::json& jlayers = mapping["layers"];
 					for (nlohmann::json& jlayer: jlayers) {
-						TilemapLayer* tilemapLayer = createLayer(jlayer["key"], mapWidth, mapHeight, tileWidth, tileHeight);
+						std::string layerKey = jlayer["key"];
+						TilemapLayer* tilemapLayer = getLayer(layerKey);
+						if (tilemapLayer == nullptr) tilemapLayer = createLayer(layerKey, width, height, tileWidth, tileHeight);
 						tilemapLayer->configure(jlayer);
+
+						if (jlayer.find("isWall") != jlayer.end() && jlayer["isWall"]) {
+							setWall(layerKey);
+						}
+					}
+				}
+
+				if (mapping.find("layer") != mapping.end() && mapping["layer"].is_object()) {
+					nlohmann::json& jlayer = mapping["layer"];
+					std::string layerKey = jlayer["key"];
+					TilemapLayer* tilemapLayer = getLayer(layerKey);
+					if (tilemapLayer == nullptr) tilemapLayer = createLayer(layerKey, width, height, tileWidth, tileHeight);
+					tilemapLayer->configure(jlayer);
+
+					if (jlayer.find("isWall") != jlayer.end() && jlayer["isWall"]) {
+						setWall(layerKey);
 					}
 				}
 
 				if (mapping.find("walls") != mapping.end() && mapping["walls"].is_array()) {
 					setWalls(mapping["walls"]);
+				}
+				if (mapping.find("wall") != mapping.end() && mapping["wall"].is_string()) {
+					setWall(mapping["wall"]);
 				}
             }
 
@@ -85,9 +109,10 @@ namespace Amara {
 
             void setTiledJson(std::string gTiledJsonKey) {
                 tiledJsonKey = gTiledJsonKey;
+				walls.clear();
                 if (!tiledJsonKey.empty()) {
                     Amara::JsonFile* jsonAsset = (Amara::JsonFile*)load->get(tiledJsonKey);
-
+					
                     if (jsonAsset != nullptr) {
                         tiledJson = jsonAsset->getJSON();
                         if (tiledJson["width"] > width) width = tiledJson["width"];
@@ -259,7 +284,6 @@ namespace Amara {
             }
 
             std::vector<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
-                walls.clear();
                 Amara::TilemapLayer* layer;
                 for (std::string layerKey: wallKeys) {
                     layer = getLayer(layerKey);
@@ -269,6 +293,14 @@ namespace Amara {
                 }
                 return walls;
             }
+
+			std::vector<Amara::TilemapLayer*> setWall(std::string wallKey) {
+				Amara::TilemapLayer* layer = getLayer(wallKey);
+				if (layer) {
+					walls.push_back(layer);
+				}
+				return walls;
+			}
 
             virtual bool isWall(int gx, int gy) {
                 Amara::Tile tile;

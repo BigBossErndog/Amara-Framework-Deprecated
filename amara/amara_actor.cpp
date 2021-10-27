@@ -21,8 +21,16 @@ namespace Amara {
 
 			void destroyScript(Amara::Script* script) {
 				if (script != nullptr) {
-					if (script->chainedScript) destroyScript(script->chainedScript);
+					Script* check;
+					for (auto it = scripts.begin(); it != scripts.end(); ++it) {
+						check = *it;
+						if (check == script) {
+							scripts.erase(it--);
+							continue;
+						}
+					}
 					if (script->deleteOnFinish) properties->taskManager->queueDeletion(script);
+					if (script->chainedScript) destroyScript(script->chainedScript);
 				} 
 			}
 

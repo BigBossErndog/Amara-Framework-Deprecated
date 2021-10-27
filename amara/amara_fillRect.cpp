@@ -92,6 +92,22 @@ namespace Amara {
 				setOrigin(go, go);
 			}
 
+			void setOriginPosition(float gx, float gy) {
+				originX = gx / width;
+				originY = gy / height;
+			}
+			void setOriginPosition(float go) {
+				setOriginPosition(go, go);
+			}
+
+			void setSize(float gw, float gh) {
+				width = gw;
+				height = gh;
+			}
+			void setSize(float gs) {
+				setSize(gs, gs);
+			}
+
 			void draw(int vx, int vy, int vw, int vh) {
 				if (!isVisible) return;
 				bool skipDrawing = false;

@@ -215,24 +215,32 @@ namespace Amara {
             float startY;
             float maxShakeX;
             float maxShakeY;
+			float targetX;
+			float targetY;
 
             Actor* ent;
 
             RNG rng;
-
-            Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float tt, Amara::Easing gEasing) {
-                maxShakeX = gMaxShakeX;
+			Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float gTargetX, float gTargetY, float tt, Amara::Easing gEasing) {
+				maxShakeX = gMaxShakeX;
                 maxShakeY = gMaxShakeY;
+				targetX = gTargetX;
+				targetY = gTargetY;
                 time = tt;
                 easing = gEasing;
-            }
+			}
+            Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float tt, Amara::Easing gEasing): Tween_ShakeXY(gMaxShakeX, gMaxShakeY, 0, 0, tt, gEasing)  {}
             Tween_ShakeXY(float gMaxShake, float tt, Amara::Easing gEasing): Tween_ShakeXY(gMaxShake, gMaxShake, tt, gEasing) {}
             Tween_ShakeXY(float gMaxShake, float tt): Tween_ShakeXY(gMaxShake, tt, LINEAR) {}
+			Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float gTargetX, float gTargetY, float tt): Tween_ShakeXY(gMaxShakeX, gMaxShakeY, gTargetX, gTargetY, tt, LINEAR) {}
 
             void prepare(Amara::Actor* actor) {
                 startX = actor->x;
                 startY = actor->y;
                 ent = actor;
+
+				if (targetX == -1) targetX = maxShakeX;
+				if (targetY == -1) targetY = maxShakeY;
 
                 rng.randomize();
             }
@@ -249,20 +257,20 @@ namespace Amara {
                 float shakeAmountY;
                 switch (easing) {
                     case LINEAR:
-                        shakeAmountX = linearEase(maxShakeX, 0, progress);
-                        shakeAmountY = linearEase(maxShakeY, 0, progress);
+                        shakeAmountX = linearEase(maxShakeX, targetX, progress);
+                        shakeAmountY = linearEase(maxShakeY, targetY, progress);
                         break;
                     case SINE_INOUT:
-                        shakeAmountX = sineInOutEase(maxShakeX, 0, progress);
-                        shakeAmountY = sineInOutEase(maxShakeY, 0, progress);
+                        shakeAmountX = sineInOutEase(maxShakeX, targetX, progress);
+                        shakeAmountY = sineInOutEase(maxShakeY, targetY, progress);
                         break;
                     case SINE_IN:
-                        shakeAmountX = sineInEase(maxShakeX, 0, progress);
-                        shakeAmountY = sineInEase(maxShakeY, 0, progress);
+                        shakeAmountX = sineInEase(maxShakeX, targetX, progress);
+                        shakeAmountY = sineInEase(maxShakeY, targetY, progress);
                         break;
                     case SINE_OUT:
-                        shakeAmountX = sineOutEase(maxShakeX, 0, progress);
-                        shakeAmountY = sineOutEase(maxShakeY, 0, progress);
+                        shakeAmountX = sineOutEase(maxShakeX, targetX, progress);
+                        shakeAmountY = sineOutEase(maxShakeY, targetY, progress);
                         break;
                 }
                 actor->x = startX + rng.random()*shakeAmountX - shakeAmountX/2.0;
@@ -271,112 +279,6 @@ namespace Amara {
 
 			void cancel(Amara::Actor* actor) {
 				actor->x = startX;
-				actor->y = startY;
-			}
-    };
-
-    class Tween_ShakeX: public Tween {
-        public:
-            float startX;
-            float maxShake;
-
-            Actor* ent;
-
-            RNG rng;
-
-            Tween_ShakeX(float gMaxShake, float tt, Amara::Easing gEasing) {
-                maxShake = gMaxShake;
-                time = tt;
-                easing = gEasing;
-            }
-            Tween_ShakeX(float gMaxShake, float tt): Tween_ShakeX(gMaxShake, tt, LINEAR) {}
-
-            void prepare(Amara::Actor* actor) {
-                startX = actor->x;
-                ent = actor;
-
-                rng.randomize();
-            }
-
-            void finish() {
-                Tween::finish();
-                ent->x = startX;
-            }
-
-            void script(Amara::Actor* actor) {
-                Amara::Tween::progressFurther();
-                float shakeAmount;
-                switch (easing) {
-                    case LINEAR:
-                        shakeAmount = linearEase(maxShake, 0, progress);
-                        break;
-                    case SINE_INOUT:
-                        shakeAmount = sineInOutEase(maxShake, 0, progress);
-                        break;
-                    case SINE_IN:
-                        shakeAmount = sineInEase(maxShake, 0, progress);
-                        break;
-                    case SINE_OUT:
-                        shakeAmount = sineOutEase(maxShake, 0, progress);
-                        break;
-                }
-                actor->x = startX + rng.random()*shakeAmount - shakeAmount/2.0;
-            }
-
-			void cancel(Amara::Actor* actor) {
-				actor->x = startX;
-			}
-    };
-
-    class Tween_ShakeY: public Tween {
-        public:
-            float startY;
-            float maxShake;
-
-            Actor* ent;
-
-            RNG rng;
-
-            Tween_ShakeY(float gMaxShake, float tt, Amara::Easing gEasing) {
-                maxShake = gMaxShake;
-                time = tt;
-                easing = gEasing;
-            }
-            Tween_ShakeY(float gMaxShake, float tt): Tween_ShakeY(gMaxShake, tt, LINEAR) {}
-
-            void prepare(Amara::Actor* actor) {
-                startY = actor->y;
-                ent = actor;
-
-                rng.randomize();
-            }
-
-            void finish() {
-                Tween::finish();
-                ent->y = startY;
-            }
-
-            void script(Amara::Actor* actor) {
-                Amara::Tween::progressFurther();
-                float shakeAmount;
-                switch (easing) {
-                    case LINEAR:
-                        shakeAmount = linearEase(maxShake, 0, progress);
-                        break;
-                    case SINE_INOUT:
-                        shakeAmount = sineInOutEase(maxShake, 0, progress);
-                        break;
-                    case SINE_IN:
-                        shakeAmount = sineInEase(maxShake, 0, progress);
-                        break;
-                    case SINE_OUT:
-                        shakeAmount = sineOutEase(maxShake, 0, progress);
-                        break;
-                }
-                actor->y = startY + rng.random()*shakeAmount - shakeAmount/2.0;
-            }
-
-			void cancel(Amara::Actor* actor) {
 				actor->y = startY;
 			}
     };
