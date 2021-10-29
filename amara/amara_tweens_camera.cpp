@@ -139,9 +139,6 @@ namespace Amara {
 	public:
 		Amara::Camera* cam;
 
-		float startX = 0;
-		float startY = 0;
-
 		float shakeStartX;
 		float shakeStartY;
 		float shakeEndX;
@@ -151,34 +148,22 @@ namespace Amara {
 
 		RNG rng;
 
-		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt, Amara::Easing gEasing, bool gCenter) {
+		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt, Amara::Easing gEasing) {
 			shakeStartX = sx;
 			shakeStartY = sy;
 			shakeEndX = ex;
 			shakeEndY = ey;
 			time = tt;
 			easing = gEasing;
-			center = gCenter;
 		}
-		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt, Amara::Easing gEasing): Tween_CameraShake(sx, sy, ex, ey, tt, gEasing, true) {}
 		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt): Tween_CameraShake(sx, sy, ex, ey, tt, LINEAR) {}
 
-		Tween_CameraShake(float tx, float ty, float tt, Amara::Easing gEasing, bool gCenter): Tween_CameraShake(tx, ty, 0, 0, tt, gEasing, gCenter) {}
-		Tween_CameraShake(float tx, float ty, float tt, Amara::Easing gEasing): Tween_CameraShake(tx, ty, 0, 0, tt, gEasing, true) {}
+		Tween_CameraShake(float tx, float ty, float tt, Amara::Easing gEasing): Tween_CameraShake(tx, ty, 0, 0, tt, gEasing) {}
 		Tween_CameraShake(float tx, float ty, float tt): Tween_CameraShake(tx, ty, tt, LINEAR) {}
 		Tween_CameraShake(float tx, float ty): Tween_CameraShake(tx, ty, 1) {}
 
 		void prepare(Amara::Actor* actor) {
 			cam = (Amara::Camera*)actor;
-			cam->stopFollow();
-			if (center) {
-				startX = cam->centerX;
-				startY = cam->centerY;
-			}
-			else {
-				startX = cam->scrollX;
-				startY = cam->scrollY;
-			}
 
 			if (shakeEndX == -1) shakeEndX = shakeStartX;
 			if (shakeEndY == -1) shakeEndY = shakeStartY;
@@ -209,15 +194,17 @@ namespace Amara {
 					break;
 			}
 
-			float shakeX = startX + rng.random()*nx - nx/2.0;
-			float shakeY = startY + rng.random()*ny - ny/2.0;
+			float shakeX = rng.random()*nx - nx/2.0;
+			float shakeY = rng.random()*ny - ny/2.0;
 
-			if (center) {
-				cam->centerOn(shakeX, shakeY);
-			}
-			else {
-				cam->setScroll(shakeX, shakeY);
-			}
+			cam->offsetX = shakeX;
+			cam->offsetY = shakeY;
+		}
+
+		void finish() {
+			Amara::Tween::finish();
+			cam->offsetX = 0;
+			cam->offsetY = 0;
 		}
 	};
 }

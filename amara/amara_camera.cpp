@@ -215,8 +215,8 @@ namespace Amara {
             void assignAttributes() {
                 resetPassOnProperties();
                 properties->currentCamera = this;
-                properties->scrollX = scrollX + offsetX/(zoomX*zoomScale);
-                properties->scrollY = scrollY + offsetY/(zoomY*zoomScale);
+                properties->scrollX = scrollX + offsetX;
+                properties->scrollY = scrollY + offsetY;
                 properties->zoomX = zoomX * zoomScale;
                 properties->zoomY = zoomY * zoomScale;
             }
