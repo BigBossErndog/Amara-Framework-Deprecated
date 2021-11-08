@@ -23,6 +23,10 @@ namespace Amara {
                 return anims->play(texture, animKey);
             }
 
+			virtual void play(Amara::Animation* anim) {
+				return anims->play(texture, anim);
+			}
+
             virtual void configure(nlohmann::json config) {
                 Amara::Image::configure(config);
                 if (config.find("animation") != config.end()) {

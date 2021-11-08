@@ -11,7 +11,7 @@ namespace Amara {
             Amara::Image* parent = nullptr;
 
             Amara::Animation* currentAnim = nullptr;
-            bool isFinished = false;
+            bool isFinished = true;
             bool isActive = false;
             bool isPaused = false;
             int currentIndex = 0;
@@ -33,6 +33,7 @@ namespace Amara {
                     std::cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << std::endl;
                 }
                 if (anim != currentAnim || (anim != nullptr && isFinished)) {
+					if (currentAnim != nullptr && currentAnim->deleteOnFinish) delete currentAnim;
                     currentAnim = anim;
 
                     currentIndex = 0;
@@ -48,9 +49,38 @@ namespace Amara {
 
                         return true;
                     }
+					else {
+						isFinished = true;
+						isActive = false;
+						isPaused = false;
+					}
                 }
                 return false;
             }
+			void play(Amara::ImageTexture* texture, Amara::Animation* anim) {
+				if (anim != currentAnim || (anim != nullptr && isFinished)) {
+					if (currentAnim != nullptr && currentAnim->deleteOnFinish && currentAnim != anim) delete currentAnim;
+                    currentAnim = anim;
+
+                    currentIndex = 0;
+                    frameCounter = 0;
+
+                    if (anim != nullptr) {
+						currentAnim->deleteOnFinish = true;
+                        currentFrame = anim->frameAt(currentIndex);
+                        parent->frame = currentFrame;
+
+                        isFinished = false;
+                        isActive = true;
+                        isPaused = false;
+                    }
+					else {
+						isFinished = true;
+						isActive = false;
+						isPaused = false;
+					}
+                }
+			}
 
             Amara::Animation* get(std::string animKey) {
                 if (parent && parent->texture && parent->texture->type == SPRITESHEET) {
@@ -69,7 +99,9 @@ namespace Amara {
             }
 
             void stop() {
+				if (currentAnim != nullptr && currentAnim->deleteOnFinish) delete currentAnim;
                 currentAnim = nullptr;
+				isFinished = true;
             }
 
             float getProgress() {
@@ -83,7 +115,6 @@ namespace Amara {
 
                 return p + e*f;
 			}
-
 
 			void setProgress(float p) {
 				if (currentAnim == nullptr) {
@@ -127,8 +158,10 @@ namespace Amara {
                         }
                         else {
                             currentFrame = currentAnim->frameAt(currentAnim->length() - 1);
+							if (currentAnim != nullptr && currentAnim->deleteOnFinish) delete currentAnim;
                             currentAnim = nullptr;
 							isFinished = true;
+							isActive = false;
                         }
                     }
                     else {

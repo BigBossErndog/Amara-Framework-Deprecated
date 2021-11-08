@@ -183,6 +183,7 @@ namespace Amara {
 
                 for (Amara::AudioBase* audio : sounds) {
                     audio->run(volume * masterVolume * parentVolume);
+					if (audio->isPlaying) currentlyPlaying = audio;
                 }
 
                 for (Amara::AudioGroup* audio : groups) {

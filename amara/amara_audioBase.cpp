@@ -8,9 +8,9 @@ namespace Amara {
     class AudioGroup;
 
     enum AudioFade {
-        NOFADE,
-        FADEIN,
-        FADEOUT
+        NOFADE = 0,
+        FADEIN = 1,
+        FADEOUT = 2
     };
 
     class AudioBase: public Amara::Asset {

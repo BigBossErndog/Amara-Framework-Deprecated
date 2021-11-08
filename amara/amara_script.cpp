@@ -27,6 +27,8 @@ namespace Amara {
             bool deleteOnFinish = true;
             bool deleteChainOnDelete = true;
 
+			bool initiated = false;
+
             Amara::Script* chainedScript = nullptr;
 
             Script(bool deleteWhenDone): Amara::StateManager() {
@@ -67,6 +69,7 @@ namespace Amara {
             virtual void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
                 init(gameProperties);
                 parent = parentActor;
+				initiated = true;
             }
 
             virtual void init() {}
