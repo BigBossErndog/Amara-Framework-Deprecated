@@ -139,6 +139,12 @@ namespace Amara {
                 config["originY"] = originY;
                 config["flipHorizontal"] = flipHorizontal;
                 config["flipVertical"] = flipVertical;
+				config["cropLeft"] = cropLeft;
+				config["cropRight"] = cropRight;
+				config["cropTop"] = cropTop;
+				config["cropBottom"] = cropBottom;
+				config["renderOffsetX"] = renderOffsetX;
+				config["renderOffsetY"] = renderOffsetY;
                 return config;
             }
 

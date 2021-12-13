@@ -98,6 +98,10 @@ namespace Amara {
                 return (scripts.size() > 0);
             }
 
+			bool notActing() {
+				return (scripts.size() == 0);
+			}
+
             void run() {
                 reciteScripts();
                 if (!isDestroyed) Amara::Entity::run();

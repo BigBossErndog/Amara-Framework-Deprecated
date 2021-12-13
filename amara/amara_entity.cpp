@@ -192,7 +192,7 @@ namespace Amara {
 				if (config.find("cameraOffsetY") != config.end()) {
 					cameraOffsetY = config["cameraOffsetY"];
 				}
-				if (config.find("data") != config.end()) {
+				if (config.find("data") != config.end() && !config["data"].is_null()) {
 					data.update(config["data"]);
 				}
 				if (config.find("bringToFront") != config.end()) {

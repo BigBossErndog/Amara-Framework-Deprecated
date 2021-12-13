@@ -158,7 +158,7 @@ namespace Amara {
                 skipEvent = true;
             }
 
-            bool wait(float time) {
+            bool wait(float time, bool skip) {
                 bool ret = false;
 
                 if (once()) {
@@ -176,7 +176,7 @@ namespace Amara {
                     }
 
                     waitCounter += 1;
-                    if (waitCounter >= t) {
+                    if (waitCounter >= t || skip) {
                         nextEvt();
                     }
 
@@ -185,6 +185,9 @@ namespace Amara {
 
                 return ret;
             }
+			bool wait(float time) {
+				return wait(time, false);
+			}
 
             bool waitUntil(bool condition) {
                 if (evt()) {

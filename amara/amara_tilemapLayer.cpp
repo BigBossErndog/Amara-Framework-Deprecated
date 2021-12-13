@@ -47,8 +47,10 @@ namespace Amara {
 
             SDL_Rect viewport;
             SDL_Rect srcRect;
-            SDL_FRect destRect;
+			SDL_Rect destRect;
+            SDL_FRect destRectF;
             SDL_FPoint origin;
+			SDL_Point originN;
             SDL_RendererFlip flip;
 
             bool pixelLocked = false;
@@ -446,18 +448,14 @@ namespace Amara {
                                 srcRect.y = floor(frame / (texture->width / tileWidth)) * tileHeight;
                                 srcRect.w = tileWidth;
                                 srcRect.h = tileHeight;
-
-                                if (tile.x == 0 && tile.y == 0) {
-                                    
-                                }
-
-                                SDL_RenderCopyExF(
+								
+                                SDL_RenderCopyEx(
                                     gRenderer,
                                     tex,
                                     &srcRect,
                                     &destRect,
                                     angle + tileAngle,
-                                    &origin,
+                                    &originN,
                                     flip
                                 );
                             }
@@ -472,21 +470,21 @@ namespace Amara {
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
 
-                destRect.x = ((x+px - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
-                destRect.y = ((y-z+py - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
-                destRect.w = (widthInPixels*scaleX*nzoomX);
-                destRect.h = (heightInPixels*scaleY*nzoomY);
+                destRectF.x = ((x+px - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
+                destRectF.y = ((y-z+py - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
+                destRectF.w = (widthInPixels*scaleX*nzoomX);
+                destRectF.h = (heightInPixels*scaleY*nzoomY);
 
                 if (pixelLocked) {
-                    destRect.x = floor(destRect.x);
-                    destRect.y = floor(destRect.y);
-                    destRect.w = ceil(destRect.w);
-                    destRect.h = ceil(destRect.h);
+                    destRectF.x = floor(destRectF.x);
+                    destRectF.y = floor(destRectF.y);
+                    destRectF.w = ceil(destRectF.w);
+                    destRectF.h = ceil(destRectF.h);
                 }
 
-                origin.x = destRect.w * originX;
-                origin.y = destRect.h * originY;
-
+                origin.x = destRectF.w * originX;
+                origin.y = destRectF.h * originY;
+				
                 SDL_SetTextureBlendMode(drawTexture, blendMode);
                 SDL_SetTextureAlphaMod(drawTexture, properties->alpha * alpha * 255);
 
@@ -494,7 +492,7 @@ namespace Amara {
                     properties->gRenderer,
                     drawTexture,
                     NULL,
-                    &destRect,
+                    &destRectF,
                     0,
                     &origin,
                     SDL_FLIP_NONE

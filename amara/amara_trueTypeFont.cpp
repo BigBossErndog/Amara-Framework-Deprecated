@@ -41,6 +41,7 @@ namespace Amara {
             bool outlineCorners = true;
             Amara::Color outlineColor = FC_MakeColor(255, 255, 255, 255);
 			float outlineAlpha = 1;
+			bool outlineAlphaLocked = 1;
 
             TrueTypeFont(): Amara::Actor() {}
 
@@ -218,7 +219,17 @@ namespace Amara {
             }
 
             void drawText(float dx, float dy) {
-                effect.alignment = (FC_AlignEnum)alignment;
+				switch (alignment) {
+					case ALIGN_LEFT:
+						effect.alignment = FC_ALIGN_LEFT;
+						break;
+					case ALIGN_CENTER:
+						effect.alignment = FC_ALIGN_CENTER;
+						break;
+					case ALIGN_RIGHT:
+						effect.alignment = FC_ALIGN_RIGHT;
+						break;
+				}
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
@@ -279,6 +290,7 @@ namespace Amara {
 
                 if (outline) {
                     effect.color = outlineColor;
+					effect.color.a = outlineColor.a * alpha * outlineAlpha;
                     for (int i = 0; i < outline+1; i++) {
                         drawText(x+i,y);
                         drawText(x-i,y);

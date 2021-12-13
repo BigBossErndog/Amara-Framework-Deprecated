@@ -6,7 +6,7 @@ namespace Amara {
     enum Alignment {
         ALIGN_LEFT,
         ALIGN_RIGHT,
-        CENTER
+        ALIGN_CENTER
     }
 }
 
