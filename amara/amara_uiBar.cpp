@@ -4,11 +4,11 @@
 namespace Amara {
     class UIBar: public Actor {
     public:
-        int value = 0;
-        int maxValue = 1;
-        int displayValue = 0;
+        float value = 0;
+        float maxValue = 1;
+        float displayValue = 0;
 
-        int changeSpeed = -1;
+        float changeSpeed = -1;
         int pauseTime = 0;
         int pauseCount = 0;
 
@@ -67,13 +67,13 @@ namespace Amara {
             return false;
         }
 
-        void setValue(int gVal) {
+        void setValue(float gVal) {
             value = gVal;
             if (value > maxValue) {
                 maxValue = value;
             }
         }
-        void setValueInstantly(int gVal) {
+        void setValueInstantly(float gVal) {
             displayValue = gVal;
             setValue(gVal);
         }
@@ -83,7 +83,7 @@ namespace Amara {
             return textDisplay;
         }
 
-        void setSpeed(int gSpeed, int gDelay) {
+        void setSpeed(float gSpeed, int gDelay) {
             changeSpeed = gSpeed;
             pauseTime = gDelay;
         }
@@ -111,7 +111,7 @@ namespace Amara {
                 }
             }
             if (textDisplay) {
-                textDisplay->setText(std::to_string(displayValue));
+                textDisplay->setText(std::to_string((int)round(displayValue)));
             }
 
             frontBar->cropLeft = frontPaddingLeft;
