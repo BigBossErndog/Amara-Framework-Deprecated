@@ -42,6 +42,7 @@ namespace Amara {
             Amara::Color outlineColor = FC_MakeColor(255, 255, 255, 255);
 			float outlineAlpha = 1;
 			bool outlineAlphaLocked = 1;
+			float outlineAlphaPow = 1;
 
             TrueTypeFont(): Amara::Actor() {}
 
@@ -290,7 +291,7 @@ namespace Amara {
 
                 if (outline) {
                     effect.color = outlineColor;
-					effect.color.a = outlineColor.a * alpha * outlineAlpha;
+					effect.color.a = outlineColor.a * pow(alpha, 1) * outlineAlpha;
                     for (int i = 0; i < outline+1; i++) {
                         drawText(x+i,y);
                         drawText(x-i,y);

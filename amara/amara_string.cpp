@@ -31,6 +31,42 @@ namespace Amara {
             reset();
         }
 
+		std::string replace(char findC, char replaceC, bool swap) {
+			std::string newContent;
+			char c;
+			for (int i = 0; i < content.size(); i++) {
+				c = content.at(i);
+				if (c == findC) {
+					newContent += replaceC;
+				}
+				else {
+					newContent += c;
+				}
+			}
+			if (swap) content = newContent;
+			return newContent;
+		}
+
+		std::string replace(char findC, char replaceC) {
+			return replace(findC, replaceC, false);
+		}
+
+		std::string remove(char findC, bool swap) {
+			std::string newContent;
+			char c;
+			for (int i = 0; i < content.size(); i++) {
+				c = content.at(i);
+				if (c != findC) {
+					newContent += c;
+				}
+			}
+			if (swap) content = newContent;
+			return newContent;
+		}
+		std::string remove(char findC) {
+			return remove(findC, false);
+		}
+
         char next() {
             if (!finished()) {
                 index += 1;

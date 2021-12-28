@@ -29,6 +29,10 @@ namespace Amara {
                 return loader->getJSON(key);
             }
 
+			std::string getString(std::string key) {
+				return loader->getString(key);
+			}
+
 			bool remove(std::string key) {
 				return loader->remove(key);
 			}

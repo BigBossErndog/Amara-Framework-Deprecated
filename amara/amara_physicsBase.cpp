@@ -27,6 +27,8 @@ namespace Amara {
 
 			bool isActive = false;
 			bool isDestroyed = false;
+			bool isWall = true;
+			bool isColliding = true;
 
 			int shape = -1;
 			PhysicsProperties properties;

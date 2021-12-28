@@ -131,6 +131,8 @@ namespace Amara {
 		SDL_SetRenderTarget(gRenderer, texture);
 		SDL_RenderClear(gRenderer);
         drawCircle(gRenderer, 0, 0, radius, color, SDL_BLENDMODE_NONE);
+
+		return texture;
 	}
 	SDL_Texture* createCircleTexture(Amara::Entity* entity, float radius, SDL_Color color) {
 		return createCircleTexture(entity->properties->gRenderer, radius, color);
@@ -141,6 +143,85 @@ namespace Amara {
         Amara::CircleTexture* circle = new CircleTexture("", IMAGE, tx);
         circle->configure(radius, color);
         return circle;
+	}
+	Amara::CircleTexture* createCircle(Amara::Entity* entity, float radius, SDL_Color color) {
+		return createCircle(entity->properties->gRenderer, radius, color);
+	}
+	Amara::CircleTexture* createCircle(Amara::Loader* loader, float radius, SDL_Color color) {
+		return createCircle(loader->properties->gRenderer, radius, color);
+	}
+
+	void drawGradient(SDL_Renderer* gRenderer, int gx, int gy, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut, SDL_BlendMode blendMode) {
+        SDL_SetRenderDrawBlendMode(gRenderer, blendMode);
+        
+		float progress;
+		SDL_Color drawColor;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+				switch (dir) {
+					case Up:
+						progress = 1 - (y/(float)height);
+						break;
+					case Down:
+						progress = y/(float)height;
+						break;
+					case Left:
+						progress = 1 - (x/(float)width);
+					case Right:
+						progress = x/(float)width;
+						break;
+				}
+				drawColor.r = colorIn.r + (progress * (colorOut.r - colorIn.r));
+				drawColor.g = colorIn.g + (progress * (colorOut.g - colorIn.g));
+				drawColor.b = colorIn.b + (progress * (colorOut.b - colorIn.b));
+				drawColor.a = colorIn.a + (progress * (colorOut.a - colorIn.a));
+
+				SDL_SetRenderDrawColor(gRenderer, drawColor.r, drawColor.g, drawColor.b, drawColor.a);
+                SDL_RenderDrawPoint(gRenderer, gx + x, gy + y);
+            }
+        }
+    }
+	void drawGradient(SDL_Renderer* gRenderer, int gx, int gy, int gw, int gh, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		drawGradient(gRenderer, gx, gy, gw, gh, dir, colorIn, colorOut, SDL_BLENDMODE_BLEND);
+	}
+	void drawGradient(Amara::Entity* entity, int gx, int gy, int gw, int gh, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		drawGradient(entity->properties->gRenderer, gx, gy, gw, gh, dir, colorIn, colorOut);
+	}
+	void drawGradient(Amara::Loader* loader, int gx, int gy, int gw, int gh, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		drawGradient(loader->properties->gRenderer, gx, gy, gw, gh, dir, colorIn, colorOut);
+	}
+	SDL_Texture* createGradientTexture(SDL_Renderer* gRenderer, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		SDL_Texture* texture = SDL_CreateTexture(
+                                    gRenderer,
+                                    SDL_PIXELFORMAT_RGBA8888,
+                                    SDL_TEXTUREACCESS_TARGET,
+                                    width,
+                                    height
+                                );
+
+		SDL_SetRenderTarget(gRenderer, texture);
+		SDL_RenderClear(gRenderer);
+        drawGradient(gRenderer, 0, 0, width, height, dir, colorIn, colorOut, SDL_BLENDMODE_NONE);
+
+		return texture;
+	}
+	SDL_Texture* createGradientTexture(Amara::Entity* entity, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		return createGradientTexture(entity->properties->gRenderer, width, height, dir, colorIn, colorOut);
+	}
+	SDL_Texture* createGradientTexture(Amara::Loader* loader, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		return createGradientTexture(loader->properties->gRenderer, width, height, dir, colorIn, colorOut);
+	}
+	Amara::GradientTexture* createGradient(SDL_Renderer* gRenderer, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		SDL_Texture* tx = createGradientTexture(gRenderer, width, height, dir, colorIn, colorOut);
+        Amara::GradientTexture* gradient = new GradientTexture("", IMAGE, tx);
+        gradient->configure(dir, colorIn, colorOut);
+        return gradient;
+	}
+	Amara::GradientTexture* createGradient(Amara::Entity* entity, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		return createGradient(entity->properties->gRenderer, width, height, dir, colorIn, colorOut);
+	}
+	Amara::GradientTexture* createGradient(Amara::Loader* loader, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
+		return createGradient(loader->properties->gRenderer, width, height, dir, colorIn, colorOut);
 	}
 }
 

@@ -60,6 +60,11 @@ namespace Amara {
 
                 yvalue = value;
             }
+
+			void manage() {
+				Amara::Button::manage();
+				angle = angleBetween(0, 0, xvalue, yvalue);
+			}
     };
 }
 

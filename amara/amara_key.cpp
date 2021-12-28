@@ -48,7 +48,7 @@ namespace Amara {
 				}
 			}
 
-            void manage() {
+            virtual void manage() {
                 justUp = false;
 				justDown = false;
 				tapped = false;

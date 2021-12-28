@@ -13,6 +13,7 @@ namespace Amara {
 
     SDL_Texture* createRadialGradientTexture(SDL_Renderer*, int, int, SDL_Color, SDL_Color, float);
 	SDL_Texture* createCircleTexture(SDL_Renderer*, float, SDL_Color);
+	SDL_Texture* createGradientTexture(SDL_Renderer*, int, int, Amara::Direction, SDL_Color, SDL_Color);
 }
 
 #endif

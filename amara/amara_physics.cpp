@@ -74,6 +74,7 @@ namespace Amara {
 
         using Amara::PhysicsBase::hasCollided;
         bool hasCollided(bool pushingX, bool pushingY) {
+			if (!isColliding) return false;
             bool col = false;
             Amara::PhysicsBase* body;
             for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
@@ -82,6 +83,7 @@ namespace Amara {
                     collisionTargets.erase(it--);
                 }
 				else if (!body->isActive) continue;
+				else if (!body->isWall) continue;
                 else if (collidesWith(body)) {
                     bumped = body;
                     if (body->isPushable) {

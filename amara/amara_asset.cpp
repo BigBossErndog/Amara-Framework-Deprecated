@@ -11,6 +11,7 @@ namespace Amara {
         IMAGE,
 		CIRCLETEXTURE,
         RADIALGRADIENTTEXTURE,
+		GRADIENTTEXTURE,
         SPRITESHEET,
         TTF,
         SOUND,
@@ -90,11 +91,35 @@ namespace Amara {
 			void configure(float gRadius, SDL_Color gColor) {
 				color = gColor;
 				radius = gRadius;
+
+				toRegenerate = true;
 			}
 
 			void regenerate(SDL_Renderer* gRenderer) {
 				SDL_DestroyTexture(Amara::ImageTexture::asset);
 				Amara::ImageTexture::asset = createCircleTexture(gRenderer, radius, color);
+			}
+	};
+
+	class GradientTexture: public Amara::ImageTexture {
+		public:
+			Amara::Direction dir = NoDir;
+			SDL_Color colorIn;
+			SDL_Color colorOut;
+
+			GradientTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
+
+			void configure(Amara::Direction gDir, SDL_Color gColorIn, SDL_Color gColorOut) {
+				dir = gDir;
+				colorIn = gColorIn;
+				colorOut = gColorOut;
+
+				toRegenerate = true;
+			}
+
+			void regenerate(SDL_Renderer* gRenderer) {
+				SDL_DestroyTexture(Amara::ImageTexture::asset);
+				Amara::ImageTexture::asset = createGradientTexture(gRenderer, width, height, dir, colorIn, colorOut);
 			}
 	};
 

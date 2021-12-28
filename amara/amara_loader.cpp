@@ -59,6 +59,14 @@ namespace Amara {
 				return emptyJson;
 			}
 
+			std::string getString(std::string key) {
+				Amara::StringFile* sf = (Amara::StringFile*)(get(key));
+				if (sf != nullptr) {
+					return sf->getString();
+				}
+				return "";
+			}
+
 			virtual bool remove(std::string key) {
 				Amara::Asset* asset = get(key);
 				if (asset != nullptr) {

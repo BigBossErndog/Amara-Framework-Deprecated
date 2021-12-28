@@ -88,13 +88,27 @@ namespace Amara {
 
             movementSpeed = shouldRun ? runSpeed : walkSpeed;
             isRunning = shouldRun;
+			
+            float ox, oy;
+			bool stickMode = false;
+			if (input->lastMode == InputMode_Gamepad) {
+				Gamepad* gamepad = input->gamepads->get(0);
+				Stick* stick = gamepad->getStick(BUTTON_LEFTSTICK);
 
-            float ox = Amara::getOffsetX(dir) * movementSpeed;
-            float oy = Amara::getOffsetY(dir) * movementSpeed;
-            if (abs(ox) && abs(oy)) {
-                ox = ox/abs(ox) * sqrt(pow(abs(movementSpeed),2)/2);
-                oy = oy/abs(oy) * sqrt(pow(abs(movementSpeed),2)/2);
-            }
+				if (abs(stick->xvalue) > JOYSTICK_DEADZONE || abs(stick->yvalue) > JOYSTICK_DEADZONE) {
+					ox = sin(stick->angle) * movementSpeed;
+					oy = cos(stick->angle) * movementSpeed;
+					stickMode = true;
+				}
+			}
+			if (!stickMode) {
+				ox = Amara::getOffsetX(dir) * movementSpeed;
+				oy = Amara::getOffsetY(dir) * movementSpeed;
+				if (abs(ox) && abs(oy)) {
+					ox = ox/abs(ox) * sqrt(pow(abs(movementSpeed),2)/2);
+					oy = oy/abs(oy) * sqrt(pow(abs(movementSpeed),2)/2);
+				}
+			}
             
             if (physics) {
 				if (accumulative) {

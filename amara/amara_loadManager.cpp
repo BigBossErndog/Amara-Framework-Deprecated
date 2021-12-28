@@ -92,7 +92,7 @@ namespace Amara {
                             success = load->spritesheet(task->key, task->path, task->frameWidth, task->frameHeight, task->replace);
                             break;
                         case STRINGFILE:
-                            success = load->json(task->key, task->path, task->replace);
+                            success = load->string(task->key, task->path, task->replace);
                             break;
                         case JSONFILE:
                             success = load->json(task->key, task->path, task->replace);
@@ -111,12 +111,15 @@ namespace Amara {
                             break;
                     }
 
-                    delete task;
-                    tasks.pop_front();
+					count += 1;
 
                     if (success) {
-                        count += 1;
+                        delete task;
                     }
+					else {
+						tasks.push_back(task);
+					}
+					tasks.pop_front();
                 }
             }
 
