@@ -453,6 +453,13 @@ namespace Amara {
 				isFullscreen = false;
 			}
 
+			void setWindowIcon(SDL_Surface* sf) {
+				SDL_SetWindowIcon(gWindow, sf);
+			}
+			void setWindowIcon(std::string key) {
+				setWindowIcon(assets->getSurface(key));
+			}
+
 			void writeProperties() {
 				properties->gWindow = gWindow;
 				properties->gSurface = gSurface;

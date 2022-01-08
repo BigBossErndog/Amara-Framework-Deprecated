@@ -20,6 +20,7 @@ namespace Amara {
 
 			bool stillLoading = false;
 			int loadSpeed = 64;
+			int numberOfTries = 8;
 
 			nlohmann::json emptyJson = nullptr;
 
@@ -56,6 +57,7 @@ namespace Amara {
 				if (jf != nullptr) {
 					return jf->getJSON();
 				}
+				std::cout << "JSON asset \"" << key << "\" not found." << std::endl;
 				return emptyJson;
 			}
 
@@ -64,7 +66,26 @@ namespace Amara {
 				if (sf != nullptr) {
 					return sf->getString();
 				}
+				std::cout << "String asset \"" << key << "\" not found." << std::endl;
 				return "";
+			}
+
+			SDL_Texture* getTexture(std::string key) {
+				Amara::ImageTexture* tx = (Amara::ImageTexture*)(get(key));
+				if (tx != nullptr) {
+					return tx->asset;
+				}
+				std::cout << "Texture asset \"" << key << "\" not found." << std::endl;
+				return nullptr;
+			}
+
+			SDL_Surface* getSurface(std::string key) {
+				Amara::Asset* sf = (Amara::Asset*)(get(key));
+				if (sf != nullptr) {
+					return (SDL_Surface*)sf->asset;
+				}
+				std::cout << "Surface asset \"" << key << "\" not found." << std::endl;
+				return nullptr;
 			}
 
 			virtual bool remove(std::string key) {
@@ -380,15 +401,17 @@ namespace Amara {
 				//Load image at specified path.
 				SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 				if (loadedSurface == NULL) {
-					std::cout << "Unable to load image %s! Error: %s\n" << path << IMG_GetError() << std::endl;
+					SDL_Log("Unable to load image \"%s\"! Error: %s\n", key.c_str(), IMG_GetError());
 					success = false;
 				}
 				else {
 					// Convert surface to screen format.
-					optimizedSurface = SDL_ConvertSurface(loadedSurface, gSurface->format, 0);
-
+					SDL_PixelFormat *format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32);
+					optimizedSurface = SDL_ConvertSurface(loadedSurface, format, 0);
+					SDL_FreeFormat(format);
+					
 					if (optimizedSurface == NULL) {
-						std::cout << "Unable to optimize image %s. SDL Error: %s\n" << path << SDL_GetError() << std::endl;
+						SDL_Log("Unable to optimize image \"%s\". SDL Error: %s\n", key.c_str(), SDL_GetError());
 						success = false;
 					}
 

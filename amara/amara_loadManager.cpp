@@ -18,6 +18,8 @@ namespace Amara {
         int size;
         int style;
         Amara::Color color;
+
+		int tries = 0;
     };
 
     class LoadManager: public Loader {
@@ -85,6 +87,9 @@ namespace Amara {
                     stillLoading  = true;
 
                     switch (task->type) {
+						case SURFACE:
+							success = load->surface(task->key, task->path, task->replace);
+							break;
                         case IMAGE:
                             success = load->image(task->key, task->path, task->replace);
                             break;
@@ -117,7 +122,13 @@ namespace Amara {
                         delete task;
                     }
 					else {
-						tasks.push_back(task);
+						if (task->tries < numberOfTries) {
+							task->tries += 1;
+							tasks.push_back(task);
+						}
+						else {
+							delete task;
+						}
 					}
 					tasks.pop_front();
                 }
@@ -130,6 +141,15 @@ namespace Amara {
             void pushTask(std::string key, Amara::LoadTask* asset) {
                 asset->key = key;
                 tasks.push_back(asset);
+            }
+
+			bool surface(std::string key, std::string path, bool replace) {
+                Amara::LoadTask* t  = new Amara::LoadTask();
+                t->type = SURFACE;
+                t->path = path;
+                t->replace = replace;
+                pushTask(key, t);
+                return true;
             }
 
             bool image(std::string key, std::string path, bool replace) {
