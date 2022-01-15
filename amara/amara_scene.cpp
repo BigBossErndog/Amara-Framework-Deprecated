@@ -202,7 +202,7 @@ namespace Amara {
                 stable_sort(entities.begin(), entities.end(), sortEntities());
 
                 float offset, upScale;
-                int vx, vy = 0;
+                int vx = 0, vy = 0;
                 float ratioRes = ((float)properties->resolution->width / (float)properties->resolution->height);
                 float ratioWin = ((float)properties->window->width / (float)properties->window->height);
 

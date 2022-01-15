@@ -317,6 +317,15 @@ namespace Amara {
 				updateMessages();
 
 				Amara::Interactable::run();
+				if (isInteractable && isDraggable && interact.isDown) {
+					x += interact.movementX;
+					y += interact.movementY;
+					if (physics) {
+						physics->velocityX = interact.movementX;
+						physics->velocityY = interact.movementY;
+					}
+				}
+
 				update();
 				if (physics != nullptr) {
 					if (physics->isActive) physics->run();

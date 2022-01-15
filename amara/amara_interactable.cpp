@@ -5,49 +5,80 @@
 #include "amara.h"
 
 namespace Amara {
+	class InteractionManager: public Amara::Key {
+		public:
+			Amara::Key mouseLeft;
+			Amara::Key mouseRight;
+			Amara::Key mouseMiddle;
+
+			Amara::Key touch;
+
+			Amara::Key mouseHover;
+			Amara::Key touchHover;
+
+			float pointX = 0;
+			float pointY = 0;
+			float movementX = 0;
+			float movementY = 0;
+
+			Amara::Mouse* mouse = nullptr;
+			Amara::TouchPointer* finger = nullptr;
+
+			void preManage() {
+				mouseLeft.manage();
+				mouseRight.manage();
+				mouseMiddle.manage();
+
+				touch.manage();
+				Amara::Key::manage();
+			}
+			void postManage() {
+				if (mouseLeft.isDown || touch.isDown) {
+					press();
+				}
+				else {
+					release();
+				}
+
+				if (isDown) {
+					if (finger) {
+						setInteractPoint(finger->x, finger->y);
+					}
+					else if (mouse) {
+						setInteractPoint(mouse->x, mouse->y);
+					}
+				}
+				else {
+					movementX = 0;
+					movementY = 0;
+				}
+			}
+
+			void setInteractPoint(float gx, float gy) {
+				if (justDown) {
+					movementX = 0;
+					movementY = 0;
+				}
+				else {
+					movementX = gx - pointX;
+					movementY = gy - pointY;
+				}
+				pointX = gx;
+				pointY = gy;
+			}
+	};
+
     class Interactable {
-        private:
-            bool recHovered = false;
-            bool recMouseHovered = false;
-            bool recTouchHovered = false;
         public:
             Amara::GameProperties* properties = nullptr;
             Amara::EventManager* events = nullptr;
             Amara::InputManager* input = nullptr;
 
-            bool isMouseDown = false;
-            bool isTouchDown = false;
+			Amara::InteractionManager interact;
+			std::vector<Amara::FloatRect> interactBoxes;
 
-            bool isInteractable = false;
-            bool justClicked = false;
-            bool leftClicked = false;
-            bool rightClicked = false;
-            bool middleClicked = false;
-
-            bool justReleased = false;
-            bool leftReleased = false;
-
-            bool justTouchDown = false;
-            bool justTouchUp = false;
-
-            bool isHovered = false;
-            bool justHovered = false;
-
-            bool isMouseHovered = false;
-            bool isTouchHovered = false;
-
-            bool justMouseHovered = false;
-            bool justTouchHovered = false;
-
-            bool justTouchTapped = false;
-
-            bool isDraggable = false;
-            bool dragged = false;
-
-            bool checkTouchDown = false;
-
-            int downTime = 0;
-            int tapTime = 12;
+			bool isInteractable = false;
+			bool isDraggable = false;
             
             virtual void init(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -69,185 +100,130 @@ namespace Amara {
                 setDraggable(true);
             }
 
-            void checkForHover(int bx, int by, int bw, int bh) {
-                if (!isInteractable) {
-                    return;
-                }
+			void makeInteractBox(int gx, int gy, int gw, int gh) {
+				if (!isInteractable) return;
+				interactBoxes.push_back({ gx, gy, gw, gh });
+			}
+			void makeInteractBox(int vx, int vy, int vw, int vh, int gx, int gy, int gw, int gh) {
+				if (!isInteractable) return;
+				if (gx > vw || gy > vh) return;
+				if (gx + gw < 0 || gy + gw < 0) return;
 
-                Amara::Mouse* mouse = properties->input->mouse;
-                int mx = mouse->dx;
-                int my = mouse->dy;
-                if (mx > bx && my > by) {
-                    if (mx < bx + bw && my < by + bh) {
-                        if (!recHovered) {
-                            recHovered = true;
-                            justHovered = true;
-                            onHover();
-                        }
-                        if (!recMouseHovered) {
-                            recMouseHovered = true;
-                            justMouseHovered = true;
-                        }
-                        if (isMouseDown) {
-                            downTime += 1;
-                        }
-                        isHovered = true;
-                        isMouseHovered = true;
-                    }
-                }
-                if (!isMouseHovered) {
-                    isMouseDown = false;
-                }
-                
-                std::vector<Amara::TouchPointer*> fingers = input->touches->pointers;
-                for (Amara::TouchPointer* finger: fingers) {
-                    if (!finger->inUse) continue;
-                    int fx = finger->dx;
-                    int fy = finger->dy;
-                    if (fx > bx && fy > by) {
-                        if (fx < bx + bw && fy < by + bh) {
-                            if (!recHovered) {
-                                recHovered = true;
-                                justHovered = true;
-                                onHover();
-                            }
-                            if (!recTouchHovered) {
-                                recTouchHovered = true;
-                                justTouchHovered = true;
-                            }
-                            isHovered = true;
-                            isTouchHovered = true;
-                            
-                            downTime += 1;
-                            if (checkTouchDown) {
-                                justTouchDown = true;
-                                downTime = 0;
-                                isTouchDown = true;
-                            }
-                        }
-                    }
-                }
-                if (!isTouchHovered) {
-                    isTouchDown = false;
-                }
+				if (gx < 0) {
+					gw += gx;
+					gx = 0;
+				}
+				if (gy < 0) {
+					gh += gy;
+					gy = 0;
+				}
+				if (gx + gw > vw) {
+					gw -= (gx + gw) - vw;
+				}
+				if (gy + gh > vh) {
+					gh -= (gy + gh) - vh;
+				}
 
-                checkTouchDown = false;
-            }
+				makeInteractBox(vx + gx, vy + gy, gw, gh);
+			}
+
+			bool checkHover() {
+				Amara::Mouse* mouse = input->mouse;
+				Amara::TouchManager* touches = input->touches;
+				std::vector<TouchPointer*>& fingers = touches->pointers;
+
+				bool touchHovered = false;
+				bool mouseHovered = false;
+
+				interact.mouse = mouse;
+				interact.finger = nullptr;
+				
+				for (Amara::FloatRect& box: interactBoxes) {
+					if (overlapping(mouse->dx, mouse->dy, &box)) {
+						mouseHovered = true;
+					}
+					for (TouchPointer* finger: fingers) {
+						if (!finger->isDown) {
+							continue;
+						}
+						if (overlapping(finger->dx, finger->dy, &box)) {
+							touchHovered = true;
+							interact.finger = finger;
+						}
+					}
+				}
+				if (mouseHovered) {
+					interact.mouseHover.press();
+				}
+				else {
+					interact.mouseHover.release();
+					interact.mouseLeft.release();
+					interact.mouseRight.release();
+					interact.mouseMiddle.release();
+				}
+				if (touchHovered) {
+					interact.touchHover.press();
+				}
+				else {
+					interact.touchHover.release();
+					interact.touch.release();
+				}
+
+				interactBoxes.clear();
+			}
 
             virtual void run() {
                 if (isInteractable) {
-                    justClicked = false;
-                    leftClicked = false;
-                    rightClicked = false;
-                    middleClicked = false;
-
-                    justReleased = false;
-                    leftReleased = false;
-
-                    justTouchDown = false;
-                    justTouchUp = false;
-
-                    justTouchTapped = false;
-
+					interact.preManage();
+					checkHover();
                     for (Amara::Event* event : events->eventList) {
                         if (event->disabled) continue;
                         switch (event->type) {
                             case OBJECTLEFTCLICK:
-                                if (isMouseHovered) {
-                                    onClick();
-                                    onPointerDown();
-                                    if (event->taken) {
-                                        event->taken->justClicked = false;
-                                        event->taken->leftClicked = false;
-                                    }
-                                    event->taken = this;
-
-                                    justClicked = true;
-                                    leftClicked = true;
-
-                                    downTime = 0;
-                                    isMouseDown = true;
-                                }
+                                if (interact.mouseHover.isDown) {
+									interact.mouseLeft.press();
+								}
                                 break;
                             case OBJECTRIGHTCLICK:
-                                if (isMouseHovered) {
-                                    onRightClick();
-                                    if (event->taken) {
-                                        event->taken->justClicked = false;
-                                        event->taken->rightClicked = false;
-                                    }
-                                    event->taken = this;
-
-                                    justClicked = true;
-                                    rightClicked = true;
-
-                                    downTime = 0;
-                                }
+								if (interact.mouseHover.isDown) {
+									interact.mouseRight.press();
+								}
                                 break;
-                            case OBJECTMIDDLERELEASE:
-                                if (isMouseHovered) {
-                                    onMiddleClick();
-                                    if (event->taken) {
-                                        event->taken->justClicked = false;
-                                        event->taken->middleClicked = false;
-                                    }
-                                    event->taken = this;
-
-                                    justClicked = true;
-                                    middleClicked = true;
-                                }
+                            case OBJECTMIDDLECLICK:
+								if (interact.mouseHover.isDown) {
+									interact.mouseMiddle.press();
+								}
                                 break;
                             case OBJECTLEFTRELEASE:
-                                if (isMouseHovered) {
-                                    onRelease();
-                                    if (event->taken) {
-                                        event->taken->justReleased = false;
-                                        event->taken->leftReleased = false;
-                                    }
-                                    event->taken = this;
-
-                                    justReleased = true;
-                                    leftReleased = true;
-                                }
+                                if (interact.mouseLeft.isDown) {
+									interact.mouseLeft.release();
+								}
+                                break;
+							case OBJECTRIGHTRELEASE:
+                                if (interact.mouseRight.isDown) {
+									interact.mouseRight.release();
+								}
+                                break;
+							case OBJECTMIDDLERELEASE:
+                                if (interact.mouseMiddle.isDown) {
+									interact.mouseMiddle.release();
+								}
                                 break;
                             case OBJECTTOUCHDOWN:
-                                checkTouchDown = true;
+								if (interact.touchHover.isDown) {
+									interact.touch.press();
+								}
                                 break;
                             case OBJECTTOUCHUP:
-                                if (isTouchHovered) {
-                                    justTouchUp = true;
-                                    isTouchDown = false;
-                                    if (downTime < tapTime) {
-                                        justTouchTapped = true;
-                                    }
-                                    isTouchHovered = false;
-                                }
+								if (interact.touch.isDown) {
+									interact.touch.release();
+								}
                                 break;
                         }
                     }
+					interact.postManage();
                 }
-                
-                recHovered = isHovered;
-                recMouseHovered = isMouseHovered;
-                recTouchHovered = isTouchHovered;
-                
-                isHovered = false;
-                justHovered = false;
-
-                isMouseHovered = false;
-                justMouseHovered = false;
-
-                isTouchHovered = false;
-                justTouchHovered = false;
             }
-
-            virtual void onHover() {}
-            virtual void onClick() {}
-            virtual void onLeftClick() {}
-            virtual void onRightClick() {}
-            virtual void onMiddleClick() {}
-            virtual void onPointerDown() {}
-            virtual void onRelease() {}
     };
 }
 

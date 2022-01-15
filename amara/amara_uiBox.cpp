@@ -388,8 +388,6 @@ namespace Amara {
                     if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
                     if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
 
-                    checkForHover(hx, hy, hw, hh);
-
                     if (canvas != nullptr) {
                         SDL_SetTextureBlendMode(canvas, blendMode);
 				        SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);

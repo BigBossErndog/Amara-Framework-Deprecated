@@ -27,25 +27,36 @@ namespace Amara {
                 keyCode = givenKeyCode;
             }
 
+			void reset() {
+				isDown = false;
+				justDown = false;
+				tapped = false;
+				justUp = false;
+				held = false;
+				activated = false;
+				downTime = 0;
+			}
+
             void press() {
 				if (!isDown) {
-					isDown = true;
 					downTime = 0;
 					justDown = true;
 					held = false;
 				}
+				isDown = true;
 				activated = true;
 			}
 
 			void release() {
-				justUp = true;
-				justDown = false;
+				if (isDown) {
+					justUp = true;
+					if (downTime < tapTime) {
+						tapped = true;
+					}
+				}
 				isDown = false;
 				activated = false;
 				held = false;
-				if (downTime < tapTime) {
-					tapped = true;
-				}
 			}
 
             virtual void manage() {

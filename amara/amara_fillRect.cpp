@@ -167,10 +167,10 @@ namespace Amara {
 					}
 					if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
 					if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
-
-					checkForHover(hx, hy, hw, hh);
 					
 					int newAlpha = (float)color.a * alpha * properties->alpha;
+
+					makeInteractBox(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
 
 					SDL_GetRenderDrawColor(properties->gRenderer, &recColor.r, &recColor.g, &recColor.b, &recColor.a);
 

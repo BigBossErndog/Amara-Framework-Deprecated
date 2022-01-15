@@ -227,8 +227,6 @@ namespace Amara {
                     if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
                     if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
 
-                    checkForHover(hx, hy, hw, hh);
-
                     if (texture != nullptr) {
                         SDL_Texture* tx = (SDL_Texture*)texture->asset;
                         switch (texture->type) {
@@ -250,6 +248,8 @@ namespace Amara {
                                 srcRect.h = spr->frameHeight - cropTop - cropBottom;
                                 break;
                         }
+
+						makeInteractBox(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
 
                         SDL_SetTextureBlendMode(tx, blendMode);
 				        SDL_SetTextureAlphaMod(tx, alpha * properties->alpha * 255);

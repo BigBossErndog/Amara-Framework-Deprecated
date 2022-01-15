@@ -252,15 +252,15 @@ namespace Amara {
                 }
                 if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
                 if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
-
-                checkForHover(hx, hy, hw, hh);
-
+				
                 if (destRect.x + destRect.w <= 0) skipDrawing = true;
                 if (destRect.y + destRect.h <= 0) skipDrawing = true;
                 if (destRect.x >= vw) skipDrawing = true;
                 if (destRect.y >= vh) skipDrawing = true;
                 if (destRect.w <= 0) skipDrawing = true;
                 if (destRect.h <= 0) skipDrawing = true;
+
+				makeInteractBox(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
 
                 if (!skipDrawing) {
                     if (canvas != nullptr) {

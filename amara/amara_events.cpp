@@ -8,16 +8,6 @@ namespace Amara {
     class Interactable;
 
     enum EventType {
-        SCENELEFTCLICK,
-        SCENERIGHTCLICK,
-        SCENEMIDDLECLICK,
-        SCENELEFTRELEASE,
-        SCENERIGHTRELEASE,
-        SCENEMIDDLERELEASE,
-
-        SCENETOUCHDOWN,
-        SCENETOUCHUP,
-
         OBJECTLEFTCLICK,
         OBJECTRIGHTCLICK,
         OBJECTMIDDLECLICK,
@@ -64,15 +54,21 @@ namespace Amara {
 
                 Amara::Mouse* mouse = input->mouse;
                 if (mouse->left->justDown) {
-                    addEvent(SCENELEFTCLICK);
                     addEvent(OBJECTLEFTCLICK);
                 }
                 if (mouse->right->justDown) {
-                    addEvent(SCENERIGHTCLICK);
                     addEvent(OBJECTRIGHTCLICK);
                 }
                 if (mouse->middle->justDown) {
-                    addEvent(SCENEMIDDLECLICK);
+                    addEvent(OBJECTMIDDLECLICK);
+                }
+				if (mouse->left->justUp) {
+                    addEvent(OBJECTLEFTRELEASE);
+                }
+                if (mouse->right->justUp) {
+                    addEvent(OBJECTRIGHTRELEASE);
+                }
+                if (mouse->middle->justUp) {
                     addEvent(OBJECTMIDDLECLICK);
                 }
 

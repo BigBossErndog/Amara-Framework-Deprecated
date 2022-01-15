@@ -7,25 +7,22 @@ using namespace std;
 
 class TestScene: public Scene {
     public:
+		Image* box;
 
         void preload() {
-            
+            load->image("box", "assets/orangeTextbox.png");
         }
 
         void create() {
-            load->add("gradient", createGradient(
-				this,
-				640, 640,
-				Up,
-				{ 0, 0, 0, 255 },
-				{ 0, 0, 0, 0 }
-			));
-			Image* img;
-			add(img = new Image(0, 0, "gradient"));
-        }
+			game->setBackgroundColor(0, 0, 0);
+            add(new FillRect(0, 0, mainCamera->width, mainCamera->height, {255, 255, 255, 255}));
+			add(box = new Image(0, 0, "box"));
+			box->setInteractable();
+			box->setDraggable();
+		}
 
         void update() {
-
+			cout << input->mouse->x << ", " << input->mouse->y << " | " << input->mouse->dx << ", " << input->mouse->dy << " || " << box->interact.justDown << endl;
         }
 };
 
@@ -36,7 +33,7 @@ int main(int argc, char** args) {
         WebGame* game = new WebGame("Amara Game");
     #endif
     game->init(480, 360);
-    game->setWindowSize(960, 720);
+    game->setWindowSize(960, 540);
     // game->setBackgroundColor(255, 255, 255);
 
     game->scenes->add("test", new TestScene());

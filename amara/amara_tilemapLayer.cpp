@@ -431,8 +431,6 @@ namespace Amara {
                             }
                             if (hx + hw > vx + vw) hw = (vx - hx);
                             if (hy + hh > vy + vh) hh = (vy - hy);
-
-                            checkForHover(hx, hy, hw, hh);
                             
                             auto got = animations.find(frame);
                             if (got != animations.end()) {
