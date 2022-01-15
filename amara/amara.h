@@ -62,6 +62,19 @@ namespace Amara {
 #define AMARA_CONSTS
 namespace Amara {
     typedef SDL_Color Color;
+
+	enum EventType {
+        OBJECTLEFTCLICK,
+        OBJECTRIGHTCLICK,
+        OBJECTMIDDLECLICK,
+
+        OBJECTLEFTRELEASE,
+        OBJECTRIGHTRELEASE,
+        OBJECTMIDDLERELEASE,
+
+        OBJECTTOUCHDOWN,
+        OBJECTTOUCHUP
+    };
 }
 #endif
 
@@ -142,6 +155,7 @@ namespace Amara {
 #include "amara_animation.cpp"
 
 #include "amara_events.cpp"
+#include "amara_interactionManager.cpp"
 #include "amara_touches.cpp"
 #include "amara_mouse.cpp"
 #include "amara_pointer.cpp"

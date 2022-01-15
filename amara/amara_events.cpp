@@ -7,19 +7,6 @@
 namespace Amara {
     class Interactable;
 
-    enum EventType {
-        OBJECTLEFTCLICK,
-        OBJECTRIGHTCLICK,
-        OBJECTMIDDLECLICK,
-
-        OBJECTLEFTRELEASE,
-        OBJECTRIGHTRELEASE,
-        OBJECTMIDDLERELEASE,
-
-        OBJECTTOUCHDOWN,
-        OBJECTTOUCHUP
-    };
-
     class Event {
         public:
             Amara::EventType type;
@@ -34,6 +21,8 @@ namespace Amara {
             Amara::InputManager* input = nullptr;
 
             std::vector<Amara::Event*> eventList;
+
+			std::unordered_map<EventType, InteractionManager*> objectRecord;
 
             EventManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -78,6 +67,17 @@ namespace Amara {
                     if (finger->justUp) addEvent(OBJECTTOUCHUP);
                 }
             }
+
+			void postManage() {
+				for (auto it: objectRecord) {
+					it.second->executeEvent(it.first);
+				}
+				objectRecord.clear();
+			}
+
+			void recordObject(EventType type, InteractionManager* obj) {
+				objectRecord[type] = obj;
+			}
     };
 }
 

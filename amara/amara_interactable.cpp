@@ -5,69 +5,6 @@
 #include "amara.h"
 
 namespace Amara {
-	class InteractionManager: public Amara::Key {
-		public:
-			Amara::Key mouseLeft;
-			Amara::Key mouseRight;
-			Amara::Key mouseMiddle;
-
-			Amara::Key touch;
-
-			Amara::Key mouseHover;
-			Amara::Key touchHover;
-
-			float pointX = 0;
-			float pointY = 0;
-			float movementX = 0;
-			float movementY = 0;
-
-			Amara::Mouse* mouse = nullptr;
-			Amara::TouchPointer* finger = nullptr;
-
-			void preManage() {
-				mouseLeft.manage();
-				mouseRight.manage();
-				mouseMiddle.manage();
-
-				touch.manage();
-				Amara::Key::manage();
-			}
-			void postManage() {
-				if (mouseLeft.isDown || touch.isDown) {
-					press();
-				}
-				else {
-					release();
-				}
-
-				if (isDown) {
-					if (finger) {
-						setInteractPoint(finger->x, finger->y);
-					}
-					else if (mouse) {
-						setInteractPoint(mouse->x, mouse->y);
-					}
-				}
-				else {
-					movementX = 0;
-					movementY = 0;
-				}
-			}
-
-			void setInteractPoint(float gx, float gy) {
-				if (justDown) {
-					movementX = 0;
-					movementY = 0;
-				}
-				else {
-					movementX = gx - pointX;
-					movementY = gy - pointY;
-				}
-				pointX = gx;
-				pointY = gy;
-			}
-	};
-
     class Interactable {
         public:
             Amara::GameProperties* properties = nullptr;
@@ -181,42 +118,50 @@ namespace Amara {
                         switch (event->type) {
                             case OBJECTLEFTCLICK:
                                 if (interact.mouseHover.isDown) {
-									interact.mouseLeft.press();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTRIGHTCLICK:
 								if (interact.mouseHover.isDown) {
-									interact.mouseRight.press();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTMIDDLECLICK:
 								if (interact.mouseHover.isDown) {
-									interact.mouseMiddle.press();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTLEFTRELEASE:
                                 if (interact.mouseLeft.isDown) {
-									interact.mouseLeft.release();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
 							case OBJECTRIGHTRELEASE:
                                 if (interact.mouseRight.isDown) {
-									interact.mouseRight.release();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
 							case OBJECTMIDDLERELEASE:
                                 if (interact.mouseMiddle.isDown) {
-									interact.mouseMiddle.release();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTTOUCHDOWN:
 								if (interact.touchHover.isDown) {
-									interact.touch.press();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTTOUCHUP:
 								if (interact.touch.isDown) {
-									interact.touch.release();
+									//events->recordObject(event->type, &interact);
+									interact.executeEvent(event->type);
 								}
                                 break;
                         }

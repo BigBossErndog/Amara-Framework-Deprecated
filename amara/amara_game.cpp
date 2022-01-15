@@ -493,6 +493,7 @@ namespace Amara {
 				messages.update();
 				events->manage();
 				scenes->run();
+				events->postManage();
 				scenes->manageTasks();
 				audio->run(1);
 			}

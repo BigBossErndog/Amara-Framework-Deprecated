@@ -1,0 +1,101 @@
+#pragma once
+#ifndef AMARA_INTERACTIONMANAGER
+#define AMARA_INTERACTIONMANAGER
+
+#include "amara.h"
+
+namespace Amara {
+	class InteractionManager: public Amara::Key {
+		public:
+			Amara::Key mouseLeft;
+			Amara::Key mouseRight;
+			Amara::Key mouseMiddle;
+
+			Amara::Key touch;
+
+			Amara::Key mouseHover;
+			Amara::Key touchHover;
+
+			float pointX = 0;
+			float pointY = 0;
+			float movementX = 0;
+			float movementY = 0;
+
+			Amara::Mouse* mouse = nullptr;
+			Amara::TouchPointer* finger = nullptr;
+
+			void preManage() {
+				mouseLeft.manage();
+				mouseRight.manage();
+				mouseMiddle.manage();
+
+				touch.manage();
+				Amara::Key::manage();
+			}
+			void postManage() {
+				if (mouseLeft.isDown || touch.isDown) {
+					press();
+				}
+				else {
+					release();
+				}
+
+				if (isDown) {
+					if (finger) {
+						setInteractPoint(finger->x, finger->y);
+					}
+					else if (mouse) {
+						setInteractPoint(mouse->x, mouse->y);
+					}
+				}
+				else {
+					movementX = 0;
+					movementY = 0;
+				}
+			}
+
+			void setInteractPoint(float gx, float gy) {
+				if (justDown) {
+					movementX = 0;
+					movementY = 0;
+				}
+				else {
+					movementX = gx - pointX;
+					movementY = gy - pointY;
+				}
+				pointX = gx;
+				pointY = gy;
+			}
+
+			void executeEvent(EventType type) {
+				switch (type) {
+					case OBJECTLEFTCLICK:
+						mouseLeft.press();
+						break;
+					case OBJECTRIGHTCLICK:
+						mouseRight.press();
+						break;
+					case OBJECTMIDDLECLICK:
+						mouseMiddle.press();
+						break;
+					case OBJECTLEFTRELEASE:
+						mouseLeft.release();
+						break;
+					case OBJECTRIGHTRELEASE:
+						mouseRight.release();
+						break;
+					case OBJECTMIDDLERELEASE:
+						mouseMiddle.release();
+						break;
+					case OBJECTTOUCHDOWN:
+						touch.press();
+						break;
+					case OBJECTTOUCHUP:
+						touch.release();
+						break;
+				}
+			}
+	};
+}
+
+#endif
