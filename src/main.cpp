@@ -7,7 +7,8 @@ using namespace std;
 
 class TestScene: public Scene {
     public:
-		Image* box;
+		Image* box1;
+		Image* box2;
 
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
@@ -16,13 +17,17 @@ class TestScene: public Scene {
         void create() {
 			game->setBackgroundColor(0, 0, 0);
             add(new FillRect(0, 0, mainCamera->width, mainCamera->height, {255, 255, 255, 255}));
-			add(box = new Image(0, 0, "box"));
-			box->setInteractable();
-			box->setDraggable();
+			add(box1 = new Image(0, 0, "box"));
+			box1->setInteractable();
+			box1->setDraggable();
+
+			add(box2 = new Image(10, 10, "box"));
+			box2->setInteractable();
+			box2->setDraggable();
 		}
 
         void update() {
-			cout << input->mouse->x << ", " << input->mouse->y << " | " << input->mouse->dx << ", " << input->mouse->dy << " || " << box->interact.justDown << endl;
+			cout << box1->interact.mouseHover.isDown << " | " << box2->interact.mouseHover.isDown << endl;
         }
 };
 

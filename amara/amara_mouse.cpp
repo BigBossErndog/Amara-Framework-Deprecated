@@ -5,6 +5,7 @@
 #include "amara.h"
 
 namespace Amara {
+	class InteractionManager;
 
     class MouseButton: public Amara::Key {
         public:
@@ -26,6 +27,8 @@ namespace Amara {
             int scrollY = 0;
 
             bool moved = false;
+
+			Amara::InteractionManager* interact = nullptr;
 
 			Mouse(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;

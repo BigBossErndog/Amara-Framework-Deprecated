@@ -5,14 +5,10 @@
 #include "amara.h"
 
 namespace Amara {
-    class Interactable;
-
     class Event {
         public:
             Amara::EventType type;
             bool disabled = false;
-            Amara::Interactable* taken;
-            std::vector<Amara::Interactable*> ignore;
     };
     
     class EventManager {
@@ -21,8 +17,6 @@ namespace Amara {
             Amara::InputManager* input = nullptr;
 
             std::vector<Amara::Event*> eventList;
-
-			std::unordered_map<EventType, InteractionManager*> objectRecord;
 
             EventManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -68,15 +62,18 @@ namespace Amara {
                 }
             }
 
-			void postManage() {
-				for (auto it: objectRecord) {
-					it.second->executeEvent(it.first);
+			void manageInteracts() {
+				if (input->mouse->interact) {
+					input->mouse->interact->mouseHover.press();
+					input->mouse->interact = nullptr;
 				}
-				objectRecord.clear();
-			}
-
-			void recordObject(EventType type, InteractionManager* obj) {
-				objectRecord[type] = obj;
+				std::vector<TouchPointer*>& fingers = input->touches->pointers;
+                for (TouchPointer* finger: fingers) {
+                    if (finger->interact) {
+						finger->interact->touchHover.press();
+						finger->interact = nullptr;
+					}
+                }
 			}
     };
 }

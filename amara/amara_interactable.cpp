@@ -12,7 +12,6 @@ namespace Amara {
             Amara::InputManager* input = nullptr;
 
 			Amara::InteractionManager interact;
-			std::vector<Amara::FloatRect> interactBoxes;
 
 			bool isInteractable = false;
 			bool isDraggable = false;
@@ -37,11 +36,7 @@ namespace Amara {
                 setDraggable(true);
             }
 
-			void makeInteractBox(int gx, int gy, int gw, int gh) {
-				if (!isInteractable) return;
-				interactBoxes.push_back({ gx, gy, gw, gh });
-			}
-			void makeInteractBox(int vx, int vy, int vw, int vh, int gx, int gy, int gw, int gh) {
+			void checkHover(int vx, int vy, int vw, int vh, int gx, int gy, int gw, int gh) {
 				if (!isInteractable) return;
 				if (gx > vw || gy > vh) return;
 				if (gx + gw < 0 || gy + gw < 0) return;
@@ -61,10 +56,12 @@ namespace Amara {
 					gh -= (gy + gh) - vh;
 				}
 
-				makeInteractBox(vx + gx, vy + gy, gw, gh);
+				checkHover(vx + gx, vy + gy, gw, gh);
 			}
 
-			bool checkHover() {
+			bool checkHover(int gx, int gy, int gw, int gh) {
+				Amara::FloatRect box = { gx, gy, gw, gh };
+
 				Amara::Mouse* mouse = input->mouse;
 				Amara::TouchManager* touches = input->touches;
 				std::vector<TouchPointer*>& fingers = touches->pointers;
@@ -75,22 +72,24 @@ namespace Amara {
 				interact.mouse = mouse;
 				interact.finger = nullptr;
 				
-				for (Amara::FloatRect& box: interactBoxes) {
-					if (overlapping(mouse->dx, mouse->dy, &box)) {
-						mouseHovered = true;
+				if (overlapping(mouse->dx, mouse->dy, &box)) {
+					mouseHovered = true;
+				}
+				for (TouchPointer* finger: fingers) {
+					if (!finger->isDown) {
+						continue;
 					}
-					for (TouchPointer* finger: fingers) {
-						if (!finger->isDown) {
-							continue;
-						}
-						if (overlapping(finger->dx, finger->dy, &box)) {
-							touchHovered = true;
-							interact.finger = finger;
-						}
+					if (overlapping(finger->dx, finger->dy, &box)) {
+						touchHovered = true;
+						interact.finger = finger;
 					}
 				}
+
 				if (mouseHovered) {
-					interact.mouseHover.press();
+					if (mouse->interact && mouse->interact->mouseHover.isDown) {
+						mouse->interact->mouseHover.release();
+					}
+					mouse->interact = &interact;
 				}
 				else {
 					interact.mouseHover.release();
@@ -99,68 +98,60 @@ namespace Amara {
 					interact.mouseMiddle.release();
 				}
 				if (touchHovered) {
-					interact.touchHover.press();
+					if (interact.finger->interact && interact.finger->interact->touchHover.isDown) {
+						interact.finger->interact->touchHover.release();
+					}
+					interact.finger->interact = &interact;
 				}
 				else {
 					interact.touchHover.release();
 					interact.touch.release();
 				}
-
-				interactBoxes.clear();
 			}
 
             virtual void run() {
                 if (isInteractable) {
 					interact.preManage();
-					checkHover();
                     for (Amara::Event* event : events->eventList) {
                         if (event->disabled) continue;
                         switch (event->type) {
                             case OBJECTLEFTCLICK:
                                 if (interact.mouseHover.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTRIGHTCLICK:
 								if (interact.mouseHover.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTMIDDLECLICK:
 								if (interact.mouseHover.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTLEFTRELEASE:
                                 if (interact.mouseLeft.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;
 							case OBJECTRIGHTRELEASE:
                                 if (interact.mouseRight.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;
 							case OBJECTMIDDLERELEASE:
                                 if (interact.mouseMiddle.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTTOUCHDOWN:
 								if (interact.touchHover.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;
                             case OBJECTTOUCHUP:
 								if (interact.touch.isDown) {
-									//events->recordObject(event->type, &interact);
 									interact.executeEvent(event->type);
 								}
                                 break;

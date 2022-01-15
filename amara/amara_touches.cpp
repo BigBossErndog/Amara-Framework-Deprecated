@@ -3,6 +3,8 @@
 #include "amara.h"
 
 namespace Amara {
+	class InteractionManager;
+
     class TouchPointer: public Amara::Key {
     public:
         Amara::GameProperties* properties = nullptr;
@@ -17,6 +19,8 @@ namespace Amara {
         float pressure = 0;
 
         bool inUse = false;
+
+		Amara::InteractionManager* interact = nullptr;
 
         TouchPointer(Amara::GameProperties* gProperties): Amara::Key() {
             properties = gProperties;

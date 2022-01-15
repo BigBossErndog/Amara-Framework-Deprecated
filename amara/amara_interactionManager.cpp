@@ -29,6 +29,9 @@ namespace Amara {
 				mouseRight.manage();
 				mouseMiddle.manage();
 
+				mouseHover.manage();
+				touchHover.manage();
+
 				touch.manage();
 				Amara::Key::manage();
 			}
