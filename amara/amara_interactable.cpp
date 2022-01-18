@@ -76,6 +76,9 @@ namespace Amara {
 
 				interact.mouse = mouse;
 				interact.finger = nullptr;
+
+				interact.interactScaleX = properties->interactScaleX;
+				interact.interactScaleY = properties->interactScaleY;
 				
 				if (overlapping(mouse->dx, mouse->dy, &box)) {
 					mouseHovered = true;

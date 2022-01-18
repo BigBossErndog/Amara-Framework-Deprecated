@@ -21,6 +21,9 @@ namespace Amara {
 			float movementX = 0;
 			float movementY = 0;
 
+			float interactScaleX = 1;
+			float interactScaleY = 1;
+
 			Amara::Mouse* mouse = nullptr;
 			Amara::TouchPointer* finger = nullptr;
 
@@ -63,8 +66,8 @@ namespace Amara {
 					movementY = 0;
 				}
 				else {
-					movementX = gx - pointX;
-					movementY = gy - pointY;
+					movementX = (gx - pointX) / interactScaleX;
+					movementY = (gy - pointY) / interactScaleY;
 				}
 				pointX = gx;
 				pointY = gy;
