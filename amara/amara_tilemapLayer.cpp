@@ -495,6 +495,8 @@ namespace Amara {
                     &origin,
                     SDL_FLIP_NONE
                 );
+
+				checkHover(vx, vy, vw, vh, destRectF.x, destRectF.y, destRectF.w, destRectF.h);
                 
                 Amara::Actor::draw(vx, vy, vw, vh);
             }

@@ -249,8 +249,6 @@ namespace Amara {
                                 break;
                         }
 
-						checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
-
                         SDL_SetTextureBlendMode(tx, blendMode);
 				        SDL_SetTextureAlphaMod(tx, alpha * properties->alpha * 255);
 
@@ -271,6 +269,8 @@ namespace Amara {
                             &origin,
                             flipVal
                         );
+
+						checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
                     }
                 }
             }

@@ -54,6 +54,11 @@ namespace Amara {
 
             float alpha = 1;
 
+			float interactOffsetX = 0;
+			float interactOffsetY = 0;
+			float interactScaleX = 1;
+			float interactScaleY = 1;
+
             Amara::IntRect* display = nullptr;
 			Amara::IntRect* resolution = nullptr;
 			Amara::IntRect* window = nullptr;

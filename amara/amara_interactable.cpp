@@ -36,7 +36,7 @@ namespace Amara {
                 setDraggable(true);
             }
 
-			void checkHover(int vx, int vy, int vw, int vh, int gx, int gy, int gw, int gh) {
+			void checkHover(int vx, int vy, int vw, int vh, float gx, float gy, float gw, float gh) {
 				if (!isInteractable) return;
 				if (gx > vw || gy > vh) return;
 				if (gx + gw < 0 || gy + gw < 0) return;
@@ -59,8 +59,13 @@ namespace Amara {
 				checkHover(vx + gx, vy + gy, gw, gh);
 			}
 
-			bool checkHover(int gx, int gy, int gw, int gh) {
-				Amara::FloatRect box = { gx, gy, gw, gh };
+			bool checkHover(float gx, float gy, float gw, float gh) {
+				Amara::FloatRect box = { 
+					properties->interactOffsetX + gx*properties->interactScaleX, 
+					properties->interactOffsetY + gy*properties->interactScaleY, 
+					gw*properties->interactScaleX, 
+					gh*properties->interactScaleY
+				};
 
 				Amara::Mouse* mouse = input->mouse;
 				Amara::TouchManager* touches = input->touches;

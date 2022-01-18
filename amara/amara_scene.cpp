@@ -225,6 +225,10 @@ namespace Amara {
                     }
                     cam->transition = transition;
 					SDL_SetRenderTarget(properties->gRenderer, NULL);
+
+					properties->interactOffsetX = 0;
+					properties->interactOffsetY = 0;
+
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
             }

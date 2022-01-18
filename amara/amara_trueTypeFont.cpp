@@ -44,6 +44,8 @@ namespace Amara {
 			bool outlineAlphaLocked = 1;
 			float outlineAlphaPow = 1;
 
+			IntRect viewbox;
+
             TrueTypeFont(): Amara::Actor() {}
 
             TrueTypeFont(float gx, float gy): TrueTypeFont() {
@@ -249,15 +251,19 @@ namespace Amara {
                             offsetX = width;
                         }
 
+						int rx = floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
+						int ry = floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY);
+
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            rx, ry,
                             wordWrapWidth,
                             effect,
                             txt
                         );
+
+						checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, width * effect.scale.x, height * effect.scale.y);
                     }
                     else {
                         int offsetX = 0;
@@ -268,14 +274,18 @@ namespace Amara {
                             offsetX = width;
                         }
 
+						int rx = floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
+						int ry = floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY);
+
                         FC_DrawEffect(
                             fontAsset->font,
                             gRenderer,
-                            floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX),
-                            floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY),
+                            rx, ry,
                             effect,
                             txt
                         );
+
+						checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, width * effect.scale.x, height * effect.scale.y);
                     }
                 }
             }
@@ -286,6 +296,8 @@ namespace Amara {
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
+
+				viewbox = { vx, vy, vw, vh };
 
                 color.a = alpha * properties->alpha * 255;
 

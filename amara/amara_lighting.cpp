@@ -199,7 +199,13 @@ namespace Amara {
                 SDL_RenderFillRect(gRenderer, NULL);
 
                 for (Amara::Light* light: lights) {
+					properties->interactOffsetX += vx;
+					properties->interactOffsetY += vy;
+
                     light->draw(properties, gRenderer, 0, 0, vw, vh);
+
+					properties->interactOffsetX -= vx;
+					properties->interactOffsetY -= vy;
                 }
 
                 SDL_SetRenderDrawColor(gRenderer, recColor.r, recColor.g, recColor.b, recColor.a);
@@ -218,6 +224,7 @@ namespace Amara {
                         SDL_FLIP_NONE
                     );
                 }
+				checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
 
                 Amara::Actor::draw(vx, vy, vw, vh);
             }

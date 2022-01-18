@@ -318,11 +318,13 @@ namespace Amara {
 
 				Amara::Interactable::run();
 				if (isInteractable && isDraggable && interact.isDown) {
-					x += interact.movementX;
-					y += interact.movementY;
 					if (physics) {
 						physics->velocityX = interact.movementX;
 						physics->velocityY = interact.movementY;
+					}
+					else {
+						x += interact.movementX;
+						y += interact.movementY;
 					}
 				}
 

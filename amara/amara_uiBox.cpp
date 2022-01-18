@@ -401,6 +401,8 @@ namespace Amara {
                             &origin,
                             SDL_FLIP_NONE
                         );
+
+						checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
                     }
                 }
 
