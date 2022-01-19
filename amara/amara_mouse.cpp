@@ -46,8 +46,9 @@ namespace Amara {
                 scrollX = 0;
                 scrollY = 0;
 
-                isActivated = false;
                 moved = false;
+
+				Amara::Pointer::manage();
 			}
 
             void afterManage() {

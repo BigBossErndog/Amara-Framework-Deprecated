@@ -149,7 +149,7 @@ namespace Amara {
         if (px < rect->x) return false;
         if (px > rect->x+rect->width) return false;
         if (py < rect->y) return false;
-        if (py > rect->y+rect->width) return false;
+        if (py > rect->y+rect->height) return false;
         return true;
     }
     bool overlapping(FloatVector2* p, FloatRect* rect) {

@@ -205,6 +205,12 @@ namespace Amara {
 						sendToBack();
 					}
 				}
+				if (config.find("isInteractable") != config.end()) {
+					setInteractable(config["isInteractable"]);
+				}
+				if (config.find("isDraggable") != config.end()) {
+					setDraggable(config["isDraggable"]);
+				}
 			}
 
 			virtual nlohmann::json toData() {

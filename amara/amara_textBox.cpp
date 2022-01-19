@@ -196,7 +196,7 @@ namespace Amara {
                     finishedProgress = true;
                 }
                 else {
-                    if (!progressControl.empty() && controls->justDown(progressControl) && allowSkip) {
+                    if (!progressControl.empty() && (controls->justDown(progressControl) || interact.tapped) && allowSkip) {
                         progress = wrappedText.length();
                     }
 
@@ -403,12 +403,12 @@ namespace Amara {
                 if (sm.evt()) {
                     if (autoProgress) {
                         autoProgressCounter += 1;
-                        if (autoProgressCounter >= autoProgressDelay || (autoProgressSkip && controls->justDown(progressControl))) {
+                        if (autoProgressCounter >= autoProgressDelay || (autoProgressSkip && (controls->justDown(progressControl) || interact.tapped))) {
 							onProgress();
                             sm.nextEvt();
                         }
                     }
-                    else if (progressControl.empty() || controls->justDown(progressControl)) {
+                    else if (progressControl.empty() || controls->justDown(progressControl) || interact.tapped) {
                         if (progressIcon != nullptr) hideProgressIcon();
 						onProgress();
                         sm.nextEvt();

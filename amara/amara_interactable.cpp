@@ -84,17 +84,14 @@ namespace Amara {
 					mouseHovered = true;
 				}
 				for (TouchPointer* finger: fingers) {
-					if (!finger->isDown) {
-						continue;
-					}
-					if (overlapping(finger->dx, finger->dy, &box)) {
+					if ((finger->isDown || finger->tapped || finger->justUp) && overlapping(finger->dx, finger->dy, &box)) {
 						touchHovered = true;
 						interact.finger = finger;
 					}
 				}
 
 				if (mouseHovered) {
-					if (mouse->interact && mouse->interact->mouseHover.isDown) {
+					if (mouse->interact && mouse->interact != &interact && mouse->interact->mouseHover.isDown) {
 						mouse->interact->mouseHover.release();
 					}
 					mouse->interact = &interact;
@@ -104,9 +101,13 @@ namespace Amara {
 					interact.mouseLeft.release();
 					interact.mouseRight.release();
 					interact.mouseMiddle.release();
+					
+					interact.mouseLeft.tapped = false;
+					interact.mouseRight.tapped = false;
+					interact.mouseMiddle.tapped = false;
 				}
 				if (touchHovered) {
-					if (interact.finger->interact && interact.finger->interact->touchHover.isDown) {
+					if (interact.finger->interact && interact.finger->interact != &interact && interact.finger->interact->touchHover.isDown) {
 						interact.finger->interact->touchHover.release();
 					}
 					interact.finger->interact = &interact;
@@ -114,6 +115,8 @@ namespace Amara {
 				else {
 					interact.touchHover.release();
 					interact.touch.release();
+
+					interact.touch.tapped = false;
 				}
 			}
 

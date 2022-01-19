@@ -240,7 +240,18 @@ namespace Amara {
                 effect.scale.x = scaleX * nzoomX;
                 effect.scale.y = scaleY * nzoomY;
 
-                const char* txt = text.c_str();
+				const char* txt = text.c_str();
+
+				int txtWidth, txtHeight;
+				if (wordWrap) {
+                    txtWidth = wordWrapWidth;
+                    txtHeight = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt);
+                }
+                else {
+                    txtWidth = FC_GetWidth(fontAsset->font, txt);
+                    txtHeight = FC_GetHeight(fontAsset->font, txt);
+                }
+
                 if (fontAsset != nullptr) {
                     if (wordWrap) {
                         int offsetX = 0;
@@ -285,7 +296,7 @@ namespace Amara {
                             txt
                         );
 
-						checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, width * effect.scale.x, height * effect.scale.y);
+						checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, txtWidth * effect.scale.x, txtHeight * effect.scale.y);
                     }
                 }
             }
