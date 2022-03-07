@@ -161,6 +161,7 @@ namespace Amara {
         SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
         bool textureLocked = false;
+		bool pleaseUpdate = false;
 
         TextureLayer(): Layer() {}
         TextureLayer(float gx, float gy): Layer(gx, gy) {}
@@ -190,11 +191,18 @@ namespace Amara {
 
         void draw(int vx, int vy, int vw, int vh) {
             float recAlpha = properties->alpha;
-            if (!textureLocked) {
+
+			if (properties->renderTargetsReset || properties->renderDeviceReset) {
+				createTexture();
+				pleaseUpdate = true;
+			}
+
+            if (!textureLocked || pleaseUpdate) {
                 if (textureWidth != properties->currentCamera->width || textureHeight != properties->currentCamera->height) {
                     createTexture();
                 }
                 if (!tx) return;
+				pleaseUpdate = false;
 
                 recTarget = SDL_GetRenderTarget(properties->gRenderer);
                 SDL_SetRenderTarget(properties->gRenderer, tx);
@@ -343,6 +351,7 @@ namespace Amara {
         SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
         bool textureLocked = false;
+		bool pleaseUpdate = false;
 
         TextureContainer(): Layer() {}
         TextureContainer(float gw, float gh) {
@@ -424,6 +433,11 @@ namespace Amara {
         void draw(int vx, int vy, int vw, int vh) {
             float recAlpha = properties->alpha;
             bool skipDrawing = false;
+
+			if (properties->renderTargetsReset || properties->renderDeviceReset) {
+				createTexture();
+				pleaseUpdate = true;
+			}
 
             if (alpha < 0) alpha = 0;
             if (alpha > 1) alpha = 1;
@@ -519,11 +533,12 @@ namespace Amara {
         }
 
 		void drawChildren() {
-			if (!textureLocked) {
+			if (!textureLocked || pleaseUpdate) {
                 if (textureWidth != width || textureHeight != height) {
                     createTexture();
                 }
                 if (!tx) return;
+				pleaseUpdate = false;
 
                 recTarget = SDL_GetRenderTarget(properties->gRenderer);
                 SDL_SetRenderTarget(properties->gRenderer, tx);

@@ -312,6 +312,9 @@ namespace Amara {
                     if (openHeight > height) openHeight = height;
                     createNewCanvasTexture();
                 }
+				else if (properties->renderTargetsReset || properties->renderDeviceReset) {
+					createNewCanvasTexture();
+				}
 
                 if (lockOpen) {
                     openWidth = width;
