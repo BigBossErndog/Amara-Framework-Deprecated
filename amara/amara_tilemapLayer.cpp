@@ -319,6 +319,10 @@ namespace Amara {
                 if (!isVisible) return;
                 if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
+				
+				if (properties->renderTargetsReset || properties->renderDeviceReset) {
+					createDrawTexture();
+				}
 
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
