@@ -176,7 +176,7 @@ namespace Amara {
             Amara::TilemapLayer* createLayer(std::string layerKey, float gx, float gy) {
                 if (tiledJsonKey.empty()) return nullptr;
                 Amara::TilemapLayer* newLayer;
-                ((Amara::Entity*)scene)->add(newLayer = new Amara::TilemapLayer(textureKey, tiledJsonKey, layerKey));
+                parent->add(newLayer = new Amara::TilemapLayer(textureKey, tiledJsonKey, layerKey));
                 layers[layerKey] = newLayer;
                 if (newLayer->width > width) width = newLayer->width;
                 if (newLayer->height > height) height = newLayer->height;
@@ -200,7 +200,7 @@ namespace Amara {
 
             Amara::TilemapLayer* createEmptyLayer(std::string layerKey) {
                 Amara::TilemapLayer* newLayer;
-                ((Amara::Entity*)scene)->add(newLayer = new Amara::TilemapLayer(width, height, tileWidth, tileHeight));
+                parent->add(newLayer = new Amara::TilemapLayer(width, height, tileWidth, tileHeight));
                 layers[layerKey] = newLayer;
 
                 if (!textureKey.empty()) {

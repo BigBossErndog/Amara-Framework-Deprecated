@@ -29,6 +29,19 @@ namespace Amara {
 				play(false);
 			}
 
+			virtual void stop() {
+				if (isPlaying && channel != -1) {
+					Mix_HaltChannel(channel);
+					channel = -1;
+					isPlaying = false;
+					isPaused = false;
+
+					if (parent && parent->currentlyPlaying == this) {
+						parent->currentlyPlaying = nullptr;
+					}
+				}
+			}
+
 			virtual void run(float parentVolume) {
                 Amara::AudioBase::run(parentVolume);
 
