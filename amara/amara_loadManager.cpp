@@ -38,6 +38,7 @@ namespace Amara {
                     delete task;
                 }
                 tasks.clear();
+                load->clearBasePath();
             }
 
             Amara::Asset* get(std::string key) {
@@ -87,6 +88,10 @@ namespace Amara {
                     stillLoading  = true;
 
                     switch (task->type) {
+                        case ASSETPATH:
+                            load->setBasePath(task->path);
+                            success = true;
+                            break;
 						case SURFACE:
 							success = load->surface(task->key, task->path, task->replace);
 							break;
@@ -116,21 +121,22 @@ namespace Amara {
                             break;
                     }
 
-					count += 1;
+                    count += 1;
 
                     if (success) {
                         delete task;
+                        tasks.pop_front();
                     }
 					else {
 						if (task->tries < numberOfTries) {
 							task->tries += 1;
-							tasks.push_back(task);
 						}
 						else {
+                            SDL_Log("Gave up on load task: %s", task->key.c_str());
 							delete task;
+                            tasks.pop_front();
 						}
 					}
-					tasks.pop_front();
                 }
             }
 
@@ -141,6 +147,13 @@ namespace Amara {
             void pushTask(std::string key, Amara::LoadTask* asset) {
                 asset->key = key;
                 tasks.push_back(asset);
+            }
+
+            void setBasePath(std::string path) {
+                Amara::LoadTask* t  = new Amara::LoadTask();
+                t->type = ASSETPATH;
+                t->path = path;
+                pushTask("setPath", t);
             }
 
 			bool surface(std::string key, std::string path, bool replace) {
