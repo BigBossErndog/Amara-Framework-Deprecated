@@ -155,6 +155,16 @@ namespace Amara {
                 return false;
             }
 
+            bool held(std::string id, int time) {
+                Amara::Control* control = get(id);
+                if (control != nullptr && control->isDown) {
+                   if (control->downTime >= time) {
+                       return true;
+                   }
+                }
+                return false;
+            }
+
             bool justDownOrHeld(std::string id, int gTime) {
                 Amara::Control* control = get(id);
                 return (justDown(id) || (isDown(id) && control->downTime > gTime));

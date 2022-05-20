@@ -42,6 +42,8 @@ namespace Amara {
             bool flipHorizontal = false;
             bool flipVertical = false;
 
+            bool onCamera = false;
+
             Image(): Actor() {
                 textureKey.clear();
             }
@@ -150,6 +152,7 @@ namespace Amara {
 
             virtual void drawTexture(int vx, int vy, int vw, int vh) {
                 bool skipDrawing = false;
+                onCamera = false;
 
                 if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
@@ -209,6 +212,8 @@ namespace Amara {
                     int hx, hy, hw, hh = 0;
                     hw = destRect.w;
                     hh = destRect.h;
+
+                    onCamera = true;
 
                     if (destRect.x >= 0) {
                         hx = destRect.x + vx;

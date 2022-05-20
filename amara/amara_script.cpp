@@ -67,9 +67,9 @@ namespace Amara {
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
-                init(gameProperties);
                 parent = parentActor;
-				initiated = true;
+                initiated = true;
+                init(gameProperties);
             }
 
             virtual void init() {}

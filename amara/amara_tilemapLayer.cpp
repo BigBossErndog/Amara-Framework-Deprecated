@@ -288,6 +288,15 @@ namespace Amara {
                 return tile;
             }
 
+            void clearTiles() {
+                for (Amara::Tile& tile: tiles) {
+                    tile.id = -1;
+                    tile.fhorizontal = false;
+                    tile.fvertical = false;
+                    tile.fdiagonal = false;
+                }
+            }
+
             void clear() {
                 for (Amara::Tile& tile: tiles) {
                     tile.id = -1;

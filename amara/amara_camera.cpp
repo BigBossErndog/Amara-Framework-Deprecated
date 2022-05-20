@@ -405,6 +405,15 @@ namespace Amara {
                 return getYAfterScrolling(entity->y);
             }
 
+            bool onCamera(FloatRect rect) {
+                FloatRect viewRect = { scrollX, scrollY, width/zoomX, height/zoomY };
+                return overlapping(&rect, &viewRect);
+            }
+
+            bool onCamera(float gx, float gy, float gw, float gh) {
+                return onCamera({ gx, gy, gw, gh });
+            }
+
             ~Camera() {
 
             }
