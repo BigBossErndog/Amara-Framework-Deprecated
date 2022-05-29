@@ -71,13 +71,15 @@ namespace Amara {
     class TouchManager {
     public:
         Amara::GameProperties* properties = nullptr;
-        bool isActivated = true;
+        bool isActivated = false;
 
         std::vector<TouchPointer*> pointers;
         int numFingers = 0;
 
         TouchPointer* lastPointer = nullptr;
         TouchPointer* activePointer = nullptr;
+
+        FloatVector2 touchCenter = { 0, 0 };
 
         TouchManager(Amara::GameProperties* gProperties) {
             properties = gProperties;
@@ -117,8 +119,19 @@ namespace Amara {
 
         void manage() {
             isActivated = false;
+            touchCenter.x = 0;
+            touchCenter.y = 0;
             for (TouchPointer* pointer: pointers) {
                 pointer->manage();
+                if (pointer->inUse) {
+                    touchCenter.x += pointer->x;
+                    touchCenter.y += pointer->y;
+                    isActivated = true;
+                }
+            }
+            if (numFingers > 0) {
+                touchCenter.x = touchCenter.x / numFingers;
+                touchCenter.y = touchCenter.y / numFingers;
             }
         }
     };

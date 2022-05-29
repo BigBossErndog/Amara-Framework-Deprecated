@@ -169,22 +169,19 @@ namespace Amara {
                 Amara::Entity* entity;
                 for (auto it = entities.begin(); it != entities.end(); ++it) {
                     entity = *it;
-                    if (entity->isDestroyed || entity->parent != this) {
+                    if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
                         entities.erase(it--);
+                        continue;
                     }
-                    else {
-                        entity->run();
-                        if (entity->isDestroyed || entity->parent != this) {
-                            entities.erase(it--);
-                        }
-                    }
+                    entity->run();
                 }  
 
                 Amara::Camera* cam;
                 for (auto it = cameras.begin(); it != cameras.end(); ++it) {
                     cam = *it;
-                    if (cam->isDestroyed || cam->parent != this) {
+                    if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
                         cameras.erase(it--);
+                        continue;
                     }
                     else {
                         cam->run();
@@ -222,6 +219,7 @@ namespace Amara {
                     cam = *it;
                     if (cam->isDestroyed || cam->parent != this) {
                         cameras.erase(it--);
+                        continue;
                     }
                     cam->transition = transition;
 					SDL_SetRenderTarget(properties->gRenderer, NULL);

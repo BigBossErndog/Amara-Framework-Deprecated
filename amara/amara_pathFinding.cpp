@@ -22,8 +22,9 @@ namespace Amara {
             int gcost = 0;
             int hcost = 0;
             int fcost = 0;
-            Amara::Direction direction;
+            Amara::Direction direction = NoDir;
             PathTileState state = PATHTILE_NA;
+            bool empty = false;
     };
 
     class PathFindingTask {
@@ -50,10 +51,16 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
+            PathFindingTask() {}
             PathFindingTask(Amara::WallFinder* gWallFinder) {
+                configure(gWallFinder);
+            }
+
+            void configure(Amara::WallFinder* gWallFinder) {
                 wallFinder = gWallFinder;
                 width = gWallFinder->getMapWidth();
                 height = gWallFinder->getMapHeight();
+                emptyTile.empty = true;
             }
 
             void calculateCosts(PathTile& child, PathTile& parent) {
@@ -77,60 +84,7 @@ namespace Amara {
             }
 
             int distanceBetween(PathTile& fromTile, PathTile& toTile) {
-                int distance = 0;
-                PathTile cur;
-                cur.x = fromTile.x;
-                cur.y = fromTile.y;
-                while (cur.x != toTile.x && cur.y != toTile.y) {
-                    if (allowDiagonals) {
-                        if (cur.x < toTile.x && cur.y < toTile.y) {
-                            cur.x += 1;
-                            cur.y += 1;
-                            distance += 14;
-                            continue;
-                        }
-                        if (cur.x < toTile.x && cur.y > toTile.y) {
-                            cur.x += 1;
-                            cur.y -= 1;
-                            distance += 14;
-                            continue;
-                        }
-                        if (cur.x > toTile.x && cur.y < toTile.y) {
-                            cur.x -= 1;
-                            cur.y += 1;
-                            distance += 14;
-                            continue;
-                        }
-                        if (cur.x > toTile.x && cur.y > toTile.y) {
-                            cur.x -= 1;
-                            cur.y -= 1;
-                            distance += 14;
-                            continue;
-                        }
-                    }
-                    if (cur.x < toTile.x) {
-                        cur.x += 1;
-                        distance += 10;
-                        continue;
-                    }
-                    if (cur.x > toTile.x) {
-                        cur.x -= 1;
-                        distance += 10;
-                        continue;
-                    }
-                    if (cur.y < toTile.y) {
-                        cur.y += 1;
-                        distance += 10;
-                        continue;
-                    }
-                    if (cur.y > toTile.y) {
-                        cur.y -= 1;
-                        distance += 10;
-                        continue;
-                    }
-                }
-
-                return distance;
+                return (Amara::distanceBetween(fromTile.x, fromTile.y, toTile.x, toTile.y) * 10.0);
             }
 
             int distanceBetween(int from, int to) {
@@ -161,6 +115,21 @@ namespace Amara {
                 return allTiles[id];
             }
 
+            Amara::PathTile& getPathTileAt(int gx, int gy) {
+                if (path.size() > 0) {
+                    Amara::PathTile tile;
+                    while (path.size() > 0) {
+                        tile = dequeue();
+                        if (tile.x == gx && tile.y == gy) {
+                            return tile;
+                        }
+                    }
+                }
+                foundPath = false;
+
+                return emptyTile;
+            }
+
             bool isWall(int gx, int gy) {
                 return wallFinder->isWall(gx, gy);
             }
@@ -176,16 +145,18 @@ namespace Amara {
                 return this;
             }
 
-            Amara::PathTile& dequeue() {
+            Amara::PathTile dequeue() {
                 if (path.size() > 0) {
-                    Amara::PathTile& tile = path.front();
+                    Amara::PathTile tile = path.front();
                     path.pop_front();
                     return tile;
                 }
+                foundPath = false;
                 return emptyTile;
             }
 
             Amara::PathFindingTask* start() {
+                emptyTile.empty = true;
                 if (findingPath || thread != nullptr) {
                     return this;
                 }
@@ -218,6 +189,10 @@ namespace Amara {
                 SDL_Thread* thread = SDL_CreateThread(findPath, NULL, this);
                 SDL_DetachThread(thread);
                 return this;
+            }
+
+            Amara::PathFindingTask* run(int sx, int sy, int ex, int ey) {
+                return from(sx, sy)->to(ex, ey)->start();
             }
     };
 

@@ -15,7 +15,7 @@ namespace Amara {
         InputMode_Mouse = 1,
         InputMode_Keyboard = 2,
         InputMode_Gamepad = 4,
-        InputMode_Touch = 5
+        InputMode_Touch = 8
     };
     
     class InputManager {

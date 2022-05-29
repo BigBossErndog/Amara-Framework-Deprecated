@@ -52,7 +52,7 @@ namespace Amara {
             }
 
             ~Sprite() {
-                delete anims;
+                if (anims != nullptr) delete anims;
             }
     };
 }

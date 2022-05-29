@@ -191,26 +191,32 @@ namespace Amara {
                     SceneTask curTask = tasks.at(i);
                     switch (curTask) {
                         case RUN:
+                            if (!isActive) {
+                                scene->init();
+                                scene->onStart();
+                            }
                             isActive = true;
                             isPaused = false;
                             isSleeping = false;
-                            scene->init();
-                            scene->onStart();
                             break;
                         case START:
+                            if (!isActive) {
+                                scene->init();
+                                scene->onStart();
+                            }
                             isActive = true;
                             isPaused = false;
                             isSleeping = false;
-                            scene->init();
-                            scene->onStart();
                             break;
                         case STOP:
+                            if (isActive) {
+                                scene->clearScripts();
+                                scene->onStop();
+                                scene->destroyEntities();
+                            }
                             isActive = false;
                             isPaused = false;
                             isSleeping = false;
-                            scene->clearScripts();
-                            scene->onStop();
-                            scene->destroyEntities();
                             break;
                         case RESTART:
                             isActive = true;
@@ -218,6 +224,7 @@ namespace Amara {
                             isSleeping = false;
                             scene->clearScripts();
                             scene->onStop();
+                            scene->destroyEntities();
                             scene->init();
                             scene->onStart();
                             break;

@@ -253,6 +253,10 @@ namespace Amara {
 				return false;
 			}
 
+			void eraseDataProperty(std::string key) {
+				if (hasDataProperty(key)) data.erase(key);
+			}
+
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
 				if (physics) {
@@ -366,6 +370,9 @@ namespace Amara {
 
 			virtual Amara::Entity* get(std::string find) {
 				for (Amara::Entity* entity : entities) {
+					if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
+						continue;
+					}
 					if (entity->id.compare(find) == 0) {
 						return entity;
 					}
@@ -374,7 +381,7 @@ namespace Amara {
 			}
 
 			virtual Amara::Entity* add(Amara::Entity* entity) {
-				if (entity && entity->parent != nullptr) {
+				if (entity != nullptr && entity->parent != nullptr) {
 					entity->parent->remove(entity);
 				}
 				entities.push_back(entity);

@@ -288,6 +288,21 @@ namespace Amara {
                 return tile;
             }
 
+            void setTiles(std::vector<int> given) {
+                for (int i = 0; i < given.size(); i++) {
+                    setTile(i, given[i]);
+                }
+            }
+
+            void fillTiles(int nid) {
+                for (Amara::Tile& tile: tiles) {
+                    tile.id = nid;
+                    tile.fhorizontal = false;
+                    tile.fvertical = false;
+                    tile.fdiagonal = false;
+                }
+            }
+
             void clearTiles() {
                 for (Amara::Tile& tile: tiles) {
                     tile.id = -1;
@@ -459,6 +474,8 @@ namespace Amara {
                                 srcRect.y = floor(frame / (texture->width / tileWidth)) * tileHeight;
                                 srcRect.w = tileWidth;
                                 srcRect.h = tileHeight;
+
+                                SDL_SetTextureAlphaMod(tex, properties->alpha * tile.alpha * 255);
 								
                                 SDL_RenderCopyEx(
                                     gRenderer,
@@ -542,6 +559,8 @@ namespace Amara {
             bool isBlockingPath(int gx, int gy) {
                 return isBlockingPath(gx, gy, false);
             }
+
+            void destroy();
 
             ~TilemapLayer() {
                 if (drawTexture) SDL_DestroyTexture(drawTexture);

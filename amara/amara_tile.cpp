@@ -23,6 +23,8 @@ namespace Amara {
         int heightInPixels = 0;
 
         bool animated  = false;
+
+        float alpha = 1;
     };
 }
 

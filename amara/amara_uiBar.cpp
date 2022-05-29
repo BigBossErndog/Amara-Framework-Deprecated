@@ -21,6 +21,10 @@ namespace Amara {
 
         int frontPaddingLeft = 0;
         int frontPaddingRight = 0;
+        int frontPaddingTop = 0;
+        int frontPaddingBottom = 0;
+        
+        Amara::Direction drainDirection = Left; 
 
         UIBar() {}
 
@@ -49,6 +53,15 @@ namespace Amara {
             }
             if (config.find("frontPaddingRight") != config.end()) {
                 frontPaddingLeft = config["frontPaddingRight"];
+            }
+            if (config.find("frontPaddingTop") != config.end()) {
+                frontPaddingTop = config["frontPaddingTop"];
+            }
+            if (config.find("frontPaddingBottom") != config.end()) {
+                frontPaddingBottom = config["frontPaddingBottom"];
+            }
+            if (config.find("drainDirection") != config.end()) {
+                drainDirection = config["drainDirection"];
             }
         }
 
@@ -113,10 +126,17 @@ namespace Amara {
             if (textDisplay) {
                 textDisplay->setText(std::to_string((int)round(displayValue)));
             }
-
-            frontBar->cropLeft = frontPaddingLeft;
-            frontBar->cropRight = frontBar->imageWidth - ceil((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/(float)maxValue)) - frontPaddingLeft;
-            if (frontBar->cropRight < frontPaddingRight) frontBar->cropRight = frontPaddingRight;
+            
+            if (drainDirection == Left) {
+                frontBar->cropLeft = frontPaddingLeft;
+                frontBar->cropRight = frontBar->imageWidth - floor((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/(float)maxValue)) - frontPaddingLeft;
+                if (frontBar->cropRight < frontPaddingRight) frontBar->cropRight = frontPaddingRight;
+            }
+            else if (drainDirection == Down) {
+                frontBar->cropBottom = frontPaddingBottom;
+                frontBar->cropTop = frontBar->imageHeight - floor((frontBar->imageHeight - frontPaddingTop - frontPaddingBottom)*(displayValue/(float)maxValue)) - frontPaddingBottom;
+                if (frontBar->cropTop < frontPaddingTop) frontBar->cropTop = frontPaddingTop;
+            }
 
             Amara::Actor::run();
         }

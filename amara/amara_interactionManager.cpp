@@ -22,6 +22,9 @@ namespace Amara {
 			float pointY = 0;
 			float movementX = 0;
 			float movementY = 0;
+			float moveDistance = 0;
+
+			bool moved = false;
 
 			float interactScaleX = 1;
 			float interactScaleY = 1;
@@ -61,6 +64,7 @@ namespace Amara {
 				else {
 					movementX = 0;
 					movementY = 0;
+					moved = false;
 				}
 			}
 
@@ -68,13 +72,19 @@ namespace Amara {
 				if (justDown) {
 					movementX = 0;
 					movementY = 0;
+					moved = false;
+					moveDistance = 0;
 				}
 				else {
 					movementX = (gx - pointX) / interactScaleX;
 					movementY = (gy - pointY) / interactScaleY;
+					moveDistance = distanceBetween(0, 0, movementX, movementY);
 				}
 				pointX = gx;
 				pointY = gy;
+				if (movementX != 0 || movementY != 0) {
+					moved = true;
+				}
 			}
 
 			void executeEvent(EventType type) {

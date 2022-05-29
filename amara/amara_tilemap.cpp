@@ -386,7 +386,36 @@ namespace Amara {
             float getMidTileY(int ty) {
                 return (ty + 0.5) * tileHeight; 
             }
+
+            void destroy() {
+                Amara::TilemapLayer* layer;
+                for (auto it = layers.begin(); it != layers.end(); it++) {
+                    layer = it->second;
+                    layer->tilemap = nullptr;
+                }
+                layers.clear();
+                walls.clear();
+                Amara::Actor::destroy();
+            }
     };
+
+    void Amara::TilemapLayer::destroy() {
+        if (tilemap != nullptr) {
+            if (tilemap->layers.find(id) != tilemap->layers.end()) {
+                tilemap->layers.erase(id);
+            }
+            Amara::TilemapLayer* layer;
+            for (auto it = tilemap->walls.begin(); it != tilemap->walls.begin(); ++it) {
+                layer = *it;
+                if (layer == this) {
+                    tilemap->walls.erase(it--);
+                    continue;
+                }
+            }
+        }
+        
+        Amara::Actor::destroy();
+    }
 }
 
 #endif
