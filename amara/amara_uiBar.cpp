@@ -96,6 +96,13 @@ namespace Amara {
             return textDisplay;
         }
 
+        void removeTextDisplay() {
+            if (textDisplay) {
+                textDisplay->destroy();
+                textDisplay = nullptr;
+            }
+        }
+
         void setSpeed(float gSpeed, int gDelay) {
             changeSpeed = gSpeed;
             pauseTime = gDelay;

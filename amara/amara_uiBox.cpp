@@ -756,11 +756,11 @@ namespace Amara {
 	public:
 		UIBox* box = nullptr;
 		
-		int targetWidth = 0;
-		int targetHeight = 0;
+		int targetWidth = -1;
+		int targetHeight = -1;
 		int startWidth = 0;
 		int startHeight = 0;
-
+        
 		UIBox_Timed(float tw, float th, float tt, Easing gEasing) {
 			targetWidth = tw;
 			targetHeight = th;
@@ -768,15 +768,28 @@ namespace Amara {
 			easing = gEasing;
 		}
 		UIBox_Timed(float tw, float th, float tt): UIBox_Timed(tw, th, tt, LINEAR) {}
-		UIBox_Timed(UIBox* gBox, float tw, float th, float tt, Easing gEasing): UIBox_Timed(tw, th, tt, gEasing) {
+		UIBox_Timed(float tt, Easing gEasing) {
+            targetWidth = -1;
+            targetHeight = -1;
+            time = tt;
+            easing = gEasing;
+        }
+        UIBox_Timed(float tt): UIBox_Timed(tt, LINEAR) {}
+        
+        UIBox_Timed(UIBox* gBox, float tw, float th, float tt, Easing gEasing): UIBox_Timed(tw, th, tt, gEasing) {
 			box = gBox;
 		}
 		UIBox_Timed(UIBox* gBox, float tw, float th, float tt): UIBox_Timed(gBox, tw, th, tt, LINEAR) {}
 
 		void prepare() {
 			if (box == nullptr) box = (UIBox*)parent;
+
+            if (targetWidth == -1) targetWidth = box->width;
+            if (targetHeight == -1) targetHeight = box->height;
+
 			startWidth = box->openWidth;
 			startHeight = box->openHeight;
+
 			if (targetWidth == -1) targetWidth = (box->openWidth > box->minWidth) ? box->minWidth : box->width;
 			if (targetHeight == -1) targetHeight = (box->openHeight > box->minHeight) ? box->minHeight : box->height;
 		}
@@ -807,6 +820,7 @@ namespace Amara {
 			Amara::Tween::finish();
 			box->openWidth = targetWidth;
 			box->openHeight = targetHeight;
+            if (box->content) box->content->setVisible(true);
 		}
 	};
 }
