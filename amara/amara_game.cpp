@@ -709,6 +709,11 @@ namespace Amara {
 
 						input->touches->isActivated = true;
 					}
+					else if( e.type == SDL_TEXTINPUT ) {
+                        if( !( SDL_GetModState() & KMOD_CTRL && ( e.text.text[ 0 ] == 'c' || e.text.text[ 0 ] == 'C' || e.text.text[ 0 ] == 'v' || e.text.text[ 0 ] == 'V' ) ) ) {
+                            input->inputText += e.text.text;
+                        }
+                    }
 				}
 
 				controls->run();

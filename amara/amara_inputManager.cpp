@@ -28,7 +28,30 @@ namespace Amara {
             int mode = InputMode_None;
             InputMode lastMode = InputMode_None;
 
+            std::string inputText;
+            bool textInputOn = false;
+
             InputManager() {}
+
+            void startTextInput() {
+                inputText.clear();
+                textInputOn = true;
+                SDL_StartTextInput();
+            }
+
+            std::string stopTextInput() {
+                textInputOn = false;
+                SDL_StopTextInput();
+                return inputText;
+            }
+
+            std::string getClipboardText() {
+                inputText = SDL_GetClipboardText();
+            }
+
+            void setClipboardText(std::string txt) {
+                SDL_SetClipboardText(txt.c_str());
+            }
     };
 }
 

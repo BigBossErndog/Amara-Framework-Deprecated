@@ -196,5 +196,28 @@ namespace Amara {
         bool finished() {
             return index >= content.size();
         }
+        
+        static bool isPunctuation(char c) {
+            if (c >= 0x3000 && c <= 0x303f) return true;
+            return false;
+        }
+
+        static bool isSameLanguage(char c1, char c2) {
+            if (isJapaneseCharacter(c1) && isJapaneseCharacter(c2)) return true;
+            if (isCJKCharacter(c1) && isCJKCharacter(c2)) return true;
+            return false;
+        }
+
+        static bool isJapaneseCharacter(char c) {
+            if (c >= 0x3040 && c <= 0x30ff) return true;
+            if (c >= 0x4e00 && c <= 0x9faf) return true;
+
+            return false;
+        }
+
+        static bool isCJKCharacter(char c) {
+            if (c >= 0x4E00 && c <= 0x9FFF) return true;
+            return false;
+        }
     };
 }

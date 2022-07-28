@@ -784,9 +784,6 @@ namespace Amara {
 		void prepare() {
 			if (box == nullptr) box = (UIBox*)parent;
 
-            if (targetWidth == -1) targetWidth = box->width;
-            if (targetHeight == -1) targetHeight = box->height;
-
 			startWidth = box->openWidth;
 			startHeight = box->openHeight;
 
@@ -820,7 +817,14 @@ namespace Amara {
 			Amara::Tween::finish();
 			box->openWidth = targetWidth;
 			box->openHeight = targetHeight;
-            if (box->content) box->content->setVisible(true);
+            if (box->content) {
+                if (box->openWidth <= box->minWidth || box->openHeight <= box->minHeight) {
+                    box->content->setVisible(false);
+                }
+                else {
+                    box->content->setVisible(true);
+                }
+            }
 		}
 	};
 }

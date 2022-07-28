@@ -132,6 +132,19 @@ namespace Amara {
                 findDimensions();
             }
 
+            std::string getWrappedText(std::string gText, float wrapWidth) {
+                int testSize = gText.size() * 2;
+                char wrapping[testSize];
+
+                FC_GetWrappedText(fontAsset->font, wrapping, testSize, wrapWidth,gText.c_str());
+
+                return wrapping;
+            }
+
+            void setWrappedText(std::string gText, float wrapWidth) {
+                setText(getWrappedText(gText, wrapWidth));
+            }
+
             void setColor(int r, int g, int b, int a) {
                 color.r = r;
                 color.g = g;

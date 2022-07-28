@@ -103,6 +103,10 @@ namespace Amara {
 				return emptyJson;
 			}
 
+			CSVFile* getCSV(std::string key) {
+				return (CSVFile*)get(key);
+			}
+
 			std::string getString(std::string key) {
 				Amara::StringFile* sf = (Amara::StringFile*)(get(key));
 				if (sf != nullptr) {
@@ -371,6 +375,22 @@ namespace Amara {
 				}
 			}
 
+			void loadCSVFromJSON(nlohmann::json& config) {
+				std::string key;
+				std::string path;
+				int frameWidth, frameHeight;
+				bool replace = false;
+				for (nlohmann::json& asset: config) {
+					key = asset["key"];
+					path = asset["path"];
+					replace = false;
+					if (asset.find("replace") != asset.end()) {
+						replace = asset["replace"];
+					}
+					csv(key, path, replace);
+				}
+			}
+
 			virtual bool fromJSON(std::string path) {
 				bool success = true;
 
@@ -419,6 +439,9 @@ namespace Amara {
 					}
 					if (config.find("lineByLine") != config.end()) {
 						loadLineByLineFromJSON(config["lineByLine"]);
+					}
+					if (config.find("csv") != config.end()) {
+						loadCSVFromJSON(config["csv"]);
 					}
 					setBasePath(recPath);
 				}
@@ -778,6 +801,40 @@ namespace Amara {
 
 			virtual bool lineByLine(std::string key, std::string path) {
 				return lineByLine(key, path, false);
+			}
+
+			virtual bool csv(std::string key, std::string path, bool replace) {
+				path = fixPath(path);
+				Amara::Asset* got = get(key);
+				if (got != nullptr && !replace) {
+					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
+					return false;
+				}
+				remove(key);
+				bool success = true;
+
+				std::ifstream in(path, std::ios::in | std::ios::binary);
+				if (in) {
+					std::vector<std::string> contents;
+					std::string temp;
+					while (std::getline(in, temp)) {
+						contents.push_back(temp);
+					}
+
+					std::cout << "Loaded: " << key << std::endl;
+					Amara::Asset* newAsset = new Amara::CSVFile(key, CSVFILE, contents);
+					assets[key] = newAsset;
+					in.close();
+				}
+				else {
+					std::cout << "Loader: Failed to read file \"" << path << "\"" << std::endl;
+					success = false;
+				}
+
+				return success;
+			}
+			virtual bool csv(std::string key, std::string path) {
+				return csv(key, path, false);
 			}
 
 			virtual void regenerateAssets() {

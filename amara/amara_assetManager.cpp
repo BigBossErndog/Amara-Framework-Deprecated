@@ -29,6 +29,10 @@ namespace Amara {
                 return loader->getJSON(key);
             }
 
+            CSVFile* getCSV(std::string key) {
+                return loader->getCSV(key);
+            }
+
 			std::string getString(std::string key) {
 				return loader->getString(key);
 			}

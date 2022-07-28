@@ -249,12 +249,13 @@ namespace Amara {
                 std::string word = "";
                 std::string pText = "";
                 float textWidth = 0;
-                char c;
+                char c, lastC = 0;
 
                 txt->setWordWrap(false);
 
                 for (int i = 0; i < gText.length(); i++) {
                     c = gText.at(i);
+                    
                     if (c == ' ') {
                         pText = fText + word;
                         txt->setText(pText);
@@ -278,8 +279,30 @@ namespace Amara {
                         word = "";
                     }
                     else {
-                        word += c;
+                        pText = fText + word;
+                        pText += c;
+                        
+                        txt->setText(pText);
+                        if (txt->width > wrapWidth) {
+                            if (!StringParser::isSameLanguage(c, lastC) && !StringParser::isPunctuation(c)) {
+                                fText += word;
+                                fText += '\n';
+                                word = c;
+                            }
+                            else if (StringParser::isJapaneseCharacter(c) || StringParser::isCJKCharacter(c)) {
+                                fText += word;
+                                fText += '\n';
+                                word = c;
+                            }
+                            else {
+                                word += c;
+                            }
+                        }
+                        else {
+                            word += c;
+                        }
                     }
+                    lastC = c;
                 }
                 pText = fText + word;
                 txt->setText(pText);

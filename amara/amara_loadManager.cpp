@@ -119,6 +119,9 @@ namespace Amara {
                         case LINEBYLINE:
                             success = load->lineByLine(task->key, task->path, task->replace);
                             break;
+                        case CSVFILE:
+                            success = load->csv(task->key, task->path, task->replace);
+                            break;
                     }
 
                     count += 1;
@@ -236,6 +239,15 @@ namespace Amara {
             bool lineByLine(std::string key, std::string path, bool replace) {
                 Amara::LoadTask* t  = new Amara::LoadTask();
                 t->type = LINEBYLINE;
+                t->path = path;
+                t->replace = replace;
+                pushTask(key, t);
+                return true;
+            }
+
+            bool csv(std::string key, std::string path, bool replace) {
+                Amara::LoadTask* t  = new Amara::LoadTask();
+                t->type = CSVFILE;
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);
