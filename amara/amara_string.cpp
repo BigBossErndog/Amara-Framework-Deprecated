@@ -199,12 +199,26 @@ namespace Amara {
         
         static bool isPunctuation(char c) {
             if (c >= 0x3000 && c <= 0x303f) return true;
+            if (c >= 0x2000 && c <= 0x206F) return true;
+            if (c >= 0x0020 && c <= 0x0040) return true;
+            if (c >= 0x02B0 && c <= 0x02FF) return true;
+            if (c >= 0x0300 && c <= 0x036F) return true;
             return false;
         }
 
         static bool isSameLanguage(char c1, char c2) {
+            if (isPunctuation(c1)) return true;
+            if (isLatinCharacter(c1) && isLatinCharacter(c2)) return true;
             if (isJapaneseCharacter(c1) && isJapaneseCharacter(c2)) return true;
             if (isCJKCharacter(c1) && isCJKCharacter(c2)) return true;
+            return false;
+        }
+
+        static bool isLatinCharacter(char c) {
+            if (c >= 0x0041 && c <= 0x007F) return true;
+            if (c >= 0x00A0 && c <= 0x00FF) return true;
+            if (c >= 0x0100 && c <= 0x017F) return true;
+            if (c >= 0x0180 && c <= 0x024F) return true;
             return false;
         }
 

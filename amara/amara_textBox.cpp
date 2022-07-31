@@ -284,7 +284,7 @@ namespace Amara {
                         
                         txt->setText(pText);
                         if (txt->width > wrapWidth) {
-                            if (!StringParser::isSameLanguage(c, lastC) && !StringParser::isPunctuation(c)) {
+                            if (!StringParser::isSameLanguage(lastC, c) && !StringParser::isPunctuation(c)) {
                                 fText += word;
                                 fText += '\n';
                                 word = c;
