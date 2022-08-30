@@ -121,6 +121,10 @@ namespace Amara {
                 SDL_RenderFillRect(properties->gRenderer, &drawnRect);
             }
 
+            void fillPixel(int gx, int gy) {
+                SDL_RenderDrawPoint(properties->gRenderer, gx, gy);
+            }
+
             void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY, float scaleX, float scaleY, float angle) {
                 drawImage.setTexture(textureKey);
                 drawImage.x = gx;

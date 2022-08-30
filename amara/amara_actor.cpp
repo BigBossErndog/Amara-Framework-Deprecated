@@ -19,6 +19,10 @@ namespace Amara {
                 entityType = "actor";
             }
 
+            Amara::Actor* getActor(std::string key) {
+                return (Amara::Actor*)get(key);
+            }
+
 			void destroyScript(Amara::Script* script) {
 				if (script != nullptr) {
 					Script* check;
@@ -102,6 +106,13 @@ namespace Amara {
 				return (scripts.size() == 0);
 			}
 
+            bool isReciting(Amara::Script* script) {
+                for (Amara::Script* check: scripts) {
+                    if (check == script) return true;
+                }
+                return false;
+            }
+
             void run() {
                 reciteScripts();
                 if (!isDestroyed) Amara::Entity::run();
@@ -164,8 +175,9 @@ namespace Amara {
                 actingPaused = false;
             }
 
-            virtual ~Actor() {
+            void destroy() {
                 clearScripts();
+                Amara::Entity::destroy();
             }
     };
 }

@@ -200,7 +200,7 @@ namespace Amara {
                 Amara::Entity* entity;
                 for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {
                     entity = *it;
-                    if (entity->isDestroyed || entity->scene != scene) {
+                    if (entity == nullptr || entity->isDestroyed || entity->scene != scene) {
                         rSceneEntities.erase(it--);
                         continue;
                     }

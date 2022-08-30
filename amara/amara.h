@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef AMARA_STD
 #define AMARA_STD
     #include <stdio.h>
@@ -78,114 +80,117 @@ namespace Amara {
 }
 #endif
 
-#include "amara_game.cpp"
+#ifndef AMARA_LIBRARY
+#define AMARA_LIBRARY
+    #include "amara_string.cpp"
+    #include "amara_math.cpp"
+    #include "amara_easing.cpp"
+    #include "amara_geometry.cpp"
 
-#include "amara_transitions.cpp"
-#include "amara_sceneTransition.cpp"
+    #include "amara_fdeclarations.cpp"
 
-#include "amara_textBox.cpp"
-#include "amara_uiBox.cpp"
+    #include "amara_fileReader.cpp"
+    #include "amara_fileWriter.cpp"
 
-#include "amara_sceneManager.cpp"
-#include "amara_scenePlugin.cpp"
-#include "amara_scene.cpp"
-#include "amara_ltimer.cpp"
+    #include "amara_gameProperties.cpp"
 
-#include "amara_physics.cpp"
+    #include "amara_messages.cpp"
 
-#include "amara_tweens_entities.cpp"
-#include "amara_tweens_camera.cpp"
-#include "amara_tween.cpp"
+    #include "amara_stateManager.cpp"
+    #include "amara_taskManager.cpp"
+    #include "amara_debugging.cpp"
 
-#include "amara_freeWalker.cpp"
+    #include "amara_inputManager.cpp"
 
-#include "amara_fillRect.cpp"
+    #include "amara_keyCodes.cpp"
+    #include "amara_key.cpp"
+    #include "amara_keyboard.cpp"
 
-#include "amara_controlScheme.cpp"
-#include "amara_control.cpp"
+    #include "amara_buttonCodes.cpp"
+    #include "amara_button.cpp"
+    #include "amara_stick.cpp"
+    #include "amara_gamepad.cpp"
+    #include "amara_gamepadManager.cpp"
 
-#include "amara_scene.cpp"
+    #include "amara_pointer.cpp"
+    #include "amara_mouse.cpp"
+    #include "amara_touches.cpp"
+    #include "amara_interactionManager.cpp"
+    #include "amara_events.cpp"
 
-#include "amara_uiBar.cpp"
+    #include "amara_animation.cpp"
+    #include "amara_asset.cpp"
+    #include "amara_audioBase.cpp"
+    #include "amara_sound.cpp"
+    #include "amara_music.cpp"
 
-#include "amara_layerContainer.cpp"
-#include "amara_canvas.cpp"
+    #include "amara_loader.cpp"
+    #include "amara_loadManager.cpp"
 
-#include "amara_lighting.cpp"
-#include "amara_particles.cpp"
+    #include "amara_audioGroup.cpp"
+    #include "amara_assetManager.cpp"
 
-#include "amara_sprite.cpp"
-#include "amara_animationManager.cpp"
-#include "amara_image.cpp"
+    #include "amara_wallFinder.cpp"
+    #include "amara_interactable.cpp"
 
-#include "amara_pathFinding.cpp"
+    #include "amara_physicsBase.cpp"
 
-#include "amara_tilemap.cpp"
-#include "amara_tilemapLayer.cpp"
-#include "amara_tile.cpp"
-#include "amara_tileAnimation.cpp"
+    #include "amara_entity.cpp"
+    #include "amara_script.cpp"
+    #include "amara_actor.cpp"
 
-#include "amara_trueTypeFont.cpp"
+    #include "amara_random.cpp"
+    #include "amara_textureGeneration.cpp"
 
-#include "amara_camera.cpp"
-#include "amara_sceneTransitionBase.cpp"
+    #include "amara_sceneTransitionBase.cpp"
+    #include "amara_camera.cpp"
 
-#include "amara_textureGeneration.cpp"
-#include "amara_random.cpp"
+    #include "amara_trueTypeFont.cpp"
 
-#include "amara_actor.cpp"
-#include "amara_script.cpp"
-#include "amara_entity.cpp"
+    #include "amara_tileAnimation.cpp"
+    #include "amara_tile.cpp"
+    #include "amara_tilemapLayer.cpp"
+    #include "amara_tilemap.cpp"
 
-#include "amara_physicsBase.cpp"
+    #include "amara_pathFinding.cpp"
 
-#include "amara_interactable.cpp"
-#include "amara_wallFinder.cpp"
+    #include "amara_image.cpp"
+    #include "amara_animationManager.cpp"
+    #include "amara_sprite.cpp"
 
-#include "amara_assetManager.cpp"
-#include "amara_audioGroup.cpp"
+    #include "amara_particles.cpp"
+    #include "amara_lighting.cpp"
 
-#include "amara_loadManager.cpp"
-#include "amara_loader.cpp"
+    #include "amara_canvas.cpp"
+    #include "amara_layerContainer.cpp"
 
-#include "amara_music.cpp"
-#include "amara_sound.cpp"
-#include "amara_audioBase.cpp"
-#include "amara_asset.cpp"
-#include "amara_animation.cpp"
+    #include "amara_uiBar.cpp"
 
-#include "amara_events.cpp"
-#include "amara_interactionManager.cpp"
-#include "amara_touches.cpp"
-#include "amara_mouse.cpp"
-#include "amara_pointer.cpp"
+    #include "amara_scene.cpp"
 
-#include "amara_gamepadManager.cpp"
-#include "amara_gamepad.cpp"
-#include "amara_stick.cpp"
-#include "amara_button.cpp"
-#include "amara_buttonCodes.cpp"
+    #include "amara_control.cpp"
+    #include "amara_controlScheme.cpp"
 
-#include "amara_keyboard.cpp"
-#include "amara_key.cpp"
-#include "amara_keyCodes.cpp"
+    #include "amara_fillRect.cpp"
 
-#include "amara_inputManager.cpp"
+    #include "amara_freeWalker.cpp"
 
-#include "amara_debugging.cpp"
-#include "amara_taskManager.cpp"
-#include "amara_stateManager.cpp"
+    #include "amara_tween.cpp"
+    #include "amara_tweens_camera.cpp"
+    #include "amara_tweens_entities.cpp"
 
-#include "amara_messages.cpp"
+    #include "amara_physics.cpp"
 
-#include "amara_gameProperties.cpp"
+    #include "amara_ltimer.cpp"
+    #include "amara_scene.cpp"
+    #include "amara_scenePlugin.cpp"
+    #include "amara_sceneManager.cpp"
 
-#include "amara_fileWriter.cpp"
-#include "amara_fileReader.cpp"
+    #include "amara_uiBox.cpp"
+    #include "amara_textBox.cpp"
 
-#include "amara_fdeclarations.cpp"
+    #include "amara_sceneTransition.cpp"
+    #include "amara_transitions.cpp"
 
-#include "amara_geometry.cpp"
-#include "amara_easing.cpp"
-#include "amara_math.cpp"
-#include "amara_string.cpp"
+    #include "amara_game.cpp"
+#endif

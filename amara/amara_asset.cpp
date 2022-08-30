@@ -273,10 +273,16 @@ namespace Amara {
             invalid = gInvalid;
         }
 
+        char getChar(std::string line, int index) {
+            if (index < 0 || index >= line.size()) return 0;
+            return line.at(index);
+        }
+
         void setLine(std::string line) {
             char c;
             std::string stringItem = "";
             bool inString = false;
+            bool escapeChar = false;
 
             items.clear();
 
@@ -286,12 +292,26 @@ namespace Amara {
                 if (c == '\r' || c == '\0') break;
 
                 if (c == '"') {
-                    inString = !inString;
+                    if (!inString) {
+                        inString = true;
+                    }
+                    else if (escapeChar) {
+                        stringItem += c;
+                        escapeChar = false;
+                    }
+                    else if (getChar(line, i+1) == ',') {
+                        inString = false;
+                    }
+                    else {
+                        escapeChar = true;
+                    }
                 }
                 else if (!inString && c == ',') {
                     if (stringItem.size() > 0) {
                         if (nlohmann::json::accept(stringItem)) {
-                            items.push_back(nlohmann::json::parse(stringItem));
+                            nlohmann::json obj = nlohmann::json::parse(stringItem);
+                            if (obj.is_string()) items.push_back(stringItem);
+                            else items.push_back(obj);
                         }
                         else {
                             items.push_back(stringItem);
@@ -308,7 +328,9 @@ namespace Amara {
             }
             if (stringItem.size() > 0) {
                 if (nlohmann::json::accept(stringItem)) {
-                    items.push_back(nlohmann::json::parse(stringItem));
+                    nlohmann::json obj = nlohmann::json::parse(stringItem);
+                    if (obj.is_string()) items.push_back(stringItem);
+                    else items.push_back(obj);
                 }
                 else {
                     items.push_back(stringItem);

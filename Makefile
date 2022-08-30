@@ -37,7 +37,6 @@ clean:
 	rm -rf $(BUILD_PATH)/*
 
 win64: $(SRC_FILES)
-	cls
 	rm -rf build/*.dll
 	rm -rf build/assets/*
 	cp -R assets/ build/
@@ -46,7 +45,6 @@ win64: $(SRC_FILES)
 
 
 win32: $(SRC_FILES)
-	cls
 	rm -rf build/*.dll
 	rm -rf build/assets/*
 	cp -R assets/ build/

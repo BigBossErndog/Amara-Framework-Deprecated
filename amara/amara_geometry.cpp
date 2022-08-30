@@ -145,12 +145,15 @@ namespace Amara {
         return overlapping(p->x, p->y, circle);
     }
     
-    bool overlapping(float px, float py, FloatRect* rect) {
-        if (px < rect->x) return false;
-        if (px > rect->x+rect->width) return false;
-        if (py < rect->y) return false;
-        if (py > rect->y+rect->height) return false;
+    bool overlapping(float px, float py, float rx, float ry, float rw, float rh) {
+        if (px < rx) return false;
+        if (px >= rx+rw) return false;
+        if (py < ry) return false;
+        if (py >= ry+rh) return false;
         return true;
+    }
+    bool overlapping(float px, float py, FloatRect* rect) {
+        return overlapping(px, py, rect->x, rect->y, rect->width, rect->height);
     }
     bool overlapping(FloatVector2* p, FloatRect* rect) {
         return overlapping(p->x, p->y, rect);
@@ -417,6 +420,13 @@ namespace Amara {
 		}
 		return "noDir";
 	}
+
+    Amara::IntVector2 getDirectionVector(Amara::Direction dir) {
+        return { getOffsetX(dir), getOffsetY(dir) };
+    }
+    Amara::IntVector2 flipVector(Amara::IntVector2 v) {
+        return { -v.x, -v.y };
+    }
 }
 
 #endif

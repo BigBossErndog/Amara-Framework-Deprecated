@@ -279,24 +279,32 @@ namespace Amara {
                         word = "";
                     }
                     else {
-                        pText = fText + word;
-                        pText += c;
-                        
-                        txt->setText(pText);
-                        if (txt->width > wrapWidth) {
-                            if (!StringParser::isSameLanguage(lastC, c) && !StringParser::isPunctuation(c)) {
-                                fText += word;
+                        if (StringParser::isPunctuation(c)) {
+                            word += c;
+                        }
+                        else if (!StringParser::isSameLanguage(lastC, c)) {
+                            pText = fText + word;
+                            txt->setText(pText);
+                            if (txt->width > wrapWidth) {
                                 fText += '\n';
-                                word = c;
-                            }
-                            else if (StringParser::isJapaneseCharacter(c) || StringParser::isCJKCharacter(c)) {
                                 fText += word;
-                                fText += '\n';
-                                word = c;
                             }
                             else {
-                                word += c;
+                                fText += word;
                             }
+                            word = c;
+                        }
+                        else if (StringParser::isJapaneseCharacter(c) || StringParser::isCJKCharacter(c)) {
+                            pText = fText + word;
+                            txt->setText(pText);
+                            if (txt->width > wrapWidth) {
+                                fText += '\n';
+                                fText += word;
+                            }
+                            else {
+                                fText += word;
+                            }
+                            word = c;
                         }
                         else {
                             word += c;

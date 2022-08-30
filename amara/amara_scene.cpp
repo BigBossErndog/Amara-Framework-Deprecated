@@ -56,18 +56,8 @@ namespace Amara {
                 setLoader(loadManager);
                 load->reset();
 
-                for (Amara::Camera* cam : cameras) {
-                    delete cam;
-                }
-                cameras.clear();
+                destroyEntities();
                 mainCamera = nullptr;
-
-                std::vector<Entity*> toDestroy = entities;
-                for (Amara::Entity* entity: toDestroy) {
-                    if (entity->isDestroyed || entity->scene != this) continue;
-                    entity->destroy();
-                }
-                entities.clear();
 
                 add(mainCamera = new Amara::Camera());
                 preload();
@@ -170,7 +160,6 @@ namespace Amara {
                 for (auto it = entities.begin(); it != entities.end(); ++it) {
                     entity = *it;
                     if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
-                        entities.erase(it--);
                         continue;
                     }
                     entity->run();
@@ -180,11 +169,19 @@ namespace Amara {
                 for (auto it = cameras.begin(); it != cameras.end(); ++it) {
                     cam = *it;
                     if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
-                        cameras.erase(it--);
                         continue;
                     }
                     else {
                         cam->run();
+                    }
+                }
+
+                checkEntities();
+                for (auto it = cameras.begin(); it != cameras.end(); ++it) {
+                    cam = *it;
+                    if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
+                        cameras.erase(it--);
+                        continue;
                     }
                 }
             }
@@ -217,7 +214,7 @@ namespace Amara {
                 Amara::Camera* cam;
                 for (std::vector<Amara::Camera*>::iterator it = cameras.begin(); it != cameras.end(); it++) {
                     cam = *it;
-                    if (cam->isDestroyed || cam->parent != this) {
+                    if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
                         cameras.erase(it--);
                         continue;
                     }
@@ -250,11 +247,15 @@ namespace Amara {
             }
 
             virtual void destroyEntities() {
-                Amara::Entity::destroyEntities();
                 for (Amara::Camera* cam: cameras) {
-                    delete cam;
+                    if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
+                        continue;
+                    }
+                    cam->destroy();
                 }
                 cameras.clear();
+                mainCamera = nullptr;
+                Amara::Entity::destroyEntities();
             }
 
             virtual void preload() {}

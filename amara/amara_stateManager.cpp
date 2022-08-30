@@ -158,6 +158,14 @@ namespace Amara {
                 skipEvent = true;
             }
 
+            bool nextEvtOn(bool cond) {
+                if (cond) {
+                    nextEvt();
+                    return true;
+                }
+                return false;
+            }
+
             bool wait(float time, bool skip) {
                 bool ret = false;
 

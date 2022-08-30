@@ -8,15 +8,15 @@ namespace Amara {
     class Game;
 
     enum SceneTask {
-        RUN,
-        STOP,
-        START,
-        RESTART,
-        PAUSE,
-        RESUME,
-        SLEEP,
-        WAKE,
-		BRINGTOFRONT
+        SCENETASK_RUN,
+        SCENETASK_STOP,
+        SCENETASK_START,
+        SCENETASK_RESTART,
+        SCENETASK_PAUSE,
+        SCENETASK_RESUME,
+        SCENETASK_SLEEP,
+        SCENETASK_WAKE,
+		SCENETASK_BRINGTOFRONT
     };
 
     class ScenePlugin {
@@ -72,7 +72,7 @@ namespace Amara {
             void start(std::string key) {
                 std::unordered_map<std::string, Amara::Scene*>::iterator got = sceneMap->find(key);
                 if (got != sceneMap->end()) {
-                    stop(this->key);
+                    stop();
                     got->second->scenes->start();
                 }
 				else {
@@ -151,46 +151,46 @@ namespace Amara {
             }
 
 			void run() {
-                tasks.push_back(RUN);
+                tasks.push_back(SCENETASK_RUN);
             }
 
 			void start() {
-                tasks.push_back(START);
+                tasks.push_back(SCENETASK_START);
             }
 
             void stop() {
-                tasks.push_back(STOP);
+                tasks.push_back(SCENETASK_STOP);
             }
 
             void pause() {
-                tasks.push_back(PAUSE);
+                tasks.push_back(SCENETASK_PAUSE);
             }
 
             void resume() {
-                tasks.push_back(RESUME);
+                tasks.push_back(SCENETASK_RESUME);
             }
 
             void restart() {
-                tasks.push_back(RESTART);
+                tasks.push_back(SCENETASK_RESTART);
             }
 
             void sleep() {
-                tasks.push_back(SLEEP);
+                tasks.push_back(SCENETASK_SLEEP);
             }
 
             void wake() {
-                tasks.push_back(WAKE);
+                tasks.push_back(SCENETASK_WAKE);
             }
 
 			void bringToFront() {
-				tasks.push_back(BRINGTOFRONT);
+				tasks.push_back(SCENETASK_BRINGTOFRONT);
 			}
-
+            
             void manageTasks() {
                 for (size_t i = 0; i < tasks.size(); i++) {
                     SceneTask curTask = tasks.at(i);
                     switch (curTask) {
-                        case RUN:
+                        case SCENETASK_RUN:
                             if (!isActive) {
                                 scene->init();
                                 scene->onStart();
@@ -199,7 +199,7 @@ namespace Amara {
                             isPaused = false;
                             isSleeping = false;
                             break;
-                        case START:
+                        case SCENETASK_START:
                             if (!isActive) {
                                 scene->init();
                                 scene->onStart();
@@ -208,7 +208,7 @@ namespace Amara {
                             isPaused = false;
                             isSleeping = false;
                             break;
-                        case STOP:
+                        case SCENETASK_STOP:
                             if (isActive) {
                                 scene->clearScripts();
                                 scene->onStop();
@@ -218,7 +218,7 @@ namespace Amara {
                             isPaused = false;
                             isSleeping = false;
                             break;
-                        case RESTART:
+                        case SCENETASK_RESTART:
                             isActive = true;
                             isPaused = false;
                             isSleeping = false;
@@ -228,35 +228,35 @@ namespace Amara {
                             scene->init();
                             scene->onStart();
                             break;
-                        case PAUSE:
+                        case SCENETASK_PAUSE:
                             if (isActive && !isPaused) {
                                 isPaused = true;
                                 isSleeping = false;
                                 scene->onStart();
                             }
                             break;
-                        case RESUME:
+                        case SCENETASK_RESUME:
                             if (isActive && isPaused) {
                                 isPaused = false;
                                 isSleeping = false;
                                 scene->onResume();
                             }
                             break;
-                        case SLEEP:
+                        case SCENETASK_SLEEP:
                             if (isActive && !isSleeping) {
                                 isPaused = false;
                                 isSleeping = true;
                                 scene->onSleep();
                             }
                             break;
-                        case WAKE:
+                        case SCENETASK_WAKE:
                             if (isActive && isSleeping) {
                                 isPaused = false;
                                 isSleeping = false;
                                 scene->onWake();
                             }
                             break;
-						case BRINGTOFRONT:
+						case SCENETASK_BRINGTOFRONT:
 							for (int i = 0; i < sceneList->size(); i++) {
 								Scene* s = sceneList->at(i);
 								if (s == scene) {

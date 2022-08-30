@@ -207,7 +207,7 @@ namespace Amara {
         }
 
         static bool isSameLanguage(char c1, char c2) {
-            if (isPunctuation(c1)) return true;
+            if (isLatinCharacter(c1) || isLatinCharacter(c2)) return true;
             if (isLatinCharacter(c1) && isLatinCharacter(c2)) return true;
             if (isJapaneseCharacter(c1) && isJapaneseCharacter(c2)) return true;
             if (isCJKCharacter(c1) && isCJKCharacter(c2)) return true;
