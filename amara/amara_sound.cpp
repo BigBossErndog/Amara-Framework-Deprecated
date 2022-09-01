@@ -2,7 +2,7 @@
 #ifndef AMARA_SOUND
 #define AMARA_SOUND
 
-#include "amara.h"
+
 
 namespace Amara {
     class Sound: public Amara::AudioBase {

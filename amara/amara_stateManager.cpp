@@ -2,7 +2,7 @@
 #ifndef AMARA_STATEMANAGER
 #define AMARA_STATEMANAGER
 
-#include "amara.h"
+
 
 namespace Amara {
     struct StateRecord {

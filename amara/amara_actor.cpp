@@ -2,7 +2,7 @@
 #ifndef AMARA_ACTOR
 #define AMARA_ACTOR
 
-#include "amara.h"
+
 
 namespace Amara {
     class Tween;

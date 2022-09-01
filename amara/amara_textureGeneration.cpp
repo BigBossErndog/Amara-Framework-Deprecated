@@ -2,7 +2,7 @@
 #ifndef AMARA_TEXTUREGENERATION
 #define AMARA_TEXTUREGENERATION
 
-#include "amara.h"
+
 
 namespace Amara {
     void drawRadialGradient(SDL_Renderer* gRenderer, int gx, int gy, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart, SDL_BlendMode blendMode) {

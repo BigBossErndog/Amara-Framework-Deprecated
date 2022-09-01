@@ -2,7 +2,7 @@
 #ifndef AMARA_KEY
 #define AMARA_KEY
 
-#include "amara.h"
+
 
 namespace Amara {
     class Key {

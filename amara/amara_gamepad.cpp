@@ -2,7 +2,7 @@
 #ifndef AMARA_GAMEPAD
 #define AMARA_GAMEPAD
 
-#include "amara.h"
+
 
 namespace Amara {
     enum Gamepad_Scheme {

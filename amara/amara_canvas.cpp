@@ -2,7 +2,7 @@
 #ifndef AMARA_CANVAS
 #define AMARA_CANVAS
 
-#include "amara.h"
+
 
 namespace Amara {
     class Canvas: public Actor {

@@ -2,7 +2,7 @@
 #ifndef AMARA_CAMERA
 #define AMARA_CAMERA
 
-#include "amara.h"
+
 
 namespace Amara {
     class Scene;

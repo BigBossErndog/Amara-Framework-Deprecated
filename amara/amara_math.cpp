@@ -2,7 +2,7 @@
 #ifndef AMARA_MATH
 #define AMARA_MATH
 
-#include "amara.h"
+
 
 namespace Amara {
     bool valueInRange(int val, int minVal, int maxVal) {

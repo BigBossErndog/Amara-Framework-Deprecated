@@ -2,7 +2,7 @@
 #ifndef AMARA_FDECLARE_TWEENS
 #define AMARA_FDECLARE_TWEENS
 
-#include "amara.h"
+
 
 namespace Amara {
     class Script;

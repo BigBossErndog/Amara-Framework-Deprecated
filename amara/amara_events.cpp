@@ -2,7 +2,7 @@
 #ifndef AMARA_EVENTS
 #define AMARA_EVENTS
 
-#include "amara.h"
+
 
 namespace Amara {
     class Event {

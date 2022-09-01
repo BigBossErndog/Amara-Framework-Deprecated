@@ -2,7 +2,7 @@
 #ifndef AMARA_INTERACTABLE
 #define AMARA_INTERACTABLE
 
-#include "amara.h"
+
 
 namespace Amara {
     class Interactable {

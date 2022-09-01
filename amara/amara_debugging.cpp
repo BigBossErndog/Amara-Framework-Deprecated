@@ -2,7 +2,7 @@
 #ifndef AMARA_DEBUGGING
 #define AMARA_DEBUGGING
 
-#include "amara.h"
+
 
 namespace Amara {
     class Error {

@@ -2,7 +2,7 @@
 #ifndef AMARA_RANDOM
 #define AMARA_RANDOM
 
-#include "amara.h"
+
 
 namespace Amara {
     class RNG {

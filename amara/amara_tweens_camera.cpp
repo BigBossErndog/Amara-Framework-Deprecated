@@ -2,7 +2,7 @@
 #ifndef AMARA_TWEENS
 #define AMARA_TWEENS
 
-#include "amara.h"
+
 
 namespace Amara {
     class Tween_ScrollCamera: public Tween {
@@ -15,6 +15,8 @@ namespace Amara {
             float startY;
             float targetX;
             float targetY;
+
+            FloatRect targetRect;
 
             Tween_ScrollCamera(float tx, float ty, float tt, Amara::Easing gEasing, bool gCenter) {
                 targetX = tx;
@@ -31,13 +33,44 @@ namespace Amara {
             void prepare(Amara::Actor* gCam) {
                 cam = (Amara::Camera*)gCam;
 				cam->stopFollow();
+
                 if (center) {
                     startX = cam->centerX;
                     startY = cam->centerY;
+
+                    if (cam->lockedToBounds) {
+                        targetRect = {
+                            targetX - (cam->width/cam->zoomX)/2.0,
+                            targetY - (cam->height/cam->zoomY)/2.0,
+                            cam->width/cam->zoomX,
+                            cam->height/cam->zoomY
+                        };
+                        if (targetRect.x < cam->boundX) targetRect.x = cam->boundX;
+                        else if (targetRect.x + targetRect.width > cam->boundX + cam->boundW) targetRect.x = cam->boundX + cam->boundW - targetRect.width;
+                        if (targetRect.y < cam->boundY) targetRect.y = cam->boundY;
+                        else if (targetRect.y + targetRect.height > cam->boundY + cam->boundH) targetRect.y = cam->boundY + cam->boundW - targetRect.height;
+                        targetX = targetRect.x + targetRect.width/2.0;
+                        targetY = targetRect.y + targetRect.height/2.0;
+                    }
                 }
                 else {
                     startX = cam->scrollX;
                     startY = cam->scrollY;
+
+                    if (cam->lockedToBounds) {
+                        targetRect = {
+                            targetX,
+                            targetY,
+                            cam->width/cam->zoomX,
+                            cam->height/cam->zoomY
+                        };
+                        if (targetRect.x < cam->boundX) targetRect.x = cam->boundX;
+                        else if (targetRect.x + targetRect.width > cam->boundX + cam->boundW) targetRect.x = cam->boundX + cam->boundW - targetRect.width;
+                        if (targetRect.y < cam->boundY) targetRect.y = cam->boundY;
+                        else if (targetRect.y + targetRect.height > cam->boundY + cam->boundH) targetRect.y = cam->boundY + cam->boundW - targetRect.height;
+                        targetX = targetRect.x;
+                        targetY = targetRect.y;
+                    }
                 }
             }
 

@@ -2,7 +2,7 @@
 #ifndef AMARA_SCENEPLUGIN
 #define AMARA_SCENEPLUGIN
 
-#include "amara.h"
+
 
 namespace Amara {
     class Game;

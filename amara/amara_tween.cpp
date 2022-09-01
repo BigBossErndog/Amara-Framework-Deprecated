@@ -2,7 +2,7 @@
 #ifndef AMARA_TWEEN
 #define AMARA_TWEEN
 
-#include "amara.h"
+
 
 namespace Amara {
     class Tween: public Script {

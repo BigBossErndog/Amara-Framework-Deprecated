@@ -2,7 +2,7 @@
 #ifndef AMARA_TRUETYPEFONT
 #define AMARA_TRUETYPEFONT
 
-#include "amara.h"
+
 
 namespace Amara {
     enum Alignment {

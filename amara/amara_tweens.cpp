@@ -1,7 +1,7 @@
 #ifndef AMARA_TWEENS
 #define AMARA_TWEENS
 
-#include "amara.h"
+
 
 namespace Amara {
     class CameraScrollTween: public Tween {

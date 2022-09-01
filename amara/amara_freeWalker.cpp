@@ -1,6 +1,6 @@
 #pragma once
 
-#include "amara.h"
+
 
 namespace Amara {
     class FreeWalker: public Amara::Sprite {

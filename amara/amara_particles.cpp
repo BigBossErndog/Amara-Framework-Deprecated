@@ -2,7 +2,7 @@
 #ifndef AMARA_PARTICLES
 #define AMARA_PARTICLES
 
-#include "amara.h"
+
 
 namespace Amara {
     class Particle: public Amara::Image, public Amara::StateManager {

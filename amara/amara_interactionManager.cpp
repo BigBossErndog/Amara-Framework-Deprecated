@@ -2,7 +2,7 @@
 #ifndef AMARA_INTERACTIONMANAGER
 #define AMARA_INTERACTIONMANAGER
 
-#include "amara.h"
+
 
 namespace Amara {
 	class InteractionManager: public Amara::Key {

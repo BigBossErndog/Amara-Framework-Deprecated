@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "amara.h"
+
 
 namespace Amara {
     class PhysicsBody: public Amara::PhysicsBase {

@@ -2,7 +2,7 @@
 #ifndef AMARA_TILEMAP
 #define AMARA_TILEMAP
 
-#include "amara.h"
+
 
 namespace Amara {
     class Tilemap: public Amara::Actor, public Amara::WallFinder {

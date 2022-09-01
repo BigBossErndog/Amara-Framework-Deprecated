@@ -2,7 +2,7 @@
 #ifndef AMARA_TILEMAPLAYER
 #define AMARA_TILEMAPLAYER
 
-#include "amara.h"
+
 
 namespace Amara {
     class Tilemap;

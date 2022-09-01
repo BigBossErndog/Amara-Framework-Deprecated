@@ -2,7 +2,7 @@
 #ifndef AMARA_AUDIOBASE
 #define AMARA_AUDIOBASE
 
-#include "amara.h"
+
 
 namespace Amara {
     class AudioGroup;

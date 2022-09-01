@@ -2,7 +2,7 @@
 #ifndef AMARA_GAMEPADMANAGER
 #define AMARA_GAMEPADMANAGER
 
-#include "amara.h"
+
 
 namespace Amara {
     class GamepadManager {

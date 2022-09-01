@@ -2,7 +2,7 @@
 #ifndef AMARA_ANIMATION
 #define AMARA_ANIMATION
 
-#include "amara.h"
+
 
 namespace Amara {
     class AnimationManager;

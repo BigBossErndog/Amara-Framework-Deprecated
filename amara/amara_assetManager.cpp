@@ -2,7 +2,7 @@
 #ifndef AMARA_ASSETMANAGER
 #define AMARA_ASSETMANAGER
 
-#include "amara.h"
+
 
 namespace Amara {
     class AssetManager {

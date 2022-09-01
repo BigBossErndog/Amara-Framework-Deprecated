@@ -1,7 +1,7 @@
 #ifndef AMARA_TWEENER
 #define AMARA_TWEENER
 
-#include "amara.h"
+
 
 namespace Amara {
     class Tweener {

@@ -2,7 +2,7 @@
 #ifndef AMARA_GAMEPROPERTIES
 #define AMARA_GAMEPROPERTIES
 
-#include "amara.h"
+
 
 namespace Amara {
     class Game;

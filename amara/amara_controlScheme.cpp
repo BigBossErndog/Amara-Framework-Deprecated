@@ -2,7 +2,7 @@
 #ifndef AMARA_CONTROLSCHEME
 #define AMARA_CONTROLSCHEME
 
-#include "amara.h"
+
 
 namespace Amara {
     class ControlScheme {

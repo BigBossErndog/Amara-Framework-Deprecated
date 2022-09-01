@@ -2,7 +2,7 @@
 #ifndef AMARA_ASSET
 #define AMARA_ASSET
 
-#include "amara.h"
+
 
 namespace Amara {
     enum AssetType {

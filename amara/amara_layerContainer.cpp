@@ -2,7 +2,7 @@
 #ifndef AMARA_LAYER
 #define AMARA_LAYER
 
-#include "amara.h"
+
 
 namespace Amara {
     class Layer: public Amara::Actor {

@@ -2,7 +2,7 @@
 #ifndef AMARA_GEOMETRY
 #define AMARA_GEOMETRY
 
-#include "amara.h"
+
 
 namespace Amara {
     typedef struct IntVector2 {

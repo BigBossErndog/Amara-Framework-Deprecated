@@ -2,7 +2,7 @@
 #ifndef AMARA_TILEANIMATION
 #define AMARA_TILEANIMATION
 
-#include "amara.h"
+
 
 namespace Amara {
     struct TileFrame {

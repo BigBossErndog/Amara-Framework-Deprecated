@@ -2,7 +2,7 @@
 #ifndef AMARA_STICK
 #define AMARA_STICK
 
-#include "amara.h"
+
 
 namespace Amara {
     const int JOYSTICK_DEADZONE = 12000;

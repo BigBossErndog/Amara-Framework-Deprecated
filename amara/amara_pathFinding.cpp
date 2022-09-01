@@ -2,7 +2,7 @@
 #ifndef AMARA_PATHFINDING
 #define AMARA_PATHFINDING
 
-#include "amara.h"
+
 
 namespace Amara {
     int findPath(void* data);

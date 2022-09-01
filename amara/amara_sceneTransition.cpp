@@ -2,7 +2,7 @@
 #ifndef AMARA_SCENETRANSITION
 #define AMARA_SCENETRANSITION
 
-#include "amara.h"
+
 
 namespace Amara {
     class SceneTransition: public Amara::SceneTransitionBase {

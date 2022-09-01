@@ -2,7 +2,7 @@
 #ifndef AMARA_SCENETRANSITIONBASE
 #define AMARA_SCENETRANSITIONBASE
 
-#include "amara.h"
+
 
 namespace Amara {
     class Scene;

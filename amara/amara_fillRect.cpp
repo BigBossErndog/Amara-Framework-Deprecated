@@ -2,7 +2,7 @@
 #ifndef AMARA_FILLRECT
 #define AMARA_FILLRECT
 
-#include "amara.h"
+
 
 namespace Amara {
 	class FillRect: public Amara::Actor {

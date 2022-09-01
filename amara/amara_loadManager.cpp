@@ -2,7 +2,7 @@
 #ifndef AMARA_LOADMANAGER
 #define AMARA_LOADMANAGER
 
-#include "amara.h"
+
 
 namespace Amara {
     struct LoadTask {

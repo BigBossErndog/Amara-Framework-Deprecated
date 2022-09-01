@@ -2,7 +2,7 @@
 #ifndef AMARA_KEYBOARD
 #define AMARA_KEYBOARD
 
-#include "amara.h"
+
 
 namespace Amara {
     class Key;

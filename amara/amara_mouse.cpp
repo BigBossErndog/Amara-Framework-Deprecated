@@ -2,7 +2,7 @@
 #ifndef AMARA_MOUSE
 #define AMARA_MOUSE
 
-#include "amara.h"
+
 
 namespace Amara {
 	class InteractionManager;

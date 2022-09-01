@@ -2,7 +2,7 @@
 #ifndef AMARA_TASKMANAGER
 #define AMARA_TASKMANAGER
 
-#include "amara.h"
+
 
 namespace Amara {
     class Entity;

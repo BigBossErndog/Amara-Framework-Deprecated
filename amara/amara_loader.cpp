@@ -2,7 +2,7 @@
 #ifndef AMARA_LOADER
 #define AMARA_LOADER
 
-#include "amara.h"
+
 
 namespace Amara {
     class Game;

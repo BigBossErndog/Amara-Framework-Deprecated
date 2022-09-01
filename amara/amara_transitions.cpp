@@ -2,7 +2,7 @@
 #ifndef AMARA_TRANSITIONS
 #define AMARA_TRANSITIONS
 
-#include "amara.h"
+
 
 namespace Amara {
     class FillTransition: public Amara::SceneTransition {
@@ -130,5 +130,5 @@ namespace Amara {
     };
 }
 
-#include "amara.h"
+
 #endif

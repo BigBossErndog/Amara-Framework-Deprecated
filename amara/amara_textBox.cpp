@@ -2,7 +2,7 @@
 #ifndef AMARA_TEXTBOX
 #define AMARA_TEXTBOX
 
-#include "amara.h"
+
 
 namespace Amara {
     class TextBox: public Amara::UIBox {

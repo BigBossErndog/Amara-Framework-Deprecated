@@ -2,7 +2,7 @@
 #ifndef AMARA_EASING
 #define AMARA_EASING
 
-#include "amara.h"
+
 
 namespace Amara {
     enum Easing {

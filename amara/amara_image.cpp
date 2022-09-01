@@ -2,7 +2,7 @@
 #ifndef AMARA_IMAGE
 #define AMARA_IMAGE
 
-#include "amara.h"
+
 
 namespace Amara {
     class Image: public Amara::Actor {

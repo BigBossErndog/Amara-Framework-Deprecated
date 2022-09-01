@@ -2,7 +2,7 @@
 #ifndef AMARA_TWEENS_ENTITIES
 #define AMARA_TWEENS_ENTITIES
 
-#include "amara.h"
+
 
 namespace Amara {
     class Tween_XY: public Tween {

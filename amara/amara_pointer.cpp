@@ -2,7 +2,7 @@
 #ifndef AMARA_POINTER
 #define AMARA_POINTER
 
-#include "amara.h"
+
 
 namespace Amara {
     class Pointer {

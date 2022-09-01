@@ -2,7 +2,7 @@
 #ifndef AMARA_LIGHTING
 #define AMARA_LIGHTING
 
-#include "amara.h"
+
 
 namespace Amara {
     class Light: public Amara::Image {

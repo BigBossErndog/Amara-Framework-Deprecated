@@ -2,7 +2,7 @@
 #ifndef AMARA_UIBOX
 #define AMARA_UIBOX
 
-#include "amara.h"
+
 
 namespace Amara {
     class UIBox: public Amara::Actor {
