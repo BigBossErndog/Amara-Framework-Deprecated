@@ -171,7 +171,7 @@ namespace Amara {
 
 			void resume() {
 				for (AudioBase* audio: sounds) {
-					if (audio->isPlaying) audio->resume();
+					if (audio->isPlaying && audio->isPaused) audio->resume();
 				}
 				for (AudioGroup* group: groups) {
 					group->resume();
@@ -195,6 +195,13 @@ namespace Amara {
                         currentlyPlaying = nullptr;
                     }
                 }
+            }
+
+            bool isCurrentlyPlaying(std::string gKey) {
+                if (currentlyPlaying != nullptr && currentlyPlaying->isPlaying && currentlyPlaying->key.compare(gKey) == 0) {
+                    return true;
+                }
+                return false;
             }
 
 			void configure(nlohmann::json config) {

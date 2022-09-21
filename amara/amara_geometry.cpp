@@ -174,13 +174,13 @@ namespace Amara {
     }
 
     bool overlapping(IntRect* rect1, IntRect* rect2) {
-        bool overlapX = abs((rect1->x + rect1->width/2.0) - (rect2->x + rect2->width/2.0)) < (rect1->width/2.0 + rect2->width/2.0);
-        bool overlapY = abs((rect1->y + rect1->height/2.0) - (rect2->y + rect2->height/2.0)) < (rect1->height/2.0 + rect2->height/2.0);
+        bool overlapX = abs((rect1->x + rect1->width/2.0) - (rect2->x + rect2->width/2.0)) <= (rect1->width/2.0 + rect2->width/2.0);
+        bool overlapY = abs((rect1->y + rect1->height/2.0) - (rect2->y + rect2->height/2.0)) <= (rect1->height/2.0 + rect2->height/2.0);
         return overlapX && overlapY;
     }
     bool overlapping(FloatRect* rect1, FloatRect* rect2) {
-        bool overlapX = abs((rect1->x + rect1->width/2.0) - (rect2->x + rect2->width/2.0)) < (rect1->width/2.0 + rect2->width/2.0);
-        bool overlapY = abs((rect1->y + rect1->height/2.0) - (rect2->y + rect2->height/2.0)) < (rect1->height/2.0 + rect2->height/2.0);
+        bool overlapX = abs((rect1->x + rect1->width/2.0) - (rect2->x + rect2->width/2.0)) <= (rect1->width/2.0 + rect2->width/2.0);
+        bool overlapY = abs((rect1->y + rect1->height/2.0) - (rect2->y + rect2->height/2.0)) <= (rect1->height/2.0 + rect2->height/2.0);
         return overlapX && overlapY;
     }
     bool overlapping(FloatRect* rect, FloatCircle* circle) {
@@ -191,7 +191,7 @@ namespace Amara {
         if (cx > rect->x + rect->width) cx = rect->x + rect->width;
         if (cy < rect->y) cy = rect->y;
         if (cy > rect->y + rect->height) cy = rect->y + rect->height;
-        if (Amara::distanceBetween(cx, cy, circle->x, circle->y) < circle->radius) {
+        if (Amara::distanceBetween(cx, cy, circle->x, circle->y) <= circle->radius) {
             return true;
         }
         return false;

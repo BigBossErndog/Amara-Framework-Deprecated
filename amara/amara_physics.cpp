@@ -1,6 +1,4 @@
-#pragma once 
-
-
+#pragma once
 
 namespace Amara {
     class PhysicsBody: public Amara::PhysicsBase {

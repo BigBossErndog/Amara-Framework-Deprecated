@@ -22,6 +22,7 @@ namespace Amara {
             float fadeSpeed = 0;
             float fadeEnd = 0;
 			bool fadeStopOnEnd = false;
+            bool fadePauseOnEnd = false;
 
             bool isPlaying = false;
             bool isPaused = false;
@@ -65,6 +66,10 @@ namespace Amara {
                 fadeDirection = NOFADE;
 				fadeStopOnEnd = false;
             }
+            void pauseOnEnd() {
+                fadeStopOnEnd = false;
+                fadePauseOnEnd = true;
+            }
 
             virtual void play() {}
 			virtual void play(int loops) {}
@@ -95,6 +100,11 @@ namespace Amara {
 								masterVolume = 1;
 								stop();
 							}
+                            else if (fadePauseOnEnd) {
+                                fadePauseOnEnd = false;
+								masterVolume = 1;
+                                pause();
+                            }
                         }
                         break;
                 }

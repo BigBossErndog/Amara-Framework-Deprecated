@@ -78,7 +78,7 @@ namespace Amara {
 
                 std::vector<Script*> chained;
                 chained.clear();
-
+                
                 Amara::Script* script;
                 for (auto it = scripts.begin(); it != scripts.end(); ++it) {
                     script = *it;

@@ -283,6 +283,14 @@ namespace Amara {
                 return nullptr;
             }
 
+            void destroyLayer(std::string layerKey) {
+                TilemapLayer* layer = getLayer(layerKey);
+                if (layer) {
+                    layers.erase(layerKey);
+                    layer->destroy();
+                }
+            }
+
             std::vector<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
                 Amara::TilemapLayer* layer;
                 for (std::string layerKey: wallKeys) {

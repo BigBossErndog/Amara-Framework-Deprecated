@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace Amara {
 	class TilemapLayer;
 	

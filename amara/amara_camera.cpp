@@ -33,6 +33,9 @@ namespace Amara {
             float centerX = 0;
             float centerY = 0;
 
+            float scrollOffsetX = 0;
+            float scrollOffsetY = 0;
+
             float offsetX = 0;
             float offsetY = 0;
 
@@ -217,10 +220,12 @@ namespace Amara {
             void assignAttributes() {
                 resetPassOnProperties();
                 properties->currentCamera = this;
-                properties->scrollX = scrollX + offsetX;
-                properties->scrollY = scrollY + offsetY;
+                properties->scrollX = scrollX + scrollOffsetX;
+                properties->scrollY = scrollY + scrollOffsetY;
                 properties->zoomX = zoomX * zoomScale;
                 properties->zoomY = zoomY * zoomScale;
+                properties->offsetX = offsetX;
+                properties->offsetY = offsetY;
             }
 
             void startFollow(Amara::Entity* entity, float lx, float ly) {

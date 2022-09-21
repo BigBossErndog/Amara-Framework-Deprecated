@@ -9,27 +9,24 @@ namespace Amara {
         public:
             Amara::GameProperties* properties = nullptr;
             Mix_Music* music = nullptr;
+
             int channel = -1;
+			int loops = -1;
 
             Music(std::string givenKey, AssetType givenType, Mix_Music* givenAsset, Amara::GameProperties* gameProperties): Amara::AudioBase(givenKey, givenType, givenAsset) {
                 properties = gameProperties;
 				music = givenAsset;
             }
 
-			void play(int loops) {
+			void play(int gLoops) {
+				loops = gLoops;
 				if (Mix_PlayingMusic()) {
-					if (properties->music == this) {
-						if (Mix_PausedMusic()) {
-							Mix_ResumeMusic();
-						}
-					}
-					else {
-						if (properties->music != nullptr) {
-							properties->music->stop();
-						}
+					if (properties->music != nullptr && !properties->music->isPaused) {
+						properties->music->stop();
 					}
 				}
 				Mix_PlayMusic(music, loops);
+				if (Mix_PausedMusic()) Mix_ResumeMusic();
 				properties->music = this;
 				isPaused = false;
 				isPlaying = true;
@@ -55,13 +52,16 @@ namespace Amara {
 			}
 
 			void resume() {
-				if (Mix_PlayingMusic() && Mix_PausedMusic()) {
-					if (properties->music == this) {
-						Mix_ResumeMusic();
-						isPaused = false;
-						isPlaying = true;
-					}
+				if (properties->music == this) {
+					Mix_ResumeMusic();
 				}
+				else {
+					Mix_PlayMusic(music, loops);
+					Mix_ResumeMusic();
+					properties->music = this;
+				}
+				isPaused = false;
+				isPlaying = true;
 			}
 
 			bool finished() {

@@ -230,8 +230,8 @@ namespace Amara {
 			float shakeX = rng.random()*nx - nx/2.0;
 			float shakeY = rng.random()*ny - ny/2.0;
 
-			cam->offsetX = shakeX;
-			cam->offsetY = shakeY;
+			cam->scrollOffsetX = shakeX;
+			cam->scrollOffsetY = shakeY;
 		}
 
 		void finish() {
