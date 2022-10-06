@@ -154,10 +154,11 @@ namespace Amara {
     #include "amara_tilemap.cpp"
 
     #include "amara_pathFinding.cpp"
-
+    
     #include "amara_image.cpp"
     #include "amara_animationManager.cpp"
     #include "amara_sprite.cpp"
+    #include "amara_repeatedSprite.cpp"
 
     #include "amara_particles.cpp"
     #include "amara_lighting.cpp"

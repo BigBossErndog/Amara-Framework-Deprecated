@@ -25,6 +25,7 @@ namespace Amara {
 			std::vector<PhysicsBase*> collisionTargets;
 
 			bool isActive = false;
+			bool isPaused = false;
 			bool isDestroyed = false;
 			bool isWall = true;
 			bool isColliding = true;
@@ -184,6 +185,13 @@ namespace Amara {
 			}
 			void removeBounds() {
 				lockedToBounds = false;
+			}
+
+			void pause(bool gPause) {
+				isPaused = gPause;
+			}
+			void pause() {
+				pause(true);
 			}
 	};
 }

@@ -106,6 +106,11 @@ namespace Amara {
             bumpDirections = 0;
             isPushing = false;
 
+            if (isPaused) {
+                updateProperties();
+                return;
+            }
+
             velocityX += accelerationX;
             velocityY += accelerationY;
             float recX = (parent) ? parent->x : x;

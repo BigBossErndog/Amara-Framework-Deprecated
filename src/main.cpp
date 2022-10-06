@@ -11,37 +11,42 @@ class TestScene: public Scene {
 		Image* box1;
 		Image* box2;
 
+		RepeatedSprite* rep;
+
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
+			load->spritesheet("vineChain", "assets/vineChain.png", 32, 32);
         }
 
         void create() {
 			game->setBackgroundColor(0, 0, 0);
             add(new FillRect(0, 0, mainCamera->width, mainCamera->height, {255, 255, 255, 255}));
 
-			add(cont = new TextureContainer(20, 20, 100, 100));
-			cont->add(new FillRect(0, 0, cont->width, cont->height, {255, 200, 200, 255}));
+			add(rep = new RepeatedSprite(0, 20, mainCamera->width, 30, "box"));
+			rep->frame = 1;
+			// add(cont = new TextureContainer(20, 20, 100, 100));
+			// cont->add(new FillRect(0, 0, cont->width, cont->height, {255, 200, 200, 255}));
 
-			cont->add(box1 = new Image(10, 10, "box"));
-			box1->setInteractable();
-			box1->setDraggable();
-			box1->addPhysics(new PhysicsRectangle(0, 0, box1->width, box1->height));
+			// cont->add(box1 = new Image(10, 10, "box"));
+			// box1->setInteractable();
+			// box1->setDraggable();
+			// box1->addPhysics(new PhysicsRectangle(0, 0, box1->width, box1->height));
 
-			cont->add(box2 = new Image(64, 64, "box"));
-			box2->setInteractable();
-			box2->setDraggable();
-			box2->addPhysics(new PhysicsRectangle(0, 0, box2->width, box2->height));
+			// cont->add(box2 = new Image(64, 64, "box"));
+			// box2->setInteractable();
+			// box2->setDraggable();
+			// box2->addPhysics(new PhysicsRectangle(0, 0, box2->width, box2->height));
 
-			box1->physics->setFriction(0.8);
-			box2->physics->setFriction(0.8);
+			// box1->physics->setFriction(0.8);
+			// box2->physics->setFriction(0.8);
 
-			box1->physics->makePushable(1);
-			box2->physics->makePushable(1);
+			// box1->physics->makePushable(1);
+			// box2->physics->makePushable(1);
 
-			box1->physics->addCollisionTarget(box2);
-			box2->physics->addCollisionTarget(box1);
+			// box1->physics->addCollisionTarget(box2);
+			// box2->physics->addCollisionTarget(box1);
 
-			cont->setScale(4);
+			// cont->setScale(4);
 		}
 
         void update() {
@@ -49,6 +54,7 @@ class TestScene: public Scene {
 			// else box1->physics->setFriction(0.2);
 			// if (box2->interact.isDown) box2->physics->setFriction(0);
 			// else box2->physics->setFriction(0.2);
+			rep->patternOffsetX += 2;
         }
 };
 
@@ -59,7 +65,7 @@ int main(int argc, char** args) {
         WebGame* game = new WebGame("Amara Game");
     #endif
     game->init(480, 360);
-    game->setWindowSize(960, 540);
+    game->setWindowSize(960, 720);
     // game->setBackgroundColor(255, 255, 255);
 
     game->scenes->add("test", new TestScene());
