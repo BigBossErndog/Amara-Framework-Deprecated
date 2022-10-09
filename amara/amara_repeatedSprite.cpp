@@ -16,6 +16,7 @@ namespace Amara {
         SDL_FRect destRectF;
         SDL_Texture* canvas = nullptr;
 
+        using Amara::Sprite::Sprite;
         RepeatedSprite(float gx, float gy, float gw, float gh, std::string tx): Amara::Sprite(gx, gy, tx) {
             width = gw;
             height = gh;
@@ -50,6 +51,8 @@ namespace Amara {
         }
 
         void createNewCanvasTexture() {
+            recWidth = width;
+            recHeight = height;
             if (canvas != nullptr) {
                 SDL_DestroyTexture(canvas);
             }
@@ -63,9 +66,12 @@ namespace Amara {
         }
 
         void drawTexture(int vx, int vy, int vw, int vh) {
+            if (!isVisible) return;
+            if (alpha <= 0) {
+                alpha = 0;
+                return;
+            } 
             if (recWidth != width || recHeight != height) {
-                recWidth = width;
-                recHeight = height;
                 createNewCanvasTexture();
             }
             else if (properties->renderTargetsReset || properties->renderDeviceReset) {
@@ -199,6 +205,10 @@ namespace Amara {
             }
 
             Amara::Entity::draw(vx, vy, vw, vh);
+        }
+
+        ~RepeatedSprite() {
+            if (canvas) SDL_DestroyTexture(canvas);
         }
     };
 };

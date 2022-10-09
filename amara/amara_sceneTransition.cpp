@@ -33,6 +33,11 @@ namespace Amara {
                             endScene->scenes->start();
                         }
                     }
+
+                    for (std::string key: stopList) {
+                        endScene->scenes->stop(key);
+                    }
+
                     return true;
                 }
                 return false;

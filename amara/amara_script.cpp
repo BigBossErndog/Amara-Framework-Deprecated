@@ -15,6 +15,7 @@ namespace Amara {
             Amara::Game* game = nullptr;
             Amara::Scene* scene = nullptr;
             Amara::Actor* parent = nullptr;
+            Amara::Entity* parentEntity = nullptr;
             Amara::InputManager* input = nullptr;
             Amara::ControlScheme* controls = nullptr;
             Amara::AudioGroup* audio = nullptr;
@@ -53,7 +54,8 @@ namespace Amara {
                 Amara::StateManager::properties = gameProperties;
                 properties = gameProperties;
                 game = properties->game;
-                scene = properties->currentScene;
+                if (parentEntity) scene = parentEntity->scene;
+                else scene = properties->currentScene;
                 input = properties->input;
                 controls = properties->controls;
                 audio = properties->audio;
@@ -68,6 +70,7 @@ namespace Amara {
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
                 parent = parentActor;
+                parentEntity = (Amara::Entity*)parent;
                 initiated = true;
                 init(gameProperties);
             }

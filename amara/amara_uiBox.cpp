@@ -306,8 +306,6 @@ namespace Amara {
                 if (height < minHeight) height = minHeight;
 
                 if (recWidth != width || recHeight != height) {
-                    recWidth = width;
-                    recHeight = height;
                     if (openWidth > width) openWidth = width;
                     if (openHeight > height) openHeight = height;
                     createNewCanvasTexture();
@@ -415,6 +413,8 @@ namespace Amara {
             }
 
             void createNewCanvasTexture() {
+                recWidth = width;
+                recHeight = height;
                 if (canvas != nullptr) {
                     SDL_DestroyTexture(canvas);
                 }
@@ -701,7 +701,7 @@ namespace Amara {
             }
 
             ~UIBox() {
-                SDL_DestroyTexture(canvas);
+                if (canvas) SDL_DestroyTexture(canvas);
             }
     };
 

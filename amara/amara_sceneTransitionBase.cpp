@@ -25,6 +25,8 @@ namespace Amara {
 
             bool fromWake = false;
 
+            std::vector<std::string> stopList;
+
             SceneTransitionBase() {}
 
             SceneTransitionBase(std::string gNextScene) {
@@ -88,6 +90,13 @@ namespace Amara {
             virtual void complete() {
                 Amara::Actor::properties->taskManager->queueDeletion(this);
 				destroyEntities();
+            }
+
+            void stop(std::string key) {
+                stopList.push_back(key);
+            }
+            void stop(std::vector<std::string> list) {
+                stopList.insert(stopList.end(), list.begin(), list.end());
             }
 
             virtual ~SceneTransitionBase() {}

@@ -44,6 +44,7 @@ namespace Amara {
                 game = properties->game;
 
                 scene = givenScene;
+                scene->key = key;
 
                 sceneMap = givenSceneMap;
                 sceneList = givenSceneList;
@@ -232,7 +233,7 @@ namespace Amara {
                             if (isActive && !isPaused) {
                                 isPaused = true;
                                 isSleeping = false;
-                                scene->onStart();
+                                scene->onPause();
                             }
                             break;
                         case SCENETASK_RESUME:
