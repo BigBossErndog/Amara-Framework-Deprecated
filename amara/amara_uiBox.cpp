@@ -302,8 +302,8 @@ namespace Amara {
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 if (!isVisible) return;
-                if (width < minWidth) width = minWidth;
-                if (height < minHeight) height = minHeight;
+                if (openWidth < minWidth) openWidth = minWidth;
+                if (openHeight < minHeight) openHeight = minHeight;
 
                 if (recWidth != width || recHeight != height) {
                     if (openWidth > width) openWidth = width;
@@ -483,6 +483,15 @@ namespace Amara {
             }
             void changeOpenSize(int gx, int gy) {
                 setOpenSize(openWidth + gx, openHeight + gy);
+            }
+
+            void forceOpenSize(int nw, int nh) {
+                openWidth = nw;
+                openHeight = nh;
+                if (width < openWidth) width = openWidth;
+                if (height < openHeight) height = openHeight;
+                if (openWidth < minWidth) minWidth = (openWidth < 0) ? 0 : openWidth;
+                if (openHeight < minHeight) minHeight = (openHeight < 0) ? 0 : openHeight;
             }
 
 			void snapClosed(bool hor, bool ver) {
@@ -789,6 +798,9 @@ namespace Amara {
 
 			if (targetWidth == -1) targetWidth = (box->openWidth > box->minWidth) ? box->minWidth : box->width;
 			if (targetHeight == -1) targetHeight = (box->openHeight > box->minHeight) ? box->minHeight : box->height;
+
+            if (targetWidth < box->minWidth) targetWidth = box->minWidth;
+            if (targetHeight < box->minHeight) targetHeight = box->minHeight;
 		}
 
 		void script() {

@@ -96,6 +96,7 @@ namespace Amara {
 				entityType = "entity";
 
 				init();
+				preload();
 				if (!isDestroyed) create();
 			}
 
@@ -636,6 +637,7 @@ namespace Amara {
 			}
 			virtual void receiveMessages() {}
 
+			virtual void preload() {}
 			virtual void create() {}
 			virtual void update() {}
 

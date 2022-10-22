@@ -17,6 +17,7 @@ namespace Amara {
 			Amara::Key touchHover;
 
 			bool isHovered = false;
+			bool justHovered = false;
 
 			float pointX = 0;
 			float pointY = 0;
@@ -52,6 +53,7 @@ namespace Amara {
 				}
 				tapped = mouseLeft.tapped || touch.tapped;
 				isHovered = mouseHover.isDown || touchHover.isDown;
+				justHovered = mouseHover.justDown || touchHover.justDown;
 
 				if (isDown) {
 					if (finger) {

@@ -387,6 +387,59 @@ namespace Amara {
                 parent->alpha = targetAlpha;
             }
     };
+
+    class Tween_Jump: public Tween {
+    public:
+        float targetX;
+        float targetY;
+        float maxZ;
+
+        float startX;
+        float startY;
+        float startZ;
+        
+        Tween_Jump(float gx, float gy, float gz, float gt) {
+            targetX = gx;
+            targetY = gy;
+            maxZ = gz;
+            time = gt;
+        }
+
+        void prepare(Actor* actor) {
+            startX = actor->x;
+            startY = actor->y;
+            startZ = actor->z;
+        }
+
+        void script(Actor* actor) {
+            Tween::progressFurther();
+            actor->x = linearEase(startX, targetX, progress);
+            actor->y = linearEase(startY, targetY, progress);
+            actor->z = sineHardInOutEase(startZ, maxZ, progress);
+        }
+    };
+
+    class Script_SetVisible: public Script {
+    public:
+        bool toSet = true;
+        bool justToggle = false;
+
+        Script_SetVisible() {
+            justToggle = true;
+        }
+        Script_SetVisible(bool v) {
+            toSet = v;
+        }
+
+        void prepare() {
+            if (justToggle) toSet = !parent->isVisible;
+        }
+
+        void script() {
+            parent->setVisible(toSet);
+            finish();
+        }
+    };
 }
 
 #endif

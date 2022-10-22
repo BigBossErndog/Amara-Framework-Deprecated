@@ -5,6 +5,8 @@ namespace Amara {
     public:
         float patternOffsetX = 0;
         float patternOffsetY = 0;
+        float patternMovementX = 0;
+        float patternMovementY = 0;
 
         int width = 0;
         int height = 0;
@@ -65,31 +67,18 @@ namespace Amara {
             );
         }
 
-        void drawTexture(int vx, int vy, int vw, int vh) {
-            if (!isVisible) return;
-            if (alpha <= 0) {
-                alpha = 0;
-                return;
-            } 
-            if (recWidth != width || recHeight != height) {
-                createNewCanvasTexture();
-            }
-            else if (properties->renderTargetsReset || properties->renderDeviceReset) {
-                createNewCanvasTexture();
-            }
+        void run() {
+            Amara::Sprite::run();
+            patternOffsetX += patternMovementX;
+            patternOffsetY += patternMovementY;
+        }
 
+        virtual void drawPattern() {
             int ix = (int)floor(patternOffsetX)%Amara::Sprite::width - Amara::Sprite::width;
             int iy = (int)floor(patternOffsetY)%Amara::Sprite::height - Amara::Sprite::height;
             int pw = floor(width/Amara::Sprite::width)+2;
             int ph = floor(height/Amara::Sprite::height)+2;
 
-            SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-            SDL_SetRenderTarget(properties->gRenderer, canvas);
-            SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
-            SDL_SetTextureAlphaMod(canvas, 255);
-            SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-            SDL_RenderClear(gRenderer);
-            SDL_RenderSetViewport(properties->gRenderer, NULL);
             if (texture != nullptr) {
                 SDL_Texture* tx = (SDL_Texture*)texture->asset;
                 switch (texture->type) {
@@ -126,6 +115,31 @@ namespace Amara {
                     }
                 }
             }
+        }
+
+        void drawTexture(int vx, int vy, int vw, int vh) {
+            if (!isVisible) return;
+            if (alpha <= 0) {
+                alpha = 0;
+                return;
+            } 
+            if (recWidth != width || recHeight != height) {
+                createNewCanvasTexture();
+            }
+            else if (properties->renderTargetsReset || properties->renderDeviceReset) {
+                createNewCanvasTexture();
+            }
+
+            SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+            SDL_SetRenderTarget(properties->gRenderer, canvas);
+            SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
+            SDL_SetTextureAlphaMod(canvas, 255);
+            SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+            SDL_RenderClear(gRenderer);
+            SDL_RenderSetViewport(properties->gRenderer, NULL);
+            
+            drawPattern();
+
             SDL_SetRenderTarget(properties->gRenderer, recTarget);
         
             bool skipDrawing = false;

@@ -102,6 +102,8 @@ namespace Amara {
                 return (scripts.size() > 0);
             }
 
+            bool isActing() { return stillActing(); }
+
 			bool notActing() {
 				return (scripts.size() == 0);
 			}

@@ -10,6 +10,8 @@ namespace Amara {
             std::random_device rd;
             std::default_random_engine e;
 
+            RNG() {}
+
             RNG* randomize() {
                 e.seed(time(0));
 				return this;
@@ -40,6 +42,10 @@ namespace Amara {
                 return between(0, 1);
             }
 
+            int intBetween(int min, int max) {
+                return floor(between(min, max+1));
+            }
+
             std::string randomString(char min, char max, int length) {
                 std::string toReturn = "";
                 char c;
@@ -66,6 +72,18 @@ namespace Amara {
                     std::shuffle(std::begin(list), std::end(list), e);
                 }
                 return list;
+            }
+
+            bool roll(double check) {
+                return random() < check;
+            }
+            bool determine(std::string s, double check) {
+                seed(s);
+                return roll(check);
+            }
+            std::string determineString(std::string s, int num) {
+                seed(s);
+                return randomString(num);
             }
     };
 }
