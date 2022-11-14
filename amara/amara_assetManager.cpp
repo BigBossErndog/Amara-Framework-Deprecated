@@ -270,6 +270,12 @@ namespace Amara {
                     std::cout << "JSON animations not found: \"" << key << "\"" << std::endl;
                 }
             }
+
+            void configureAnimations(std::vector<std::string> keys) {
+                for (std::string key: keys) {
+                    configureAnimations(key);
+                }
+            }
     };
 }
 

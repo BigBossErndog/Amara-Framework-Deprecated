@@ -7,6 +7,9 @@
 namespace Amara {
     class Tween;
     class Actor: public Amara::Entity {
+        private:
+            bool inRecital = false;
+            std::vector<Amara::Script*> scriptBuffer;
         public:
             std::vector<Amara::Script*> scripts;
             bool actingPaused = false;
@@ -47,7 +50,12 @@ namespace Amara {
 					destroyScript(script);
 					return script;
 				}
-                scripts.push_back(script);
+                if (!inRecital) {
+                    scripts.push_back(script);
+                }
+                else {
+                    scriptBuffer.push_back(script);
+                }
                 script->init(properties, this);
                 script->prepare();
                 script->prepare(this);
@@ -59,11 +67,23 @@ namespace Amara {
                     Amara::Script* lastScript = scripts.back();
                     return lastScript->chain(script);
                 }
+                if (scriptBuffer.size() > 0) {
+                    Amara::Script* lastScript = scriptBuffer.back();
+                    return lastScript->chain(script);
+                }
                 return recite(script);
             }
 
             virtual void reciteScripts() {
+                for (Amara::Script* script: scriptBuffer) {
+                    scripts.push_back(script);
+                }
+                scriptBuffer.clear();
+
                 if (scripts.size() == 0 || actingPaused) return;
+                
+                inRecital = true;
+
                 for (Amara::Script* script: scripts) {
                     if (!script->finished) {
                         script->receiveMessages();
@@ -72,6 +92,7 @@ namespace Amara {
                     }
 					if (isDestroyed) {
 						clearScripts();
+                        inRecital = false;
 						return;
 					}
                 }
@@ -96,6 +117,7 @@ namespace Amara {
                 for (Amara::Script* chain: chained) {
                     recite(chain);
                 }
+                inRecital = false;
             }
 
             bool stillActing() {
@@ -112,16 +134,15 @@ namespace Amara {
                 for (Amara::Script* check: scripts) {
                     if (check == script) return true;
                 }
+                for (Amara::Script* check: scriptBuffer) {
+                    if (check == script) return true;
+                }
                 return false;
             }
 
             void run() {
                 reciteScripts();
                 if (!isDestroyed) Amara::Entity::run();
-            }
-
-            Amara::Entity* add(Amara::Entity* entity) {
-                return Amara::Entity::add(entity);
             }
 
             void clearScripts() {
@@ -131,11 +152,30 @@ namespace Amara {
                     }
                 }
                 scripts.clear();
+                for (Amara::Script* script: scriptBuffer) {
+                    if (script->deleteOnFinish) {
+                        delete script;
+                    }
+                }
+                scriptBuffer.clear();
             }
 
 			void clearScript(std::string gid) {
 				Amara::Script* script;
                 for (auto it = scripts.begin(); it != scripts.end(); ++it) {
+                    script = *it;
+                    if (script->id.compare(gid) == 0) {
+                        if (script->chainedScript != nullptr) {
+                            recite(script->chainedScript);
+                        }
+                        scripts.erase(it--);
+                        if (script->deleteOnFinish) {
+                            delete script;
+                        }
+						return;
+                    }
+                }
+                for (auto it = scriptBuffer.begin(); it != scriptBuffer.end(); ++it) {
                     script = *it;
                     if (script->id.compare(gid) == 0) {
                         if (script->chainedScript != nullptr) {
@@ -168,6 +208,14 @@ namespace Amara {
                     }
                 }
                 scripts.clear();
+                for (Amara::Script* script: scriptBuffer) {
+					script->cancel();
+					script->cancel(this);
+                    if (script->deleteOnFinish) {
+                        delete script;
+                    }
+                }
+                scriptBuffer.clear();
 			}
 
             void pauseActing() {
