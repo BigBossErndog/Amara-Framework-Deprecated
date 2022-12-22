@@ -632,6 +632,9 @@ namespace Amara {
 				pushedMessages = true;
 				return properties->messages->broadcast(this, key, gData);
 			}
+			Message& broadcastMessage(std::string key) {
+				return broadcastMessage(key, nullptr);
+			}
 			Message& getMessage(std::string key) {
 				return properties->messages->get(key);
 			}

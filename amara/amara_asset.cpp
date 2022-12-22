@@ -317,6 +317,12 @@ namespace Amara {
                             items.push_back(stringItem);
                         }
                     }
+                    else if (stringItem.compare("TRUE") == 0) {
+                        items.push_back(true);
+                    }
+                    else if (stringItem.compare("FALSE") == 0) {
+                        items.push_back(false);
+                    }
                     else {
                         items.push_back(stringItem);
                     }

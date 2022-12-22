@@ -63,23 +63,18 @@ namespace Amara {
             }
 
             virtual Amara::Script* chain(Amara::Script* script) {
-                if (scripts.size() > 0) {
-                    Amara::Script* lastScript = scripts.back();
-                    return lastScript->chain(script);
-                }
                 if (scriptBuffer.size() > 0) {
                     Amara::Script* lastScript = scriptBuffer.back();
+                    return lastScript->chain(script);
+                }
+                if (scripts.size() > 0) {
+                    Amara::Script* lastScript = scripts.back();
                     return lastScript->chain(script);
                 }
                 return recite(script);
             }
 
             virtual void reciteScripts() {
-                for (Amara::Script* script: scriptBuffer) {
-                    scripts.push_back(script);
-                }
-                scriptBuffer.clear();
-
                 if (scripts.size() == 0 || actingPaused) return;
                 
                 inRecital = true;
@@ -118,16 +113,24 @@ namespace Amara {
                     recite(chain);
                 }
                 inRecital = false;
+                pipeScriptBuffer();
+            }
+
+            void pipeScriptBuffer() {
+                for (Amara::Script* script: scriptBuffer) {
+                    scripts.push_back(script);
+                }
+                scriptBuffer.clear();
             }
 
             bool stillActing() {
-                return (scripts.size() > 0);
+                return (scripts.size() > 0 || scriptBuffer.size() > 0);
             }
 
             bool isActing() { return stillActing(); }
 
 			bool notActing() {
-				return (scripts.size() == 0);
+				return !stillActing();
 			}
 
             bool isReciting(Amara::Script* script) {

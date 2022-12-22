@@ -101,6 +101,9 @@ namespace Amara {
 				Message& msg = ((Entity*)parent)->broadcastMessage(key, gData);
                 return msg;
 			}
+            Message& broadcastMessage(std::string key) {
+                return broadcastMessage(key, nullptr);
+            }
 			Message& getMessage(std::string key) {
 				return properties->messages->get(key);
 			}
