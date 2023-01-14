@@ -57,15 +57,20 @@ namespace Amara {
 
         bool willCollide() {
             Amara::PhysicsBase* body;
-            for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+            for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
                 body = *it;
                 if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
-                    collisionTargets.erase(it--);
+                    it = collisionTargets.erase(it);
+                    continue;
                 }
-				else if (!body->isActive) continue;
+				else if (!body->isActive) {
+                    ++it;
+                    continue;
+                }
                 else if (willCollideWith(body)) {
                     return true;
                 }
+                ++it;
             }
             return false;
         }
@@ -75,13 +80,14 @@ namespace Amara {
 			if (!isColliding) return false;
             bool col = false;
             Amara::PhysicsBase* body;
-            for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+            for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
                 body = *it;
                 if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
-                    collisionTargets.erase(it--);
+                    it = collisionTargets.erase(it);
+                    continue;
                 }
-				else if (!body->isActive) continue;
-				else if (!body->isWall) continue;
+				else if (!body->isActive) { ++it; continue; }
+				else if (!body->isWall) { ++it; continue; }
                 else if (collidesWith(body)) {
                     bumped = body;
                     if (body->isPushable) {
@@ -91,10 +97,12 @@ namespace Amara {
                     if (pushingX || pushingY) {
                         if (body->isPushable) isPushing = true;
                         col = true;
+                        ++it;
                         continue;
                     }
                     return true;
                 }
+                ++it;
             }
             return col;
         }
@@ -471,7 +479,7 @@ namespace Amara {
 
     class PhysicsCollisionGroup: public PhysicsBody {
     public:
-        std::vector<Amara::PhysicsBase*>members;
+        std::list<Amara::PhysicsBase*>members;
 
         PhysicsCollisionGroup() {
             members.clear();
@@ -490,11 +498,14 @@ namespace Amara {
             return remove(gEntity->physics);
         }
         Amara::PhysicsBase* remove(Amara::PhysicsBase* gBody) {
-            for (int i = 0; i < members.size(); i++) {
-                if (members[i] == gBody) {
-                    members.erase(members.begin() + i);
+            PhysicsBase* member;
+            for (auto it = members.begin(); it != members.end();) {
+                member = *it;
+                if (member == gBody) {
+                    it = members.erase(it);
                     return gBody;
                 }
+                ++it;
             }
             return nullptr;
         }
@@ -503,13 +514,14 @@ namespace Amara {
         }
 
         bool collidesWith(Amara::PhysicsBase* other) {
-            for (auto it = members.begin(); it != members.end(); ++it) {
+            for (auto it = members.begin(); it != members.end();) {
                 Amara::PhysicsBase* body = *it;
                 if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
-                    members.erase(it--);
+                    it = members.erase(it);
+                    continue;
                 }
-                if (body == other) continue;
-                if (!body->isActive) continue;
+                if (body == other) { ++it; continue; }
+                if (!body->isActive) { ++it; continue; }
                 if (body->collidesWith(other)) {
                     return true;
                 }

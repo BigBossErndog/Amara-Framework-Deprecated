@@ -16,8 +16,8 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::InputManager* input = nullptr;
 
-            std::vector<Amara::Event*> eventList;
-			std::vector<Amara::Event*> delayedEvents;
+            std::list<Amara::Event*> eventList;
+			std::list<Amara::Event*> delayedEvents;
 
             EventManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;

@@ -16,7 +16,7 @@ namespace Amara {
 
     class MessageQueue {
     public:
-        std::vector<Message> queue;
+        std::list<Message> queue;
 
         static Message nullMessage;
 
@@ -25,22 +25,23 @@ namespace Amara {
         }
         
         void update() {
-            for (auto it = queue.begin(); it != queue.end(); ++it) {
+            for (auto it = queue.begin(); it != queue.end();) {
                 Message msg = *it;
                 if (msg.parent == nullptr || !msg.isActive) {
                     if (msg.skip) msg.skip = false;
                     else {
-                        queue.erase(it--);
+                        it = queue.erase(it);
                         continue;
                     }
                 }
+                ++it;
             }
         }
 
-        std::vector<Message>::iterator begin() {
+        std::list<Message>::iterator begin() {
             return queue.begin();
         }
-        std::vector<Message>::iterator end() {
+        std::list<Message>::iterator end() {
             return queue.end();
         }
 

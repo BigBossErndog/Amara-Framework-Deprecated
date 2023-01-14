@@ -308,6 +308,12 @@ namespace Amara {
                 }
                 else if (!inString && c == ',') {
                     if (stringItem.size() > 0) {
+                        if (stringItem.compare("TRUE") == 0) {
+                            items.push_back(true);
+                        }
+                        else if (stringItem.compare("FALSE") == 0) {
+                            items.push_back(false);
+                        }
                         if (nlohmann::json::accept(stringItem)) {
                             nlohmann::json obj = nlohmann::json::parse(stringItem);
                             if (obj.is_string()) items.push_back(stringItem);
@@ -316,12 +322,6 @@ namespace Amara {
                         else {
                             items.push_back(stringItem);
                         }
-                    }
-                    else if (stringItem.compare("TRUE") == 0) {
-                        items.push_back(true);
-                    }
-                    else if (stringItem.compare("FALSE") == 0) {
-                        items.push_back(false);
                     }
                     else {
                         items.push_back(stringItem);

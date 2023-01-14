@@ -143,11 +143,13 @@ namespace Amara {
 
 			Amara::PhysicsBase* removeCollisionTarget(Amara::PhysicsBase* gBody) {
 				Amara::PhysicsBase* other;
-				for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+				for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
 					other = *it;
 					if (other == gBody) {
-						collisionTargets.erase(it--);
+						it = collisionTargets.erase(it);
+						continue;
 					}
+					++it;
 				}
 				return gBody;
 			}
@@ -155,11 +157,13 @@ namespace Amara {
 
 			void checkActiveCollisionTargets() {
 				Amara::PhysicsBase* other;
-				for (auto it = collisionTargets.begin(); it != collisionTargets.end(); ++it) {
+				for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
 					other = *it;
 					if (other->isDestroyed) {
-						collisionTargets.erase(it--);
+						it = collisionTargets.erase(it);
+						continue;
 					}
+					++it;
 				}
 			}
 

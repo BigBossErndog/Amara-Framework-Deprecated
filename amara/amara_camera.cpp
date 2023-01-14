@@ -9,7 +9,7 @@ namespace Amara {
 
     class Camera : public Amara::Actor {
         public:
-            std::vector<Amara::Camera*>* sceneCameras = nullptr;
+            std::list<Amara::Camera*>* sceneCameras = nullptr;
             Amara::SceneTransitionBase* transition = nullptr;
 
             bool definedDimensions = false;
@@ -199,17 +199,22 @@ namespace Amara {
 
                 checkHover(dx, dy, dw, dh, 0, 0, dw, dh);
 
-                std::vector<Amara::Entity*>& rSceneEntities = parent->entities;
+                std::list<Amara::Entity*>& rSceneEntities = parent->entities;
                 Amara::Entity* entity;
-                for (std::vector<Amara::Entity*>::iterator it = rSceneEntities.begin(); it != rSceneEntities.end(); it++) {
+                for (auto it = rSceneEntities.begin(); it != rSceneEntities.end();) {
                     entity = *it;
                     if (entity == nullptr || entity->isDestroyed || entity->scene != scene) {
-                        rSceneEntities.erase(it--);
+                        ++it;
                         continue;
                     }
-                    if (!entity->isVisible) continue;
+                    if (!entity->isVisible) {
+                        ++it;
+                        continue;
+                    }
                     assignAttributes();
                     entity->draw(dx, dy, dw, dh);
+                    ++it;
+
                 }
 
                 if (transition != nullptr) {
@@ -321,7 +326,7 @@ namespace Amara {
 
             virtual void bringToFront() {
                 if (sceneCameras == nullptr) return;
-                std::vector<Amara::Camera*>& rSceneCameras = *sceneCameras;
+                std::list<Amara::Camera*>& rSceneCameras = *sceneCameras;
 				for (Amara::Camera* cam: rSceneCameras) {
 					if (depth <= cam->depth) {
 						depth = cam->depth + 1;

@@ -23,7 +23,7 @@ namespace Amara {
             bool offMapIsWall = true;
 
             std::unordered_map<std::string, Amara::TilemapLayer*> layers;
-            std::vector<Amara::TilemapLayer*> walls;
+            std::list<Amara::TilemapLayer*> walls;
             std::unordered_map<int, Amara::Direction> wallTypes;
 
             Tilemap(): Amara::Actor() {}
@@ -291,7 +291,7 @@ namespace Amara {
                 }
             }
 
-            std::vector<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
+            std::list<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
                 Amara::TilemapLayer* layer;
                 for (std::string layerKey: wallKeys) {
                     layer = getLayer(layerKey);
@@ -302,7 +302,7 @@ namespace Amara {
                 return walls;
             }
 
-			std::vector<Amara::TilemapLayer*> setWall(std::string wallKey) {
+			std::list<Amara::TilemapLayer*> setWall(std::string wallKey) {
 				Amara::TilemapLayer* layer = getLayer(wallKey);
 				if (layer) {
 					walls.push_back(layer);
@@ -413,12 +413,13 @@ namespace Amara {
                 tilemap->layers.erase(id);
             }
             Amara::TilemapLayer* layer;
-            for (auto it = tilemap->walls.begin(); it != tilemap->walls.begin(); ++it) {
+            for (auto it = tilemap->walls.begin(); it != tilemap->walls.begin();) {
                 layer = *it;
                 if (layer == this) {
-                    tilemap->walls.erase(it--);
+                    it = tilemap->walls.erase(it);
                     continue;
                 }
+                ++it;
             }
         }
         

@@ -85,7 +85,7 @@ namespace Amara {
             SDL_Rect destRect;
             SDL_Rect viewport;
 
-            std::vector<Amara::Light*> lights;
+            std::list<Amara::Light*> lights;
 
             SDL_BlendMode blendMode = SDL_BLENDMODE_MOD;
 
@@ -156,14 +156,16 @@ namespace Amara {
 
             void run() {
                 Amara::Light* light;
-                for (auto it = lights.begin(); it != lights.end(); it++) {
+                for (auto it = lights.begin(); it != lights.end();) {
                     light = *it;
                     if (!light->isDestroyed) {
                         light->run();
                     }
                     if (light->isDestroyed) {
-                        lights.erase(it--);
+                        it = lights.erase(it);
+                        continue;
                     }
+                    ++it;
                 }
                 
                 Amara::Actor::run();

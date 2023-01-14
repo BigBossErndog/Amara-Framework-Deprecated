@@ -108,7 +108,7 @@ namespace Amara {
 
             checkHover(vx + dx, vy + dy, dw, dh);
             
-            stable_sort(entities.begin(), entities.end(), sortEntities());
+            entities.sort(sortEntities());
 
             float recZoomX = properties->zoomX;
             float recZoomY = properties->zoomY;
@@ -295,14 +295,13 @@ namespace Amara {
             float recAlpha = properties->alpha;
             properties->alpha = 1;
 
-            stable_sort(entities.begin(), entities.end(), sortEntities());
+            entities.sort(sortEntities());
 
             Amara::Entity* entity;
             for (auto it = entities.begin(); it != entities.end(); ++it) {
                 entity = *it;
 
                 if (entity->isDestroyed || entity->parent != this) {
-                    entities.erase(it--);
                     continue;
                 }
                 if (!entity->isVisible) continue;
@@ -578,7 +577,7 @@ namespace Amara {
             float recAlpha = properties->alpha;
             properties->alpha = 1;
 
-            stable_sort(entities.begin(), entities.end(), sortEntities());
+            entities.sort(sortEntities());
 
             Amara::Entity* entity;
             for (auto it = entities.begin(); it != entities.end(); ++it) {

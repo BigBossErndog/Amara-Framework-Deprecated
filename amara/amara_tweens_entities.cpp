@@ -440,6 +440,58 @@ namespace Amara {
             finish();
         }
     };
+
+    class Tween_FillRectWH: public Tween {
+    public:
+        FillRect* rect = nullptr;
+
+        float targetW = 0;
+        float targetH = 0;
+        float startW = 0;
+        float startH = 0;
+
+        Tween_FillRectWH(float tw, float th, float tt, Amara::Easing gEasing) {
+            targetW = tw;
+            targetH = th;
+            time = tt;
+            easing = gEasing;
+        }
+        Tween_FillRectWH(float tw, float th, float tt): Tween_FillRectWH(tw, th, tt, LINEAR) {}
+
+        void prepare() {
+            if (rect == nullptr) rect = (FillRect*)parent;
+            startW = rect->width;
+            startH = rect->height;
+        }
+
+        void script(Amara::Actor* actor) {
+            Amara::Tween::progressFurther();
+            switch (easing) {
+                case LINEAR:
+                    rect->width = linearEase(startW, targetW, progress);
+                    rect->height = linearEase(startH, targetH, progress);
+                    break;
+                case SINE_INOUT:
+                    rect->width = sineInOutEase(startW, targetW, progress);
+                    rect->height = sineInOutEase(startH, targetH, progress);
+                    break;
+                case SINE_IN:
+                    rect->width = sineInEase(startW, targetW, progress);
+                    rect->height = sineInEase(startH, targetH, progress);
+                    break;
+                case SINE_OUT:
+                    rect->width = sineOutEase(startW, targetW, progress);
+                    rect->height = sineOutEase(startH, targetH, progress);
+                    break;
+            }
+        }
+
+        void finish() {
+            Tween::finish();
+            rect->width = targetW;
+            rect->height = targetH;
+        }
+    };
 }
 
 #endif
