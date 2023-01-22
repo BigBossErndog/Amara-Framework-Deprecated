@@ -139,6 +139,16 @@ namespace Amara {
                 frontBar->cropRight = frontBar->imageWidth - floor((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/(float)maxValue)) - frontPaddingLeft;
                 if (frontBar->cropRight < frontPaddingRight) frontBar->cropRight = frontPaddingRight;
             }
+            else if (drainDirection == Right) {
+                frontBar->cropRight = frontPaddingRight;
+                frontBar->cropLeft = frontBar->imageWidth - floor((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/(float)maxValue)) - frontPaddingRight;
+                if (frontBar->cropLeft < frontPaddingLeft) frontBar->cropLeft = frontPaddingLeft;
+            }
+            else if (drainDirection == Up) {
+                frontBar->cropTop = frontPaddingTop;
+                frontBar->cropBottom = frontBar->imageHeight - floor((frontBar->imageHeight - frontPaddingTop - frontPaddingBottom)*(displayValue/(float)maxValue)) - frontPaddingTop;
+                if (frontBar->cropBottom < frontPaddingBottom) frontBar->cropBottom = frontPaddingBottom;
+            }
             else if (drainDirection == Down) {
                 frontBar->cropBottom = frontPaddingBottom;
                 frontBar->cropTop = frontBar->imageHeight - floor((frontBar->imageHeight - frontPaddingTop - frontPaddingBottom)*(displayValue/(float)maxValue)) - frontPaddingBottom;

@@ -151,7 +151,7 @@ namespace Amara {
                 if (!isDestroyed) Amara::Entity::run();
             }
 
-            void clearScripts() {
+            Amara::Actor* clearScripts() {
                 for (Amara::Script* script: scripts) {
                     if (script->deleteOnFinish) {
                         delete script;
@@ -164,9 +164,10 @@ namespace Amara {
                     }
                 }
                 scriptBuffer.clear();
+                return this;
             }
 
-			void clearScript(std::string gid) {
+			Amara::Actor* clearScript(std::string gid) {
 				Amara::Script* script;
                 for (auto it = scripts.begin(); it != scripts.end();) {
                     script = *it;
@@ -178,7 +179,7 @@ namespace Amara {
                         if (script->deleteOnFinish) {
                             delete script;
                         }
-						return;
+						break;
                     }
                     ++it;
                 }
@@ -192,10 +193,11 @@ namespace Amara {
                         if (script->deleteOnFinish) {
                             delete script;
                         }
-						return;
+						break;
                     }
                     ++it;
                 }
+                return this;
 			}
 
 			Amara::Script* getScript(std::string gid) {
@@ -207,7 +209,7 @@ namespace Amara {
 				return nullptr;
 			}
 
-			void cancelScripts() {
+			Amara::Actor* cancelScripts() {
 				for (Amara::Script* script: scripts) {
 					script->cancel();
 					script->cancel(this);
@@ -224,13 +226,17 @@ namespace Amara {
                     }
                 }
                 scriptBuffer.clear();
+
+                return this;
 			}
 
-            void pauseActing() {
+            Amara::Actor* pauseActing() {
                 actingPaused = true;
+                return this;
             }
-            void resumeActing() {
+            Amara::Actor* resumeActing() {
                 actingPaused = false;
+                return this;
             }
 
             void destroy() {

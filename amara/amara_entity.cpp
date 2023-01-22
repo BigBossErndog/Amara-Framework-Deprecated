@@ -369,8 +369,9 @@ namespace Amara {
 
 			virtual void runEntities() {
 				Amara::Entity* entity;
-				for (auto it = entities.begin(); it != entities.end(); ++it) {
+				for (auto it = entities.begin(); it != entities.end();) {
 					entity = *it;
+					++it;
 					if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
 						continue;
 					}
@@ -379,7 +380,10 @@ namespace Amara {
 			}
 
 			virtual Amara::Entity* get(std::string find) {
-				for (Amara::Entity* entity : entities) {
+				Amara::Entity* entity;
+				for (auto it = entities.begin(); it != entities.end();) {
+					entity = *it;
+					++it;
 					if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
 						continue;
 					}
