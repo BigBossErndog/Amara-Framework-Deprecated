@@ -14,22 +14,24 @@ namespace Amara {
 				sound = givenAsset;
             }
 
-			virtual void play(bool loops) {
+			virtual Amara::AudioBase* play(int loops) {
 				channel = Mix_PlayChannel(-1, sound, loops);
 				if (channel == -1) {
 					std::cout << "Error playing sound: \"" << key << "\"" << std::endl;
-					return;
+					return this;
 				}
 				Mix_Volume(channel, floor(volume * masterVolume * 128));
 				isPaused = false;
 				isPlaying = true;
+
+				return this;
 			}
 
-			virtual void play() {
-				play(false);
+			virtual Amara::AudioBase* play() {
+				return play(0);
 			}
 
-			virtual void stop() {
+			virtual Amara::AudioBase* stop() {
 				if (isPlaying && channel != -1) {
 					Mix_HaltChannel(channel);
 					channel = -1;
@@ -40,6 +42,8 @@ namespace Amara {
 						parent->currentlyPlaying = nullptr;
 					}
 				}
+
+				return this;
 			}
 
 			virtual void run(float parentVolume) {

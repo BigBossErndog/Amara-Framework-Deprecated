@@ -18,7 +18,7 @@ namespace Amara {
 
             bool waitingForPermission = false;
             bool permissionGranted = false;
-            bool finished = false;
+            bool isFinished = false;
 
             bool sleepScene = false;
             bool wakeScene = false;
@@ -55,7 +55,7 @@ namespace Amara {
             }
 
             virtual void finish() {
-                finished = true;
+                isFinished = true;
             }
             bool finishEvt() {
                 if (once()) {

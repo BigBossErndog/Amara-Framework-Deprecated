@@ -150,7 +150,7 @@ namespace Amara {
                 return audio;
             }
 
-			void stop() {
+			Amara::AudioBase* stop() {
 				for (AudioBase* audio: sounds) {
 					if (audio->isPlaying) audio->stop();
 				}
@@ -158,24 +158,30 @@ namespace Amara {
 					group->stop();
 				}
 				currentlyPlaying = nullptr;
+
+                return this;
 			}
 
-			void pause() {
+			Amara::AudioBase* pause() {
 				for (AudioBase* audio: sounds) {
 					if (audio->isPlaying) audio->pause();
 				}
 				for (AudioGroup* group: groups) {
 					group->pause();
 				}
+
+                return this;
 			}
 
-			void resume() {
+			Amara::AudioBase* resume() {
 				for (AudioBase* audio: sounds) {
 					if (audio->isPlaying && audio->isPaused) audio->resume();
 				}
 				for (AudioGroup* group: groups) {
 					group->resume();
 				}
+                
+                return this;
 			}
 
             void run(float parentVolume) {

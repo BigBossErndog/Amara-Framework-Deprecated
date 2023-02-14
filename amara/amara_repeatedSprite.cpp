@@ -222,7 +222,10 @@ namespace Amara {
         }
 
         ~RepeatedSprite() {
-            if (canvas) SDL_DestroyTexture(canvas);
+            if (canvas) {
+                SDL_DestroyTexture(canvas);
+                canvas = nullptr;
+            }
         }
     };
 };

@@ -25,6 +25,27 @@ namespace Amara {
         }
     };
 
+    class UnsortedLayer: public Amara::Actor {
+    public:
+        UnsortedLayer(): Amara::Actor() {}
+
+        UnsortedLayer(float gx, float gy): UnsortedLayer() {
+            x = gx;
+            y = gy;
+        }
+
+        using Amara::Actor::init;
+        void init() {
+            shouldSortChildren = false;
+            Amara::Actor::init();
+            entityType = "layer";
+        }
+
+        virtual void draw(int vx, int vy, int vw, int vh) {
+            Amara::Actor::draw(vx, vy, vw, vh);
+        }
+    };
+
     class Container: public Amara::Layer {
     public:
         float width = 0;
@@ -105,10 +126,10 @@ namespace Amara {
 
             if (alpha < 0) alpha = 0;
             if (alpha > 1) alpha = 1;
-
+            
             checkHover(vx + dx, vy + dy, dw, dh);
             
-            entities.sort(sortEntities());
+            if (shouldSortChildren) entities.sort(sortEntities());
 
             float recZoomX = properties->zoomX;
             float recZoomY = properties->zoomY;
@@ -116,7 +137,9 @@ namespace Amara {
             float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
             float recAlpha = properties->alpha * alpha;
 
-            for (Amara::Entity* entity : entities) {
+            Amara::Entity* entity;
+            for (auto it = entities.begin(); it != entities.end();) {
+                entity = *it;
                 properties->scrollX = 0;
                 properties->scrollY = 0;
                 properties->offsetX = ox;
@@ -126,9 +149,14 @@ namespace Amara {
                 properties->zoomFactorX = recZoomFactorX;
                 properties->zoomFactorY = recZoomFactorY;
                 properties->alpha = recAlpha;
-                if (entity->isDestroyed || entity->parent != this) continue;
-                if (!entity->isVisible) continue;
-                entity->draw(vx + dx, vy + dy, dw, dh);
+                if (entity->isDestroyed || entity->parent != this) {
+                    it = entities.erase(it);
+                    continue;
+                }
+                if (entity->isVisible) {
+                    entity->draw(vx + dx, vy + dy, dw, dh);
+                }
+                ++it;
             }
         }
 
@@ -295,28 +323,31 @@ namespace Amara {
             float recAlpha = properties->alpha;
             properties->alpha = 1;
 
-            entities.sort(sortEntities());
+            if (shouldSortChildren) entities.sort(sortEntities());
 
             Amara::Entity* entity;
-            for (auto it = entities.begin(); it != entities.end(); ++it) {
+            for (auto it = entities.begin(); it != entities.end();) {
                 entity = *it;
 
                 if (entity->isDestroyed || entity->parent != this) {
+                    it = entities.erase(it);
                     continue;
                 }
-                if (!entity->isVisible) continue;
+                if (entity->isVisible) {
+                    properties->scrollX = recScrollX;
+                    properties->scrollY = recScrollY;
+                    properties->offsetX = recOffsetX;
+                    properties->offsetY = recOffsetY;
+                    properties->zoomX = recZoomX;
+                    properties->zoomY = recZoomY;
+                    properties->zoomFactorX = recZoomFactorX;
+                    properties->zoomFactorY = recZoomFactorY;
+                    properties->angle = recAngle;
+                    properties->alpha = 1;
+                    entity->draw(vx, vy, vw, vh);
+                }
 
-                properties->scrollX = recScrollX;
-                properties->scrollY = recScrollY;
-                properties->offsetX = recOffsetX;
-                properties->offsetY = recOffsetY;
-                properties->zoomX = recZoomX;
-                properties->zoomY = recZoomY;
-                properties->zoomFactorX = recZoomFactorX;
-                properties->zoomFactorY = recZoomFactorY;
-                properties->angle = recAngle;
-                properties->alpha = 1;
-                entity->draw(vx, vy, vw, vh);
+                ++it;
             }
             properties->alpha = recAlpha;
         }
@@ -324,6 +355,7 @@ namespace Amara {
         ~TextureLayer() {
             if (tx) {
                 SDL_DestroyTexture(tx);
+                tx = nullptr;
             }
         }
     };
@@ -577,29 +609,30 @@ namespace Amara {
             float recAlpha = properties->alpha;
             properties->alpha = 1;
 
-            entities.sort(sortEntities());
+            if (shouldSortChildren) entities.sort(sortEntities());
 
             Amara::Entity* entity;
-            for (auto it = entities.begin(); it != entities.end(); ++it) {
+            for (auto it = entities.begin(); it != entities.end();) {
                 entity = *it;
 
                 if (entity->isDestroyed || entity->parent != this) {
-                    entities.erase(it--);
+                    it = entities.erase(it);
                     continue;
                 }
-                if (!entity->isVisible) continue;
-
-                properties->scrollX = 0;
-                properties->scrollY = 0;
-                properties->offsetX = 0;
-                properties->offsetY = 0;
-                properties->zoomX = 1;
-                properties->zoomY = 1;
-                properties->zoomFactorX = 1;
-                properties->zoomFactorY = 1;
-                properties->angle = 0;
-                properties->alpha = 1;
-                entity->draw(vx, vy, vw, vh);
+                if (entity->isVisible) {
+                    properties->scrollX = 0;
+                    properties->scrollY = 0;
+                    properties->offsetX = 0;
+                    properties->offsetY = 0;
+                    properties->zoomX = 1;
+                    properties->zoomY = 1;
+                    properties->zoomFactorX = 1;
+                    properties->zoomFactorY = 1;
+                    properties->angle = 0;
+                    properties->alpha = 1;
+                    entity->draw(vx, vy, vw, vh);
+                }
+                ++it;
             }
             properties->alpha = recAlpha;
             properties->scrollX = recScrollX;
@@ -616,6 +649,7 @@ namespace Amara {
         ~TextureContainer() {
             if (tx) {
                 SDL_DestroyTexture(tx);
+                tx = nullptr;
             }
         }
     };

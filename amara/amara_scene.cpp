@@ -107,7 +107,7 @@ namespace Amara {
 					
                     if (!load->stillLoading) {
                         if (transition != nullptr) {
-                            if (transition->finished) {
+                            if (transition->isFinished) {
                                 initialLoaded = true;
                                 transition->complete();
                                 transition = nullptr;
@@ -134,7 +134,7 @@ namespace Amara {
                     if (transition != nullptr) {
                         transition->run();
                         if (transition && transition->fromWake) {
-                            if (transition->finished) {
+                            if (transition->isFinished) {
                                 transition->complete();
                                 transition = nullptr;
                             }
@@ -179,7 +179,7 @@ namespace Amara {
 				properties->scrollY = 0;
 
                 cameras.sort(sortEntities());
-                entities.sort(sortEntities());
+                if (shouldSortChildren) entities.sort(sortEntities());
 
                 float offset, upScale;
                 int vx = 0, vy = 0;

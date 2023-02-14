@@ -66,11 +66,11 @@ namespace Amara {
 
                 startScene = gStartScene;
                 startScene->transition = this;
-
+                
                 endScene = sceneManager->get(nextSceneKey);
                 fromWake = false;
 
-                finished = false;
+                isFinished = false;
                 reset();
 
                 create();

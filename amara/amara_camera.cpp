@@ -207,12 +207,10 @@ namespace Amara {
                         ++it;
                         continue;
                     }
-                    if (!entity->isVisible) {
-                        ++it;
-                        continue;
+                    if (entity->isVisible) {
+                        assignAttributes();
+                        entity->draw(dx, dy, dw, dh);
                     }
-                    assignAttributes();
-                    entity->draw(dx, dy, dw, dh);
                     ++it;
 
                 }

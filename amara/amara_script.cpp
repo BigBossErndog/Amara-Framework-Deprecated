@@ -63,7 +63,7 @@ namespace Amara {
                 load = properties->loader;
                 messages = properties->messages;
 
-                finished = false;
+                isFinished = false;
                 reset();
                 init();
             }
@@ -77,10 +77,10 @@ namespace Amara {
 
             virtual void init() {}
 
-            bool finished = false;
+            bool isFinished = false;
 
             virtual void finish() {
-                finished = true;
+                isFinished = true;
             }
             void finishEvt() {
                 if (evt()) {

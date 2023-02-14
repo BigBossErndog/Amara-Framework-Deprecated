@@ -175,6 +175,7 @@ namespace Amara {
 			}
 
 			virtual void destroy() {
+				if (isDestroyed) return;
 				isActive = false;
 				isDestroyed = true;
 				gameProperties->taskManager->queueDeletion(this);

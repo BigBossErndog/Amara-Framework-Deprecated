@@ -69,20 +69,23 @@ namespace Amara {
             AudioBase* fadeOut(float speed) { return fadeOut(speed, 0, true); }
             AudioBase* fadeOut() { return fadeOut(0.01); }
 
-            void stopFade() {
+            AudioBase* stopFade() {
                 fadeDirection = NOFADE;
 				fadeStopOnEnd = false;
+                return this;
             }
-            void pauseOnEnd() {
+            AudioBase* pauseOnEnd() {
                 fadeStopOnEnd = false;
                 fadePauseOnEnd = true;
+                return this;
             }
 
-            virtual void play() {}
-			virtual void play(int loops) {}
-            virtual void pause() {}
-            virtual void resume() {}
-            virtual void stop() {}
+            virtual AudioBase* play() {}
+			virtual AudioBase* play(int loops) {}
+            virtual AudioBase* pause() {}
+            virtual AudioBase* resume() {}
+            virtual AudioBase* stop() {}
+
             virtual void run(float parentVolume) {
                 switch (fadeDirection) {
                     case FADEIN:

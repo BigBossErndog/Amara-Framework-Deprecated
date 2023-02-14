@@ -75,6 +75,8 @@ namespace Amara {
 			bool isDestroyed = false;
 			bool isVisible = true;
 
+			bool shouldSortChildren = true;
+
 			Entity() {}
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
@@ -258,6 +260,10 @@ namespace Amara {
 				if (hasDataProperty(key)) data.erase(key);
 			}
 
+			void sortChildren() {
+				entities.sort(sortEntities());
+			}
+
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
 				if (physics) {
@@ -278,7 +284,7 @@ namespace Amara {
 				float recAngle = properties->angle + angle;
 				float recAlpha = properties->alpha * alpha;
 
-				entities.sort(sortEntities());
+				if (shouldSortChildren) entities.sort(sortEntities());
 
 				Amara::Entity* entity;
 				for (auto it = entities.begin(); it != entities.end();) {
@@ -288,23 +294,19 @@ namespace Amara {
 						it = entities.erase(it);
                         continue;
                     }
-					if (!entity->isVisible) {
-						++it;
-						continue;
+					if (entity->isVisible) {
+						properties->scrollX = recScrollX;
+						properties->scrollY = recScrollY;
+						properties->offsetX = recOffsetX;
+						properties->offsetY = recOffsetY;
+						properties->zoomX = recZoomX;
+						properties->zoomY = recZoomY;
+						properties->zoomFactorX = recZoomFactorX;
+						properties->zoomFactorY = recZoomFactorY;
+						properties->angle = recAngle;
+						properties->alpha = recAlpha;
+						entity->draw(vx, vy, vw, vh);
 					}
-
-					properties->scrollX = recScrollX;
-					properties->scrollY = recScrollY;
-					properties->offsetX = recOffsetX;
-					properties->offsetY = recOffsetY;
-					properties->zoomX = recZoomX;
-					properties->zoomY = recZoomY;
-					properties->zoomFactorX = recZoomFactorX;
-					properties->zoomFactorY = recZoomFactorY;
-					properties->angle = recAngle;
-					properties->alpha = recAlpha;
-					entity->draw(vx, vy, vw, vh);
-
 					++it;
                 }
 			}

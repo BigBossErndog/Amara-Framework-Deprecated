@@ -20,7 +20,7 @@ namespace Amara {
 				music = givenAsset;
             }
 
-			void play(int gLoops) {
+			Amara::AudioBase* play(int gLoops) {
 				loops = gLoops;
 				if (Mix_PlayingMusic()) {
 					if (properties->music != nullptr && !properties->music->isPaused) {
@@ -37,13 +37,15 @@ namespace Amara {
 					parent->lastPlayed = this;
 					parent->currentlyPlaying == this;
 				}
+
+				return this;
 			}
 
-			void play() {
-				play(-1);
+			Amara::AudioBase* play() {
+				return play(-1);
 			}
 
-			void pause() {
+			Amara::AudioBase* pause() {
 				if (Mix_PlayingMusic() && !Mix_PausedMusic()) {
 					if (properties->music == this) {
 						Mix_PauseMusic();
@@ -52,9 +54,11 @@ namespace Amara {
 						position = Mix_GetMusicPosition(music);
 					}
 				}
+				
+				return this;
 			}
 
-			void resume() {
+			Amara::AudioBase* resume() {
 				if (properties->music == this) {
 					Mix_ResumeMusic();
 				}
@@ -65,13 +69,15 @@ namespace Amara {
 				}
 				isPaused = false;
 				isPlaying = true;
+
+				return this;
 			}
 
 			bool finished() {
 				return !isPlaying;
 			}
 
-			void stop() {
+			Amara::AudioBase* stop() {
 				if (Mix_PlayingMusic()) {
 					if (properties->music == this) {
 						Mix_HaltMusic();
@@ -82,6 +88,7 @@ namespace Amara {
 						}
 					}
 				}
+				return this;
 			}
 
             void run(float parentVolume) {

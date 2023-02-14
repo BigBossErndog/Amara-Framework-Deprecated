@@ -81,7 +81,7 @@ namespace Amara {
                 inRecital = true;
 
                 for (Amara::Script* script: scripts) {
-                    if (!script->finished) {
+                    if (!script->isFinished) {
                         script->receiveMessages();
                         script->script();
                         script->script(this);
@@ -99,7 +99,7 @@ namespace Amara {
                 Amara::Script* script;
                 for (auto it = scripts.begin(); it != scripts.end();) {
                     script = *it;
-                    if (script->finished) {
+                    if (script->isFinished) {
                         if (script->chainedScript != nullptr) {
                             chained.push_back(script->chainedScript);
                             script->chainedScript = nullptr;

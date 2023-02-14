@@ -15,6 +15,7 @@ namespace Amara {
         public:
             Amara::GameProperties* properties = nullptr;
             std::string currentState;
+            std::string lastState;
 
             std::vector<StateRecord> stateRecords;
 
@@ -40,6 +41,7 @@ namespace Amara {
 
             void reset() {
                 currentState.clear();
+                lastState.clear();
                 currentEvent = 1;
                 jumpFlag.clear();
                 stateRecords.clear();
@@ -83,6 +85,7 @@ namespace Amara {
 
             void switchState(std::string key) {
                 if (!currentState.empty()) {
+                    lastState = currentState;
                     Amara::StateRecord record = {currentState, data, currentEvent};
                     stateRecords.push_back(record);
                 }
@@ -105,6 +108,8 @@ namespace Amara {
                     reset();
                 }
                 else {
+                    lastState = currentState;
+                    
                     Amara::StateRecord record = stateRecords.back();
                     currentState = record.name;
                     currentEvent = record.event;
