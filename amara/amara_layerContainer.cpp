@@ -129,7 +129,10 @@ namespace Amara {
             
             checkHover(vx + dx, vy + dy, dw, dh);
             
-            if (shouldSortChildren) entities.sort(sortEntities());
+            if (shouldSortChildren || sortChildrenOnce) {
+                sortChildrenOnce = false;
+                children.sort(sortEntities());
+            }
 
             float recZoomX = properties->zoomX;
             float recZoomY = properties->zoomY;
@@ -138,7 +141,7 @@ namespace Amara {
             float recAlpha = properties->alpha * alpha;
 
             Amara::Entity* entity;
-            for (auto it = entities.begin(); it != entities.end();) {
+            for (auto it = children.begin(); it != children.end();) {
                 entity = *it;
                 properties->scrollX = 0;
                 properties->scrollY = 0;
@@ -150,7 +153,7 @@ namespace Amara {
                 properties->zoomFactorY = recZoomFactorY;
                 properties->alpha = recAlpha;
                 if (entity->isDestroyed || entity->parent != this) {
-                    it = entities.erase(it);
+                    it = children.erase(it);
                     continue;
                 }
                 if (entity->isVisible) {
@@ -323,14 +326,17 @@ namespace Amara {
             float recAlpha = properties->alpha;
             properties->alpha = 1;
 
-            if (shouldSortChildren) entities.sort(sortEntities());
+            if (shouldSortChildren || sortChildrenOnce) {
+                sortChildrenOnce = false;
+                children.sort(sortEntities());
+            }
 
             Amara::Entity* entity;
-            for (auto it = entities.begin(); it != entities.end();) {
+            for (auto it = children.begin(); it != children.end();) {
                 entity = *it;
 
                 if (entity->isDestroyed || entity->parent != this) {
-                    it = entities.erase(it);
+                    it = children.erase(it);
                     continue;
                 }
                 if (entity->isVisible) {
@@ -609,14 +615,17 @@ namespace Amara {
             float recAlpha = properties->alpha;
             properties->alpha = 1;
 
-            if (shouldSortChildren) entities.sort(sortEntities());
+            if (shouldSortChildren || sortChildrenOnce) {
+                sortChildrenOnce = false;
+                children.sort(sortEntities());
+            }
 
             Amara::Entity* entity;
-            for (auto it = entities.begin(); it != entities.end();) {
+            for (auto it = children.begin(); it != children.end();) {
                 entity = *it;
 
                 if (entity->isDestroyed || entity->parent != this) {
-                    it = entities.erase(it);
+                    it = children.erase(it);
                     continue;
                 }
                 if (entity->isVisible) {

@@ -459,7 +459,7 @@ namespace Amara {
             startDepth = actor->depth;
             if (targetDepth = -1) {
                 Amara::Entity* entity;
-                for (auto it = actor->entities.begin(); it != actor->entities.end();) {
+                for (auto it = actor->children.begin(); it != actor->children.end();) {
                     entity = *it;
                     if (entity->depth > targetDepth) {
                         targetDepth = entity->depth + 0.1;

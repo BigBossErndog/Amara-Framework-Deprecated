@@ -67,7 +67,7 @@ namespace Amara {
             }
 
             virtual Amara::Entity* add(Amara::Entity* entity) {
-                entities.push_back(entity);
+                children.push_back(entity);
                 entity->init(properties, this, this);
                 return entity;
             }
@@ -149,8 +149,8 @@ namespace Amara {
             virtual void updateScene() {
                 update();
                 reciteScripts();
-                runEntities();
-                checkEntities();
+                runChildren();
+                checkChildren();
 
                 Amara::Camera* cam;
                 for (auto it = cameras.begin(); it != cameras.end(); ++it) {
@@ -179,7 +179,10 @@ namespace Amara {
 				properties->scrollY = 0;
 
                 cameras.sort(sortEntities());
-                if (shouldSortChildren) entities.sort(sortEntities());
+                if (shouldSortChildren || sortChildrenOnce) {
+                    sortChildrenOnce = false;
+                    children.sort(sortEntities());
+                }
 
                 float offset, upScale;
                 int vx = 0, vy = 0;

@@ -199,7 +199,7 @@ namespace Amara {
 
                 checkHover(dx, dy, dw, dh, 0, 0, dw, dh);
 
-                std::list<Amara::Entity*>& rSceneEntities = parent->entities;
+                std::list<Amara::Entity*>& rSceneEntities = parent->children;
                 Amara::Entity* entity;
                 for (auto it = rSceneEntities.begin(); it != rSceneEntities.end();) {
                     entity = *it;

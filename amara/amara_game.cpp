@@ -310,7 +310,7 @@ namespace Amara {
 				Amara::Entity* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
-                    std::cout << "TaskManager: Deleting " << size << " entities." << std::endl;
+                    std::cout << "TaskManager: Deleting " << size << " children." << std::endl;
                 }
                 for (size_t i = 0; i < size; i++) {
                     obj = deleteQueue.at(i);

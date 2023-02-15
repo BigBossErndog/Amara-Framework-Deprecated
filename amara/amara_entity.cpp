@@ -43,7 +43,7 @@ namespace Amara {
 			Amara::Loader* load = nullptr;
 			Amara::MessageQueue* messages = nullptr;
 
-			std::list<Amara::Entity*> entities;
+			std::list<Amara::Entity*> children;
 
 			Amara::PhysicsBase* physics = nullptr;
 			bool pushedMessages = false;
@@ -76,6 +76,7 @@ namespace Amara {
 			bool isVisible = true;
 
 			bool shouldSortChildren = true;
+			bool sortChildrenOnce = false;
 
 			Entity() {}
 
@@ -261,7 +262,7 @@ namespace Amara {
 			}
 
 			void sortChildren() {
-				entities.sort(sortEntities());
+				children.sort(sortEntities());
 			}
 
 			virtual void draw(int vx, int vy, int vw, int vh) {
@@ -284,14 +285,17 @@ namespace Amara {
 				float recAngle = properties->angle + angle;
 				float recAlpha = properties->alpha * alpha;
 
-				if (shouldSortChildren) entities.sort(sortEntities());
+				if (shouldSortChildren || sortChildrenOnce) {
+					sortChildrenOnce = false;
+					children.sort(sortEntities());
+				}
 
 				Amara::Entity* entity;
-				for (auto it = entities.begin(); it != entities.end();) {
+				for (auto it = children.begin(); it != children.end();) {
                     entity = *it;
 
                     if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
-						it = entities.erase(it);
+						it = children.erase(it);
                         continue;
                     }
 					if (entity->isVisible) {
@@ -365,13 +369,13 @@ namespace Amara {
                     }
 				}
 
-				runEntities();
-				checkEntities();
+				runChildren();
+				checkChildren();
 			}
 
-			virtual void runEntities() {
+			virtual void runChildren() {
 				Amara::Entity* entity;
-				for (auto it = entities.begin(); it != entities.end();) {
+				for (auto it = children.begin(); it != children.end();) {
 					entity = *it;
 					++it;
 					if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
@@ -383,7 +387,7 @@ namespace Amara {
 
 			virtual Amara::Entity* get(std::string find) {
 				Amara::Entity* entity;
-				for (auto it = entities.begin(); it != entities.end();) {
+				for (auto it = children.begin(); it != children.end();) {
 					entity = *it;
 					++it;
 					if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
@@ -398,18 +402,18 @@ namespace Amara {
 
 			virtual Amara::Entity* add(Amara::Entity* entity) {
 				if (entity == nullptr || entity->isDestroyed) return nullptr;
-				entities.push_back(entity);
+				children.push_back(entity);
 				entity->init(properties, scene, this);
 				return entity;
 			}
 
 			Amara::Entity* remove(Amara::Entity* entity) {
 				Amara::Entity* child;
-				for (auto it = entities.begin(); it != entities.end();) {
+				for (auto it = children.begin(); it != children.end();) {
 					child = *it;
 					if (child == entity) {
 						if (entity->parent == this) entity->parent = nullptr;
-						it = entities.erase(it);
+						it = children.erase(it);
 						continue;
 					}
 					++it;
@@ -418,18 +422,18 @@ namespace Amara {
 			}
 
 			void removeEntities() {
-				for (Amara::Entity* entity: entities) {
+				for (Amara::Entity* entity: children) {
 					if (entity->parent == this) entity->parent = nullptr;
 				}
-				entities.clear();
+				children.clear();
 			}
 
-			void checkEntities() {
+			void checkChildren() {
 				Amara::Entity* entity;
-				for (auto it = entities.begin(); it != entities.end();) {
+				for (auto it = children.begin(); it != children.end();) {
                     entity = *it;
                     if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
-                        it = entities.erase(it);
+                        it = children.erase(it);
                         continue;
                     }
 					++it;
@@ -460,14 +464,14 @@ namespace Amara {
 			}
 
 			void destroyChildren() {
-				for (Amara::Entity* child: entities) {
+				for (Amara::Entity* child: children) {
 					child->destroy();
 				}
-				entities.clear();
+				children.clear();
 			}
 
 			virtual void destroyEntities(bool recursiveDestroy) {
-				for (Amara::Entity* child: entities) {
+				for (Amara::Entity* child: children) {
 					if (child->isDestroyed || child->parent != this) continue;
 					if (recursiveDestroy) {
 						child->destroy();
@@ -476,7 +480,7 @@ namespace Amara {
 						child->parent = nullptr;
 					}
 				}
-				entities.clear();
+				children.clear();
 			}
 
 			virtual void destroyEntities() {
@@ -565,16 +569,19 @@ namespace Amara {
 			}
 
 			void bringToFront() {
-				std::list<Amara::Entity*>& rSceneEntities = parent->entities;
-				for (Amara::Entity* entity: rSceneEntities) {
-					if (entity != this && !entity->isDestroyed && depth <= entity->depth) {
-						depth = entity->depth + 1;
+				if (parent) {
+					std::list<Amara::Entity*>& rSceneEntities = parent->children;
+					for (Amara::Entity* entity: rSceneEntities) {
+						if (entity != this && !entity->isDestroyed && depth <= entity->depth) {
+							depth = entity->depth + 1;
+						}
 					}
+					parent->sortChildrenOnce = true;
 				}
 			}
 
 			void sendToBack() {
-				std::list<Amara::Entity*>& rSceneEntities = parent->entities;
+				std::list<Amara::Entity*>& rSceneEntities = parent->children;
 				for (Amara::Entity* entity: rSceneEntities) {
 					if (entity != this && depth >= entity->depth) {
 						depth = entity->depth - 1;
@@ -607,7 +614,7 @@ namespace Amara {
 			void setLoader(Amara::Loader* gLoader, bool recursive) {
 				load = gLoader;
 				if (recursive) {
-					for (Amara::Entity* entity: entities) {
+					for (Amara::Entity* entity: children) {
 						if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
 							continue;
 						}

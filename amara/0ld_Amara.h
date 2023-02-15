@@ -1827,7 +1827,7 @@ namespace FAKE_AMARA {
 		public:
 			Amara::GameProperties* game = NULL;
 			Amara::Loader* load = NULL;
-			Amara::LinkedList* entities = NULL;
+			Amara::LinkedList* children = NULL;
 			Amara::WorldEntity* parent = NULL;
 
 			SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
@@ -1865,7 +1865,7 @@ namespace FAKE_AMARA {
 				Amara::Actor::run();
 				runPhysics();
 				update();
-				runEntities();
+				runChildren();
 			}
 
 			virtual void draw(int parentx, int parenty, int parentwidth, int parentheight) {
@@ -1891,19 +1891,19 @@ namespace FAKE_AMARA {
 			}
 
 			virtual Amara::WorldEntity* add(Amara::WorldEntity* newEntity) {
-				if (entities == NULL) {
-					entities = new Amara::LinkedList();
+				if (children == NULL) {
+					children = new Amara::LinkedList();
 				}
 
 				newEntity->game = game;
-				if (newEntity->inheritEntities) newEntity->entities = entities;
+				if (newEntity->inheritEntities) newEntity->children = children;
 				newEntity->load = load;
 				newEntity->parent = this;
 				newEntity->setDirector(this);
 				newEntity->preload();
 				newEntity->create();
 
-				entities->push(newEntity);
+				children->push(newEntity);
 				return newEntity;
 			}
 
@@ -1967,9 +1967,9 @@ namespace FAKE_AMARA {
 				}
 			}
 
-			void runEntities() {
-				if (entities == NULL || destroyed || paused) return;
-				Amara::LinkedItem* curItem = entities->startItem;
+			void runChildren() {
+				if (children == NULL || destroyed || paused) return;
+				Amara::LinkedItem* curItem = children->startItem;
 				Amara::LinkedItem* lastItem = NULL;
 				Amara::LinkedItem* nextItem = NULL;
 
@@ -1985,7 +1985,7 @@ namespace FAKE_AMARA {
 							nextItem = curItem->next;
 							curItem->destroy();
 							delete curItem;
-							entities->startItem = nextItem;
+							children->startItem = nextItem;
 							curItem = nextItem;
 						}
 						else {
@@ -1999,8 +1999,8 @@ namespace FAKE_AMARA {
 			}
 
 			void drawEntities(int parentx, int parenty, int parentwidth, int parentheight) {
-				if (entities == NULL || destroyed) return;
-				Amara::LinkedItem* curItem = entities->startItem;
+				if (children == NULL || destroyed) return;
+				Amara::LinkedItem* curItem = children->startItem;
 				Amara::LinkedItem* lastItem = NULL;
 				Amara::LinkedItem* nextItem = NULL;
 
@@ -2016,7 +2016,7 @@ namespace FAKE_AMARA {
 							nextItem = curItem->next;
 							curItem->destroy();
 							delete curItem;
-							entities->startItem = nextItem;
+							children->startItem = nextItem;
 							curItem = nextItem;
 						}
 						else {
@@ -2030,8 +2030,8 @@ namespace FAKE_AMARA {
 			}
 
 			Amara::LinkedItem* sortEntities(Amara::Comparator* comparator, bool descending) {
-				if (entities == NULL) return NULL;
-				return entities->sort(comparator, descending);
+				if (children == NULL) return NULL;
+				return children->sort(comparator, descending);
 			}
 
 			Amara::LinkedItem* sortEntities(Amara::Comparator* comparator) {
@@ -2039,8 +2039,8 @@ namespace FAKE_AMARA {
 			}
 
 			virtual void destroyEntities() {
-				if (entities == NULL) return;
-				Amara::LinkedItem* curItem = entities->startItem;
+				if (children == NULL) return;
+				Amara::LinkedItem* curItem = children->startItem;
 				while (curItem != NULL) {
 					Amara::WorldEntity* curEntity = (Amara::WorldEntity*) curItem->item;
 
@@ -2049,9 +2049,9 @@ namespace FAKE_AMARA {
 					curItem = curItem->next;
 				}
 
-				entities->deepDestroy();
+				children->deepDestroy();
 
-				entities = NULL;
+				children = NULL;
 			}
 
 			virtual void goTo(float newx, float newy) {
@@ -2219,7 +2219,7 @@ namespace FAKE_AMARA {
 	};
 
 	/*
-	 * Compares two entities by x value.
+	 * Compares two children by x value.
 	 */
 	class XComparator: public Amara::Comparator {
 		public:
@@ -2237,7 +2237,7 @@ namespace FAKE_AMARA {
 	Amara::XComparator* xComparator = new Amara::XComparator();
 
 	/*
-	 * Compares two entities by y value.
+	 * Compares two children by y value.
 	 */
 	class YComparator: public Amara::Comparator {
 		public:
@@ -2255,7 +2255,7 @@ namespace FAKE_AMARA {
 	Amara::YComparator* yComparator = new Amara::YComparator();
 
 	/*
-	 * Compares two entities by z value.
+	 * Compares two children by z value.
 	 */
 	class ZComparator: public Amara::Comparator {
 		public:
@@ -2848,7 +2848,7 @@ namespace FAKE_AMARA {
 				runPhysics();
 				culled = false;
 
-				runEntities();
+				runChildren();
 			}
 
 			virtual void draw(int parentx, int parenty, int parentwidth, int parentheight) {
@@ -3236,7 +3236,7 @@ namespace FAKE_AMARA {
 					frame = currentAnimation->run();
 				}
 
-				runEntities();
+				runChildren();
 			}
 
 			virtual void draw(int parentx, int parenty, int parentwidth, int parentheight) {
@@ -3871,7 +3871,7 @@ namespace FAKE_AMARA {
 						tiles[i][j]->run();
 					}
 				}
-				Amara::WorldEntity::runEntities();
+				Amara::WorldEntity::runChildren();
 			}
 
 			void runAnimations() {
@@ -4097,7 +4097,7 @@ namespace FAKE_AMARA {
 				update();
 				runPhysics();
 
-				runEntities();
+				runChildren();
 			}
 
 			void setText(char* newText) {
@@ -4178,14 +4178,14 @@ namespace FAKE_AMARA {
 			}
 
 			void draw(int parentx, int parenty, int parentwidth, int parentheight) {
-				if (destroyed || entities == NULL) return;
+				if (destroyed || children == NULL) return;
 				if (autoResize) {
 					x = 0;
 					y = 0;
 					width = parentwidth;
 					height = parentheight;
 				}
-				Amara::LinkedItem* curItem = entities->startItem;
+				Amara::LinkedItem* curItem = children->startItem;
 				Amara::LinkedItem* lastItem = NULL;
 				Amara::LinkedItem* nextItem = NULL;
 
@@ -4244,7 +4244,7 @@ namespace FAKE_AMARA {
 							nextItem = curItem->next;
 							curItem->destroy();
 							delete curItem;
-							entities->startItem = nextItem;
+							children->startItem = nextItem;
 							curItem = nextItem;
 						}
 						else {
@@ -4642,8 +4642,8 @@ namespace FAKE_AMARA {
 
 				canvas->beginFill();
 
-				if (entities != NULL) {
-					Amara::LinkedItem* curItem = entities->startItem;
+				if (children != NULL) {
+					Amara::LinkedItem* curItem = children->startItem;
 					Amara::LinkedItem* lastItem = NULL;
 					Amara::LinkedItem* nextItem = NULL;
 
@@ -4660,7 +4660,7 @@ namespace FAKE_AMARA {
 								nextItem = curItem->next;
 								curItem->destroy();
 								delete curItem;
-								entities->startItem = nextItem;
+								children->startItem = nextItem;
 								curItem = nextItem;
 							}
 							else {
@@ -4847,7 +4847,7 @@ namespace FAKE_AMARA {
 				}
 				width = box->width;
 				height = box->height;
-				Amara::LinkedItem* curItem = entities->startItem;
+				Amara::LinkedItem* curItem = children->startItem;
 				Amara::LinkedItem* lastItem = NULL;
 				Amara::LinkedItem* nextItem = NULL;
 
@@ -4879,7 +4879,7 @@ namespace FAKE_AMARA {
 								nextItem = curItem->next;
 								curItem->destroy();
 								delete curItem;
-								entities->startItem = nextItem;
+								children->startItem = nextItem;
 								curItem = nextItem;
 							}
 							else {
@@ -5014,7 +5014,7 @@ namespace FAKE_AMARA {
 				destroyed = false;
 				running = true;
 
-				entities = new Amara::LinkedList();
+				children = new Amara::LinkedList();
 
 				if (makeLoader) {
 					load = new Amara::Loader(game);
@@ -5025,7 +5025,7 @@ namespace FAKE_AMARA {
 				}
 
 				mainCamera = new Amara::Camera();
-				mainCamera->entities = entities;
+				mainCamera->children = children;
 				mainCamera->load = load;
 				mainCamera->game = game;
 				mainCamera->init();
@@ -5046,7 +5046,7 @@ namespace FAKE_AMARA {
 
 			virtual Amara::WorldEntity* add(Amara::Camera* newCamera) {
 				newCamera->game = game;
-				newCamera->entities = entities;
+				newCamera->children = children;
 				newCamera->load = load;
 				newCamera->parent = this;
 				newCamera->init();
@@ -5064,7 +5064,7 @@ namespace FAKE_AMARA {
 				update();
 				runPhysics();
 				runCameras();
-				runEntities();
+				runChildren();
 			}
 
 			void runCameras() {
