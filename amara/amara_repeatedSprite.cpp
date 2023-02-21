@@ -122,7 +122,8 @@ namespace Amara {
             if (alpha <= 0) {
                 alpha = 0;
                 return;
-            } 
+            }
+            if (texture == nullptr) return;
             if (recWidth != width || recHeight != height) {
                 createNewCanvasTexture();
             }
@@ -217,8 +218,6 @@ namespace Amara {
                     checkHover(vx, vy, vw, vh, destRectF.x, destRectF.y, destRectF.w, destRectF.h);
                 }
             }
-
-            Amara::Entity::draw(vx, vy, vw, vh);
         }
 
         ~RepeatedSprite() {

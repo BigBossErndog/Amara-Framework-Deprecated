@@ -282,7 +282,6 @@ namespace Amara {
 
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 drawTexture(vx, vy, vw, vh);
-
                 Amara::Entity::draw(vx, vy, vw, vh);
             }
 

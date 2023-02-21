@@ -145,12 +145,16 @@ namespace Amara {
 			}
 
 			virtual bool add(std::string key, SDL_Texture* tx, bool replace) {
-				Amara::Asset* got = get(key);
-				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
-					return false;
+				Amara::ImageTexture* got = (Amara::ImageTexture*)get(key);
+				if (got != nullptr) {
+					if (!replace) {
+						std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
+						return false;
+					}
+					got->setTexture(tx);
+					std::cout << "Replaced texture: " << key << std::endl;
+					return true;
 				}
-				remove(key);
 				if (tx == nullptr) {
 					std::cout << "No texture was given for key: \"" << key << "\"" <<  std::endl;
 					return false;
@@ -165,12 +169,16 @@ namespace Amara {
 			}
 
 			virtual bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight, bool replace) {
-				Amara::Asset* got = get(key);
-				if (got != nullptr && !replace) {
-					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
-					return false;
+				Amara::Spritesheet* got = (Amara::Spritesheet*)get(key);
+				if (got != nullptr) {
+					if (!replace) {
+						std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
+						return false;
+					}
+					got->setTexture(tx, frwidth, frheight);
+					std::cout << "Replaced texture: " << key << std::endl;
+					return true;
 				}
-				remove(key);
 				if (tx == nullptr) {
 					std::cout << "No texture was given for key: \"" << key << "\"" <<  std::endl;
 					return false;

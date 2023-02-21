@@ -53,7 +53,7 @@ namespace Amara {
                 return loader->add(key, tx, replace);
             }
             bool add(std::string key, SDL_Texture* tx) {
-                return add(key, tx, false);
+                return add(key, tx, true);
             }
 
             bool add(std::string key, SDL_Texture* tx, int frwidth, int frheight, bool replace) {

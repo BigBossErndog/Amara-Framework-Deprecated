@@ -265,6 +265,18 @@ namespace Amara {
 				children.sort(sortEntities());
 			}
 
+			void setChildrenSorting(bool always) {
+				shouldSortChildren = always;
+			}
+			void setChildrenSorting(bool always, bool once) {
+				setChildrenSorting(always);
+				sortChildrenOnce = once;
+			}
+
+			void sortOnce() {
+				setChildrenSorting(false, true);
+			}
+
 			virtual void draw(int vx, int vy, int vw, int vh) {
 				if (properties->quit) return;
 				if (physics) {
@@ -583,9 +595,10 @@ namespace Amara {
 			void sendToBack() {
 				std::list<Amara::Entity*>& rSceneEntities = parent->children;
 				for (Amara::Entity* entity: rSceneEntities) {
-					if (entity != this && depth >= entity->depth) {
+					if (entity != this && !entity->isDestroyed && depth >= entity->depth) {
 						depth = entity->depth - 1;
 					}
+					parent->sortChildrenOnce = true;
 				}
 			}
 

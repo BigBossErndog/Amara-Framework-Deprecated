@@ -52,12 +52,22 @@ namespace Amara {
             SDL_Texture* asset = nullptr;
 
             ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType, givenAsset) {
+                setTexture(givenAsset);
+            }
+
+            void removeTexture() {
+                if (asset) SDL_DestroyTexture(asset);
+                asset = nullptr;
+            }
+
+            virtual void setTexture(SDL_Texture* givenAsset) {
+                removeTexture();
                 SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
                 asset = givenAsset;
             }
 
             ~ImageTexture() {
-                SDL_DestroyTexture(asset);
+                removeTexture();
             }
     };
 
@@ -133,7 +143,12 @@ namespace Amara {
             std::unordered_map<std::string, Amara::Animation*> anims;
 
             Spritesheet(std::string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, newtexture) {
-                asset = newtexture;
+                setTexture(newtexture, newwidth, newheight);
+            }
+
+            void setTexture(SDL_Texture* newtexture, int newwidth, int newheight) {
+                Amara::ImageTexture::setTexture(newtexture);
+
                 frameWidth = newwidth;
                 frameHeight = newheight;
                 if (frameWidth > width) {
