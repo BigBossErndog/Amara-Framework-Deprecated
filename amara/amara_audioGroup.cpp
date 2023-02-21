@@ -24,7 +24,7 @@ namespace Amara {
                 load = properties->loader;
             }
 
-            AudioGroup(std::string gKey, Amara::AssetType gType, void* asset): Amara::AudioBase(gKey, gType, asset) {}
+            AudioGroup(std::string gKey, Amara::AssetType gType): Amara::AudioBase(gKey, gType) {}
 
             Amara::AudioGroup* add(Amara::AudioGroup* gGroup) {
                 groups.push_back(gGroup);

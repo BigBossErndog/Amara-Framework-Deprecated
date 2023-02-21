@@ -126,9 +126,9 @@ namespace Amara {
 			}
 
 			SDL_Surface* getSurface(std::string key) {
-				Amara::Asset* sf = (Amara::Asset*)(get(key));
+				Amara::SurfaceAsset* sf = (Amara::SurfaceAsset*)(get(key));
 				if (sf != nullptr) {
-					return (SDL_Surface*)sf->asset;
+					return sf->asset;
 				}
 				std::cout << "Surface asset \"" << key << "\" not found." << std::endl;
 				return nullptr;
@@ -502,7 +502,7 @@ namespace Amara {
 
 				if (success) {
 					std::cout << "Loaded: " << key << std::endl;
-					Amara::Asset* newAsset = new Amara::Asset(key, SURFACE, optimizedSurface);
+					Amara::SurfaceAsset* newAsset = new Amara::SurfaceAsset(key, SURFACE, optimizedSurface);
 					assets[key] = newAsset;
 				}
 

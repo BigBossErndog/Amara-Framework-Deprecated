@@ -26,20 +26,31 @@ namespace Amara {
     class Asset {
         public:
             AssetType type;
-            void* asset;
             std::string key;
 
             bool toRegenerate = false;
 
             Asset() {}
 
-            Asset(std::string givenKey, AssetType givenType, void* givenAsset) {
+            Asset(std::string givenKey, AssetType givenType) {
                 key = givenKey;
                 type = givenType;
-				asset = givenAsset;
             }
 
             virtual void regenerate(SDL_Renderer*) {}
+    };
+
+    class SurfaceAsset: public Amara::Asset {
+        public:
+            SDL_Surface* asset = nullptr;
+
+            SurfaceAsset(std::string givenKey, AssetType givenType, SDL_Surface* surface): Amara::Asset(givenKey, givenType) {
+                asset = surface;
+            }
+
+            ~SurfaceAsset() {
+                SDL_FreeSurface(asset);
+            }
     };
 
     class ImageTexture : public Amara::Asset {
@@ -51,7 +62,7 @@ namespace Amara {
 
             SDL_Texture* asset = nullptr;
 
-            ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType, givenAsset) {
+            ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType) {
                 setTexture(givenAsset);
             }
 
@@ -60,7 +71,8 @@ namespace Amara {
                 asset = nullptr;
             }
 
-            virtual void setTexture(SDL_Texture* givenAsset) {
+            void setTexture(SDL_Texture* givenAsset) {
+                if (givenAsset == nullptr) return;
                 removeTexture();
                 SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
                 asset = givenAsset;
@@ -135,19 +147,20 @@ namespace Amara {
 			}
 	};
 
-    class Spritesheet : public Amara::ImageTexture {
+    class Spritesheet: public Amara::ImageTexture {
         public:
             int frameWidth = 0;
             int frameHeight = 0;
 
             std::unordered_map<std::string, Amara::Animation*> anims;
 
-            Spritesheet(std::string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, newtexture) {
+            Spritesheet(std::string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, nullptr) {
                 setTexture(newtexture, newwidth, newheight);
             }
 
+            using Amara::ImageTexture::setTexture;
             void setTexture(SDL_Texture* newtexture, int newwidth, int newheight) {
-                Amara::ImageTexture::setTexture(newtexture);
+                setTexture(newtexture);
 
                 frameWidth = newwidth;
                 frameHeight = newheight;
@@ -191,7 +204,7 @@ namespace Amara {
         public:
             std::string contents;
 
-            StringFile(std::string givenKey, AssetType givenType, std::string gContents): Amara::Asset(givenKey, STRINGFILE, nullptr) {
+            StringFile(std::string givenKey, AssetType givenType, std::string gContents): Amara::Asset(givenKey, STRINGFILE) {
                 contents = gContents;
             }
 
@@ -208,7 +221,7 @@ namespace Amara {
 		public:
             nlohmann::json jsonObj;
 
-			JsonFile(std::string givenKey, AssetType givenType, nlohmann::json gJson): Amara::Asset(givenKey, JSONFILE, nullptr) {
+			JsonFile(std::string givenKey, AssetType givenType, nlohmann::json gJson): Amara::Asset(givenKey, JSONFILE) {
                 jsonObj = gJson;
             }
 
@@ -227,7 +240,7 @@ namespace Amara {
 
             bool recFullscreen = false;
 
-            TTFAsset(std::string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF, gFont) {
+            TTFAsset(std::string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF) {
                 font = gFont;
                 toRegenerate = true;
             }
@@ -247,7 +260,7 @@ namespace Amara {
         int index = 0;
         std::vector<std::string> contents;
 
-        LineByLine(std::string givenKey, AssetType givenType, std::vector<std::string> givenContents): Amara::Asset(givenKey, LINEBYLINE, nullptr){
+        LineByLine(std::string givenKey, AssetType givenType, std::vector<std::string> givenContents): Amara::Asset(givenKey, LINEBYLINE){
             contents = givenContents;
         }
 
@@ -376,7 +389,7 @@ namespace Amara {
 
         Amara::CSVLine invalidLine = Amara::CSVLine(true);
 
-        CSVFile(std::string givenKey, AssetType givenType, std::vector<std::string> givenContents): Amara::Asset(givenKey, LINEBYLINE, nullptr){
+        CSVFile(std::string givenKey, AssetType givenType, std::vector<std::string> givenContents): Amara::Asset(givenKey, LINEBYLINE){
             lines.clear();
             lines.resize(givenContents.size());
             for (int i = 0; i < givenContents.size(); i++) {

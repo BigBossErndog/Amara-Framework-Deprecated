@@ -36,7 +36,7 @@ namespace Amara {
             std::string nextInChain = "";
 
             AudioBase(): Amara::Asset() {}
-            AudioBase(std::string gKey, Amara::AssetType gType, void* gAsset): Amara::Asset(gKey, gType, gAsset) {}
+            AudioBase(std::string gKey, Amara::AssetType gType): Amara::Asset(gKey, gType) {}
 
             AudioBase* setVolume(float vol) {
                 volume = vol;

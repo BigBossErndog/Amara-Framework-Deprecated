@@ -10,7 +10,7 @@ namespace Amara {
             Mix_Chunk* sound = nullptr;
 			int channel = -1;
 
-            Sound(std::string givenKey, AssetType givenType, Mix_Chunk* givenAsset): Amara::AudioBase(givenKey, givenType, givenAsset) {
+            Sound(std::string givenKey, AssetType givenType, Mix_Chunk* givenAsset): Amara::AudioBase(givenKey, givenType) {
 				sound = givenAsset;
             }
 

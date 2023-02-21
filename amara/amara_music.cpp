@@ -15,7 +15,7 @@ namespace Amara {
 
 			double position = 0;
 
-            Music(std::string givenKey, AssetType givenType, Mix_Music* givenAsset, Amara::GameProperties* gameProperties): Amara::AudioBase(givenKey, givenType, givenAsset) {
+            Music(std::string givenKey, AssetType givenType, Mix_Music* givenAsset, Amara::GameProperties* gameProperties): Amara::AudioBase(givenKey, givenType) {
                 properties = gameProperties;
 				music = givenAsset;
             }
