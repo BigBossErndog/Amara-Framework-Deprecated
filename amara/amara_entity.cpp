@@ -545,6 +545,10 @@ namespace Amara {
             void changeScale(float gi) {
                 changeScale(gi, gi);
             }
+			
+			void setRadianAngle(float gAngle) {
+				angle = radiansToDegrees(gAngle);
+			}
 
 			void setScrollFactor(float gx, float gy) {
 				scrollFactorX = gx;

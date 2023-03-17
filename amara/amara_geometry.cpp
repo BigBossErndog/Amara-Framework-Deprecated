@@ -321,7 +321,7 @@ namespace Amara {
     }
 
     Amara::Direction flipDirection(Amara::Direction dir, bool diagonals) {
-        std::vector<Amara::Direction> list = (diagonals) ? DirectionsInOrder : FourDirections;
+        std::vector<Amara::Direction> list = (diagonals) ? DirectionsInOrder : CardinalDirections;
 
         for (int i = 0; i < list.size(); i++) {
             if (list[i] == dir) {
@@ -356,7 +356,7 @@ namespace Amara {
         return turnDirection(dir, DirectionsInOrder, turn);
     }
 
-    Amara::Direction getDirectionBetween(int x1, int y1, int x2, int y2, std::vector<Amara::Direction> list) {
+    Amara::Direction directionBetween(int x1, int y1, int x2, int y2, std::vector<Amara::Direction> list) {
         if (x1 == x2 && y1 == y2) {
             return NoDir;
         }
@@ -370,17 +370,17 @@ namespace Amara {
 
         return direction;
     }
-	Amara::Direction getDirectionBetween(int x1, int y1, int x2, int y2) {
-        return getDirectionBetween(x1, y1, x2, y2, DirectionsInOrder);
+	Amara::Direction directionBetween(int x1, int y1, int x2, int y2) {
+        return directionBetween(x1, y1, x2, y2, DirectionsInOrder);
     }
-	Amara::Direction getDirectionBetween(IntVector2 p1, IntVector2 p2, std::vector<Amara::Direction> list) {
-        return getDirectionBetween(p1.x, p1.y, p2.x, p2.y, list);
+	Amara::Direction directionBetween(IntVector2 p1, IntVector2 p2, std::vector<Amara::Direction> list) {
+        return directionBetween(p1.x, p1.y, p2.x, p2.y, list);
     }
-    Amara::Direction getDirectionBetween(IntVector2 p1, IntVector2 p2) {
-        return getDirectionBetween(p1.x, p1.y, p2.x, p2.y);
+    Amara::Direction directionBetween(IntVector2 p1, IntVector2 p2) {
+        return directionBetween(p1.x, p1.y, p2.x, p2.y);
     }
 
-	Amara::Direction getDirectionFromString(std::string dir) {
+	Amara::Direction directionFromString(std::string dir) {
 		if (dir.compare("up") == 0) return Up;
 		if (dir.compare("down") == 0) return Down;
 		if (dir.compare("left") == 0) return Left;
@@ -421,11 +421,16 @@ namespace Amara {
 		return "noDir";
 	}
 
-    Amara::IntVector2 getDirectionVector(Amara::Direction dir) {
+    Amara::IntVector2 directionVector(Amara::Direction dir) {
         return { getOffsetX(dir), getOffsetY(dir) };
     }
     Amara::IntVector2 flipVector(Amara::IntVector2 v) {
         return { -v.x, -v.y };
+    }
+    float angleFromDirection(Direction dir) {
+        int offsetX = getOffsetX(dir);
+        int offsetY = getOffsetY(dir);
+        return angleBetween(0, 0, offsetX, offsetY);
     }
 }
 

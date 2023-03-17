@@ -237,7 +237,7 @@ namespace Amara {
                 dirs = Amara::DirectionsInOrder;
             }
             else {
-                dirs = Amara::FourDirections;
+                dirs = Amara::CardinalDirections;
             }
             int ox, oy, nId;
             for (Amara::Direction dir: dirs) {
