@@ -131,7 +131,7 @@ namespace Amara {
             
             if (shouldSortChildren || sortChildrenOnce) {
                 sortChildrenOnce = false;
-                children.sort(sortEntities());
+                delayedSorting();
             }
 
             float recZoomX = properties->zoomX;
@@ -328,7 +328,7 @@ namespace Amara {
 
             if (shouldSortChildren || sortChildrenOnce) {
                 sortChildrenOnce = false;
-                children.sort(sortEntities());
+                delayedSorting();
             }
 
             Amara::Entity* entity;
@@ -617,7 +617,7 @@ namespace Amara {
 
             if (shouldSortChildren || sortChildrenOnce) {
                 sortChildrenOnce = false;
-                children.sort(sortEntities());
+                delayedSorting();
             }
 
             Amara::Entity* entity;

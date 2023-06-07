@@ -349,7 +349,7 @@ namespace Amara {
 
     class Tween_Alpha: public Tween {
         public:
-            float startAlpha = 0;
+            float startAlpha = -1;
             float targetAlpha = 0;
 
             Tween_Alpha(float gTarget, float gTime, Amara::Easing gEasing) {
@@ -360,8 +360,14 @@ namespace Amara {
             Tween_Alpha(float gTarget, float gTime): Tween_Alpha(gTarget, gTime, LINEAR) {}
             Tween_Alpha(float gTime): Tween_Alpha(0, gTime) {}
 
+
+            Tween_Alpha(float gStart, float gTarget, float gTime, Amara::Easing gEasing): Tween_Alpha(gTarget, gTime, gEasing) {
+                startAlpha = gStart;
+            }
+            Tween_Alpha(float gStart, float gTarget, float gTime): Tween_Alpha(gStart, gTarget, gTime, LINEAR) {}
+
             void prepare(Amara::Actor* actor) {
-                startAlpha = actor->alpha;
+                if (startAlpha == -1) startAlpha = actor->alpha;
             }
 
             void script(Amara::Actor* actor) {
@@ -551,14 +557,17 @@ namespace Amara {
 
         SDL_Color* affectColor;
 
-        Tween_Color(SDL_Color& gAffect, SDL_Color gEnd, float tt, Amara::Easing gEasing) {
-            startColor = gAffect;
-            affectColor = &gAffect;
+        Tween_Color(SDL_Color* gAffect, SDL_Color gEnd, float tt, Amara::Easing gEasing) {
+            startColor = *gAffect;
+            affectColor = gAffect;
             endColor = gEnd;
             time = tt;
             easing = gEasing;
         }
+        Tween_Color(SDL_Color& gAffect, SDL_Color gEnd, float tt, Amara::Easing gEasing): Tween_Color(&gAffect, gEnd, tt, gEasing) {}
         Tween_Color(SDL_Color& gAffect, SDL_Color gEnd, float tt): Tween_Color(gAffect, gEnd, tt, LINEAR) {}
+        Tween_Color(FillRect* rect, SDL_Color gEnd, float tt, Amara::Easing gEasing): Tween_Color(rect->color,gEnd, tt, gEasing) {}
+        Tween_Color(FillRect* rect, SDL_Color gEnd, float tt): Tween_Color(rect, gEnd, tt, LINEAR) {}
 
         void script(Amara::Actor* actor) {
             Amara::Tween::progressFurther();
@@ -596,6 +605,33 @@ namespace Amara {
             affectColor->g = endColor.g;
             affectColor->b = endColor.b;
             affectColor->a = endColor.a;
+        }
+    };
+
+    class TimedBroadcast: public Amara::Script {
+    public:
+        std::string messageKey;
+        nlohmann::json messageData = nullptr;
+
+        float time = 0;
+
+        TimedBroadcast(float gTime, std::string gKey) {
+            time = gTime;
+            messageKey = gKey;
+        }
+        TimedBroadcast(float gTime, std::string gKey, nlohmann::json gData): TimedBroadcast(gTime, gKey) {
+            messageData = gData;
+        }
+
+        void script() {
+            start();
+
+            wait(time);
+
+            if (evt()) {
+                parent->broadcastMessage(messageKey, messageData);
+                finish();
+            }
         }
     };
 }

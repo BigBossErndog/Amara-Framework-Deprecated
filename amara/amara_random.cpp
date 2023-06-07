@@ -77,6 +77,9 @@ namespace Amara {
             bool roll(double check) {
                 return random() < check;
             }
+            bool flip() {
+                return roll(0.5);
+            }
             bool determine(std::string s, double check) {
                 seed(s);
                 return roll(check);

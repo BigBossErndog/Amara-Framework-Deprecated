@@ -20,6 +20,7 @@
     #include <algorithm>
     #include <functional>
     #include <math.h>
+    #include <regex>
     #include <random>
     #include <nlohmann/json.hpp>
     #include <MurmurHash3.cpp>
@@ -87,6 +88,7 @@ namespace Amara {
     #include "amara_easing.cpp"
     #include "amara_geometry.cpp"
     #include "amara_utility.cpp"
+    #include "amara_ltimer.cpp"
 
     #include "amara_fdeclarations.cpp"
 
@@ -141,6 +143,7 @@ namespace Amara {
     #include "amara_actor.cpp"
 
     #include "amara_random.cpp"
+    #include "amara_timer.cpp"
     #include "amara_textureGeneration.cpp"
 
     #include "amara_sceneTransitionBase.cpp"
@@ -175,6 +178,8 @@ namespace Amara {
 
     #include "amara_fillRect.cpp"
 
+    #include "amara_tintImage.cpp"
+
     #include "amara_freeWalker.cpp"
 
     #include "amara_tween.cpp"
@@ -183,7 +188,6 @@ namespace Amara {
 
     #include "amara_physics.cpp"
 
-    #include "amara_ltimer.cpp"
     #include "amara_scene.cpp"
     #include "amara_scenePlugin.cpp"
     #include "amara_sceneManager.cpp"

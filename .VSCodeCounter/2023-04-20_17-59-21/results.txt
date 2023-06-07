@@ -1,0 +1,106 @@
+Date : 2023-04-20 17:59:21
+Directory : c:\Users\ernes\Documents\Creations\amara\amara
+Total : 82 files,  19239 codes, 307 comments, 3711 blanks, all 23257 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         82 |     19,239 |        307 |      3,711 |     23,257 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                         | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                            |         82 |     19,239 |        307 |      3,711 |     23,257 |
++------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                     | language | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\ernes\Documents\Creations\amara\amara\0ld_Amara.h                   | C++      |      4,628 |        239 |      1,022 |      5,889 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara.h                       | C++      |        153 |          0 |         45 |        198 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_actor.cpp               | C++      |        221 |          0 |         29 |        250 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_animation.cpp           | C++      |         48 |          0 |         14 |         62 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_animationManager.cpp    | C++      |        152 |          0 |         26 |        178 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_asset.cpp               | C++      |        351 |          0 |         79 |        430 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_assetManager.cpp        | C++      |        250 |          0 |         32 |        282 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_audioBase.cpp           | C++      |        112 |          0 |         20 |        132 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_audioGroup.cpp          | C++      |        205 |          0 |         41 |        246 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_button.cpp              | C++      |         32 |          0 |          8 |         40 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_buttonCodes.cpp         | C++      |         47 |          3 |          6 |         56 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_camera.cpp              | C++      |        405 |          0 |         85 |        490 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_canvas.cpp              | C++      |        247 |          0 |         56 |        303 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_control.cpp             | C++      |        126 |          0 |         31 |        157 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_controlScheme.cpp       | C++      |        162 |          0 |         36 |        198 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_debugging.cpp           | C++      |         25 |          0 |          8 |         33 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_easing.cpp              | C++      |         31 |          0 |         10 |         41 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_entity.cpp              | C++      |        603 |          0 |         90 |        693 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_events.cpp              | C++      |         76 |          0 |         12 |         88 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_fdeclarations.cpp       | C++      |         13 |          0 |          6 |         19 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_fdeclare_tweens.cpp     | C++      |          8 |          0 |          4 |         12 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_fileReader.cpp          | C++      |          6 |          0 |          4 |         10 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_fileWriter.cpp          | C++      |         20 |          0 |          3 |         23 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_fillRect.cpp            | C++      |        154 |          0 |         37 |        191 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_freeWalker.cpp          | C++      |        232 |          0 |         36 |        268 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_game.cpp                | C++      |        578 |         32 |        134 |        744 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_gameProperties.cpp      | C++      |         74 |          0 |         27 |        101 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_gamepad.cpp             | C++      |        227 |          0 |         34 |        261 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_gamepadManager.cpp      | C++      |        162 |          0 |         23 |        185 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_geometry.cpp            | C++      |        390 |          0 |         48 |        438 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_image.cpp               | C++      |        343 |          0 |         69 |        412 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_inputManager.cpp        | C++      |         45 |          0 |         13 |         58 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_interactable.cpp        | C++      |        155 |          0 |         22 |        177 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_interactionManager.cpp  | C++      |        106 |          0 |         17 |        123 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_key.cpp                 | C++      |         65 |          0 |         13 |         78 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_keyCodes.cpp            | C++      |        249 |          3 |         16 |        268 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_keyboard.cpp            | C++      |         76 |          0 |         19 |         95 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_layerContainer.cpp      | C++      |        563 |          0 |        104 |        667 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_lighting.cpp            | C++      |        194 |          0 |         47 |        241 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_loadManager.cpp         | C++      |        224 |          0 |         36 |        260 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_loader.cpp              | C++      |        743 |         24 |         94 |        861 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_ltimer.cpp              | C++      |         64 |          6 |         17 |         87 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_math.cpp                | C++      |         24 |          0 |          6 |         30 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_messages.cpp            | C++      |         65 |          0 |         16 |         81 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_mouse.cpp               | C++      |         43 |          0 |         18 |         61 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_music.cpp               | C++      |         93 |          0 |         20 |        113 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_particles.cpp           | C++      |         77 |          0 |         17 |         94 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_pathFinding.cpp         | C++      |        241 |          0 |         47 |        288 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_physics.cpp             | C++      |        470 |          0 |         64 |        534 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_physicsBase.cpp         | C++      |        173 |          0 |         29 |        202 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_pointer.cpp             | C++      |         25 |          0 |          8 |         33 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_random.cpp              | C++      |         74 |          0 |         18 |         92 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_repeatedSprite.cpp      | C++      |        200 |          0 |         30 |        230 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_scene.cpp               | C++      |        222 |          0 |         45 |        267 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_sceneManager.cpp        | C++      |         91 |          0 |         23 |        114 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_scenePlugin.cpp         | C++      |        243 |          0 |         36 |        279 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_sceneTransition.cpp     | C++      |         65 |          0 |         16 |         81 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_sceneTransitionBase.cpp | C++      |         85 |          0 |         22 |        107 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_script.cpp              | C++      |         96 |          0 |         25 |        121 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_sound.cpp               | C++      |         53 |          0 |         14 |         67 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_sprite.cpp              | C++      |         49 |          0 |         12 |         61 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_stateManager.cpp        | C++      |        208 |          0 |         48 |        256 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_stick.cpp               | C++      |         57 |          0 |         14 |         71 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_string.cpp              | C++      |        207 |          0 |         30 |        237 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_taskManager.cpp         | C++      |         37 |          0 |         11 |         48 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_textBox.cpp             | C++      |        420 |          0 |         73 |        493 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_textureGeneration.cpp   | C++      |        212 |          0 |         24 |        236 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tile.cpp                | C++      |         23 |          0 |          8 |         31 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tileAnimation.cpp       | C++      |         46 |          0 |         15 |         61 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tilemap.cpp             | C++      |        363 |          0 |         67 |        430 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tilemapLayer.cpp        | C++      |        493 |          0 |        104 |        597 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_touches.cpp             | C++      |        115 |          0 |         23 |        138 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_transitions.cpp         | C++      |        112 |          0 |         22 |        134 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_trueTypeFont.cpp        | C++      |        297 |          0 |         56 |        353 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tween.cpp               | C++      |         28 |          0 |          8 |         36 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tweenBase.cpp           | C++      |         27 |          0 |          9 |         36 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tweens_camera.cpp       | C++      |        209 |          0 |         37 |        246 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_tweens_entities.cpp     | C++      |        535 |          0 |         72 |        607 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_uiBar.cpp               | C++      |        140 |          0 |         21 |        161 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_uiBox.cpp               | C++      |        725 |          0 |        123 |        848 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_utility.cpp             | C++      |          9 |          0 |          1 |         10 |
+| c:\Users\ernes\Documents\Creations\amara\amara\amara_wallFinder.cpp          | C++      |         22 |          0 |          6 |         28 |
+| Total                                                                        |          |     19,239 |        307 |      3,711 |     23,257 |
++------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

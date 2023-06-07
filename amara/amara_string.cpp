@@ -196,6 +196,83 @@ namespace Amara {
         bool finished() {
             return index >= content.size();
         }
+
+        static std::string wrapString(FC_Font* font, std::string input, float wrapWidth) {
+            std::string recText = input;
+            std::string fText = "";
+            std::string word = "";
+            std::string pText = "";
+            float textWidth = 0;
+            char c, lastC = 0;
+
+            for (int i = 0; i < input.length(); i++) {
+                c = input.at(i);
+                
+                if (c == ' ') {
+                    pText = fText + word;
+                    if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
+                        fText += '\n';
+                        fText += word;
+                    }
+                    else {
+                        fText += word;
+                    }
+
+                    pText = fText + c;
+                    if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
+                        fText += '\n';
+                    }
+                    else {
+                        fText += c;
+                    }
+
+                    word.clear();
+                }
+                else {
+                    if (StringParser::isPunctuation(c)) {
+                        word += c;
+                    }
+                    else if (!StringParser::isSameLanguage(lastC, c)) {
+                        pText = fText + word;
+                        if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
+                            fText += '\n';
+                            fText += word;
+                        }
+                        else {
+                            fText += word;
+                        }
+                        word = c;
+                    }
+                    else if (StringParser::isCJKCharacter(c)) {
+                        pText = fText + word;
+                        if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
+                            fText += L'\n';
+                            fText += word;
+                        }
+                        else {
+                            fText += word;
+                        }
+                        word = c;
+                    }
+                    else {
+                        word += c;
+                    }
+                }
+                lastC = c;
+            }
+
+            pText = fText + word;
+
+            if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
+                fText += '\n';
+                fText += word;
+            }
+            else {
+                fText += word;
+            }
+
+            return fText;
+        }
         
         static bool isPunctuation(char c) {
             if (c >= 0x3000 && c <= 0x303f) return true;
@@ -223,15 +300,25 @@ namespace Amara {
         }
 
         static bool isJapaneseCharacter(char c) {
-            if (c >= 0x3040 && c <= 0x30ff) return true;
-            if (c >= 0x4e00 && c <= 0x9faf) return true;
+            std::regex expr("[\u3040-\u30ff]");
+            std::string strC = std::string(1, c);
+            return std::regex_match(strC, expr);
+        }
 
-            return false;
+        static bool isChineseCharacter(char c) {
+            std::regex expr("[\u4e00-\u9FFF]");
+            std::string strC = std::string(1, c);
+            return std::regex_match(strC, expr);
+        }
+
+        static bool isKoreanCharacter(char c) {
+            std::regex expr("[\uac00-\ud7a3]");
+            std::string strC = std::string(1, c);
+            return std::regex_match(strC, expr);
         }
 
         static bool isCJKCharacter(char c) {
-            if (c >= 0x4E00 && c <= 0x9FFF) return true;
-            return false;
+            return isJapaneseCharacter(c) || isChineseCharacter(c) || isKoreanCharacter(c);
         }
     };
 }

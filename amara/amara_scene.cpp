@@ -181,7 +181,7 @@ namespace Amara {
                 cameras.sort(sortEntities());
                 if (shouldSortChildren || sortChildrenOnce) {
                     sortChildrenOnce = false;
-                    children.sort(sortEntities());
+                    delayedSorting();
                 }
 
                 float offset, upScale;

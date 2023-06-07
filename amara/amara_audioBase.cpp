@@ -27,6 +27,8 @@ namespace Amara {
             bool isPlaying = false;
             bool isPaused = false;
 
+            int defaultLoops = -1;
+
 			Amara::AudioGroup* group = nullptr;
 			Amara::AudioBase* parent = nullptr;
 
@@ -80,11 +82,21 @@ namespace Amara {
                 return this;
             }
 
-            virtual AudioBase* play() {}
-			virtual AudioBase* play(int loops) {}
+            virtual AudioBase* play() { play(defaultLoops); }
+			virtual AudioBase* play(int loops) { }
+            virtual AudioBase* play(std::string) {}
             virtual AudioBase* pause() {}
             virtual AudioBase* resume() {}
             virtual AudioBase* stop() {}
+
+            virtual void chain(std::string nextKey) {
+                nextInChain = nextKey;
+            }
+
+            virtual AudioBase* getRootAudio() {
+                if (parent) return parent->getRootAudio();
+                return this;
+            }
 
             virtual void run(float parentVolume) {
                 switch (fadeDirection) {

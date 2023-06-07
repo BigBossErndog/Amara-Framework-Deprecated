@@ -121,7 +121,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    std::cout << "Font with key: \"" << gFontKey << "\" was not found." << std::endl;
+                    SDL_Log("Font with key: \"$s\" was not found.", gFontKey.c_str());
                 }
                 return false;
             }
@@ -211,6 +211,7 @@ namespace Amara {
                 wordWrapWidth = w;
                 wordWrap = true;
                 if (w == 0 || w == false) {
+                    wordWrapWidth = 0;
                     wordWrap = false;
                 }
                 findDimensions();
@@ -277,7 +278,7 @@ namespace Amara {
 
 						int rx = floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
 						int ry = floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY);
-
+                        
                         FC_DrawColumnEffect(
                             fontAsset->font,
                             gRenderer,

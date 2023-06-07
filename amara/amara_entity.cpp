@@ -78,6 +78,9 @@ namespace Amara {
 			bool shouldSortChildren = true;
 			bool sortChildrenOnce = false;
 
+			int sortingDelay = 0;
+			int sortingDelayCounter = 0;
+
 			Entity() {}
 
 			virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
@@ -264,6 +267,13 @@ namespace Amara {
 			void sortChildren() {
 				children.sort(sortEntities());
 			}
+			void delayedSorting() {
+				sortingDelayCounter += 1;
+				if (sortingDelayCounter >= sortingDelay) {
+					sortChildren();
+					sortingDelayCounter = 0;
+				}
+			}
 
 			void setChildrenSorting(bool always) {
 				shouldSortChildren = always;
@@ -296,10 +306,10 @@ namespace Amara {
 				float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
 				float recAngle = properties->angle + angle;
 				float recAlpha = properties->alpha * alpha;
-
+				
 				if (shouldSortChildren || sortChildrenOnce) {
 					sortChildrenOnce = false;
-					children.sort(sortEntities());
+					delayedSorting();
 				}
 
 				Amara::Entity* entity;

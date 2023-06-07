@@ -42,7 +42,7 @@ namespace Amara {
 			}
 
 			Amara::AudioBase* play() {
-				return play(-1);
+				return play(defaultLoops);
 			}
 
 			Amara::AudioBase* pause() {
@@ -73,6 +73,11 @@ namespace Amara {
 				return this;
 			}
 
+			virtual void chain(std::string nextKey) {
+                Amara::AudioBase::chain(nextKey);
+				defaultLoops = 0;
+            }
+
 			bool finished() {
 				return !isPlaying;
 			}
@@ -94,9 +99,21 @@ namespace Amara {
             void run(float parentVolume) {
                 Amara::AudioBase::run(parentVolume);
 
-                if (Mix_PlayingMusic() && properties->music == this) {
-					Mix_VolumeMusic(floor(volume * masterVolume * parentVolume * MIX_MAX_VOLUME));
-					position = Mix_GetMusicPosition(music);
+                if (properties->music == this) {
+					if (Mix_PlayingMusic()) {
+						Mix_VolumeMusic(floor(volume * masterVolume * parentVolume * MIX_MAX_VOLUME));
+						position = Mix_GetMusicPosition(music);
+					}
+					else {
+						isPlaying = false;
+						isPaused = false;
+						if (parent && parent->currentlyPlaying == this) {
+							parent->currentlyPlaying = nullptr;
+						}
+						if (!nextInChain.empty()) {
+							getRootAudio()->play(nextInChain);
+						}
+					}
 				}
 				else {
 					isPlaying = false;

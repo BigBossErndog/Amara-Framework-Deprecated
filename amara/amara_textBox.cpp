@@ -3,7 +3,6 @@
 #define AMARA_TEXTBOX
 
 
-
 namespace Amara {
     class TextBox: public Amara::UIBox {
         public:
@@ -11,8 +10,6 @@ namespace Amara {
             std::string wrappedText;
             std::string recText;
             std::string txtProgress;
-
-            std::string progressControl;
 
             unsigned int progress = 0;
             unsigned int timeCounter = 0;
@@ -91,9 +88,6 @@ namespace Amara {
                 }
                 if (config.find("isProgressive") != config.end()) {
                     isProgressive = config["isProgressive"];
-                }
-                if (config.find("progressControl") != config.end()) {
-                    progressControl = config["progressControl"];
                 }
                 if (config.find("allowSkip") != config.end()) {
                     allowSkip = config["allowSkip"];
@@ -196,7 +190,7 @@ namespace Amara {
                     finishedProgress = true;
                 }
                 else {
-                    if (!progressControl.empty() && (controls->justDown(progressControl) || interact.tapped) && allowSkip) {
+                    if (progressControl() && allowSkip) {
                         progress = wrappedText.length();
                     }
 
@@ -228,8 +222,9 @@ namespace Amara {
 
                 int nMarginLeft = marginLeft + extraMarginLeft;
                 int nMarginRight = marginRight + extraMarginRight;
+                int wrapWidth = width - nMarginLeft - nMarginRight;
 
-                txt->setWordWrap(false);
+                txt->setWordWrap((isProgressive) ? false : wrapWidth);
 
                 text = newText;
                 wrappedText = adjustText(newText, width - (nMarginLeft + nMarginRight));
@@ -244,87 +239,12 @@ namespace Amara {
             }
 
             std::string adjustText(std::string gText, float wrapWidth) {
-                std::string recText = txt->text;
-                std::string fText = "";
-                std::string word = "";
-                std::string pText = "";
-                float textWidth = 0;
-                char c, lastC = 0;
-
-                txt->setWordWrap(false);
-
-                for (int i = 0; i < gText.length(); i++) {
-                    c = gText.at(i);
-                    
-                    if (c == ' ') {
-                        pText = fText + word;
-                        txt->setText(pText);
-                        if (txt->width > wrapWidth) {
-                            fText += '\n';
-                            fText += word;
-                        }
-                        else {
-                            fText += word;
-                        }
-
-                        pText = fText + c;
-                        txt->setText(pText);
-                        if (txt->width > wrapWidth) {
-                            fText += '\n';
-                        }
-                        else {
-                            fText += c;
-                        }
-
-                        word = "";
-                    }
-                    else {
-                        if (StringParser::isPunctuation(c)) {
-                            word += c;
-                        }
-                        else if (!StringParser::isSameLanguage(lastC, c)) {
-                            pText = fText + word;
-                            txt->setText(pText);
-                            if (txt->width > wrapWidth) {
-                                fText += '\n';
-                                fText += word;
-                            }
-                            else {
-                                fText += word;
-                            }
-                            word = c;
-                        }
-                        else if (StringParser::isJapaneseCharacter(c) || StringParser::isCJKCharacter(c)) {
-                            pText = fText + word;
-                            txt->setText(pText);
-                            if (txt->width > wrapWidth) {
-                                fText += '\n';
-                                fText += word;
-                            }
-                            else {
-                                fText += word;
-                            }
-                            word = c;
-                        }
-                        else {
-                            word += c;
-                        }
-                    }
-                    lastC = c;
-                }
-                pText = fText + word;
-                txt->setText(pText);
-                if (txt->width > wrapWidth) {
-                    fText += '\n';
-                    fText += word;
-                }
-                else {
-                    fText += word;
+                txt->setWordWrap((isProgressive) ? false : wrapWidth);
+                if (!isProgressive) {
+                    return gText;
                 }
 
-                txt->setText(recText);
-
-                return fText;
+                return StringParser::wrapString(txt->fontAsset->font, gText, wrapWidth);
             }
 
 			void fixText() {
@@ -335,7 +255,7 @@ namespace Amara {
 
                 int wrapWidth = width - nMarginLeft - nMarginRight;
                 
-                txt->setWordWrap(false);
+                txt->setWordWrap((isProgressive) ? false : wrapWidth);
                 txt->setText(wrappedText);
 
                 switch (horizontalAlignment) {
@@ -434,12 +354,12 @@ namespace Amara {
                 if (sm.evt()) {
                     if (autoProgress) {
                         autoProgressCounter += 1;
-                        if (autoProgressCounter >= autoProgressDelay || (autoProgressSkip && (controls->justDown(progressControl) || interact.tapped))) {
+                        if (autoProgressCounter >= autoProgressDelay || (autoProgressSkip && progressControl())) {
 							onProgress();
                             sm.nextEvt();
                         }
                     }
-                    else if (progressControl.empty() || controls->justDown(progressControl) || interact.tapped) {
+                    else if (progressControl()) {
                         if (progressIcon != nullptr) hideProgressIcon();
 						onProgress();
                         sm.nextEvt();
@@ -478,8 +398,12 @@ namespace Amara {
                 return toReturn;
             }
 
-            virtual void setProgressControl(std::string gControl) {
-                progressControl = gControl;
+            std::string inputKey = "confirm";
+            virtual bool progressControl() {
+                if (controls->justDown(inputKey) || interact.tapped) {
+                    return true;
+                }
+                return false;
             }
 
 			void setAutoProgressDelay(float s) {

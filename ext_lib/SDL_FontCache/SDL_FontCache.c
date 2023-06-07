@@ -6,7 +6,7 @@ See SDL_FontCache.h for license info.
 */
 
 #include "SDL_FontCache.h"
-
+#include <regex>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,7 +80,27 @@ __inline int c99_snprintf(char *outBuf, size_t size, const char *format, ...)
 // Extra pixels of padding around each glyph to avoid linear filtering artifacts
 #define FC_CACHE_PADDING 1
 
+static bool FC_IsJapaneseCharacter(char c) {
+    std::regex expr("[\u3040-\u30ff]");
+    std::string strC = std::string(1, c);
+    return std::regex_match(strC, expr);
+}
 
+static bool FC_IsChineseCharacter(char c) {
+    std::regex expr("[\u4e00-\u9FFF]");
+    std::string strC = std::string(1, c);
+    return std::regex_match(strC, expr);
+}
+
+static bool FC_IsKoreanCharacter(char c) {
+    std::regex expr("[\uac00-\ud7a3]");
+    std::string strC = std::string(1, c);
+    return std::regex_match(strC, expr);
+}
+
+static bool FC_IsCJKCharacter(char c) {
+    return FC_IsJapaneseCharacter(c) || FC_IsChineseCharacter(c) || FC_IsKoreanCharacter(c);
+}
 
 static Uint8 has_clip(FC_Target* dest)
 {
@@ -1944,10 +1964,17 @@ static FC_StringList* FC_ExplodeAndKeep(const char* text, char delimiter)
     // Doesn't technically support UTF-8, but it's probably fine, right?
     size = 0;
     start = end = text;
+    bool isCJK;
     while(1)
     {
-        if(*end == delimiter || *end == '\0')
+        isCJK = FC_IsCJKCharacter(*end);
+        if(*end == delimiter || *end == '\0' || isCJK)
         {
+            if (isCJK) {
+                size += 1;
+                end += 1;
+            }
+
             FC_StringListPushBackBytes(node, start, size);
 
             if(*end == '\0')

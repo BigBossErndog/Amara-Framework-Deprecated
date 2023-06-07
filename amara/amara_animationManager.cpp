@@ -135,9 +135,11 @@ namespace Amara {
 
             void pause() {
                 isPaused = true;
+                isActive = false;
             }
             void resume() {
                 isPaused = false;
+                if (currentAnim != nullptr) isActive = true;
             }
 
             void run() {
@@ -150,7 +152,7 @@ namespace Amara {
                 float frameDelay = properties->lps/(float)currentAnim->frameRate;
                 frameCounter += 1;
                 if (frameCounter >= frameDelay) {
-                    currentIndex += 1;
+                    currentIndex += floor(frameCounter/frameDelay);
                     if (currentIndex >= currentAnim->length()) {
                         if (currentAnim->loop) {
                             currentIndex = 0;

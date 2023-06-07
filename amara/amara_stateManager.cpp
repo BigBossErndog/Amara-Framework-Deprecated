@@ -9,6 +9,7 @@ namespace Amara {
         std::string name;
 		nlohmann::json data;
         int event = 0;
+        std::string jumpFlag;
     };
 
     class StateManager {
@@ -86,7 +87,7 @@ namespace Amara {
             void switchState(std::string key) {
                 if (!currentState.empty()) {
                     lastState = currentState;
-                    Amara::StateRecord record = {currentState, data, currentEvent};
+                    Amara::StateRecord record = {currentState, data, currentEvent, jumpFlag};
                     stateRecords.push_back(record);
                 }
 
@@ -113,6 +114,7 @@ namespace Amara {
                     Amara::StateRecord record = stateRecords.back();
                     currentState = record.name;
                     currentEvent = record.event;
+                    jumpFlag = record.jumpFlag;
 					data = record.data;
                     stateRecords.pop_back();
                 }
@@ -223,9 +225,7 @@ namespace Amara {
             bool bookmark(std::string flag) {
                 bool toReturn = false;
 
-                if (once()) {
-                    toReturn = true;
-                }
+                if (once()) {}
                 else {
                     if (jumpFlag.compare(flag) == 0) {
                         jumpFlag.clear();

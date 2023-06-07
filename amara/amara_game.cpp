@@ -63,7 +63,6 @@ namespace Amara {
 			int tps = 1000 / fps;
 			int lps = fps;
 			int realFPS = fps;
-			LTimer fpsTimer;
 			LTimer capTimer;
 			
 			int frameCounter = 0;

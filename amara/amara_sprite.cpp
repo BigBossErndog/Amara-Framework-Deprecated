@@ -51,6 +51,15 @@ namespace Amara {
                 anims->run();
             }
 
+            using Amara::Image::setTexture;
+            bool setTexture(std::string gTextureKey, std::string gAnimKey) {
+                if (setTexture(gTextureKey)) {
+                    play(gAnimKey);
+                    return true;
+                }
+                return false;
+            }
+
             ~Sprite() {
                 if (anims != nullptr) delete anims;
             }

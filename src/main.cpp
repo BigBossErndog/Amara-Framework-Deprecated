@@ -5,56 +5,41 @@ using namespace std;
 
 // This is all test code and may not be necessarily helpful as an example.
 
-class TestScene: public Scene {
+class TestScene: public Scene, public StateManager {
     public:
-		TextureContainer* cont;
-		Image* box1;
-		Image* box2;
+		TextBox* box = nullptr;
 
-		RepeatedSprite* rep;
+		nlohmann::json testText;
+
+		TrueTypeFont* showText;
+		int progress = 0;
 
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
-			load->spritesheet("vineChain", "assets/vineChain.png", 32, 32);
+			load->ttf("font", "assets/PixelMplus10-Regular.ttf", 10);
+			load->json("testText", "assets/testText.json");
         }
 
         void create() {
-			game->setBackgroundColor(0, 0, 0);
-            add(new FillRect(0, 0, mainCamera->width, mainCamera->height, {255, 255, 255, 255}));
+			controls->addKey("confirm", KEY_SPACE);
 
-			add(rep = new RepeatedSprite(0, 20, mainCamera->width, 30, "box"));
-			rep->frame = 1;
-			// add(cont = new TextureContainer(20, 20, 100, 100));
-			// cont->add(new FillRect(0, 0, cont->width, cont->height, {255, 200, 200, 255}));
+			testText = assets->getJSON("testText");
 
-			// cont->add(box1 = new Image(10, 10, "box"));
-			// box1->setInteractable();
-			// box1->setDraggable();
-			// box1->addPhysics(new PhysicsRectangle(0, 0, box1->width, box1->height));
+			add(box = new TextBox(0, 0, 240, 68, "box", "font"));
+			box->configure({
+				{ "xFromCenter", -120 },
+				{ "yFromCenter", -34 }
+			});
+			box->copyStateManager(this);
 
-			// cont->add(box2 = new Image(64, 64, "box"));
-			// box2->setInteractable();
-			// box2->setDraggable();
-			// box2->addPhysics(new PhysicsRectangle(0, 0, box2->width, box2->height));
-
-			// box1->physics->setFriction(0.8);
-			// box2->physics->setFriction(0.8);
-
-			// box1->physics->makePushable(1);
-			// box2->physics->makePushable(1);
-
-			// box1->physics->addCollisionTarget(box2);
-			// box2->physics->addCollisionTarget(box1);
-
-			// cont->setScale(4);
+			// add(showText = new TrueTypeFont(16, 16, "font", "WAITING"));
 		}
 
         void update() {
-			// if (box1->interact.isDown) box1->physics->setFriction(0);
-			// else box1->physics->setFriction(0.2);
-			// if (box2->interact.isDown) box2->physics->setFriction(0);
-			// else box2->physics->setFriction(0.2);
-			rep->patternOffsetX += 2;
+			start();
+			for (int i = 0; i < testText.size(); i++) {
+				box->say(testText[i]);
+			}
         }
 };
 
@@ -66,13 +51,9 @@ int main(int argc, char** args) {
     #endif
     game->init(480, 360);
     game->setWindowSize(960, 720);
-    // game->setBackgroundColor(255, 255, 255);
 
     game->scenes->add("test", new TestScene());
     game->start("test");
-
-    // game->scenes->add("enterSceneKey", new GiveSceneInstance());
-    // game->start("enterStartingScene");
 
     return 0;
 }
