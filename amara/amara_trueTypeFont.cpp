@@ -167,6 +167,9 @@ namespace Amara {
             void setOutlineColor(int r, int g, int b) {
                 setOutlineColor(r, g, b, 255);
             }
+            void setOutlineColor(SDL_Color gColor) {
+                outlineColor = gColor;
+            }
 
             void setOutline(int size, int r, int g, int b, int a) {
                 outline = size;
@@ -174,6 +177,10 @@ namespace Amara {
             }
             void setOutline(int size, int r, int g, int b) {
                 setOutline(size, r, g, b, 255);
+            }
+            void setOutline(int size, SDL_Color gColor) {
+                outline = size;
+                setOutlineColor(gColor);
             }
 
             void setOrigin(float gx, float gy) {

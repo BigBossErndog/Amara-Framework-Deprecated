@@ -19,17 +19,6 @@ namespace Amara {
                 }
             }
     };
-
-    class Tween_Wait: public Tween {
-    public:
-        Tween_Wait(double gt) {
-            time = gt;
-        }
-        
-        void script() {
-            progressFurther();
-        }
-    };
 }
 
 #endif

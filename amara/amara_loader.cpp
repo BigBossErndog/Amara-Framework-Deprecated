@@ -756,8 +756,7 @@ namespace Amara {
 				bool success = true;
 
 				std::ifstream in(path, std::ios::in | std::ios::binary);
-				if (in)
-				{
+				if (in) {
 					std::string contents;
 					in.seekg(0, std::ios::end);
 					contents.resize(in.tellg());
@@ -777,7 +776,7 @@ namespace Amara {
 			}
 
 			virtual bool json(std::string key, std::string path) {
-				json(key, path, replacementDefault);
+				return json(key, path, replacementDefault);
 			}
 
 			virtual bool lineByLine(std::string key, std::string path, bool replace) {

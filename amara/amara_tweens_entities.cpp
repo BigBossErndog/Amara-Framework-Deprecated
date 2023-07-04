@@ -608,18 +608,29 @@ namespace Amara {
         }
     };
 
-    class TimedBroadcast: public Amara::Script {
+    class Tween_Wait: public Tween {
+    public:
+        Tween_Wait(double gt) {
+            time = gt;
+        }
+        
+        void script() {
+            progressFurther();
+        }
+    };
+
+    class Script_TimedBroadcast: public Amara::Script {
     public:
         std::string messageKey;
         nlohmann::json messageData = nullptr;
 
         float time = 0;
 
-        TimedBroadcast(float gTime, std::string gKey) {
+        Script_TimedBroadcast(float gTime, std::string gKey) {
             time = gTime;
             messageKey = gKey;
         }
-        TimedBroadcast(float gTime, std::string gKey, nlohmann::json gData): TimedBroadcast(gTime, gKey) {
+        Script_TimedBroadcast(float gTime, std::string gKey, nlohmann::json gData): Script_TimedBroadcast(gTime, gKey) {
             messageData = gData;
         }
 
@@ -632,6 +643,47 @@ namespace Amara {
                 parent->broadcastMessage(messageKey, messageData);
                 finish();
             }
+        }
+    };
+
+    class Script_Destroy: public Script {
+    public:
+        Entity* toDestroy = nullptr;
+
+        Script_Destroy() {}
+        Script_Destroy(Entity* gEntity) {
+            toDestroy = gEntity;
+        }
+
+        void prepare() {
+            if (!toDestroy) toDestroy = parent;
+        }
+
+        void script() {
+            toDestroy->destroy();
+            finish();
+        }
+    };
+
+    class Script_Configure: public Script {
+    public:
+        Entity* target = nullptr;
+        nlohmann::json config = nullptr;
+
+        Script_Configure(nlohmann::json gConfig) {
+            config = gConfig;
+        }
+        Script_Configure(Entity* gTarget, nlohmann::json gConfig): Script_Configure(gConfig) {
+            target = gTarget;
+        }
+
+        void prepare() {
+            if (!target) target = parent;
+        }
+
+        void script() {
+            target->configure(config);
+            finish();
         }
     };
 }
