@@ -45,7 +45,34 @@ A Makefile with many useful commands for setting up Amara, compilation and playi
 ### Windows
 You will find that the project is already set up for Windows, complete with all the necessary headers and dlls :)
 You just need to have MinGW set up with make and the g++ compiler.
-https://sourceforge.net/projects/mingw/
+
+#### Linux-like Environment Setup
+
+To set up a linux-like environment I am using GNUWin.
+
+Download and install coreutils-5.3.0.exe from the following:  
+https://sourceforge.net/projects/gnuwin32/files/coreutils/5.3.0/  
+Once installed, add the following include paths to the system environment variables:  
+````
+C:\Program Files (x86)\GnuWin32\bin
+````
+You may need to alter the path if you've installed it somewhere else.  
+
+For the make command download and install make-3.81.exe from the following:  
+http://sourceforge.net/projects/gnuwin32/files/make/3.81  
+It will install to the same folder as coreutils so no more steps are needed.  
+
+
+#### GCC Compiler Setup
+
+I am using MinGW-w64's version of the gcc compiler to compile for windows.  
+Download the latest UCRT Win64 build found by scrolling down on the following page:  
+https://winlibs.com  
+Extract and place the inner folder mingw64 wherever you'd like.  
+Add the following include path to the system environment variables:  
+````
+C:\(Path to mingw64 folder)\bin
+````
 
 ### Linux
 The following `make` commands will set up Amara depending on which package management system you use.
