@@ -149,6 +149,7 @@ namespace Amara {
             virtual void updateScene() {
                 update();
                 reciteScripts();
+                
                 runChildren();
                 checkChildren();
 

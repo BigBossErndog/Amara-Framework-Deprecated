@@ -352,7 +352,7 @@ namespace Amara {
                 effect.color = color;
                 drawText(x, y);
 
-                Amara::Entity::draw(vx, vy, vw, vh);
+                Amara::Actor::draw(vx, vy, vw, vh);
             }
     };
 }

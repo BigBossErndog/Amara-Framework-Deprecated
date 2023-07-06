@@ -147,8 +147,45 @@ namespace Amara {
             }
 
             void run() {
+                receiveMessages();
+				updateMessages();
+
+				Amara::Interactable::run();
+				if (isInteractable && isDraggable && interact.isDown) {
+					if (physics) {
+						physics->velocityX = interact.movementX;
+						physics->velocityY = interact.movementY;
+					}
+					else {
+						x += interact.movementX;
+						y += interact.movementY;
+					}
+				}
+
+				update();
+
+				if (physics != nullptr) {
+					if (physics->isActive) physics->run();
+
+					if (physics->isDestroyed) {
+						removePhysics();
+					}
+				}
+
+				if (attachedTo != nullptr) {
+					if (attachedTo->isDestroyed) {
+                        attachedTo = nullptr;
+                    }
+                    else {
+                        x = attachedTo->x + attachmentOffsetX;
+                        y = attachedTo->y + attachmentOffsetY;
+                    }
+				}
+                
                 reciteScripts();
-                if (!isDestroyed) Amara::Entity::run();
+
+				runChildren();
+				checkChildren();
             }
 
             Amara::Actor* clearScripts() {

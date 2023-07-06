@@ -373,6 +373,7 @@ namespace Amara {
 				}
 
 				update();
+
 				if (physics != nullptr) {
 					if (physics->isActive) physics->run();
 
@@ -396,6 +397,7 @@ namespace Amara {
 			}
 
 			virtual void runChildren() {
+				if (isDestroyed) return;
 				Amara::Entity* entity;
 				for (auto it = children.begin(); it != children.end();) {
 					entity = *it;

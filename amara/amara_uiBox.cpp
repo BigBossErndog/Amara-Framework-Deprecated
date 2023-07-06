@@ -408,7 +408,7 @@ namespace Amara {
                 }
 
                 if (openWidth == width && openHeight == height) {
-                    Amara::Entity::draw(vx, vy, vw, vh);
+                    Amara::Actor::draw(vx, vy, vw, vh);
                 }
             }
 

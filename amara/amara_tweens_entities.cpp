@@ -646,6 +646,25 @@ namespace Amara {
         }
     };
 
+    class Script_Broadcast: public Amara::Script {
+    public:
+        std::string messageKey;
+        nlohmann::json messageData = nullptr;
+
+        Script_Broadcast(std::string gKey) {
+            messageKey = gKey;
+        }
+        Script_Broadcast(std::string gKey, nlohmann::json gData): Script_Broadcast(gKey) {
+            messageData = gData;
+        }
+
+        void script() {
+            start();
+            if (once()) broadcastMessage(messageKey, messageData);
+            finishEvt();
+        }
+    };
+
     class Script_Destroy: public Script {
     public:
         Entity* toDestroy = nullptr;

@@ -86,7 +86,7 @@ namespace Amara {
                         particle.draw(vx, vy, vw, vh);
                     }
                 }
-                Amara::Entity::draw(vx, vy, vw, vh);
+                Amara::Actor::draw(vx, vy, vw, vh);
             }
     };
 }

@@ -167,11 +167,6 @@ namespace Amara {
                 if (progressIcon) progressIcon->setVisible(false);
             }
 
-            void run() {
-                textboxUpdate();
-                Amara::UIBox::run();
-            }
-
             virtual void textboxUpdate() {
                 int nMarginTop = marginTop + extraMarginTop;
                 int nMarginBottom = marginBottom + extraMarginBottom;
@@ -217,7 +212,6 @@ namespace Amara {
             }
 
             void setText(std::string newText) {
-                std::string word;
                 int pos = 0;
 
                 int nMarginLeft = marginLeft + extraMarginLeft;
@@ -236,6 +230,7 @@ namespace Amara {
                 progress = 0;
 
 				fixText();
+                txt->setText("");
             }
 
             std::string adjustText(std::string gText, float wrapWidth) {
@@ -326,6 +321,7 @@ namespace Amara {
 
                 if (sm.once()) {
                     setText("");
+                    txt->setText("");
                 }
 
                 if (open()) {
@@ -340,6 +336,7 @@ namespace Amara {
                 }
 
                 if (sm.evt()) {
+                    textboxUpdate();
                     if (finishedProgress) {
                         autoProgressCounter = 0;
                         if (!autoProgress && progressIcon != nullptr) {
@@ -388,6 +385,7 @@ namespace Amara {
 
                 if (sm.once()) {
                     setText("");
+                    txt->setText("");
                     toReturn = true;
                 }
 

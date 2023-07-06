@@ -287,7 +287,7 @@ namespace Amara {
                     }
                 }
 
-                Amara::Entity::draw(vx, vy, vw, vh);
+                Amara::Actor::draw(vx, vy, vw, vh);
 
 				checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
 
