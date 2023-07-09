@@ -97,17 +97,39 @@ namespace Amara {
 			virtual void cancel() {}
 			virtual void cancel(Amara::Actor* actor) {}
 
-            Message& broadcastMessage(std::string key, nlohmann::json gData) {
-				Message& msg = ((Entity*)parent)->broadcastMessage(key, gData);
-                return msg;
+            bool pushedMessages = false;
+
+            void updateMessages() {
+				if (pushedMessages) {
+					pushedMessages = false;
+					Amara::MessageQueue& messages = *(properties->messages);
+					for (auto it = messages.begin(); it != messages.end();) {
+						Message msg = *it;
+						if (msg.parent == this) {
+							if (msg.skip) {
+								msg.skip = false;
+								pushedMessages = true;
+							}
+							else {
+								it = messages.queue.erase(it);
+								continue;
+							}
+						}
+						++it;
+					}
+				}
 			}
-            Message& broadcastMessage(std::string key) {
-                return broadcastMessage(key, nullptr);
-            }
+			Message& broadcastMessage(std::string key, nlohmann::json gData) {
+				pushedMessages = true;
+				return properties->messages->broadcast(this, key, gData);
+			}
+			Message& broadcastMessage(std::string key) {
+				return broadcastMessage(key, nullptr);
+			}
 			Message& getMessage(std::string key) {
 				return properties->messages->get(key);
 			}
-            virtual void receiveMessages() {}
+			virtual void receiveMessages() {}
 
             ~Script() {
                 if (deleteChainOnDelete && chainedScript) {

@@ -6,7 +6,7 @@ namespace Amara {
     class Entity;
 
     typedef struct Message {
-        Entity* parent = nullptr;
+        void* parent = nullptr;
         std::string key;
         nlohmann::json data;
         bool isActive = true;
@@ -72,7 +72,7 @@ namespace Amara {
             return queue.back();
         }
 
-        Message& broadcast(Amara::Entity* gParent, std::string key, nlohmann::json gData) {
+        Message& broadcast(void* gParent, std::string key, nlohmann::json gData) {
             queue.push_back({ gParent, key, gData });
             return queue.back();
         }

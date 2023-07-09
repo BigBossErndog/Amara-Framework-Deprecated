@@ -83,6 +83,7 @@ namespace Amara {
                 for (Amara::Script* script: scripts) {
                     if (!script->isFinished) {
                         script->receiveMessages();
+                        script->updateMessages();
                         script->script();
                         script->script(this);
                     }

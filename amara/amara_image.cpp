@@ -11,7 +11,7 @@ namespace Amara {
 
             Amara::ImageTexture* texture = nullptr;
             std::string textureKey;
-
+            
             SDL_Rect viewport;
             SDL_Rect srcRect;
             SDL_FRect destRect;
