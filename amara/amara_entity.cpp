@@ -219,6 +219,12 @@ namespace Amara {
 					setDraggable(config["isDraggable"]);
 				}
 			}
+			void recursiveConfigure(nlohmann::json config) {
+				configure(config);
+				for (Amara::Entity* child: children) {
+					child->recursiveConfigure(config);
+				}
+			}
 
 			virtual nlohmann::json toData() {
 				nlohmann::json config;
@@ -687,6 +693,19 @@ namespace Amara {
 				return properties->messages->get(key);
 			}
 			virtual void receiveMessages() {}
+
+			virtual void reloadAssets() {}
+			void reloadChildrenAssets(bool recursive) {
+				Amara::Entity* entity;
+				for (auto it = children.begin(); it != children.end(); it++) {
+					entity = *it;
+					entity->reloadAssets();
+					if (recursive) entity->reloadChildrenAssets(recursive);
+				}
+			}
+			void reloadChildrenAssets() {
+				reloadChildrenAssets(false);
+			}
 
 			virtual void preload() {}
 			virtual void create() {}

@@ -248,6 +248,10 @@ namespace Amara {
                 return false;
             }
 
+            void reloadAssets() {
+                setTexture(textureKey);
+            }
+
             int getTileIdAt(int gx, int gy) {
                 return getTileAt(gx, gy).id;
             }

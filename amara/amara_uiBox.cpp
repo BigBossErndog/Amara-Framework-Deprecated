@@ -462,6 +462,10 @@ namespace Amara {
                 return false;
             }
 
+            void reloadAssets() {
+                setTexture(textureKey);
+            }
+
             bool removeTexture() {
                 textureKey.clear();
                 if (texture && texture->temp) delete texture;

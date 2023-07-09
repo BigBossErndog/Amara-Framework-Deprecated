@@ -80,6 +80,12 @@ namespace Amara {
             return false;
         }
 
+        void reloadAssets() {
+            backBar->reloadAssets();
+            frontBar->reloadAssets();
+            if (textDisplay) textDisplay->reloadAssets();
+        }
+
         void setValue(float gVal) {
             value = gVal;
             if (value > maxValue) {

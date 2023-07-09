@@ -316,6 +316,10 @@ namespace Amara {
                 return false;
             }
 
+            void reloadAssets() {
+                setTexture(textureKey);
+            }
+
             bool setTexture(SDL_Texture* tx) {
                 if (texture) removeTexture();
                 texture = new ImageTexture("temp", IMAGE, tx);

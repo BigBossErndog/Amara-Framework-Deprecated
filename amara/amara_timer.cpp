@@ -6,6 +6,8 @@ namespace Amara {
         int minutes = 0;
         int hours = 0;
 
+        bool autoTick = true;
+
         bool isRunning = false;
 
         LTimer ticker;
@@ -22,7 +24,7 @@ namespace Amara {
         }
 
         nlohmann::json toData() {
-            nlohmann::json config = Actor::toData();
+            nlohmann::json config = nlohmann::json::object();
             
             config["milliseconds"] = milliseconds;
             config["seconds"] = seconds;
@@ -33,6 +35,7 @@ namespace Amara {
         }
 
         void init() {
+            Amara::Actor::init();
             reset();
         }
 
@@ -69,7 +72,7 @@ namespace Amara {
                 seconds += 1;
             }
             while (seconds >= 60) {
-                seconds -= 60;  
+                seconds -= 60;
                 minutes += 1;
             }
             while (minutes >= 60) {
@@ -80,7 +83,7 @@ namespace Amara {
         }
 
         void run() {
-            tick();
+            if (autoTick) tick();
             Actor::run();
         }
     };
