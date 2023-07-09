@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_UIBOX
-#define AMARA_UIBOX
-
-
-
 namespace Amara {
     class UIBox: public Amara::Actor {
         public:
@@ -847,5 +841,3 @@ namespace Amara {
 		}
 	};
 }
-
-#endif

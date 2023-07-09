@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_PATHFINDING
-#define AMARA_PATHFINDING
-
-
-
 namespace Amara {
     int findPath(void* data);
 
@@ -284,5 +278,3 @@ namespace Amara {
         return 0;
     }
 }
-
-#endif

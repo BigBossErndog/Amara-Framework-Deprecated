@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_LOADMANAGER
-#define AMARA_LOADMANAGER
-
-
-
 namespace Amara {
     struct LoadTask {
         Amara::AssetType type;
@@ -72,7 +66,7 @@ namespace Amara {
             void regenerateAssets() {
                 load->regenerateAssets();
             }
-
+            
             int numTasks() {
                 return tasks.size();
             }
@@ -255,5 +249,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

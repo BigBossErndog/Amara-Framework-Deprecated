@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_INPUTMANAGER
-#define AMARA_INPUTMANAGER
-
-
-
 namespace Amara {
     class Keyboard;
     class Mouse;
@@ -54,5 +48,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

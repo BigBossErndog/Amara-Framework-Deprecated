@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_MATH
-#define AMARA_MATH
-
-
-
 namespace Amara {
     bool valueInRange(int val, int minVal, int maxVal) {
         return (val >= minVal) && (val <= maxVal);
@@ -26,5 +20,3 @@ namespace Amara {
         return (num1 < num2) ? num1 : num2;
     }
 }
-
-#endif

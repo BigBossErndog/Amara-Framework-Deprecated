@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_TWEEN
-#define AMARA_TWEEN
-
-
-
 namespace Amara {
     class Tween: public Script {
         public:
@@ -20,5 +14,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

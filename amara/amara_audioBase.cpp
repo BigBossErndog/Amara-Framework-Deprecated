@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_AUDIOBASE
-#define AMARA_AUDIOBASE
-
-
-
 namespace Amara {
     class AudioGroup;
 
@@ -139,5 +133,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

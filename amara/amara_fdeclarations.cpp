@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_FDECLARE_TWEENS
-#define AMARA_FDECLARE_TWEENS
-
-
-
 namespace Amara {
     class Script;
     enum Easing;
@@ -15,5 +9,3 @@ namespace Amara {
 	SDL_Texture* createCircleTexture(SDL_Renderer*, float, SDL_Color);
 	SDL_Texture* createGradientTexture(SDL_Renderer*, int, int, Amara::Direction, SDL_Color, SDL_Color);
 }
-
-#endif

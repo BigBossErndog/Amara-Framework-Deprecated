@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_EASING
-#define AMARA_EASING
-
-
-
 namespace Amara {
     enum Easing {
         LINEAR,
@@ -37,5 +31,3 @@ namespace Amara {
         return startVal + (endVal - startVal)*(sin(M_PI * progress));
     }
 }
-
-#endif

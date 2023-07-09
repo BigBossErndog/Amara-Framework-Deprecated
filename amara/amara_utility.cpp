@@ -1,5 +1,3 @@
-#pragma once
-
 bool listContains(std::vector<nlohmann::json> list, nlohmann::json f) {
     for (nlohmann::json obj: list) {
         if (obj.is_null() && f.is_null()) return true;

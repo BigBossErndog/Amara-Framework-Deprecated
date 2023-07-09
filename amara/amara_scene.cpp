@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_SCENE
-#define AMARA_SCENE
-
-
-
 namespace Amara {
     class Game;
     class ScenePlugin;
@@ -22,9 +16,7 @@ namespace Amara {
 
             bool initialLoaded = false;
 
-            Scene(): Actor() {
-
-            }
+            using Actor::Actor;
 
             virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* gScenePlugin) final {
                 properties = gameProperties;
@@ -263,5 +255,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_GAMEPADMANAGER
-#define AMARA_GAMEPADMANAGER
-
-
-
 namespace Amara {
     class GamepadManager {
         public:
@@ -181,5 +175,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

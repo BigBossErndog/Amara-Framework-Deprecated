@@ -1,7 +1,3 @@
-#pragma once
-#ifndef AMARA_KEYCODES
-#define AMARA_KEYCODES
-
 namespace Amara {
     typedef Sint32 Keycode;
 
@@ -264,5 +260,3 @@ namespace Amara {
         KEY_AUDIOFASTFORWARD = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_AUDIOFASTFORWARD)
     };
 }
-
-#endif

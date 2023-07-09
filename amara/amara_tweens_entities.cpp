@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_TWEENS_ENTITIES
-#define AMARA_TWEENS_ENTITIES
-
-
-
 namespace Amara {
     class Tween_XY: public Tween {
         public:
@@ -706,5 +700,3 @@ namespace Amara {
         }
     };
 }
-
-#endif

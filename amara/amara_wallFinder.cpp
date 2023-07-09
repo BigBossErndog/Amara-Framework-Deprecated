@@ -1,7 +1,3 @@
-#pragma once
-#ifndef AMARA_WALLFINDER
-#define AMARA_WALLFINDER
-
 namespace Amara {
     class WallFinder {
         public:
@@ -24,5 +20,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

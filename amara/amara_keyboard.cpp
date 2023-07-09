@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_KEYBOARD
-#define AMARA_KEYBOARD
-
-
-
 namespace Amara {
     class Key;
 
@@ -90,5 +84,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

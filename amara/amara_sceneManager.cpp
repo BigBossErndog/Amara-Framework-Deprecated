@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_SCENEMANAGER
-#define AMARA_SCENEMANAGER
-
-
-
 namespace Amara {
 	class Game;
 
@@ -109,5 +103,3 @@ namespace Amara {
 			}
 	};
 }
-
-#endif

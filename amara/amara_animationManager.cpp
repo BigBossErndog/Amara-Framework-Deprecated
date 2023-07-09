@@ -1,9 +1,3 @@
-#pragma once
-#ifndef Amara_ANIMATIONMANAGER
-#define Amara_ANIMATIONMANAGER
-
-
-
 namespace Amara {
     class AnimationManager {
         public:
@@ -175,5 +169,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

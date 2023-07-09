@@ -1,7 +1,3 @@
-#pragma once
-#ifndef AMARA_LTIMER
-#define AMARA_LTIMER
-
 namespace Amara {
     /*
 	 * The application time based timer
@@ -84,4 +80,3 @@ namespace Amara {
 			bool mStarted;
 	};
 }
-#endif

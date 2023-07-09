@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_GEOMETRY
-#define AMARA_GEOMETRY
-
-
-
 namespace Amara {
     typedef struct IntVector2 {
         int x = 0;
@@ -433,5 +427,3 @@ namespace Amara {
         return angleBetween(0, 0, offsetX, offsetY);
     }
 }
-
-#endif

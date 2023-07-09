@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_SPRITE
-#define AMARA_SPRITE
-
-
-
 namespace Amara {
     class Sprite: public Amara::Image, public Amara::Animated {
         public:
@@ -65,5 +59,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_INTERACTIONMANAGER
-#define AMARA_INTERACTIONMANAGER
-
-
-
 namespace Amara {
 	class InteractionManager: public Amara::Key {
 		public:
@@ -119,5 +113,3 @@ namespace Amara {
 			}
 	};
 }
-
-#endif

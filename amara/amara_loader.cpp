@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_LOADER
-#define AMARA_LOADER
-
-
-
 namespace Amara {
     class Game;
 
@@ -858,5 +852,3 @@ namespace Amara {
 			}
     };
 }
-
-#endif

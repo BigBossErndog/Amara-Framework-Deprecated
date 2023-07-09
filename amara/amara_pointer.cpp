@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_POINTER
-#define AMARA_POINTER
-
-
-
 namespace Amara {
     class Pointer {
         public:
@@ -29,5 +23,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_CAMERA
-#define AMARA_CAMERA
-
-
-
 namespace Amara {
     class Scene;
 
@@ -485,5 +479,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

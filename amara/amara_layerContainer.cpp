@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_LAYER
-#define AMARA_LAYER
-
-
-
 namespace Amara {
     class Layer: public Amara::Actor {
     public:
@@ -663,5 +657,3 @@ namespace Amara {
         }
     };
 }
-
-#endif

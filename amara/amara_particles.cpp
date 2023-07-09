@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_PARTICLES
-#define AMARA_PARTICLES
-
-
-
 namespace Amara {
     class Particle: public Amara::Image, public Amara::StateManager {
         public:
@@ -90,5 +84,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

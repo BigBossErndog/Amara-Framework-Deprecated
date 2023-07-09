@@ -91,8 +91,7 @@ namespace Amara {
     #include "amara_ltimer.cpp"
 
     #include "amara_fdeclarations.cpp"
-
-    #include "amara_fileReader.cpp"
+    
     #include "amara_fileWriter.cpp"
 
     #include "amara_gameProperties.cpp"
@@ -125,7 +124,6 @@ namespace Amara {
     #include "amara_asset.cpp"
     #include "amara_audioBase.cpp"
     #include "amara_sound.cpp"
-    #include "amara_music.cpp"
 
     #include "amara_loader.cpp"
     #include "amara_loadManager.cpp"
@@ -137,6 +135,8 @@ namespace Amara {
     #include "amara_interactable.cpp"
 
     #include "amara_physicsBase.cpp"
+
+    #include "amara_broadcaster.cpp"
 
     #include "amara_entity.cpp"
     #include "amara_script.cpp"
@@ -151,9 +151,7 @@ namespace Amara {
 
     #include "amara_trueTypeFont.cpp"
 
-    #include "amara_tileAnimation.cpp"
     #include "amara_tile.cpp"
-    #include "amara_tilemapLayer.cpp"
     #include "amara_tilemap.cpp"
 
     #include "amara_pathFinding.cpp"
@@ -164,14 +162,11 @@ namespace Amara {
     #include "amara_repeatedSprite.cpp"
 
     #include "amara_particles.cpp"
-    #include "amara_lighting.cpp"
 
     #include "amara_canvas.cpp"
     #include "amara_layerContainer.cpp"
 
     #include "amara_uiBar.cpp"
-
-    #include "amara_scene.cpp"
 
     #include "amara_control.cpp"
     #include "amara_controlScheme.cpp"

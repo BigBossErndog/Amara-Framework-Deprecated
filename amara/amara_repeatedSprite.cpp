@@ -1,5 +1,3 @@
-#pragma once
-
 namespace Amara {
     class RepeatedSprite: public Amara::Sprite {
     public:

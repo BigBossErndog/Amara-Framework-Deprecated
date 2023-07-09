@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_ASSETMANAGER
-#define AMARA_ASSETMANAGER
-
-
-
 namespace Amara {
     class AssetManager {
         public:
@@ -278,5 +272,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

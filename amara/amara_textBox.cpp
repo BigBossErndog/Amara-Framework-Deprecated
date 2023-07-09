@@ -1,8 +1,3 @@
-#pragma once
-#ifndef AMARA_TEXTBOX
-#define AMARA_TEXTBOX
-
-
 namespace Amara {
     class TextBox: public Amara::UIBox {
         public:
@@ -412,5 +407,3 @@ namespace Amara {
 			virtual void onProgress() {}
     };
 }
-
-#endif

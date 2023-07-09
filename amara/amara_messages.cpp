@@ -1,7 +1,3 @@
-#pragma once
-
-
-
 namespace Amara {
     class Entity;
 
@@ -20,9 +16,7 @@ namespace Amara {
 
         static Message nullMessage;
 
-        MessageQueue() {
-
-        }
+        MessageQueue() {}
         
         void update() {
             for (auto it = queue.begin(); it != queue.end();) {

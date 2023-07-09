@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_ACTOR
-#define AMARA_ACTOR
-
-
-
 namespace Amara {
     class Tween;
     class Actor: public Amara::Entity {
@@ -283,5 +277,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

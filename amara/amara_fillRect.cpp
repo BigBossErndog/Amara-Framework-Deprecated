@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_FILLRECT
-#define AMARA_FILLRECT
-
-
-
 namespace Amara {
 	class FillRect: public Amara::Actor {
 		public:
@@ -186,5 +180,3 @@ namespace Amara {
 			}
 	};
 }
-
-#endif

@@ -1,6 +1,3 @@
-#pragma once
-
-
 namespace Amara {
     class FileWriter {
     public:

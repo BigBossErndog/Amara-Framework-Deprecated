@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_TRUETYPEFONT
-#define AMARA_TRUETYPEFONT
-
-
-
 namespace Amara {
     enum Alignment {
         ALIGN_LEFT,
@@ -364,5 +358,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

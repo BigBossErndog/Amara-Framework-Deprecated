@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_GAMEPROPERTIES
-#define AMARA_GAMEPROPERTIES
-
-
-
 namespace Amara {
     class Game;
     class AssetManager;
@@ -96,5 +90,3 @@ namespace Amara {
             GameProperties() {}
     };
 }
-
-#endif

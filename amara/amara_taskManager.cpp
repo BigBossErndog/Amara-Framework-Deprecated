@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_TASKMANAGER
-#define AMARA_TASKMANAGER
-
-
-
 namespace Amara {
     class Entity;
     class SceneTransitionBase;
@@ -44,5 +38,3 @@ namespace Amara {
             void run() {}
     };
 }
-
-#endif

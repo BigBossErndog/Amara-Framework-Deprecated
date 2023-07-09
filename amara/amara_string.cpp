@@ -1,6 +1,3 @@
-#pragma once
-
-
 namespace Amara {
     template <typename ...Args>
     std::string stringWithFormat(const std::string& format, Args && ...args)

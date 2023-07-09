@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_RANDOM
-#define AMARA_RANDOM
-
-
-
 namespace Amara {
     class RNG {
         public:
@@ -90,5 +84,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

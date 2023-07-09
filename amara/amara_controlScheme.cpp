@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_CONTROLSCHEME
-#define AMARA_CONTROLSCHEME
-
-
-
 namespace Amara {
     class ControlScheme {
         public:
@@ -194,5 +188,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

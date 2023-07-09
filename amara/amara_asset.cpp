@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_ASSET
-#define AMARA_ASSET
-
-
-
 namespace Amara {
     enum AssetType {
         JSONCONFIG,
@@ -425,5 +419,3 @@ namespace Amara {
         }
     };
 }
-
-#endif

@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_IMAGE
-#define AMARA_IMAGE
-
-
-
 namespace Amara {
     class Image: public Amara::Actor {
         public:
@@ -11,7 +5,7 @@ namespace Amara {
 
             Amara::ImageTexture* texture = nullptr;
             std::string textureKey;
-            
+
             SDL_Rect viewport;
             SDL_Rect srcRect;
             SDL_FRect destRect;
@@ -420,5 +414,3 @@ namespace Amara {
 			}
     };
 }
-
-#endif

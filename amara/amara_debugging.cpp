@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_DEBUGGING
-#define AMARA_DEBUGGING
-
-
-
 namespace Amara {
     class Error {
         public:
@@ -28,5 +22,3 @@ namespace Amara {
         e->breakGame();
     }
 }
-
-#endif

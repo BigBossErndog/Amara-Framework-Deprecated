@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_STATEMANAGER
-#define AMARA_STATEMANAGER
-
-
-
 namespace Amara {
     struct StateRecord {
         std::string name;
@@ -251,5 +245,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

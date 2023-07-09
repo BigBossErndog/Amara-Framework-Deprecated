@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_EVENTS
-#define AMARA_EVENTS
-
-
-
 namespace Amara {
     class Event {
         public:
@@ -84,5 +78,3 @@ namespace Amara {
 			}
     };
 }
-
-#endif

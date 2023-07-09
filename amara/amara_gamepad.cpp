@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_GAMEPAD
-#define AMARA_GAMEPAD
-
-
-
 namespace Amara {
     enum Gamepad_Scheme {
         DPAD_UP,
@@ -257,5 +251,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

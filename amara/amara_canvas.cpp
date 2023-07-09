@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_CANVAS
-#define AMARA_CANVAS
-
-
-
 namespace Amara {
     class Canvas: public Actor {
         public:
@@ -299,5 +293,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

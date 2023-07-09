@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_STICK
-#define AMARA_STICK
-
-
-
 namespace Amara {
     const int JOYSTICK_DEADZONE = 12000;
 
@@ -67,5 +61,3 @@ namespace Amara {
 			}
     };
 }
-
-#endif

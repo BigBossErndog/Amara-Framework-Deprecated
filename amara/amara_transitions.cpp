@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_TRANSITIONS
-#define AMARA_TRANSITIONS
-
-
-
 namespace Amara {
     class FillTransition: public Amara::SceneTransition {
         public:
@@ -129,6 +123,3 @@ namespace Amara {
             }
     };
 }
-
-
-#endif

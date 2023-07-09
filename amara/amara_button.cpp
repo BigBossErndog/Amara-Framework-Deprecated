@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_BUTTON
-#define AMARA_BUTTON
-
-
-
 namespace Amara {
     class Button: public Amara::Key {
         public:
@@ -36,5 +30,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

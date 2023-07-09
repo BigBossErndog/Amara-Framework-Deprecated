@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_MOUSE
-#define AMARA_MOUSE
-
-
-
 namespace Amara {
 	class InteractionManager;
 
@@ -57,5 +51,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

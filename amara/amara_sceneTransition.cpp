@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_SCENETRANSITION
-#define AMARA_SCENETRANSITION
-
-
-
 namespace Amara {
     class SceneTransition: public Amara::SceneTransitionBase {
         public:
@@ -77,5 +71,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

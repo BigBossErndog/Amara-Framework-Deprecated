@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_GAME
-#define AMARA_GAME
-
-
-
 namespace Amara {
 	class Game {
 		public:
@@ -738,5 +732,3 @@ namespace Amara {
 			}
 	};
 }
-
-#endif

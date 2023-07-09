@@ -1,7 +1,3 @@
-#pragma once
-
-
-
 namespace Amara {
     class FreeWalker: public Amara::Sprite {
     public:

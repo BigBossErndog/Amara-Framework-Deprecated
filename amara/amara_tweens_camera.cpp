@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_TWEENS
-#define AMARA_TWEENS
-
-
-
 namespace Amara {
     class Tween_ScrollCamera: public Tween {
         public:
@@ -241,5 +235,3 @@ namespace Amara {
 		}
 	};
 }
-
-#endif

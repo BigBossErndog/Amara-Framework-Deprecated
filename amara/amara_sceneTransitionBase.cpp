@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_SCENETRANSITIONBASE
-#define AMARA_SCENETRANSITIONBASE
-
-
-
 namespace Amara {
     class Scene;
     class SceneManager;
@@ -102,5 +96,3 @@ namespace Amara {
             virtual ~SceneTransitionBase() {}
     };
 }
-
-#endif

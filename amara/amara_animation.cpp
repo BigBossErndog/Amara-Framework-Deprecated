@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_ANIMATION
-#define AMARA_ANIMATION
-
-
-
 namespace Amara {
     class AnimationManager;
 
@@ -58,5 +52,3 @@ namespace Amara {
 			virtual void play(Amara::Animation* anim) {}
     };
 }
-
-#endif

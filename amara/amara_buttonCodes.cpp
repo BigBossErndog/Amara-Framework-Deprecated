@@ -1,7 +1,3 @@
-#pragma once
-#ifndef AMARA_BUTTONCODES
-#define AMARA_BUTTONCODES
-
 namespace Amara {
     typedef Uint8 Buttoncode;
     typedef Uint8 Axiscode;
@@ -52,5 +48,3 @@ namespace Amara {
         AXIS_MAX
     };
 }
-
-#endif

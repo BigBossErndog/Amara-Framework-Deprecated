@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_AUDIOGROUP
-#define AMARA_AUDIOGROUP
-
-
-
 namespace Amara {
     class AudioGroup: public Amara::AudioBase {
         public:
@@ -241,5 +235,3 @@ namespace Amara {
 			}
     };
 }
-
-#endif

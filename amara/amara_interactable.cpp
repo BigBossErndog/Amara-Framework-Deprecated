@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_INTERACTABLE
-#define AMARA_INTERACTABLE
-
-
-
 namespace Amara {
     class Interactable {
         public:
@@ -173,5 +167,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

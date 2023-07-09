@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_KEY
-#define AMARA_KEY
-
-
-
 namespace Amara {
     class Key {
         public:
@@ -73,5 +67,3 @@ namespace Amara {
             }
     };
 }
-
-#endif

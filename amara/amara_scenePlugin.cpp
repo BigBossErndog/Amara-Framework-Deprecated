@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_SCENEPLUGIN
-#define AMARA_SCENEPLUGIN
-
-
-
 namespace Amara {
     class Game;
 
@@ -274,5 +268,3 @@ namespace Amara {
             }
     };
 }
-
-#endif
