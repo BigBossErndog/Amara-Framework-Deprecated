@@ -17,7 +17,6 @@ namespace Amara {
 			bool dragged = false;
 
 			SDL_Window* gWindow = NULL;
-			SDL_Surface* gSurface = NULL;
 			SDL_Renderer* gRenderer = NULL;
 
 			int width = 0;
@@ -122,14 +121,6 @@ namespace Amara {
 					return false;
 				}
 				properties->gWindow = gWindow;
-
-				// Get window surface
-				gSurface = SDL_GetWindowSurface(gWindow);
-				properties->gSurface = gSurface;
-
-				// Fill the surface black
-				// Background color
-				SDL_FillRect(gSurface, NULL, SDL_MapRGB(gSurface->format, 0, 0, 0));
 
 				//Update the surface
 				SDL_UpdateWindowSurface(gWindow);
@@ -241,6 +232,8 @@ namespace Amara {
 				writeProperties();
 
 				setWindowSize(width, height);
+
+				return true;
 			}
 
 			// For when the player closes the game
@@ -303,11 +296,11 @@ namespace Amara {
 				Amara::Entity* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
-                    std::cout << "TaskManager: Deleting " << size << " children." << std::endl;
+                    SDL_Log("TaskManager: Deleting %d entities.", size);
                 }
                 for (size_t i = 0; i < size; i++) {
                     obj = deleteQueue.at(i);
-                    delete obj;
+                    if (obj) delete obj;
                 }
                 deleteQueue.clear();
 			}
@@ -317,11 +310,11 @@ namespace Amara {
 				void* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
-                    std::cout << "TaskManager: Deleting " << size << " objects." << std::endl;
+                    SDL_Log("TaskManager: Deleting %d objects.", size);
                 }
                 for (size_t i = 0; i < size; i++) {
                     obj = deleteQueue.at(i);
-                    delete obj;
+                    if (obj) delete obj;
                 }
                 deleteQueue.clear();
 			}
@@ -331,7 +324,7 @@ namespace Amara {
 				Amara::SceneTransitionBase* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
-                    std::cout << "TaskManager: Deleting " << size << " transitions." << std::endl;
+                    SDL_Log("TaskManager: Deleting %d transitions.", size);
                 }
                 for (size_t i = 0; i < size; i++) {
                     obj = deleteQueue.at(i);
@@ -459,7 +452,6 @@ namespace Amara {
 
 			void writeProperties() {
 				properties->gWindow = gWindow;
-				properties->gSurface = gSurface;
 				properties->gRenderer = gRenderer;
 
 				properties->testing = testing;
@@ -507,12 +499,8 @@ namespace Amara {
 
 				scenes->draw();
 				events->manageInteracts();
-
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
-				if (!hardwareRendering) {
-					SDL_UpdateWindowSurface(gWindow);
-				}
 			}
 
 			void manageFPSStart() {

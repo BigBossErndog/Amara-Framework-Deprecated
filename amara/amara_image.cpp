@@ -361,7 +361,7 @@ namespace Amara {
                 return true;
             }
 
-            bool removeTexture() {
+            void removeTexture() {
                 textureKey.clear();
                 if (texture != nullptr && texture->temp) delete texture;
                 texture = nullptr;

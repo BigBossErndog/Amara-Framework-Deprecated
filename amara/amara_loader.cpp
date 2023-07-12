@@ -6,7 +6,6 @@ namespace Amara {
             Amara::Game* game = nullptr;
 			Amara::GameProperties* properties = nullptr;
             SDL_Window* gWindow = NULL;
-			SDL_Surface* gSurface = NULL;
 			SDL_Renderer* gRenderer = NULL;
 
             std::unordered_map<std::string, Amara::Asset*> assets;
@@ -27,7 +26,6 @@ namespace Amara {
 				properties = gameProperties;
 				game = properties->game;
 				gWindow = properties->gWindow;
-                gSurface = properties->gSurface;
                 gRenderer = properties->gRenderer;
                 assets.clear();
             }
@@ -198,6 +196,7 @@ namespace Amara {
 				std::cout << "Asset added: " << key << std::endl;
 				assets[key] = newAsset;
 				newAsset->key = key;
+				return true;
 			}
 			virtual bool add(std::string key, Amara::Asset* newAsset) {
 				return add(key, newAsset, replacementDefault);
@@ -249,7 +248,6 @@ namespace Amara {
 				}
 			}
 			void loadTTFsFromJSON(nlohmann::json& config) {
-				// std::string key, std::string path, int size, Amara::Color color, int style, bool replace
 				std::string key;
 				std::string path;
 				int size, style, colorSize;
@@ -377,7 +375,6 @@ namespace Amara {
 					lineByLine(key, path, replace);
 				}
 			}
-
 			void loadCSVFromJSON(nlohmann::json& config) {
 				std::string key;
 				std::string path;
@@ -671,11 +668,9 @@ namespace Amara {
 
 				return success;
 			}
-
 			virtual bool sound(std::string key, std::string path) {
 				return sound(key, path, replacementDefault);
 			}
-
 
 			virtual bool music(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
