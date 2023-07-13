@@ -270,25 +270,19 @@ namespace Amara {
 			void gameLoop() {
 				renderTargetsReset = false;
 				renderDeviceReset = false;
-				SDL_Log("GL 1");
 				manageFPSStart();
-				SDL_Log("GL 2");
 				writeProperties();
 				// Draw Screen
 				draw();
-				SDL_Log("GL 3");
 				// Manage frame catch up and slow down
 				manageFPSEnd();
-				SDL_Log("GL 4");
 				deleteEntities();
 				deleteObjects();
 				deleteTransitions();
 				taskManager->run();
-				SDL_Log("GL 5");
 				if (renderTargetsReset || renderDeviceReset) {
 					load->regenerateAssets();
 				}
-				SDL_Log("GL 6");
 			}
 
 			void deleteEntities() {
@@ -476,22 +470,14 @@ namespace Amara {
 
 			void update() {
 				if (quit) return;
-				SDL_Log("UP 1");
 				handleEvents();
-				SDL_Log("UP 2");
 				writeProperties();
-				SDL_Log("UP 3");
 				if (quit) return;
 				messages.update();
-				SDL_Log("UP 4");
 				events->manage();
-				SDL_Log("UP 5");
 				scenes->run();
-				SDL_Log("UP 6");
 				scenes->manageTasks();
-				SDL_Log("UP 7");
 				audio->run(1);
-				SDL_Log("UP 8");
 			}
 
 			void draw() {
@@ -504,9 +490,7 @@ namespace Amara {
 					frameCounter = 0;
 				}
 				frameCounter += 1;
-				SDL_Log("DRW 1");
 				scenes->draw();
-				SDL_Log("DRW 2");
 
 				events->manageInteracts();
 				/// Draw to renderer

@@ -504,7 +504,6 @@ namespace Amara {
 		}
 
 		virtual void destroyEntities(bool recursiveDestroy) {
-			SDL_Log("DE 1");
 			Amara::Entity* child = nullptr;
 			for (auto it = children.begin(); it != children.end();) {
 				child = *it;
@@ -513,10 +512,7 @@ namespace Amara {
 					continue;
 				}
 				if (recursiveDestroy) {
-					SDL_Log("CDE 1: %s", toData().dump().c_str());
-					SDL_Log("CDE 1.1: %s", child->toData().dump().c_str());
 					child->destroy();
-					SDL_Log("CDE 2");
 				}
 				else {
 					child->parent = nullptr;
@@ -524,7 +520,6 @@ namespace Amara {
 				++it;
 			}
 			children.clear();
-			SDL_Log("DE 2");
 		}
 
 		virtual void destroyEntities() {
@@ -532,22 +527,16 @@ namespace Amara {
 		}
 
 		virtual void destroy(bool recursiveDestroy) {
-			SDL_Log("JD 1");
 			if (isDestroyed) return;
 			parent = nullptr;
-			SDL_Log("JD 1.1");
 			destroyEntities(recursiveDestroy);
-			SDL_Log("JD 1.2");
 			isDestroyed = true;
 			isActive = false;
-			SDL_Log("JD 1.3");
 			properties->taskManager->queueDeletion(this);
-			SDL_Log("JD 1.4");
 			if (physics) {
 				physics->destroy();
 				physics = nullptr;
 			}
-			SDL_Log("JD 2");
 		}
 
 		virtual void destroy() {

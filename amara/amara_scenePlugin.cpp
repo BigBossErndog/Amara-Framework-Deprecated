@@ -204,20 +204,14 @@ namespace Amara {
                             isSleeping = false;
                             break;
                         case SCENETASK_STOP:
-                            SDL_Log("SP Stop %s", key.c_str());
                             if (isActive) {
-                                SDL_Log("1");
                                 scene->onStop();
-                                SDL_Log("2");
                                 scene->destroyEntities();
-                                SDL_Log("3");
                                 scene->clearScripts();
-                                SDL_Log("4");
                             }
                             isActive = false;
                             isPaused = false;
                             isSleeping = false;
-                            SDL_Log("SP Stop End");
                             break;
                         case SCENETASK_RESTART:
                             isActive = true;

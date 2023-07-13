@@ -228,19 +228,15 @@ namespace Amara {
             }
 
             virtual void destroyEntities() {
-                SDL_Log("SDE 1");
                 for (Amara::Camera* cam: cameras) {
                     if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
                         continue;
                     }
                     cam->destroy();
                 }
-                SDL_Log("SDE 2");
                 cameras.clear();
                 mainCamera = nullptr;
-                SDL_Log("SDE 3");
                 Amara::Actor::destroyEntities();
-                SDL_Log("SDE 4");
             }
 
             virtual void preload() {}

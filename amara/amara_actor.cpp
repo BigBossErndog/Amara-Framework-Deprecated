@@ -80,7 +80,6 @@ namespace Amara {
             
             inRecital = true;
             for (Amara::Script* script: scripts) {
-                SDL_Log("RECITE SCRIPT");
                 if (!script->isFinished) {
                     script->receiveMessages();
                     script->updateMessages();
@@ -88,7 +87,6 @@ namespace Amara {
                     if (!isDestroyed && !script->isFinished) script->script(this);
                     if (isDestroyed) break;
                 }
-                SDL_Log("RECITE SCRIPT END");
                 if (isDestroyed) {
                     clearScripts();
                     inRecital = false;
@@ -198,16 +196,13 @@ namespace Amara {
         }
 
         Amara::Actor* clearScripts() {
-            SDL_Log("ACS 1");
             for (Amara::Script* script: scripts) {
                 script->deleteScript();
             }
-            SDL_Log("ACS 2");
             scripts.clear();
             for (Amara::Script* script: scriptBuffer) {
                 script->deleteScript();
             }
-            SDL_Log("ACS 3");
             scriptBuffer.clear();
             return this;
         }
