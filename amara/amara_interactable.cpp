@@ -53,7 +53,7 @@ namespace Amara {
 				checkHover(vx + gx, vy + gy, gw, gh);
 			}
 
-			bool checkHover(float gx, float gy, float gw, float gh) {
+			void checkHover(float gx, float gy, float gw, float gh) {
 				Amara::FloatRect box = { 
 					properties->interactOffsetX + gx*properties->interactScaleX, 
 					properties->interactOffsetY + gy*properties->interactScaleY, 

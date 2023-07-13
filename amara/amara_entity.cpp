@@ -478,7 +478,7 @@ namespace Amara {
 			}
 			return rec;
 		}
-		virtual Amara::PhysicsBase* destroyPhysics() {
+		virtual void destroyPhysics() {
 			Amara::PhysicsBase* rec = removePhysics();
 			if (rec) {
 				rec->destroy();

@@ -270,25 +270,35 @@ namespace Amara {
 			void gameLoop() {
 				renderTargetsReset = false;
 				renderDeviceReset = false;
+				SDL_Log("1");
 				
 				manageFPSStart();
+				SDL_Log("2");
 
 				writeProperties();
-
+				SDL_Log("3");
 				// Draw Screen
 				draw();
 
+				SDL_Log("4");
+
 				// Manage frame catch up and slow down
 				manageFPSEnd();
+
+				SDL_Log("5");
 
 				deleteEntities();
 				deleteObjects();
 				deleteTransitions();
 				taskManager->run();
 
+				SDL_Log("6");
+
 				if (renderTargetsReset || renderDeviceReset) {
 					load->regenerateAssets();
 				}
+
+				SDL_Log("7");
 			}
 
 			void deleteEntities() {

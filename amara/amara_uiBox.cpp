@@ -460,7 +460,7 @@ namespace Amara {
                 setTexture(textureKey);
             }
 
-            bool removeTexture() {
+            void removeTexture() {
                 textureKey.clear();
                 if (texture && texture->temp) delete texture;
                 texture = nullptr;
@@ -527,9 +527,7 @@ namespace Amara {
                 if (copySm != nullptr) {
                     return *copySm;
                 }
-                else {
-                    return mySm;
-                }
+                return mySm;
             }
 
             virtual bool show() {

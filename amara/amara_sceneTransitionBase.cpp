@@ -75,7 +75,7 @@ namespace Amara {
                 Amara::Actor::init(gProperties, gScene, gParent);
             }
 
-            virtual bool startNextScene() {}
+            virtual bool startNextScene() { return false; }
             virtual void draw(int vx, int vy, int vw, int vh) {
                 resetPassOnProperties();
                 Amara::Actor::draw(vx, vy, vw, vh);
