@@ -10,7 +10,7 @@ namespace Amara {
 			std::unordered_map<std::string, void*> globalObjects;
 			RNG rng;
 
-			Amara::MessageQueue messages = MessageQueue();
+			Amara::MessageQueue messages;
 
 			std::string name;
 			bool quit = false;
@@ -205,7 +205,9 @@ namespace Amara {
 				input->touches = new Amara::TouchManager(properties);
 				properties->input = input;
 
+				messages = MessageQueue(properties);
 				messages.clear();
+
 				properties->messages = &messages;
 
 				writer = new FileWriter();

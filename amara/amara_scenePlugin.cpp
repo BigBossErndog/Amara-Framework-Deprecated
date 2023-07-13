@@ -198,6 +198,7 @@ namespace Amara {
                             if (!isActive) {
                                 scene->init();
                                 scene->onStart();
+                                properties->messages->clearMessagesOfScene(scene);
                             }
                             isActive = true;
                             isPaused = false;
@@ -208,6 +209,7 @@ namespace Amara {
                                 scene->clearScripts();
                                 scene->onStop();
                                 scene->destroyEntities();
+                                properties->messages->clearMessagesOfScene(scene);
                             }
                             isActive = false;
                             isPaused = false;
@@ -222,6 +224,7 @@ namespace Amara {
                             scene->destroyEntities();
                             scene->init();
                             scene->onStart();
+                            properties->messages->clearMessagesOfScene(scene);
                             break;
                         case SCENETASK_PAUSE:
                             if (isActive && !isPaused) {

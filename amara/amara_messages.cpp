@@ -1,8 +1,10 @@
 namespace Amara {
     class Entity;
+    class Scene;
 
     typedef struct Message {
         void* parent = nullptr;
+        Amara::Scene* scene = nullptr;
         std::string key;
         nlohmann::json data;
         bool isActive = true;
@@ -12,11 +14,15 @@ namespace Amara {
 
     class MessageQueue {
     public:
+        Amara::GameProperties* properties = nullptr;
         std::list<Message> queue;
 
         static Message nullMessage;
-
+        
         MessageQueue() {}
+        MessageQueue(Amara::GameProperties* gProperties) {
+            properties = gProperties;
+        }
         
         void update() {
             for (auto it = queue.begin(); it != queue.end();) {
@@ -62,14 +68,25 @@ namespace Amara {
         }
 
         Message& broadcast(std::string key, nlohmann::json gData) {
-            queue.push_back({ nullptr, key, gData });
+            queue.push_back({ nullptr, properties->currentScene, key, gData });
             return queue.back();
         }
 
         Message& broadcast(void* gParent, std::string key, nlohmann::json gData) {
-            queue.push_back({ gParent, key, gData });
+            queue.push_back({ gParent, properties->currentScene, key, gData });
             return queue.back();
         }
+
+        void clearMessagesOfScene(Amara::Scene* scene) {
+            for (auto it = queue.begin(); it != queue.end();) {
+                Message msg = *it;
+                if (msg.scene == scene) {
+                    it = queue.erase(it);
+                    continue;
+                }
+                ++it;
+            }
+        }
     };
-    Message MessageQueue::nullMessage = { nullptr, "null", {}, false, true, true };
+    Message MessageQueue::nullMessage = { nullptr, nullptr, "null", {}, false, true, true };
 }
