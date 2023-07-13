@@ -114,10 +114,12 @@ namespace Amara {
                 }
             }
 
-            void returnStateEvt() {
+            bool returnStateEvt() {
                 if (evt()) {
                     returnState();
+                    return true;
                 }
+                return false;
             }
 
             void restartState() {

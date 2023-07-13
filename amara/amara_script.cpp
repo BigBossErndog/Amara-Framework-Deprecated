@@ -90,9 +90,19 @@ namespace Amara {
 			virtual void cancel() {}
 			virtual void cancel(Amara::Actor* actor) {}
 
+            virtual void deleteScript() {
+                if (chainedScript && deleteChainOnDelete) {
+                    chainedScript->properties = properties;
+                    chainedScript->deleteScript();
+                    chainedScript = nullptr;
+                }
+                if (deleteOnFinish) properties->taskManager->queueDeletion(this);
+            }
+            
             ~Script() {
                 if (deleteChainOnDelete && chainedScript) {
-                    delete chainedScript;
+                    chainedScript->properties = properties;
+                    chainedScript->deleteScript();
                 }
             }
     };

@@ -101,5 +101,13 @@ namespace Amara {
 					scenes->manageTasks();
 				}
 			}
+
+			void checkChildren() {
+				Amara::Scene* scene;
+				for (size_t i = 0; i < sceneList.size(); i++) {
+					scene = sceneList.at(i);
+					scene->checkChildren(true);
+				}
+			}
 	};
 }

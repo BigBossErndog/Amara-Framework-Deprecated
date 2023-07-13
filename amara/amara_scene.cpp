@@ -31,7 +31,7 @@ namespace Amara {
                 scene = this;
 
                 if (loadManager != nullptr) {
-                    delete loadManager;
+                    properties->taskManager->queueDeletion(loadManager);
                 }
                 loadManager = new Amara::LoadManager(properties);
                 setLoader(loadManager);
@@ -236,7 +236,7 @@ namespace Amara {
                 }
                 cameras.clear();
                 mainCamera = nullptr;
-                Amara::Entity::destroyEntities();
+                Amara::Actor::destroyEntities();
             }
 
             virtual void preload() {}
@@ -251,7 +251,7 @@ namespace Amara {
             virtual void onWake() {}
 
             ~Scene() {
-                delete load;
+                if (load) delete load;
             }
     };
 }

@@ -15,6 +15,7 @@ namespace Amara {
 				file.close();
 				return true;
 			}
+			return false;
         }
     };
 }

@@ -474,8 +474,6 @@ namespace Amara {
                 return false;
             }
 
-            ~Camera() {
-
-            }
+            ~Camera() {}
     };
 }

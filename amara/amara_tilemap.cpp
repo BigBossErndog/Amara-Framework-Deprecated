@@ -1,9 +1,3 @@
-#pragma once
-#ifndef AMARA_TILEMAP
-#define AMARA_TILEMAP
-
-
-
 namespace Amara {
     class Tilemap;
 
@@ -1018,5 +1012,3 @@ namespace Amara {
         Amara::Actor::destroy();
     }
 }
-
-#endif

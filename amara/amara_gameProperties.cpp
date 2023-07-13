@@ -22,7 +22,6 @@ namespace Amara {
             bool quit = false;
 
             SDL_Window* gWindow = NULL;
-			SDL_Surface* gSurface = NULL;
 			SDL_Renderer* gRenderer = NULL;
 
             SDL_Color backgroundColor;

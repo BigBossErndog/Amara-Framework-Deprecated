@@ -206,10 +206,10 @@ namespace Amara {
                             break;
                         case SCENETASK_STOP:
                             if (isActive) {
-                                scene->clearScripts();
                                 scene->onStop();
-                                scene->destroyEntities();
                                 properties->messages->clearMessagesOfScene(scene);
+                                scene->destroyEntities();
+                                scene->clearScripts();
                             }
                             isActive = false;
                             isPaused = false;

@@ -673,8 +673,7 @@ namespace Amara {
         }
 
         void script() {
-            toDestroy->destroy();
-            finish();
+            if (toDestroy) toDestroy->destroy();
         }
     };
 

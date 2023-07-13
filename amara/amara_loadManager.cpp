@@ -198,6 +198,7 @@ namespace Amara {
                 t->path = path;
                 t->replace = replace;
                 pushTask(key, t);
+                return true;
 			}
 
             bool string(std::string key, std::string path, bool replace) {
