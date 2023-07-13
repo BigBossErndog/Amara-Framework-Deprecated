@@ -235,6 +235,7 @@ namespace Amara {
 			config["depth"] = depth;
 			config["cameraOffsetX"] = cameraOffsetX;
 			config["cameraOffsetY"] = cameraOffsetY;
+			config["numberOfChildren"] = children.size();
 			config["data"] = data;
 			return config;
 		}
@@ -424,6 +425,12 @@ namespace Amara {
 
 		virtual Amara::Entity* add(Amara::Entity* entity) {
 			if (entity == nullptr || entity->isDestroyed) return nullptr;
+			for (Amara::Entity* check: children) {
+				if (check == entity) {
+					entity->parent = this;
+					return entity;
+				}
+			}
 			children.push_back(entity);
 			entity->init(properties, scene, this);
 			return entity;
@@ -450,7 +457,7 @@ namespace Amara {
 			children.clear();
 		}
 
-		void checkChildren() {
+		void checkChildren(bool recursive) {
 			Amara::Entity* entity;
 			for (auto it = children.begin(); it != children.end();) {
 				entity = *it;
@@ -458,8 +465,12 @@ namespace Amara {
 					it = children.erase(it);
 					continue;
 				}
+				if (recursive) entity->checkChildren(true);
 				++it;
 			}
+		}
+		void checkChildren() {
+			checkChildren(false);
 		}
 
 		virtual void addPhysics(Amara::PhysicsBase* gPhysics) {
@@ -493,16 +504,27 @@ namespace Amara {
 		}
 
 		virtual void destroyEntities(bool recursiveDestroy) {
-			for (Amara::Entity* child: children) {
-				if (child->isDestroyed || child->parent != this) continue;
+			SDL_Log("DE 1");
+			Amara::Entity* child = nullptr;
+			for (auto it = children.begin(); it != children.end();) {
+				child = *it;
+				if (child == nullptr || child->isDestroyed || child->parent != this) {
+					++it;
+					continue;
+				}
 				if (recursiveDestroy) {
+					SDL_Log("CDE 1: %s", toData().dump().c_str());
+					SDL_Log("CDE 1.1: %s", child->toData().dump().c_str());
 					child->destroy();
+					SDL_Log("CDE 2");
 				}
 				else {
 					child->parent = nullptr;
 				}
+				++it;
 			}
 			children.clear();
+			SDL_Log("DE 2");
 		}
 
 		virtual void destroyEntities() {
@@ -510,20 +532,22 @@ namespace Amara {
 		}
 
 		virtual void destroy(bool recursiveDestroy) {
+			SDL_Log("JD 1");
 			if (isDestroyed) return;
 			parent = nullptr;
-
+			SDL_Log("JD 1.1");
 			destroyEntities(recursiveDestroy);
-
+			SDL_Log("JD 1.2");
 			isDestroyed = true;
 			isActive = false;
-
+			SDL_Log("JD 1.3");
 			properties->taskManager->queueDeletion(this);
-
+			SDL_Log("JD 1.4");
 			if (physics) {
 				physics->destroy();
 				physics = nullptr;
 			}
+			SDL_Log("JD 2");
 		}
 
 		virtual void destroy() {

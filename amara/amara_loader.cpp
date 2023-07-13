@@ -132,7 +132,7 @@ namespace Amara {
 				Amara::Asset* asset = get(key);
 				if (asset != nullptr) {
 					assets.erase(key);
-					delete asset;
+					properties->taskManager->queueDeletion(asset);
 					return true;
 				}
 				return false;

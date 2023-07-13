@@ -363,7 +363,7 @@ namespace Amara {
 
             void removeTexture() {
                 textureKey.clear();
-                if (texture != nullptr && texture->temp) delete texture;
+                if (texture != nullptr && texture->temp) properties->taskManager->queueDeletion(texture);
                 texture = nullptr;
             }
 

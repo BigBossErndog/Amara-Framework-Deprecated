@@ -146,7 +146,7 @@ namespace Amara {
                 properties->zoomFactorX = recZoomFactorX;
                 properties->zoomFactorY = recZoomFactorY;
                 properties->alpha = recAlpha;
-                if (entity->isDestroyed || entity->parent != this) {
+                if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
                     it = children.erase(it);
                     continue;
                 }

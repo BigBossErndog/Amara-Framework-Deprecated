@@ -27,7 +27,7 @@ namespace Amara {
                     std::cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << std::endl;
                 }
                 if (anim != currentAnim || (anim != nullptr && isFinished)) {
-					if (currentAnim != nullptr && currentAnim->deleteOnFinish) delete currentAnim;
+					if (currentAnim != nullptr && currentAnim->deleteOnFinish) properties->taskManager->queueDeletion(currentAnim);
                     currentAnim = anim;
 
                     currentIndex = 0;
@@ -53,7 +53,7 @@ namespace Amara {
             }
 			void play(Amara::ImageTexture* texture, Amara::Animation* anim) {
 				if (anim != currentAnim || (anim != nullptr && isFinished)) {
-					if (currentAnim != nullptr && currentAnim->deleteOnFinish && currentAnim != anim) delete currentAnim;
+					if (currentAnim != nullptr && currentAnim->deleteOnFinish && currentAnim != anim) properties->taskManager->queueDeletion(currentAnim);
                     currentAnim = anim;
 
                     currentIndex = 0;
@@ -93,7 +93,7 @@ namespace Amara {
             }
 
             void stop() {
-				if (currentAnim != nullptr && currentAnim->deleteOnFinish) delete currentAnim;
+				if (currentAnim != nullptr && currentAnim->deleteOnFinish) properties->taskManager->queueDeletion(currentAnim);
                 currentAnim = nullptr;
 				isFinished = true;
             }
@@ -154,7 +154,7 @@ namespace Amara {
                         }
                         else {
                             currentFrame = currentAnim->frameAt(currentAnim->length() - 1);
-							if (currentAnim != nullptr && currentAnim->deleteOnFinish) delete currentAnim;
+							if (currentAnim != nullptr && currentAnim->deleteOnFinish) properties->taskManager->queueDeletion(currentAnim);
                             currentAnim = nullptr;
 							isFinished = true;
 							isActive = false;
