@@ -19,7 +19,7 @@ namespace Amara {
 				sceneList.push_back(scene);
 				scene->setup(properties, new ScenePlugin(key, properties, scene, &sceneMap, &sceneList));
 				scene->key = key;
-				std::cout << "ADDED SCENE: " << scene->scenes->key << std::endl;
+				if (properties->testing) SDL_Log("ADDED SCENE: %s", scene->scenes->key.c_str());
 				if (willStart) scene->scenes->start();
 				return scene;
 			}
@@ -73,6 +73,10 @@ namespace Amara {
 					return sceneMap[key];
 				}
 				return nullptr;
+			}
+
+			bool has(std::string key) {
+				return get(key) != nullptr;
 			}
 
 			Amara::Scene* start(std::string key) {
