@@ -30,8 +30,12 @@ namespace Amara {
             }
 
             StateManager(Amara::GameProperties* gProperties) {
-                properties = gProperties;
+                init(gProperties);
                 StateManager();
+            }
+
+            void init(Amara::GameProperties* gProperties) {
+                properties = gProperties;
             }
 
             void reset() {
