@@ -56,50 +56,55 @@ namespace Amara {
 				}
 			}
 
-			void setColor(int r, int g, int b, int a) {
+			Amara::FillRect* setColor(int r, int g, int b, int a) {
 				color.r = r;
 				color.g = g;
 				color.b = b;
 				color.a = a;
+				return this;
 			}
-			void setColor(int r, int g, int b) {
-				setColor(r, g, b, 255);
+			Amara::FillRect* setColor(int r, int g, int b) {
+				return setColor(r, g, b, 255);
 			}
-			void setColor(Amara::Color gColor) {
+			Amara::FillRect* setColor(Amara::Color gColor) {
 				color = gColor;
+				return this;
 			}
 
-			void setRenderOffset(float gx, float gy) {
+			Amara::FillRect* setRenderOffset(float gx, float gy) {
 				renderOffsetX = gx;
 				renderOffsetY = gy;
+				return this;
 			}
 
-			void setRenderOffset(float gi) {
-				setRenderOffset(gi, gi);
+			Amara::FillRect* setRenderOffset(float gi) {
+				return setRenderOffset(gi, gi);
 			}
 
-			void setOrigin(float gx, float gy) {
+			Amara::FillRect* setOrigin(float gx, float gy) {
 				originX = gx;
 				originY = gy;
+				return this;
 			}
-			void setOrigin(float go) {
-				setOrigin(go, go);
+			Amara::FillRect* setOrigin(float g) {
+				return setOrigin(g, g);
+			}
+			Amara::FillRect* setOriginPosition(float gx, float gy) {
+				originX = gx/width;
+				originY = gy/height;
+				return this;
+			}
+			Amara::FillRect* setOriginPosition(float g) {
+				return setOriginPosition(g, g);
 			}
 
-			void setOriginPosition(float gx, float gy) {
-				originX = gx / width;
-				originY = gy / height;
-			}
-			void setOriginPosition(float go) {
-				setOriginPosition(go, go);
-			}
-
-			void setSize(float gw, float gh) {
+			Amara::FillRect* setSize(float gw, float gh) {
 				width = gw;
 				height = gh;
+				return this;
 			}
-			void setSize(float gs) {
-				setSize(gs, gs);
+			Amara::FillRect* setSize(float gs) {
+				return setSize(gs, gs);
 			}
 
 			void draw(int vx, int vy, int vw, int vh) {

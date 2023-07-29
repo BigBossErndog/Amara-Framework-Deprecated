@@ -501,19 +501,21 @@ namespace Amara {
 				if (ver) openHeight = height;
 			} 
 
-            void setOrigin(float gx, float gy) {
+            Amara::UIBox* setOrigin(float gx, float gy) {
                 originX = gx;
                 originY = gy;
+                return this;
             }
-            void setOrigin(float gi) {
-                setOrigin(gi, gi);
+            Amara::UIBox* setOrigin(float g) {
+                return setOrigin(g, g);
             }
-            void setOriginPosition(float gx, float gy) {
+            Amara::UIBox* setOriginPosition(float gx, float gy) {
                 originX = gx/width;
                 originY = gy/height;
+                return this;
             }
-            void setOriginPosition(float g) {
-                setOriginPosition(g, g);
+            Amara::UIBox* setOriginPosition(float g) {
+                return setOriginPosition(g, g);
             }
 
             void copyStateManager(Amara::StateManager* gsm) {

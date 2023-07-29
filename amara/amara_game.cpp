@@ -61,6 +61,8 @@ namespace Amara {
 			int frameCounter = 0;
 			int logicDelay = 0;
 
+			bool reloadAssets = false;
+
 			SDL_Event e;
 
 			bool testing = true;
@@ -231,6 +233,8 @@ namespace Amara {
 				properties->audio = audio;
 				audio->rootGroup = true;
 
+				properties->rng = &rng;
+
 				writeProperties();
 
 				setWindowSize(width, height);
@@ -283,6 +287,10 @@ namespace Amara {
 				deleteTransitions();
 				taskManager->run();
 				if (renderTargetsReset || renderDeviceReset) {
+					reloadAssets = true;
+				}
+				else if (reloadAssets) {
+					reloadAssets = false;
 					load->regenerateAssets();
 				}
 			}

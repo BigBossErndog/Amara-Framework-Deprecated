@@ -15,11 +15,14 @@ namespace Amara {
     class AudioGroup;
     class Assets;
     class MessageQueue;
+    class RNG;
 
     class GameProperties {
         public:
             Amara::Game* game = nullptr;
             bool quit = false;
+
+            Amara::RNG* rng = nullptr;
 
             SDL_Window* gWindow = NULL;
 			SDL_Renderer* gRenderer = NULL;

@@ -214,7 +214,6 @@ namespace Amara {
 
             Actor* ent;
 
-            RNG rng;
 			Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float gTargetX, float gTargetY, float tt, Amara::Easing gEasing) {
 				maxShakeX = gMaxShakeX;
                 maxShakeY = gMaxShakeY;
@@ -235,8 +234,6 @@ namespace Amara {
 
 				if (targetX == -1) targetX = maxShakeX;
 				if (targetY == -1) targetY = maxShakeY;
-
-                rng.randomize();
             }
 
             void finish() {
@@ -267,8 +264,8 @@ namespace Amara {
                         shakeAmountY = sineOutEase(maxShakeY, targetY, progress);
                         break;
                 }
-                actor->x = startX + rng.random()*shakeAmountX - shakeAmountX/2.0;
-                actor->y = startY + rng.random()*shakeAmountY - shakeAmountY/2.0;
+                actor->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
+                actor->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
             }
 
 			void cancel(Amara::Actor* actor) {
@@ -286,8 +283,6 @@ namespace Amara {
 
             Actor* ent;
 
-            RNG rng;
-
             Tween_ReverseShakeXY(float gMaxShakeX, float gMaxShakeY, float tt, Amara::Easing gEasing) {
                 maxShakeX = gMaxShakeX;
                 maxShakeY = gMaxShakeY;
@@ -301,8 +296,6 @@ namespace Amara {
                 startX = actor->x;
                 startY = actor->y;
                 ent = actor;
-
-                rng.randomize();
             }
 
             void finish() {
@@ -331,8 +324,8 @@ namespace Amara {
                         shakeAmountY = sineOutEase(maxShakeY, 0, (1-progress));
                         break;
                 }
-                actor->x = startX + rng.random()*shakeAmountX - shakeAmountX/2.0;
-                actor->y = startY + rng.random()*shakeAmountY - shakeAmountY/2.0;
+                actor->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
+                actor->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
             }
 
 			void cancel(Amara::Actor* actor) {

@@ -278,36 +278,39 @@ namespace Amara {
                 txt->y -= height*originY;
 			}
 
-            void setFont(std::string gFontKey) {
+            bool setFont(std::string gFontKey) {
                 fontKey = gFontKey;
-                txt->setFont(fontKey);
+                return txt->setFont(fontKey);
             }
 
-            void setMargin(int t, int b, int l, int r) {
+            Amara::TextBox* setMargin(int t, int b, int l, int r) {
                 marginTop = t;
                 marginBottom = b;
                 marginLeft = l;
                 marginRight = r;
+                return this;
             }
-            void setMargin(int g) {
-                setMargin(g, g, g, g);
+            Amara::TextBox* setMargin(int g) {
+                return setMargin(g, g, g, g);
             }
 
-            void setProgressive(int gDelay) {
+            Amara::TextBox* setProgressive(int gDelay) {
                 isProgressive = true;
                 progressDelay = gDelay;
                 progress = 0;
                 timeCounter = 0;
+                return this;
             }
-            void setProgressive(bool gProgressive, int gDelay) {
+            Amara::TextBox* setProgressive(bool gProgressive, int gDelay) {
                 setProgressive(gDelay);
                 isProgressive = gProgressive;
+                return this;
             }
-            void setProgressive(bool gProgressive) {
-                setProgressive(gProgressive, progressDelay);
+            Amara::TextBox* setProgressive(bool gProgressive) {
+                return setProgressive(gProgressive, progressDelay);
             }
-            void setProgressive() {
-                setProgressive(true);
+            Amara::TextBox* setProgressive() {
+                return setProgressive(true);
             }
 
             virtual bool say(std::string gText) {
@@ -361,17 +364,19 @@ namespace Amara {
                 return toReturn;
             }
 
-            void setTextColor(int r, int g, int b, int a) {
+            Amara::TextBox* setTextColor(int r, int g, int b, int a) {
                 if (txt) txt->setColor(r, g, b, a);
+                return this;
             }
-            void setTextColor(int r, int g, int b) {
-                setTextColor(r, g, b, 255);
+            Amara::TextBox* setTextColor(int r, int g, int b) {
+                return setTextColor(r, g, b, 255);
             }
-            void setTextOutline(int o, int r, int g, int b, int a) {
+            Amara::TextBox* setTextOutline(int o, int r, int g, int b, int a) {
                 if (txt) txt->setOutline(o, r, g, b, a);
+                return this;
             }
-            void setTextOutline(int o, int r, int g, int b) {
-                setTextOutline(o, r, g, b, 255);
+            Amara::TextBox* setTextOutline(int o, int r, int g, int b) {
+                return setTextOutline(o, r, g, b, 255);
             }
 
             virtual bool close() {

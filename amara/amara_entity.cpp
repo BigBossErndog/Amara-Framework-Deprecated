@@ -263,27 +263,32 @@ namespace Amara {
 			if (hasDataProperty(key)) data.erase(key);
 		}
 
-		void sortChildren() {
+		Amara::Entity* sortChildren() {
 			children.sort(sortEntities());
+			return this;
 		}
-		void delayedSorting() {
+		Amara::Entity* delayedSorting() {
 			sortingDelayCounter += 1;
 			if (sortingDelayCounter >= sortingDelay) {
 				sortChildren();
 				sortingDelayCounter = 0;
 			}
+			return this;
 		}
 
-		void setChildrenSorting(bool always) {
+		Amara::Entity* setChildrenSorting(bool always) {
 			shouldSortChildren = always;
+			return this;
 		}
-		void setChildrenSorting(bool always, bool once) {
+		Amara::Entity* setChildrenSorting(bool always, bool once) {
 			setChildrenSorting(always);
 			sortChildrenOnce = once;
+			return this;
 		}
 
-		void sortOnce() {
+		Amara::Entity* sortOnce() {
 			setChildrenSorting(false, true);
+			return this;
 		}
 
 		virtual void draw(int vx, int vy, int vw, int vh) {
@@ -450,11 +455,12 @@ namespace Amara {
 			return nullptr;
 		}
 
-		void removeEntities() {
+		Amara::Entity* removeEntities() {
 			for (Amara::Entity* entity: children) {
 				if (entity->parent == this) entity->parent = nullptr;
 			}
 			children.clear();
+			return this;
 		}
 
 		void checkChildren(bool recursive) {
@@ -473,13 +479,14 @@ namespace Amara {
 			checkChildren(false);
 		}
 
-		virtual void addPhysics(Amara::PhysicsBase* gPhysics) {
+		virtual Amara::PhysicsBase* addPhysics(Amara::PhysicsBase* gPhysics) {
 			physics = gPhysics;
 			physics->isActive = true;
 			physics->parent = this;
 			physics->gameProperties = properties;
 			physics->updateProperties();
 			physics->create();
+			return physics;
 		}
 
 		virtual Amara::PhysicsBase* removePhysics() {
@@ -543,55 +550,71 @@ namespace Amara {
 			destroy(true);
 		}
 
-		void setVisible(bool val) {
+		Amara::Entity* setVisible(bool val) {
 			isVisible = val;
+			return this;
 		}
 
-		void setAlpha(float nAlpha) {
+		Amara::Entity* setAlpha(float nAlpha) {
 			alpha  = nAlpha;
 			if (alpha < 0) alpha = 0;
 			if (alpha > 1) alpha = 1;
+			return this;
 		}
 
-		void setScale(float gx, float gy) {
+		Amara::Entity* setScale(float gx, float gy) {
 			scaleX = gx;
 			scaleY = gy;
+			return this;
 		}
-		void setScale(float g) {
+		Amara::Entity* setScale(float g) {
 			setScale(g, g);
+			return this;
 		}
 
-		void changeScale(float gx, float gy) {
+		Amara::Entity* changeScale(float gx, float gy) {
 			scaleX += gx;
 			scaleY += gy;
+			return this;
 		}
-		void changeScale(float gi) {
-			changeScale(gi, gi);
+		Amara::Entity* changeScale(float gi) {
+			return changeScale(gi, gi);
 		}
 		
-		void setRadianAngle(float gAngle) {
+		float setRadianAngle(float gAngle) {
 			angle = radiansToDegrees(gAngle);
+			return angle;
 		}
 
-		void setScrollFactor(float gx, float gy) {
+		Amara::Entity* setScrollFactor(float gx, float gy) {
 			scrollFactorX = gx;
 			scrollFactorY = gy;
+			return this;
 		}
-		void setScrollFactor(float gi) {
-			setScrollFactor(gi, gi);
+		Amara::Entity* setScrollFactor(float gi) {
+			return setScrollFactor(gi, gi);
 		}
 
-		void setZoomFactor(float gx, float gy) {
+		Amara::Entity* setZoomFactor(float gx, float gy) {
 			zoomFactorX = gx;
 			zoomFactorY = gy;
+			return this;
 		}
-		void setZoomFactor(float gi) {
+		Amara::Entity* setZoomFactor(float gi) {
 			setZoomFactor(gi, gi);
+			return this;
 		}
 
-		void fixCameraPosition() {
+		Amara::Entity* fixOnCamera() {
 			setScrollFactor(0);
 			setZoomFactor(0);
+			return this;
+		}
+
+		Amara::Entity* fixCameraPosition() {
+			setScrollFactor(0);
+			setZoomFactor(0);
+			return this;
 		}
 
 		void resetPassOnProperties() {
@@ -607,7 +630,7 @@ namespace Amara {
 			properties->alpha = 1;
 		}
 
-		void bringToFront() {
+		Amara::Entity* bringToFront() {
 			if (parent) {
 				std::list<Amara::Entity*>& rSceneEntities = parent->children;
 				for (Amara::Entity* entity: rSceneEntities) {
@@ -617,9 +640,10 @@ namespace Amara {
 				}
 				parent->sortChildrenOnce = true;
 			}
+			return this;
 		}
 
-		void sendToBack() {
+		Amara::Entity* sendToBack() {
 			std::list<Amara::Entity*>& rSceneEntities = parent->children;
 			for (Amara::Entity* entity: rSceneEntities) {
 				if (entity != this && !entity->isDestroyed && depth >= entity->depth) {
@@ -627,6 +651,7 @@ namespace Amara {
 				}
 				parent->sortChildrenOnce = true;
 			}
+			return this;
 		}
 
 		void attachTo(Amara::Entity* entity) {

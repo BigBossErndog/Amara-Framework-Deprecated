@@ -361,52 +361,60 @@ namespace Amara {
                 return true;
             }
 
-            void removeTexture() {
+            Amara::Image* removeTexture() {
                 textureKey.clear();
                 if (texture != nullptr && texture->temp) properties->taskManager->queueDeletion(texture);
                 texture = nullptr;
+                return this;
             }
 
-            void setOrigin(float gx, float gy) {
+            Amara::Image* setOrigin(float gx, float gy) {
                 originX = gx;
                 originY = gy;
+                return this;
             }
-            void setOrigin(float g) {
-                setOrigin(g, g);
+            Amara::Image* setOrigin(float g) {
+                return setOrigin(g, g);
             }
-            void setOriginPosition(float gx, float gy) {
+            Amara::Image* setOriginPosition(float gx, float gy) {
                 originX = gx/imageWidth;
                 originY = gy/imageHeight;
+                return this;
             }
-            void setOriginPosition(float g) {
-                setOriginPosition(g, g);
+            Amara::Image* setOriginPosition(float g) {
+                return setOriginPosition(g, g);
             }
 
-            void setRenderOffset(float gx, float gy) {
+            Amara::Image* setRenderOffset(float gx, float gy) {
                 renderOffsetX = gx;
                 renderOffsetY = gy;
+                return this;
             }
 
-            void setRenderOffset(float gi) {
-                setRenderOffset(gi, gi);
+            Amara::Image* setRenderOffset(float gi) {
+                return setRenderOffset(gi, gi);
             }
 
-            void setFrame(int fr) {
+            Amara::Image* setFrame(int fr) {
                 frame = fr;
+                return this;
             }
 
-            void scaleTo(float gw, float gh) {
+            Amara::Image* scaleTo(float gw, float gh) {
                 scaleX = gw/imageWidth;
                 scaleY = gh/imageHeight;
+                return this;
             }
 
-            void scaleToWidth(float gw) { 
+            Amara::Image* scaleToWidth(float gw) { 
                 scaleX = gw/imageWidth;
                 scaleY = scaleX;
+                return this;
             }
-            void scaleToHeight(float gh) {
+            Amara::Image* scaleToHeight(float gh) {
                 scaleY = gh/imageHeight;
                 scaleX = scaleY;
+                return this;
             }
 
 			~Image() {
