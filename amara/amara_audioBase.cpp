@@ -2,9 +2,9 @@ namespace Amara {
     class AudioGroup;
 
     enum AudioFade {
-        NOFADE = 0,
-        FADEIN = 1,
-        FADEOUT = 2
+        AudioFade_NOFADE = 0,
+        AudioFade_FADEIN = 1,
+        AudioFade_FADEOUT = 2
     };
 
     class AudioBase: public Amara::Asset {
@@ -12,7 +12,7 @@ namespace Amara {
             float volume = 1;
 			float masterVolume = 1;
 
-            Amara::AudioFade fadeDirection = NOFADE;
+            Amara::AudioFade fadeDirection = AudioFade_NOFADE;
             float fadeSpeed = 0;
             float fadeEnd = 0;
 			bool fadeStopOnEnd = false;
@@ -55,18 +55,27 @@ namespace Amara {
                 return this;
             }
 
-			AudioBase* fadeIn(float speed, float end, bool stopOnEnd) { return fade(FADEIN, speed, end, stopOnEnd); }
+			AudioBase* fadeIn(float speed, float end, bool stopOnEnd) { return fade(AudioFade_FADEIN, speed, end, stopOnEnd); }
             AudioBase* fadeIn(float speed, float end) { return fadeIn(speed, end, false); }
             AudioBase* fadeIn(float speed) { return fadeIn(speed, 1); }
             AudioBase* fadeIn() { return fadeIn(0.01); }
 
-			AudioBase* fadeOut(float speed, float end, bool stopOnEnd) { return fade(FADEOUT, speed, end, stopOnEnd); }
+			AudioBase* fadeOut(float speed, float end, bool stopOnEnd) { return fade(AudioFade_FADEOUT, speed, end, stopOnEnd); }
             AudioBase* fadeOut(float speed, float end) { return fadeOut(speed, end, false); }
             AudioBase* fadeOut(float speed) { return fadeOut(speed, 0, true); }
             AudioBase* fadeOut() { return fadeOut(0.01); }
 
+            AudioBase* copyFade(AudioBase* other) {
+                other->fadeDirection = fadeDirection;
+                other->fadeSpeed = fadeSpeed;
+                other->fadeEnd = fadeEnd;
+                other->fadeStopOnEnd = fadeStopOnEnd;
+                other->fadePauseOnEnd = fadePauseOnEnd;
+                return this;
+            }
+
             AudioBase* stopFade() {
-                fadeDirection = NOFADE;
+                fadeDirection = AudioFade_NOFADE;
 				fadeStopOnEnd = false;
                 return this;
             }
@@ -94,11 +103,11 @@ namespace Amara {
 
             virtual void run(float parentVolume) {
                 switch (fadeDirection) {
-                    case FADEIN:
+                    case AudioFade_FADEIN:
                         masterVolume += fadeSpeed;
                         if (masterVolume >= fadeEnd) {
                             masterVolume = fadeEnd;
-                            fadeDirection = NOFADE;
+                            fadeDirection = AudioFade_NOFADE;
 							if (fadeStopOnEnd) {
 								fadeStopOnEnd = false;
 								masterVolume = 1;
@@ -106,11 +115,11 @@ namespace Amara {
 							}
                         }
                         break;
-                    case FADEOUT:
+                    case AudioFade_FADEOUT:
                         masterVolume -= fadeSpeed;
                         if (masterVolume <= fadeEnd) {
                             masterVolume = fadeEnd;
-                            fadeDirection = NOFADE;
+                            fadeDirection = AudioFade_NOFADE;
 							if (fadeStopOnEnd) {
 								fadeStopOnEnd = false;
 								masterVolume = 1;

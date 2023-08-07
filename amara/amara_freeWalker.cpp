@@ -16,6 +16,8 @@ namespace Amara {
 
         bool controlsEnabled = true;
 
+        bool allowFreeRangeStick = true;
+
         Amara::PathFindingTask* pathTask = nullptr;
         Amara::PathTile currentPathTile;
 
@@ -87,11 +89,11 @@ namespace Amara {
 			
             float ox, oy;
 			bool stickMode = false;
-			if (input->lastMode == InputMode_Gamepad) {
+			if (input->lastMode == InputMode_Gamepad && allowFreeRangeStick) {
 				Gamepad* gamepad = input->gamepads->get(0);
 				Stick* stick = gamepad->getStick(BUTTON_LEFTSTICK);
 
-				if (abs(stick->xvalue) > JOYSTICK_DEADZONE || abs(stick->yvalue) > JOYSTICK_DEADZONE) {
+				if (stick->xactive || stick->yactive) {
 					ox = sin(stick->angle) * movementSpeed;
 					oy = cos(stick->angle) * movementSpeed;
 					stickMode = true;

@@ -158,6 +158,9 @@ namespace Amara {
 						if (parent && parent->currentlyPlaying == this) {
 							parent->currentlyPlaying = nullptr;
 						}
+						if (properties->music == this) {
+							properties->music = nullptr;
+						}
 					}
 				}
 				return this;
@@ -177,8 +180,12 @@ namespace Amara {
 						if (parent && parent->currentlyPlaying == this) {
 							parent->currentlyPlaying = nullptr;
 						}
+						if (properties->music == this) {
+							properties->music = nullptr;
+						}
 						if (!nextInChain.empty()) {
-							getRootAudio()->play(nextInChain);
+							Amara::AudioBase* nextMusic = getRootAudio()->play(nextInChain);
+							copyFade(nextMusic);
 						}
 					}
 				}

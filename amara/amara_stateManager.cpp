@@ -18,6 +18,7 @@ namespace Amara {
             int eventLooker = 0;
 
             int waitCounter = 0;
+            float waitTimeElapsed = 0;
 
             bool skipEvent = false;
             bool killLog = false;
@@ -190,6 +191,7 @@ namespace Amara {
 
                 if (once()) {
                     waitCounter = 0;
+                    waitTimeElapsed = 0;
                     ret = true;
                 }
 

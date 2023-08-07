@@ -1,11 +1,15 @@
 namespace Amara {
-    const int JOYSTICK_DEADZONE = 12000;
+    int JOYSTICK_DEADZONE = 12000;
 
     class Stick: public Amara::Button {
         public:
             Sint16 xvalue = 0;
             Sint16 yvalue = 0;
+
             double angle = 0;
+
+            bool xactive = false;
+            bool yactive = false;
 
             Amara::Button* up;
             Amara::Button* down;
@@ -34,6 +38,8 @@ namespace Amara {
                     right->release();
                 }
 
+                if (left->isDown || right->isDown) xactive = true;
+
                 xvalue = value;
             }
 
@@ -51,6 +57,8 @@ namespace Amara {
                 else if (value < JOYSTICK_DEADZONE && yvalue > JOYSTICK_DEADZONE) {
                     down->release();
                 }
+
+                if (up->isDown || down->isDown) yactive = true;
 
                 yvalue = value;
             }

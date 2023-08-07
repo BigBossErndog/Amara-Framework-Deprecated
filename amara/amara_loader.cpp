@@ -9,7 +9,7 @@ namespace Amara {
 			SDL_Renderer* gRenderer = NULL;
 
             std::unordered_map<std::string, Amara::Asset*> assets;
-			std::string selfkey;
+			std::unordered_map<std::string, std::string> pseudonyms;
 
 			bool stillLoading = false;
 			int loadSpeed = 64;
@@ -73,7 +73,11 @@ namespace Amara {
 				return fixedPath;
 			}
 
-            virtual Amara::Asset* get(std::string key) {
+            virtual Amara::Asset* get(std::string key, bool usePseudonyms) {
+				if (usePseudonyms && pseudonyms.find(key) != pseudonyms.end()) {
+					Amara::Asset* found = get(pseudonyms[key]);
+					if (found) return found;
+				}
                 std::unordered_map<std::string, Amara::Asset*>::iterator got = assets.find(key);
                 if (got != assets.end()) {
                     return got->second;
@@ -81,9 +85,16 @@ namespace Amara {
                 return nullptr;
             }
 
+			virtual Amara::Asset* get(std::string key) {
+				return get(key, true);
+			}
+
 			virtual bool has(std::string key) {
 				if (assets.find(key) != assets.end()) {
 					return true;
+				}
+				if (pseudonyms.find(key) != pseudonyms.end()) {
+					return has(pseudonyms[key]);
 				}
 				return false;
 			}
@@ -133,6 +144,14 @@ namespace Amara {
 				if (asset != nullptr) {
 					assets.erase(key);
 					properties->taskManager->queueDeletion(asset);
+					return true;
+				}
+				return false;
+			}
+
+			virtual bool removePseudonym(std::string key) {
+				if (pseudonyms.find(key) != pseudonyms.end()) {
+					pseudonyms.erase(key);
 					return true;
 				}
 				return false;
@@ -200,6 +219,10 @@ namespace Amara {
 			}
 			virtual bool add(std::string key, Amara::Asset* newAsset) {
 				return add(key, newAsset, replacementDefault);
+			}
+
+			virtual void addPseudonym(std::string pseudo, std::string key) {
+				pseudonyms[pseudo] = key;
 			}
 
 			void loadSurfacesFromJSON(nlohmann::json& config) {
@@ -391,6 +414,27 @@ namespace Amara {
 				}
 			}
 
+			virtual void clearPseudonyms() {
+				pseudonyms.clear();
+			}
+
+			virtual void clearPseudonyms(nlohmann::json list) {
+				if (list.is_boolean() && list) clearPseudonyms();
+				else if (list.is_array()) {
+					for (int i = 0; i < list.size(); i++) {
+						removePseudonym(list[i]);
+					}
+				}
+			}
+
+			virtual void setPseudonyms(nlohmann::json config) {
+				for (auto it: config.items()) {
+					std::string pseudo = it.key();
+					std::string key = it.value();
+					pseudonyms[pseudo] = key;
+				}
+			}
+
 			virtual bool fromJSON(std::string path) {
 				bool success = true;
 
@@ -443,6 +487,12 @@ namespace Amara {
 					if (config.find("csv") != config.end()) {
 						loadCSVFromJSON(config["csv"]);
 					}
+					if (config.find("clearPseudonyms") != config.end()) {
+						clearPseudonyms(config["clearPseudonyms"]);
+					}
+					if (config.find("pseudonyms") != config.end()) {
+						setPseudonyms(config["pseudonyms"]);
+					}
 					setBasePath(recPath);
 				}
 				else {
@@ -461,7 +511,7 @@ namespace Amara {
 			 */
 			virtual bool surface(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -510,7 +560,7 @@ namespace Amara {
 			 */
 			virtual bool image(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -558,7 +608,7 @@ namespace Amara {
 			 */
 			virtual bool spritesheet(std::string key, std::string path, int frwidth, int frheight, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -603,7 +653,7 @@ namespace Amara {
 			 */
 			virtual bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -647,7 +697,7 @@ namespace Amara {
 
             virtual bool sound(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -674,7 +724,7 @@ namespace Amara {
 
 			virtual bool music(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -702,7 +752,7 @@ namespace Amara {
 
 			virtual bool string(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -736,7 +786,7 @@ namespace Amara {
 
 			virtual bool json(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -770,7 +820,7 @@ namespace Amara {
 
 			virtual bool lineByLine(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;
@@ -804,7 +854,7 @@ namespace Amara {
 
 			virtual bool csv(std::string key, std::string path, bool replace) {
 				path = fixPath(path);
-				Amara::Asset* got = get(key);
+				Amara::Asset* got = get(key, false);
 				if (got != nullptr && !replace) {
 					std::cout << "Loader: Key \"" << key << "\" has already been used." << std::endl;
 					return false;

@@ -30,4 +30,34 @@ namespace Amara {
     double sineHardInOutEase(float startVal, float endVal, double progress) {
         return startVal + (endVal - startVal)*(sin(M_PI * progress));
     }
+
+    double ease(float startVal, float endVal, double progress, Amara::Easing easing) {
+        switch (easing) {
+            case LINEAR:
+                return linearEase(startVal, endVal, progress);
+                break;
+            case SINE_INOUT:
+                return sineInOutEase(startVal, endVal, progress);
+                break;
+            case SINE_IN:
+                return sineInEase(startVal, endVal, progress);
+                break;
+             case SINE_OUT:
+                return sineOutEase(startVal, endVal, progress);
+                break;
+        }
+        return linearEase(startVal, endVal, progress);
+    }
+
+    SDL_Color colorEase(SDL_Color startColor, SDL_Color endColor, double progress, Amara::Easing easing) {
+        return {
+            ease(startColor.r, endColor.r, progress, easing),
+            ease(startColor.g, endColor.g, progress, easing),
+            ease(startColor.b, endColor.b, progress, easing),
+            ease(startColor.a, endColor.a, progress, easing)
+        };
+    }
+    SDL_Color colorEase(SDL_Color startColor, SDL_Color endColor, double progress) {
+        return colorEase(startColor, endColor, progress, LINEAR);
+    }
 }

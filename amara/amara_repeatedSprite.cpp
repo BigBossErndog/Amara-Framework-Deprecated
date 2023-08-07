@@ -1,6 +1,8 @@
 namespace Amara {
     class RepeatedSprite: public Amara::Sprite {
     public:
+        float patternBaseX = 0;
+        float patternBaseY = 0;
         float patternOffsetX = 0;
         float patternOffsetY = 0;
         float patternMovementX = 0;
@@ -72,8 +74,13 @@ namespace Amara {
         }
 
         virtual void drawPattern() {
-            int ix = (int)floor(patternOffsetX)%Amara::Sprite::width - Amara::Sprite::width;
-            int iy = (int)floor(patternOffsetY)%Amara::Sprite::height - Amara::Sprite::height;
+            int cx = floor(patternBaseX + patternOffsetX);
+            while (cx < 0) cx += Amara::Sprite::width;
+            int cy = floor(patternBaseY + patternOffsetY);
+            while (cy < 0) cy += Amara::Sprite::height;
+
+            int ix = cx%Amara::Sprite::width - Amara::Sprite::width;
+            int iy = cy%Amara::Sprite::height - Amara::Sprite::height;
             int pw = floor(width/Amara::Sprite::width)+2;
             int ph = floor(height/Amara::Sprite::height)+2;
 

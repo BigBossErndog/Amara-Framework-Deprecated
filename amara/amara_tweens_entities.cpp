@@ -429,8 +429,12 @@ namespace Amara {
         }
 
         void script() {
-            parent->setVisible(toSet);
             finish();
+        }
+
+        void finish() {
+            parent->setVisible(toSet);
+            Script::finish();
         }
     };
 

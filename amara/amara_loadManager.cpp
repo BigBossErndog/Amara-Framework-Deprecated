@@ -66,6 +66,18 @@ namespace Amara {
             void regenerateAssets() {
                 load->regenerateAssets();
             }
+
+            virtual void clearPseudonyms() {
+                load->clearPseudonyms();
+            }
+
+            virtual void clearPseudonyms(nlohmann::json config) {
+                load->clearPseudonyms(config);
+            }
+
+            virtual void setPseudonyms(nlohmann::json config) {
+                load->setPseudonyms(config);
+            }
             
             int numTasks() {
                 return tasks.size();
