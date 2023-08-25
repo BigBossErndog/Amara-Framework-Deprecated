@@ -339,8 +339,11 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
-                destRect.x = ((x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-                destRect.y = ((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+                float rotatedX = (x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX));
+                float rotatedY = (y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY));
+
+                destRect.x = (rotatedX * nzoomX);
+                destRect.y = (rotatedY * nzoomY);
                 destRect.w = ((width * scaleX) * nzoomX);
                 destRect.h = ((height * scaleY) * nzoomY);
 
@@ -454,6 +457,14 @@ namespace Amara {
                     std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
                 }
                 return false;
+            }
+
+            UIBox* setPartitions(int top, int bottom, int left, int right) {
+                partitionTop = top;
+                partitionBottom = bottom;
+                partitionLeft = left;
+                partitionRight = right;
+                return this;
             }
 
             void reloadAssets() {

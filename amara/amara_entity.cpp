@@ -414,6 +414,7 @@ namespace Amara {
 		}
 
 		virtual Amara::Entity* get(std::string find) {
+			if (find.size() == 0) return nullptr;
 			Amara::Entity* entity;
 			for (auto it = children.begin(); it != children.end();) {
 				entity = *it;
@@ -550,6 +551,18 @@ namespace Amara {
 			destroy(true);
 		}
 
+		Amara::Entity* setPosition(float gx, float gy) {
+			x = gx;
+			y = gy;
+			return this;
+		}
+		Amara::Entity* setPosition(FloatVector2 v) {
+			return setPosition(v.x, v.y);
+		}
+		Amara::Entity* setPosition(Amara::Entity* entity) {
+			return setPosition(entity->x, entity->y);
+		}
+
 		Amara::Entity* setVisible(bool val) {
 			isVisible = val;
 			return this;
@@ -654,26 +667,28 @@ namespace Amara {
 			return this;
 		}
 
-		void attachTo(Amara::Entity* entity) {
+		Amara::Entity* attachTo(Amara::Entity* entity) {
 			attachedTo = entity;
-			if (entity == nullptr) return;
+			if (entity == nullptr) return this;
 			x = attachedTo->x + attachmentOffsetX;
 			y = attachedTo->y + attachmentOffsetY;
+			return this;
 		}
-		void attachTo(Amara::Entity* entity, float gx, float gy) {
+		Amara::Entity* attachTo(Amara::Entity* entity, float gx, float gy) {
 			setAttachmentOffset(gx, gy);
-			attachTo(entity);
+			return attachTo(entity);
 		}
-		void dettach() {
+		Amara::Entity* dettach() {
 			attachedTo = nullptr;
+			return this;
 		}
-		void setAttachmentOffset(float gx, float gy) {
+		Amara::Entity* setAttachmentOffset(float gx, float gy) {
 			attachmentOffsetX = gx;
 			attachmentOffsetY = gy;
-			attachTo(attachedTo);
+			return attachTo(attachedTo);
 		}
-		void setAttachementOffset(float gi) {
-			setAttachmentOffset(gi, gi);
+		Amara::Entity* setAttachementOffset(float gi) {
+			return setAttachmentOffset(gi, gi);
 		}
 
 		void setLoader(Amara::Loader* gLoader, bool recursive) {

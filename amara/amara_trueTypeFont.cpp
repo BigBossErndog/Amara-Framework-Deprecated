@@ -105,10 +105,15 @@ namespace Amara {
 							break;
 					}
 				}
-                if (config.find("r") != config.end()) color.r = config["r"];
-                if (config.find("g") != config.end()) color.g = config["g"];
-                if (config.find("b") != config.end()) color.b = config["b"];
-                if (config.find("a") != config.end()) color.a = config["a"];
+                if (config.find("color") != config.end()) {
+                    nlohmann::json check = config["color"];
+                    if (check.is_array()) {
+                        color.r = check[0];
+                        color.g = check[1];
+                        color.b = check[2];
+                        if (check.size() >= 4) color.a = check[3];
+                    }
+                }
             }
 
             bool setFont(std::string gFontKey) {
@@ -199,7 +204,7 @@ namespace Amara {
             Amara::TrueTypeFont* setOrigin(float g) {
                 return setOrigin(g, g);
             }
-
+            
             Amara::TrueTypeFont* setScale(float gx, float gy) {
                 scaleX = gx;
                 scaleY = gy;
@@ -293,8 +298,8 @@ namespace Amara {
                             offsetX = width;
                         }
 
-						int rx = floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
-						int ry = floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY);
+						float rx = floor((dx - properties->scrollX*scrollFactorX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
+						float ry = floor((dy-z - properties->scrollY*scrollFactorY + properties->offsetY - (height * originY)) * nzoomY);
                         
                         FC_DrawColumnEffect(
                             fontAsset->font,
@@ -304,7 +309,7 @@ namespace Amara {
                             effect,
                             txt
                         );
-
+                        
 						checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, width * effect.scale.x, height * effect.scale.y);
                     }
                     else {
@@ -316,8 +321,8 @@ namespace Amara {
                             offsetX = width;
                         }
 
-						int rx = floor((dx - properties->scrollX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
-						int ry = floor((dy-z - properties->scrollY + properties->offsetY - (height * originY)) * nzoomY);
+						float rx = floor((dx - properties->scrollX*scrollFactorX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
+						float ry = floor((dy-z - properties->scrollY*scrollFactorY + properties->offsetY - (height * originY)) * nzoomY);
 
                         FC_DrawEffect(
                             fontAsset->font,

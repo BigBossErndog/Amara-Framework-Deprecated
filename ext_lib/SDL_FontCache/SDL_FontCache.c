@@ -700,8 +700,8 @@ FC_Rect FC_DefaultRenderCallback(FC_Image* src, FC_Rect* srcrect, FC_Target* des
         }
 
         SDL_Rect r = *srcrect;
-        SDL_Rect dr = {(int)x, (int)y, (int)(xscale*r.w), (int)(yscale*r.h)};
-        SDL_RenderCopyEx(dest, src, &r, &dr, 0, NULL, flip);
+        SDL_FRect dr = {x, y, (xscale*r.w), (yscale*r.h)};
+        SDL_RenderCopyExF(dest, src, &r, &dr, 0, NULL, flip);
     }
     #endif
 
