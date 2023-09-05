@@ -11,6 +11,7 @@ namespace Amara {
         public:
             float volume = 1;
 			float masterVolume = 1;
+            float calculatedVolume = 1;
 
             Amara::AudioFade fadeDirection = AudioFade_NOFADE;
             float fadeSpeed = 0;

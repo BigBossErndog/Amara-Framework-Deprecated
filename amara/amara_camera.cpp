@@ -58,15 +58,22 @@ namespace Amara {
                 y = gy;
             }
 
-            void setSize(int gw, int gh) {
+            Camera* setSize(int gw, int gh) {
                 width = gw;
                 height = gh;
                 definedDimensions = true;
+                return this;
             }
-            void setSize(float gx, float gy, float gw, float gh) {
+            Camera* setSize(float gx, float gy, float gw, float gh) {
                 x = gx;
                 y = gy;
-                setSize(gw, gh);
+                return setSize(gw, gh);
+            }
+            Camera* setSize(IntRect rect) {
+                return setSize(rect.x, rect.y, rect.width, rect.height);
+            }
+            Camera* setSize(IntVector2 v) {
+                return setSize(v.x, v.y);
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* gParent) {

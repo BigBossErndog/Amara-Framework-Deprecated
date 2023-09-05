@@ -15,7 +15,7 @@ namespace Amara {
 					std::cout << "Error playing sound: \"" << key << "\"" << std::endl;
 					return this;
 				}
-				Mix_Volume(channel, floor(volume * masterVolume * 128));
+				Mix_Volume(channel, floor(volume * masterVolume * MIX_MAX_VOLUME));
 				isPaused = false;
 				isPlaying = true;
 
@@ -50,7 +50,7 @@ namespace Amara {
                 Amara::AudioBase::run(parentVolume);
 
 				if (channel != -1) {
-					if (Mix_Playing(channel)) Mix_Volume(channel, floor(volume * masterVolume * parentVolume * 128));
+					if (Mix_Playing(channel)) Mix_Volume(channel, floor(volume * masterVolume * parentVolume * MIX_MAX_VOLUME));
 					else {
 						isPlaying = false;
 						channel = -1;
@@ -96,7 +96,8 @@ namespace Amara {
 				}
 				Mix_PlayMusic(music, loops);
 				if (Mix_PausedMusic()) Mix_ResumeMusic();
-				properties->music = this;
+				Mix_VolumeMusic(floor(volume * masterVolume * MIX_MAX_VOLUME));
+				properties->music =  this;
 				isPaused = false;
 				isPlaying = true;
 

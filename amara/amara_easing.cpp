@@ -49,7 +49,7 @@ namespace Amara {
         return linearEase(startVal, endVal, progress);
     }
 
-    SDL_Color colorEase(SDL_Color startColor, SDL_Color endColor, double progress, Amara::Easing easing) {
+    SDL_Color ease(SDL_Color startColor, SDL_Color endColor, double progress, Amara::Easing easing) {
         return {
             ease(startColor.r, endColor.r, progress, easing),
             ease(startColor.g, endColor.g, progress, easing),
@@ -57,7 +57,7 @@ namespace Amara {
             ease(startColor.a, endColor.a, progress, easing)
         };
     }
-    SDL_Color colorEase(SDL_Color startColor, SDL_Color endColor, double progress) {
-        return colorEase(startColor, endColor, progress, LINEAR);
+    SDL_Color ease(SDL_Color startColor, SDL_Color endColor, double progress) {
+        return ease(startColor, endColor, progress, LINEAR);
     }
 }

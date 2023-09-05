@@ -8,12 +8,71 @@ namespace Amara {
 		PHYSICS_TILEMAP_LAYER = 3
 	};
 
-	typedef struct PhysicsProperties {
+	class PhysicsProperties {
+	public:
+		int shape = -1;
 		FloatRect rect;
 		FloatCircle circle;
 		FloatLine line;
 		TilemapLayer* tilemapLayer;
-	} PhysicsProperties;
+
+		void setRect(FloatRect gRect) {
+			shape = PHYSICS_RECTANGLE;
+			rect = gRect;
+		}
+		void setRect(float gx, float gy, float gw, float gh) {
+			setRect({ gx, gy, gw, gh });
+		}
+		static PhysicsProperties newRect(FloatRect gRect) {
+			PhysicsProperties nRect;
+			nRect.setRect(gRect);
+			return nRect;
+		}
+		static PhysicsProperties newRect(float gx, float gy, float gw, float gh) {
+			return newRect({ gx, gy, gw, gh });
+		}
+
+		void setCircle(FloatCircle gCircle) {
+			shape = PHYSICS_CIRCLE;
+			circle = gCircle;
+		}
+		void setCircle(float gx, float gy, float gr) {
+			setCircle({ gx, gy, gr });
+		}
+		static PhysicsProperties newCircle(FloatCircle gCircle) {
+			PhysicsProperties nCircle;
+			nCircle.setCircle(gCircle);
+			return nCircle;
+		}
+		static PhysicsProperties newCircle(float gx, float gy, float gr) {
+			return newCircle({ gx, gy, gr });
+		}
+
+		void setLine(FloatLine gLine) {
+			shape = PHYSICS_LINE;
+			line = gLine;
+		}
+		void setLine(float x1, float y1, float x2, float y2) {
+			setLine({ x1, y1, x2, y2 });
+		}
+		static PhysicsProperties newLine(FloatLine gLine) {
+			PhysicsProperties nLine;
+			nLine.setLine(gLine);
+			return nLine;
+		}
+		static PhysicsProperties newLine(float x1, float y1, float x2, float y2) {
+			return newLine(x1, y1, x2, y2);
+		}
+
+		void adjustXY(float gx, float gy) {
+			switch (shape) {
+				case PHYSICS_RECTANGLE:
+					rect.x += gx;
+					rect.y += gy;
+					break;
+			}
+		}
+	};
 
 	class PhysicsBase {
 		public:
@@ -28,7 +87,6 @@ namespace Amara {
 			bool isWall = true;
 			bool isColliding = true;
 
-			int shape = -1;
 			PhysicsProperties properties;
 
 			float x = 0;

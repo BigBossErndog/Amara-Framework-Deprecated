@@ -207,7 +207,7 @@ namespace Amara {
         float height = 0;
 
         PhysicsRectangle() {
-            shape = PHYSICS_RECTANGLE;
+            properties.shape = PHYSICS_RECTANGLE;
             properties.rect = { 0, 0, 0, 0 };
         }
         PhysicsRectangle(float gWidth, float gHeight): PhysicsRectangle() {
@@ -228,7 +228,7 @@ namespace Amara {
 
         bool collidesWith(Amara::PhysicsBase* body) {
             if (!body->isActive) return false;
-            switch (body->shape) {
+            switch (body->properties.shape) {
                 case PHYSICS_RECTANGLE:
                     body->updateProperties();
                     return Amara::overlapping(&properties.rect, &body->properties.rect);
@@ -262,8 +262,8 @@ namespace Amara {
         float radius = 0;
 
         PhysicsCircle() {
+            properties.shape = PHYSICS_CIRCLE;
             properties.circle = { 0, 0, 0 };
-            shape = PHYSICS_CIRCLE;
         }
         PhysicsCircle(float gRadius): PhysicsCircle() {
             radius = gRadius; 
@@ -281,7 +281,7 @@ namespace Amara {
 
         bool collidesWith(Amara::PhysicsBase* body) {
             if (!body->isActive) return false;
-            switch (body->shape) {
+            switch (body->properties.shape) {
                 case PHYSICS_RECTANGLE:
                     body->updateProperties();
                     return Amara::overlapping(&properties.circle, &body->properties.rect);
@@ -317,7 +317,7 @@ namespace Amara {
 
         PhysicsLine() {
             properties.line = {{0, 0}, {0, 0}};
-            shape = PHYSICS_LINE;
+            properties.shape = PHYSICS_LINE;
         }
         PhysicsLine(float p1x, float p1y, float p2x, float p2y): PhysicsLine() {
             float ex = ((parent) ? parent->x : 0);
@@ -333,7 +333,7 @@ namespace Amara {
 
         bool collidesWith(Amara::PhysicsBody* body) {
             if (!body->isActive) return false;
-            switch (body->shape) {
+            switch (body->properties.shape) {
                 case PHYSICS_RECTANGLE:
                     body->updateProperties();
                     return Amara::overlapping(&properties.line, &body->properties.rect);
@@ -372,8 +372,10 @@ namespace Amara {
         float defaultProgressRate = 0.1;
         int checkPadding = 1;
 
+        PhysicsProperties tileProperties;
+
         PhysicsTilemapLayer() {
-            shape = PHYSICS_TILEMAP_LAYER;
+            properties.shape = PHYSICS_TILEMAP_LAYER;
         }
         PhysicsTilemapLayer(float gx, float gy): PhysicsTilemapLayer() {
             x = gx;
@@ -404,10 +406,23 @@ namespace Amara {
                 tx = tile.x * tilemapLayer->tileWidth + px;
                 ty = tile.y * tilemapLayer->tileHeight + py;
 
-                properties.rect = { tilemapLayer->x + tx, tilemapLayer->y + ty, (float)tilemapLayer->tileWidth, (float)tilemapLayer->tileHeight };
+                if (tilemapLayer->tilePhysics.find(tile.id) != tilemapLayer->tilePhysics.end()) {
+                    tileProperties = tilemapLayer->tilePhysics[tile.id];
+                }
+                else {
+                    tileProperties.setRect(tilemapLayer->x + tx, tilemapLayer->y + ty, tilemapLayer->tileWidth, tilemapLayer->tileHeight);
+                }
 
-                if (Amara::overlapping(&properties.rect, &body->properties.line)) {
-                    return true;
+                switch (tileProperties.shape) {
+                    case PHYSICS_RECTANGLE:
+                        if (collideUsingTileRect(body)) return true;
+                        break;
+                    case PHYSICS_CIRCLE:
+                        if (collideUsingTileCircle(body)) return true;
+                        break;
+                    case PHYSICS_LINE:
+                        if (collideUsingTileLine(body)) return true;
+                        break;
                 }
             }
             return false;
@@ -422,7 +437,7 @@ namespace Amara {
 
             float sx, sy, ex, ey, tx, ty;
             body->updateProperties();
-            switch (body->shape) {
+            switch (body->properties.shape) {
                 case PHYSICS_RECTANGLE:
                     sx = body->properties.rect.x + body->properties.rect.width/2.0;
                     sy = body->properties.rect.y + body->properties.rect.height/2.0;
@@ -452,25 +467,94 @@ namespace Amara {
                 for (int j = sy; j <= ey; j++) {
                     Tile& tile = tilemapLayer->getTileAt(i, j);
                     if (tile.id == -1) continue;
+
                     tx = tile.x * tilemapLayer->tileWidth + px;
                     ty = tile.y * tilemapLayer->tileHeight + py;
 
-                    properties.rect = { tilemapLayer->x + tx, tilemapLayer->y + ty, (float)tilemapLayer->tileWidth, (float)tilemapLayer->tileHeight };
-                    switch (body->shape) {
+                    if (tilemapLayer->tilePhysics.find(tile.id) != tilemapLayer->tilePhysics.end()) {
+                        tileProperties = tilemapLayer->tilePhysics[tile.id];
+                    }
+                    else {
+                        tileProperties.setRect(tilemapLayer->x + tx, tilemapLayer->y + ty, tilemapLayer->tileWidth, tilemapLayer->tileHeight);
+                    }
+                    
+                    switch (tileProperties.shape) {
                         case PHYSICS_RECTANGLE:
-                            if (Amara::overlapping(&properties.rect, &body->properties.rect)) {
-                                return true;
-                            }
+                            if (collideUsingTileRect(body)) return true;
                             break;
                         case PHYSICS_CIRCLE:
-                            if (Amara::overlapping(&properties.rect, &body->properties.circle)) {
-                                return true;
-                            }
+                            if (collideUsingTileCircle(body)) return true;
+                            break;
+                        case PHYSICS_LINE:
+                            if (collideUsingTileLine(body)) return true;
                             break;
                     }
                 }
             }
 
+            return false;
+        }
+
+        bool collideUsingTileRect(Amara::PhysicsBase* body) {
+            switch (body->properties.shape) {
+                case PHYSICS_RECTANGLE:
+                    if (Amara::overlapping(&tileProperties.rect, &body->properties.rect)) {
+                        return true;
+                    }
+                    break;
+                case PHYSICS_CIRCLE:
+                    if (Amara::overlapping(&tileProperties.rect, &body->properties.circle)) {
+                        return true;
+                    }
+                    break;
+                case PHYSICS_LINE:
+                    if (Amara::overlapping(&tileProperties.rect, &body->properties.line)) {
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+        bool collideUsingTileCircle(Amara::PhysicsBase* body) {
+            switch (body->properties.shape) {
+                case PHYSICS_RECTANGLE:
+                    if (Amara::overlapping(&tileProperties.circle, &body->properties.rect)) {
+                        return true;
+                    }
+                    break;
+                case PHYSICS_CIRCLE:
+                    if (Amara::overlapping(&tileProperties.circle, &body->properties.circle)) {
+                        return true;
+                    }
+                    break;
+                case PHYSICS_LINE:
+                    if (Amara::overlapping(&tileProperties.circle, &body->properties.line)) {
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+        bool collideUsingTileLine(Amara::PhysicsBase* body) {
+            switch (body->properties.shape) {
+                case PHYSICS_RECTANGLE:
+                    if (Amara::overlapping(&tileProperties.line, &body->properties.rect)) {
+                        return true;
+                    }
+                    break;
+                case PHYSICS_CIRCLE:
+                    if (Amara::overlapping(&tileProperties.line, &body->properties.circle)) {
+                        return true;
+                    }
+                    break;
+                case PHYSICS_LINE:
+                    if (Amara::overlapping(&tileProperties.line, &body->properties.line)) {
+                        return true;
+                    }
+                    break;
+            }
             return false;
         }
     };

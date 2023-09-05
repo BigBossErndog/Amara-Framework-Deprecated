@@ -27,6 +27,8 @@ namespace Amara {
 
             std::vector<Amara::Tile> tiles;
 
+            std::unordered_map<int, Amara::PhysicsProperties> tilePhysics;
+
             Amara::Tilemap* tilemap = nullptr;
             Amara::Entity* tilemapEntity = nullptr;
             
@@ -98,6 +100,8 @@ namespace Amara {
             void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
                 gRenderer = properties->gRenderer;
+
+                tilePhysics.clear();
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);

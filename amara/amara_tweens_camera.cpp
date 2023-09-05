@@ -162,7 +162,7 @@ namespace Amara {
         return (new Tween_CameraZoom(tz, tt, gEasing));
     };
 
-	class Tween_CameraShake: public Amara::Tween {
+	class Tween_ShakeCamera: public Amara::Tween {
 	public:
 		Amara::Camera* cam;
 
@@ -175,7 +175,7 @@ namespace Amara {
 
 		RNG rng;
 
-		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt, Amara::Easing gEasing) {
+		Tween_ShakeCamera(float sx, float sy, float ex, float ey, float tt, Amara::Easing gEasing) {
 			shakeStartX = sx;
 			shakeStartY = sy;
 			shakeEndX = ex;
@@ -183,11 +183,11 @@ namespace Amara {
 			time = tt;
 			easing = gEasing;
 		}
-		Tween_CameraShake(float sx, float sy, float ex, float ey, float tt): Tween_CameraShake(sx, sy, ex, ey, tt, LINEAR) {}
+		Tween_ShakeCamera(float sx, float sy, float ex, float ey, float tt): Tween_ShakeCamera(sx, sy, ex, ey, tt, LINEAR) {}
 
-		Tween_CameraShake(float tx, float ty, float tt, Amara::Easing gEasing): Tween_CameraShake(tx, ty, 0, 0, tt, gEasing) {}
-		Tween_CameraShake(float tx, float ty, float tt): Tween_CameraShake(tx, ty, tt, LINEAR) {}
-		Tween_CameraShake(float tx, float ty): Tween_CameraShake(tx, ty, 1) {}
+		Tween_ShakeCamera(float tx, float ty, float tt, Amara::Easing gEasing): Tween_ShakeCamera(tx, ty, 0, 0, tt, gEasing) {}
+		Tween_ShakeCamera(float tx, float ty, float tt): Tween_ShakeCamera(tx, ty, tt, LINEAR) {}
+		Tween_ShakeCamera(float tx, float ty): Tween_ShakeCamera(tx, ty, 1) {}
 
 		void prepare(Amara::Actor* actor) {
 			cam = (Amara::Camera*)actor;
@@ -234,4 +234,39 @@ namespace Amara {
 			cam->offsetY = 0;
 		}
 	};
+
+    class Tween_ResizeCamera: public Amara::Tween {
+    public:
+        Amara::Camera* cam = nullptr;
+
+        IntRect startRect;
+        IntRect targetRect;
+
+        Tween_ResizeCamera(IntRect rect, double tt, Amara::Easing gEase) {
+            time = tt;
+            easing = gEase;
+        }
+
+        void prepare(Amara::Actor* actor) {
+            if (cam == nullptr) cam = (Amara::Camera*)actor;
+
+            startRect = { cam->x, cam->y, cam->width, cam->height };
+        }
+
+        void script() {
+            Amara::Tween::progressFurther();
+
+            cam->setSize(
+                ease(startRect.x, targetRect.x, progress, easing),
+                ease(startRect.y, targetRect.y, progress, easing),
+                ease(startRect.width, targetRect.width, progress, easing),
+                ease(startRect.height, targetRect.height, progress, easing)
+            );
+        }
+
+        void finish() {
+            Amara::Tween::finish();
+            cam->setSize(targetRect);
+        }
+    };
 }
