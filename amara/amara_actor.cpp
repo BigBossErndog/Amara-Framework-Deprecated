@@ -154,6 +154,13 @@ namespace Amara {
         }
 
         void run() {
+			if (debugging) {
+				debugID = "";
+				for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
+				debugID += id;
+				SDL_Log("%s (%s): Running.", debugID.c_str(), entityType.c_str());
+			}
+            
             receiveMessages();
             updateMessages();
 

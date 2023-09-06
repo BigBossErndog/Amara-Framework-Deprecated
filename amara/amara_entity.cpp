@@ -73,6 +73,10 @@ namespace Amara {
 		int sortingDelay = 0;
 		int sortingDelayCounter = 0;
 
+		static bool debuggingDefault;
+		std::string debugID;
+		bool debugging = debuggingDefault;
+
 		Entity() {}
 
 		virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
@@ -361,6 +365,14 @@ namespace Amara {
 		}
 
 		virtual void run() {
+			debugID = id;
+			if (debugging) {
+				debugID = "";
+				for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
+				debugID += id;
+				SDL_Log("%s (%s): Running.", debugID.c_str(), entityType.c_str());
+			}
+			
 			receiveMessages();
 			updateMessages();
 
@@ -403,14 +415,22 @@ namespace Amara {
 		virtual void runChildren() {
 			if (isDestroyed) return;
 			Amara::Entity* entity;
+			properties->entityDepth += 1;
+			if (debugging) {
+				debugID = "";
+				for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
+				debugID += id;
+			}
 			for (auto it = children.begin(); it != children.end();) {
 				entity = *it;
 				++it;
 				if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
 					continue;
 				}
+				if (debugging) SDL_Log("%s (%s): Running Child %d \"%s\"", debugID.c_str(), entityType.c_str(), std::distance(it, children.begin()), entity->id.c_str());
 				entity->run();
 			}
+			properties->entityDepth -= 1;
 		}
 
 		virtual Amara::Entity* get(std::string find) {
@@ -731,4 +751,5 @@ namespace Amara {
 			}
 		}
 	};
+	bool Amara::Entity::debuggingDefault = false;
 }

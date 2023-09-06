@@ -142,6 +142,7 @@ namespace Amara {
                 update();
                 reciteScripts();
                 
+                properties->entityDepth = 0;
                 runChildren();
                 checkChildren();
 

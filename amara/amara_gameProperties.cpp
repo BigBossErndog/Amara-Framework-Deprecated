@@ -31,6 +31,8 @@ namespace Amara {
 
             bool testing = true;
 
+            int entityDepth = 0;
+
             int width = 0;
             int height = 0;
 
