@@ -146,7 +146,7 @@ namespace Amara {
             int frameWidth = 0;
             int frameHeight = 0;
 
-            std::unordered_map<std::string, Amara::Animation*> anims;
+            std::unordered_map<std::string, Amara::Animation> anims;
 
             Spritesheet(std::string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, nullptr) {
                 setTexture(newtexture, newwidth, newheight);
@@ -167,30 +167,34 @@ namespace Amara {
             }
 
             Amara::Animation* addAnim(std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
-                Amara::Animation* anim;
-                std::unordered_map<std::string, Amara::Animation*>::iterator got = anims.find(animKey);
+                auto got = anims.find(animKey);
                 if (got != anims.end()) {
-                    anim = got->second;
-                    anim->frames = frames;
-                    anim->frameRate = frameRate;
-                    anim->loop = loop;
-                    return anim;
+                    Amara::Animation& anim = got->second;
+                    anim.frames = frames;
+                    anim.frameRate = frameRate;
+                    anim.loop = loop;
+                    return &anim;
                 }
-
-                anim = new Amara::Animation(key, animKey, frames, frameRate, loop);
-                anims[animKey] = anim;
-                return anim;
+                anims[animKey] = Amara::Animation(key, animKey, frames, frameRate, loop);
+                return &anims[animKey];
             }
             Amara::Animation* addAnim(std::string animKey, int frame) {
                 return addAnim(animKey, {frame}, 1, false);
             }
 
             Amara::Animation* getAnim(std::string animKey) {
-                std::unordered_map<std::string, Amara::Animation*>::iterator got = anims.find(animKey);
+                auto got = anims.find(animKey);
                 if (got != anims.end()) {
-                    return got->second;
+                    return &got->second;
                 }
                 return nullptr;
+            }
+
+            void removeAnim(std::string animKey) {
+                auto got = anims.find(animKey);
+                if (got != anims.end()) {
+                    anims.erase(animKey);
+                }
             }
     };
 

@@ -13,6 +13,7 @@ namespace Amara {
 
             float frameCounter = 0;
 
+            AnimationManager() {}
             AnimationManager(Amara::GameProperties* gameProperties, Amara::Image* givenParent) {
                 properties = gameProperties;
                 parent = givenParent;
@@ -123,8 +124,8 @@ namespace Amara {
 				parent->frame = currentFrame;
 			}
 
-            void syncWith(Amara::Animated* other) {
-                setProgress(other->anims->getProgress());
+            void syncWith(AnimationManager& other) {
+                setProgress(other.getProgress());
             }
 
             void pause() {
@@ -167,5 +168,15 @@ namespace Amara {
                     frameCounter -= frameDelay;
                 }
             }
+    };
+
+    class Animated {
+        public:
+            Amara::AnimationManager anims;
+
+            Animated() {}
+
+            virtual bool play(std::string key) {}
+			virtual void play(Amara::Animation* anim) {}
     };
 }

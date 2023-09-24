@@ -524,7 +524,7 @@ namespace Amara {
 					}
 				}
 				else if (fps > lps) {
-					logicDelay = fps/lps;
+					logicDelay = floor(fps/(float)lps);
 				}
 
 				int frameTicks = capTimer.getTicks();

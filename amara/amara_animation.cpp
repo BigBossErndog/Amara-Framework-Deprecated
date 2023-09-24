@@ -1,6 +1,4 @@
 namespace Amara {
-    class AnimationManager;
-
     class Animation {
         public:
             std::string texture;
@@ -12,6 +10,7 @@ namespace Amara {
 
 			bool deleteOnFinish = false;
 
+            Animation() {}
 			Animation(std::vector<int> givenFrames, int gFrameRate, bool gLoop) {
 				frames = givenFrames;
                 frameRate = gFrameRate;
@@ -42,13 +41,5 @@ namespace Amara {
             int length() {
                 return frames.size();
             }
-    };
-
-    class Animated {
-        public:
-            Amara::AnimationManager* anims = nullptr;
-
-            virtual bool play(std::string key) {}
-			virtual void play(Amara::Animation* anim) {}
     };
 }
