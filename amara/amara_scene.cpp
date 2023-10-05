@@ -16,6 +16,8 @@ namespace Amara {
 
             bool initialLoaded = false;
 
+            bool sortCameras = false;
+
             using Actor::Actor;
 
             virtual void setup(Amara::GameProperties* gameProperties, Amara::ScenePlugin* gScenePlugin) final {
@@ -172,7 +174,7 @@ namespace Amara {
 				properties->scrollX = 0;
 				properties->scrollY = 0;
 
-                cameras.sort(sortEntities());
+                if (sortCameras) cameras.sort(sortEntitiesByDepth());
                 if (shouldSortChildren || sortChildrenOnce) {
                     sortChildrenOnce = false;
                     delayedSorting();

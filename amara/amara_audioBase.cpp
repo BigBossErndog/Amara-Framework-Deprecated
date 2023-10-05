@@ -66,7 +66,8 @@ namespace Amara {
             AudioBase* fadeOut(float speed) { return fadeOut(speed, 0, true); }
             AudioBase* fadeOut() { return fadeOut(0.01); }
 
-            AudioBase* copyFade(AudioBase* other) {
+            AudioBase* transferFade(AudioBase* other) {
+                other->masterVolume = masterVolume;
                 other->fadeDirection = fadeDirection;
                 other->fadeSpeed = fadeSpeed;
                 other->fadeEnd = fadeEnd;
@@ -92,6 +93,8 @@ namespace Amara {
             virtual AudioBase* pause() {}
             virtual AudioBase* resume() {}
             virtual AudioBase* stop() {}
+
+            virtual void onStop() {}
 
             virtual void chain(std::string nextKey) {
                 nextInChain = nextKey;

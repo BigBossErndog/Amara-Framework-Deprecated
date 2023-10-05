@@ -15,7 +15,7 @@ namespace Amara {
         int z = 0;
     } IntVector;
 
-    typedef struct FloatVector3{
+    typedef struct FloatVector3 {
         float x = 0;
         float y = 0;
         float z = 0;

@@ -11,7 +11,7 @@ namespace Amara {
 		float depth = 0;
 	};
 
-	struct sortEntities {
+	struct sortEntitiesByDepth {
 		inline bool operator() (Amara::SortedEntity* entity1, Amara::SortedEntity* entity2) {
 			if (entity1 == nullptr) return false;
 			if (entity2 == nullptr) return false;
@@ -19,7 +19,7 @@ namespace Amara {
 		}
 	};
 
-	class Entity : public Amara::SortedEntity, public Amara::Interactable, public Amara::Broadcaster {
+	class Entity : public Amara::SortedEntity, public Amara::Interactable, public Amara::Broadcaster, public Amara::FloatVector3 {
 	public:
 		Amara::GameProperties* properties = nullptr;
 		Amara::Game*  game = nullptr;
@@ -40,14 +40,10 @@ namespace Amara {
 
 		Amara::PhysicsBase* physics = nullptr;
 
-		nlohmann::json data;
+		nlohmann::json data = nullptr;
 
 		std::string id;
 		std::string entityType;
-
-		float x = 0;
-		float y = 0;
-		float z = 0;
 
 		float scaleX = 1;
 		float scaleY = 1;
@@ -268,7 +264,7 @@ namespace Amara {
 		}
 
 		Amara::Entity* sortChildren() {
-			children.sort(sortEntities());
+			children.sort(sortEntitiesByDepth());
 			return this;
 		}
 		Amara::Entity* delayedSorting() {
