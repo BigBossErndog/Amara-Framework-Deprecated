@@ -18,7 +18,7 @@ namespace Amara {
 
 			std::string id;
 
-            bool deleteOnFinish = true;
+            bool manualDeletion = true;
             bool deleteChainOnDelete = true;
 
 			bool initiated = false;
@@ -26,7 +26,7 @@ namespace Amara {
             Amara::Script* chainedScript = nullptr;
 
             Script(bool deleteWhenDone): Amara::StateManager() {
-                deleteOnFinish = deleteWhenDone;
+                manualDeletion = deleteWhenDone;
             }
 
             Script(): Script(true) {}
@@ -96,7 +96,7 @@ namespace Amara {
                     chainedScript->deleteScript();
                     chainedScript = nullptr;
                 }
-                if (deleteOnFinish) properties->taskManager->queueDeletion(this);
+                if (manualDeletion) properties->taskManager->queueDeletion(this);
             }
             
             ~Script() {

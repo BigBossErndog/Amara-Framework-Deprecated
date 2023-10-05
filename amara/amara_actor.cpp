@@ -37,7 +37,7 @@ namespace Amara {
                     }
                     ++it;
                 }
-                if (script->deleteOnFinish) properties->taskManager->queueDeletion(script);
+                if (script->manualDeletion) properties->taskManager->queueDeletion(script);
                 if (script->chainedScript) destroyScript(script->chainedScript);
             } 
         }
@@ -106,7 +106,7 @@ namespace Amara {
                         script->chainedScript = nullptr;
                     }
                     it = scripts.erase(it);
-                    if (script->deleteOnFinish) properties->taskManager->queueDeletion(script);
+                    if (script->manualDeletion) properties->taskManager->queueDeletion(script);
                     continue;
                 }
                 ++it;
@@ -223,7 +223,7 @@ namespace Amara {
                         recite(script->chainedScript);
                     }
                     it = scripts.erase(it);
-                    if (script->deleteOnFinish) {
+                    if (script->manualDeletion) {
                         properties->taskManager->queueDeletion(script);
                     }
                     break;
@@ -237,7 +237,7 @@ namespace Amara {
                         recite(script->chainedScript);
                     }
                     it = scripts.erase(it);
-                    if (script->deleteOnFinish) {
+                    if (script->manualDeletion) {
                         properties->taskManager->queueDeletion(script);
                     }
                     break;
@@ -260,7 +260,7 @@ namespace Amara {
             for (Amara::Script* script: scripts) {
                 script->cancel();
                 script->cancel(this);
-                if (script->deleteOnFinish) {
+                if (script->manualDeletion) {
                     properties->taskManager->queueDeletion(script);
                 }
             }
@@ -268,7 +268,7 @@ namespace Amara {
             for (Amara::Script* script: scriptBuffer) {
                 script->cancel();
                 script->cancel(this);
-                if (script->deleteOnFinish) {
+                if (script->manualDeletion) {
                     properties->taskManager->queueDeletion(script);
                 }
             }
