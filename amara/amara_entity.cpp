@@ -21,7 +21,6 @@ namespace Amara {
 
 	class Entity : public Amara::SortedEntity, public Amara::Interactable, public Amara::Broadcaster, public Amara::FloatVector3 {
 	public:
-		Amara::GameProperties* properties = nullptr;
 		Amara::Game*  game = nullptr;
 		Amara::Scene* scene = nullptr;
 		Amara::Entity* parent = nullptr;
@@ -30,7 +29,6 @@ namespace Amara {
 		float attachmentOffsetX = 0;
 		float attachmentOffsetY = 0;
 
-		Amara::InputManager* input = nullptr;
 		Amara::ControlScheme* controls = nullptr;
 		Amara::AudioGroup* audio = nullptr;
 		Amara::AssetManager* assets = nullptr;
@@ -74,16 +72,14 @@ namespace Amara {
 		bool debugging = debuggingDefault;
 
 		Entity() {}
+		Entity(Amara::GameProperties* gProperties) {
+			Amara::Entity::init(gProperties);
+		}
 
-		virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
+		virtual void init(Amara::GameProperties* gameProperties) {
 			Amara::Interactable::init(gameProperties);
 
-			properties = gameProperties;
 			game = properties->game;
-			scene = givenScene;
-			parent = givenParent;
-
-			input = properties->input;
 			controls = properties->controls;
 			audio = properties->audio;
 			assets = properties->assets;
@@ -92,6 +88,12 @@ namespace Amara {
 
 			isActive = true;
 			entityType = "entity";
+		}
+		virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
+			Amara::Entity::init(gameProperties);
+
+			scene = givenScene;
+			parent = givenParent;
 
 			init();
 			preload();
@@ -358,6 +360,16 @@ namespace Amara {
 		}
 		void drawToTexture(SDL_Texture* tx) {
 			drawToTexture(tx, x, y);
+		}
+
+		Amara::Entity* goToXY(float gx, float gy) {
+			x = gx; y = gy;
+			return this;
+		}
+		Amara::Entity* goToXYZ(float gx, float gy, float gz) {
+			goToXY(gx, gy);
+			x = gz;
+			return this;
 		}
 
 		virtual void run() {

@@ -21,7 +21,6 @@ class TestScene: public Scene, public StateManager {
         }
 
         void create() {
-			SDL_Log("CREATE");
 			controls->addKey("confirm", KEY_SPACE);
 
 			testText = assets->getJSON("testText");
@@ -34,33 +33,27 @@ class TestScene: public Scene, public StateManager {
 			box->copyStateManager(this);
 
 			// add(showText = new TrueTypeFont(16, 16, "font", "WAITING"));
-			SDL_Log("END CREATE");
 		}
 
         void update() {
-			SDL_Log("UPDATE");
 			start();
 			for (int i = 0; i < testText.size(); i++) {
 				box->say(testText[i]);
 			}
-			SDL_Log("END UPDATE");
         }
 };
 
 int main(int argc, char** args) {
     #ifndef AMARA_WEB
-        Game* game = new Game("Amara Game", false);
+        Game game = Game("Amara Game", false);
     #else
-        WebGame* game = new WebGame("Amara Game");
+        WebGame game = WebGame("Amara Game");
     #endif
-	SDL_Log("INIT GAME");
-    game->init(480, 360);
-	cout << "WHERE?" << endl;
-    game->setWindowSize(960, 720);
-	SDL_Log("END SET WINDOW SIZE");
+    game.init(480, 360);
+    game.setWindowSize(960, 720);
 
-    game->scenes->add("test", new TestScene());
-    game->start("test");
+    game.scenes.add("test", new TestScene());
+    game.start("test");
 
     return 0;
 }

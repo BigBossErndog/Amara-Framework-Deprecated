@@ -18,8 +18,8 @@ namespace Amara {
 
 			std::string id;
 
-            bool manualDeletion = true;
-            bool deleteChainOnDelete = true;
+            bool manualDeletion = false;
+            bool deleteChained = true;
 
 			bool initiated = false;
 
@@ -91,16 +91,16 @@ namespace Amara {
 			virtual void cancel(Amara::Actor* actor) {}
 
             virtual void deleteScript() {
-                if (chainedScript && deleteChainOnDelete) {
+                if (chainedScript && deleteChained) {
                     chainedScript->properties = properties;
                     chainedScript->deleteScript();
                     chainedScript = nullptr;
                 }
-                if (manualDeletion) properties->taskManager->queueDeletion(this);
+                if (!manualDeletion) properties->taskManager->queueDeletion(this);
             }
             
             ~Script() {
-                if (deleteChainOnDelete && chainedScript) {
+                if (deleteChained && chainedScript) {
                     chainedScript->properties = properties;
                     chainedScript->deleteScript();
                 }

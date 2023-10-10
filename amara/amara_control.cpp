@@ -22,6 +22,7 @@ namespace Amara {
 
             Amara::Key* lastKeyDown = nullptr;
 
+            Control() {}
             Control(Amara::GameProperties* gProperties, std::string givenId) {
                 properties = gProperties;
                 input = properties->input;

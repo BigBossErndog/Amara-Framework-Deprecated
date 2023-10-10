@@ -4,9 +4,10 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::InputManager* input = nullptr;
 
-            std::unordered_map<std::string, Amara::Control*> controls;
+            std::unordered_map<std::string, Amara::Control> controls;
             std::vector<Amara::Control*> controlList;
 
+            ControlScheme() {}
             ControlScheme(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 input = gameProperties->input;
@@ -31,17 +32,17 @@ namespace Amara {
                     return get(key);
                 }
 
-                Amara::Control* newControl = new Amara::Control(properties, key);
-                controls[key] = newControl;
-                controlList.push_back(newControl);
+                controls[key] = Amara::Control(properties, key);
+                Amara::Control& newControl = controls[key];
+                controlList.push_back(&newControl);
 
-                return newControl;
+                return &newControl;
             }
 
             Amara::Control* get(std::string key) {
-                std::unordered_map<std::string, Amara::Control*>::iterator got = controls.find(key);
+                auto got = controls.find(key);
                 if (got != controls.end()) {
-                    return got->second;
+                    return &got->second;
                 }
                 return nullptr;
             }

@@ -9,6 +9,7 @@ namespace Amara {
             std::vector<Amara::SceneTransitionBase*> transitionDeletionQueue;
             std::vector<void*> objectDeletionQueue;
 
+            TaskManager() {}
             TaskManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
             }

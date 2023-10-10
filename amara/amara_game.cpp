@@ -4,7 +4,7 @@ namespace Amara {
 			SDL_version compiledVersion;
             SDL_version linkedVersion;
 
-			Amara::GameProperties* properties;
+			Amara::GameProperties properties;
 
 			nlohmann::json globalData;
 			std::unordered_map<std::string, void*> globalObjects;
@@ -22,9 +22,9 @@ namespace Amara {
 			int width = 0;
 			int height = 0;
 
-			Amara::IntRect* display = nullptr;
-			Amara::IntRect* resolution = nullptr;
-			Amara::IntRect* window = nullptr;
+			Amara::IntRect display;
+			Amara::IntRect resolution;
+			Amara::IntRect window;
 
 			bool lagging = false;
 			int lagCounter = 0;
@@ -35,21 +35,21 @@ namespace Amara {
 			bool renderTargetsReset = false;
 			bool renderDeviceReset = false;
 
-			Amara::Loader* load = nullptr;
-			Amara::AssetManager* assets = nullptr;
-			Amara::SceneManager* scenes = nullptr;
+			Amara::Loader load;
+			Amara::AssetManager assets;
+			Amara::SceneManager scenes;
 
-			Amara::InputManager* input = nullptr;
-			Amara::ControlScheme* controls = nullptr;
+			Amara::InputManager input;
+			Amara::ControlScheme controls;
 			bool controllerEnabled = true;
 
 			SDL_Color backgroundColor = {255, 255, 255, 255};
 
 			Amara::AudioGroup* audio = nullptr;
-			Amara::EventManager* events = nullptr;
-			Amara::TaskManager* taskManager = nullptr;
+			Amara::EventManager events;
+			Amara::TaskManager taskManager;
 
-			Amara::FileWriter* writer = nullptr;
+			Amara::FileWriter writer;
 
 			bool vsync = false;
 			int fps = 60;
@@ -68,11 +68,13 @@ namespace Amara {
 			bool testing = true;
 			bool hardwareRendering = true;
 
+			Game() {}
+
 			Game(std::string givenName, bool gRendering) {
 				name = givenName;
 
-				properties = new Amara::GameProperties();
-				properties->game = this;
+				properties = Amara::GameProperties();
+				properties.game = this;
 
 				hardwareRendering = gRendering;
 			}
@@ -122,7 +124,7 @@ namespace Amara {
 					SDL_Log("Window could not be created. Game Error: %s\n", SDL_GetError());
 					return false;
 				}
-				properties->gWindow = gWindow;
+				properties.gWindow = gWindow;
 
 				//Update the surface
 				SDL_UpdateWindowSurface(gWindow);
@@ -140,7 +142,7 @@ namespace Amara {
 					SDL_Log("Game Error: Renderer failed to start. SDL Error: %s\n", SDL_GetError());
 					return false;
 				}
-				properties->gRenderer = gRenderer;
+				properties.gRenderer = gRenderer;
 
 				// Initialize renderer color
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
@@ -173,37 +175,37 @@ namespace Amara {
 				// Setting game logical size
 				SDL_RenderSetLogicalSize(gRenderer, width, height);
 
-				display = new Amara::IntRect{ 0, 0, dm.w, dm.h };
-				properties->display = display;
+				display = Amara::IntRect{ 0, 0, dm.w, dm.h };
+				properties.display = &display;
 
-				resolution = new Amara::IntRect{ 0, 0, width, height };
-				properties->resolution = resolution;
+				resolution = Amara::IntRect{ 0, 0, width, height };
+				properties.resolution = &resolution;
 
-				window = new Amara::IntRect{ 0, 0, width, height };
-				properties->window = window;
+				window = Amara::IntRect{ 0, 0, width, height };
+				properties.window = &window;
 
-				SDL_GetWindowPosition(gWindow, &window->x, &window->y);
+				SDL_GetWindowPosition(gWindow, &window.x, &window.y);
 				// SDL_Log("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
 
-				load = new Amara::Loader(properties);
-				properties->loader = load;
+				load = Amara::Loader(&properties);
+				properties.loader = &load;
 
-				assets = new Amara::AssetManager(properties);
-				properties->assets = assets;
+				assets = Amara::AssetManager(&properties);
+				properties.assets = &assets;
 
-				input = new Amara::InputManager();
-				input->keyboard = new Amara::Keyboard(properties);
-				input->mouse = new Amara::Mouse(properties);
-				input->gamepads = new Amara::GamepadManager(properties);
-				input->touches = new Amara::TouchManager(properties);
-				properties->input = input;
+				input = Amara::InputManager();
+				input.keyboard = new Amara::Keyboard(&properties);
+				input.mouse = new Amara::Mouse(&properties);
+				input.gamepads = new Amara::GamepadManager(&properties);
+				input.touches = new Amara::TouchManager(&properties);
+				properties.input = &input;
 
-				messages = MessageQueue(properties);
+				messages = MessageQueue(&properties);
 				messages.clear();
 
-				properties->messages = &messages;
+				properties.messages = &messages;
 
-				writer = new FileWriter();
+				writer = FileWriter();
 
 				globalData.clear();
 				rng.randomize();
@@ -213,27 +215,27 @@ namespace Amara {
 				for (int i = 0; i < SDL_NumJoysticks(); i++) {
 					if (SDL_IsGameController(i)) {
 						SDL_GameController* controller = SDL_GameControllerOpen(i);
-						input->gamepads->connectGamepad(controller);
+						input.gamepads->connectGamepad(controller);
 					}
 				}
 
-				controls = new Amara::ControlScheme(properties);
-				properties->controls = controls;
+				controls = Amara::ControlScheme(&properties);
+				properties.controls = &controls;
 
-				scenes = new Amara::SceneManager(properties);
-				properties->scenes = scenes;
+				scenes = Amara::SceneManager(&properties);
+				properties.scenes = &scenes;
 
-				taskManager = new Amara::TaskManager(properties);
-				properties->taskManager = taskManager;
+				taskManager = Amara::TaskManager(&properties);
+				properties.taskManager = &taskManager;
 
-				events = new Amara::EventManager(properties);
-				properties->events = events;
+				events = Amara::EventManager(&properties);
+				properties.events = &events;
 
-				audio = new Amara::AudioGroup(properties, "root");
-				properties->audio = audio;
+				audio = new Amara::AudioGroup(&properties, "root");
+				properties.audio = audio;
 				audio->rootGroup = true;
 
-				properties->rng = &rng;
+				properties.rng = &rng;
 
 				writeProperties();
 
@@ -269,7 +271,7 @@ namespace Amara {
 
 			void start(std::string startKey) {
 				// Start a specific scene
-				scenes->start(startKey);
+				scenes.start(startKey);
 				start();
 			}
 
@@ -285,18 +287,18 @@ namespace Amara {
 				deleteEntities();
 				deleteObjects();
 				deleteTransitions();
-				taskManager->run();
+				taskManager.run();
 				if (renderTargetsReset || renderDeviceReset) {
 					reloadAssets = true;
 				}
 				else if (reloadAssets) {
 					reloadAssets = false;
-					load->regenerateAssets();
+					load.regenerateAssets();
 				}
 			}
 
 			void deleteEntities() {
-				std::vector<Amara::Entity*>& deleteQueue = taskManager->getEntityQueue();
+				std::vector<Amara::Entity*>& deleteQueue = taskManager.getEntityQueue();
 				Amara::Entity* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
@@ -310,7 +312,7 @@ namespace Amara {
 			}
 
 			void deleteObjects() {
-				std::vector<void*>& deleteQueue = taskManager->getObjectQueue();
+				std::vector<void*>& deleteQueue = taskManager.getObjectQueue();
 				void* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
@@ -324,7 +326,7 @@ namespace Amara {
 			}
 
 			void deleteTransitions() {
-				std::vector<Amara::SceneTransitionBase*>& deleteQueue = taskManager->getTransitionQueue();
+				std::vector<Amara::SceneTransitionBase*>& deleteQueue = taskManager.getTransitionQueue();
 				Amara::SceneTransitionBase* obj;
                 int size = deleteQueue.size();
                 if (testing && size > 0) {
@@ -365,11 +367,11 @@ namespace Amara {
 
 			void setFPS(int newFps, bool lockLogicSpeed) {
 				fps = newFps;
-				properties->fps = fps;
+				properties.fps = fps;
 				tps = 1000 / fps;
 				if (!lockLogicSpeed) {
 					lps = newFps;
-					properties->lps = lps;
+					properties.lps = lps;
 				}
 			}
 
@@ -381,8 +383,8 @@ namespace Amara {
 				fps = newFps;
 				lps = newLps;
 				tps = 1000 / fps;
-				properties->fps = fps;
-				properties->lps = lps;
+				properties.fps = fps;
+				properties.lps = lps;
 			}
 
 			void setLogicTickRate(int newRate) {
@@ -403,16 +405,16 @@ namespace Amara {
 			void setWindowSize(int neww, int newh) {
 				if (gWindow != NULL) {
 					SDL_SetWindowSize(gWindow, neww, newh);
-					window->width = neww;
-					window->height = newh;
+					window.width = neww;
+					window.height = newh;
 				}
 			}
 
 			void setWindowPosition(int newx, int newy) {
 				if (gWindow != NULL) {
 					SDL_SetWindowPosition(gWindow, newx, newy);
-					window->x = newx;
-					window->y = newy;
+					window.x = newx;
+					window.y = newy;
 				}
 			}
 
@@ -420,8 +422,8 @@ namespace Amara {
 				if (gRenderer != NULL) {
 					SDL_RenderSetLogicalSize(gRenderer, neww, newh);
 				}
-				resolution->width = neww;
-				resolution->height = newh;
+				resolution.width = neww;
+				resolution.height = newh;
 				width = neww;
 				height = newh;
 				writeProperties();
@@ -451,31 +453,31 @@ namespace Amara {
 				SDL_SetWindowIcon(gWindow, sf);
 			}
 			void setWindowIcon(std::string key) {
-				setWindowIcon(assets->getSurface(key));
+				setWindowIcon(assets.getSurface(key));
 			}
 
 			void writeProperties() {
-				properties->gWindow = gWindow;
-				properties->gRenderer = gRenderer;
+				properties.gWindow = gWindow;
+				properties.gRenderer = gRenderer;
 
-				properties->testing = testing;
+				properties.testing = testing;
 
-				properties->width = width;
-				properties->height = height;
+				properties.width = width;
+				properties.height = height;
 
-				properties->isFullscreen = isFullscreen;
+				properties.isFullscreen = isFullscreen;
 
-				properties->renderTargetsReset = renderTargetsReset;
-				properties->renderDeviceReset = renderDeviceReset;
+				properties.renderTargetsReset = renderTargetsReset;
+				properties.renderDeviceReset = renderDeviceReset;
 
-				properties->lagging = lagging;
-				properties->dragged = dragged;
+				properties.lagging = lagging;
+				properties.dragged = dragged;
 
-				properties->fps = fps;
-				properties->lps = lps;
-				properties->realFPS = realFPS;
+				properties.fps = fps;
+				properties.lps = lps;
+				properties.realFPS = realFPS;
 
-				properties->backgroundColor = backgroundColor;
+				properties.backgroundColor = backgroundColor;
 			}
 
 			void update() {
@@ -484,9 +486,9 @@ namespace Amara {
 				writeProperties();
 				if (quit) return;
 				messages.update();
-				events->manage();
-				scenes->run();
-				scenes->manageTasks();
+				events.manage();
+				scenes.run();
+				scenes.manageTasks();
 				audio->run(1);
 			}
 
@@ -500,9 +502,9 @@ namespace Amara {
 					frameCounter = 0;
 				}
 				frameCounter += 1;
-				scenes->draw();
+				scenes.draw();
 
-				events->manageInteracts();
+				events.manageInteracts();
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
 			}
@@ -542,97 +544,97 @@ namespace Amara {
 
 			void handleEvents() {
 				// Handle events on queue
-				input->keyboard->manage();
-				input->mouse->manage();
-				input->gamepads->manage();
-				input->touches->manage();
+				input.keyboard->manage();
+				input.mouse->manage();
+				input.gamepads->manage();
+				input.touches->manage();
 
 				// manageControllers();
 
 				while (SDL_PollEvent(&e) != 0) {
 					if (e.type == SDL_QUIT) {
 						quit = true;
-						properties->quit = true;
+						properties.quit = true;
 					}
 					else if (e.type == SDL_KEYDOWN) {
-						input->keyboard->press(e.key.keysym.sym);
-						input->keyboard->isActivated = true;
+						input.keyboard->press(e.key.keysym.sym);
+						input.keyboard->isActivated = true;
 					}
 					else if (e.type == SDL_KEYUP) {
-						input->keyboard->release(e.key.keysym.sym);
-						input->keyboard->isActivated = true;
+						input.keyboard->release(e.key.keysym.sym);
+						input.keyboard->isActivated = true;
 					}
 					else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
-						input->mouse->dx = (mx * (float)resolution->width/(float)window->width);
-						input->mouse->dy = (my * (float)resolution->height/(float)window->height);
+						input.mouse->dx = (mx * (float)resolution.width/(float)window.width);
+						input.mouse->dy = (my * (float)resolution.height/(float)window.height);
 
-						input->mouse->x = input->mouse->dx;
-						input->mouse->y = input->mouse->dy;
+						input.mouse->x = input.mouse->dx;
+						input.mouse->y = input.mouse->dy;
 
 						float offset, upScale;
 						int vx, vy = 0;
-						float ratioRes = ((float)properties->resolution->width / (float)properties->resolution->height);
-						float ratioWin = ((float)properties->window->width / (float)properties->window->height);
+						float ratioRes = ((float)resolution.width / (float)resolution.height);
+						float ratioWin = ((float)window.width / (float)window.height);
 
-						input->mouse->isActivated = true;
-						if (e.type == SDL_MOUSEMOTION) input->mouse->moved = true;
+						input.mouse->isActivated = true;
+						if (e.type == SDL_MOUSEMOTION) input.mouse->moved = true;
 
 						if (ratioRes < ratioWin) {
-							upScale = ((float)properties->window->height/(float)properties->resolution->height);
-							offset = ((float)properties->window->width - ((float)properties->resolution->width * upScale))/2;
-							input->mouse->dx = mx/upScale;
-							input->mouse->x = (mx - offset)/upScale;
+							upScale = ((float)window.height/(float)resolution.height);
+							offset = ((float)window.width - ((float)resolution.width * upScale))/2;
+							input.mouse->dx = mx/upScale;
+							input.mouse->x = (mx - offset)/upScale;
 						}
 						else if (ratioRes > ratioWin) {
-							upScale = ((float)properties->window->width/(float)properties->resolution->width);
-							offset = ((float)properties->window->height - ((float)properties->resolution->height * upScale))/2;
-							input->mouse->dy = my/upScale;
-							input->mouse->y = (my - offset)/upScale;
+							upScale = ((float)window.width/(float)resolution.width);
+							offset = ((float)window.height - ((float)resolution.height * upScale))/2;
+							input.mouse->dy = my/upScale;
+							input.mouse->y = (my - offset)/upScale;
 						}
 
 						if (e.type == SDL_MOUSEBUTTONDOWN) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
-								input->mouse->left->press();
+								input.mouse->left->press();
 							}
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
-								input->mouse->right->press();
+								input.mouse->right->press();
 							}
 							else if (e.button.button == SDL_BUTTON_MIDDLE) {
-								input->mouse->middle->press();
+								input.mouse->middle->press();
 							}
 						}
 						else if (e.type == SDL_MOUSEBUTTONUP) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
-								input->mouse->left->release();
+								input.mouse->left->release();
 							}
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
-								input->mouse->right->release();
+								input.mouse->right->release();
 							}
 							else if (e.button.button == SDL_BUTTON_MIDDLE) {
-								input->mouse->middle->release();
+								input.mouse->middle->release();
 							}
 						}
 					}
 					else if (e.type == SDL_MOUSEWHEEL) {
 						int mul = (e.wheel.direction == SDL_MOUSEWHEEL_FLIPPED) ? -1 : 1;
-						input->mouse->scrollX = e.wheel.x * mul;
-						input->mouse->scrollY = e.wheel.y * mul;
+						input.mouse->scrollX = e.wheel.x * mul;
+						input.mouse->scrollY = e.wheel.y * mul;
 
-						input->mouse->isActivated = true;
+						input.mouse->isActivated = true;
 					}
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_MOVED)) {
 						dragged = true;
-						properties->dragged = true;
+						properties.dragged = true;
 					}
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_LEAVE)) {
 						windowFocused = false;
-						properties->windowFocused = false;
+						properties.windowFocused = false;
 					}
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_ENTER)) {
 						windowFocused = true;
-						properties->windowFocused = true;
+						properties.windowFocused = true;
 					}
 					else if (e.type == SDL_RENDER_TARGETS_RESET) {
 						renderTargetsReset = true;
@@ -642,84 +644,84 @@ namespace Amara {
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEADDED) {
 						SDL_GameController* controller = SDL_GameControllerOpen(e.cdevice.which);
-						input->gamepads->connectGamepad(controller);
+						input.gamepads->connectGamepad(controller);
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						input->gamepads->disconnectGamepad(controller);
+						input.gamepads->disconnectGamepad(controller);
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						Amara::Gamepad* gamepad = input->gamepads->get(controller);
+						Amara::Gamepad* gamepad = input.gamepads->get(controller);
 						if (gamepad != nullptr) gamepad->press(e.cbutton.button);
-						input->gamepads->isActivated = true;
+						input.gamepads->isActivated = true;
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONUP) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						Amara::Gamepad* gamepad = input->gamepads->get(controller);
+						Amara::Gamepad* gamepad = input.gamepads->get(controller);
 						if (gamepad != nullptr) gamepad->release(e.cbutton.button);
-						input->gamepads->isActivated = true;
+						input.gamepads->isActivated = true;
 					}
 					else if (e.type == SDL_CONTROLLERAXISMOTION) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.caxis.which);
-						Amara::Gamepad* gamepad = input->gamepads->get(controller);
+						Amara::Gamepad* gamepad = input.gamepads->get(controller);
 						if (gamepad != nullptr) gamepad->push(e.caxis.axis, e.caxis.value);
-						input->gamepads->isActivated = true;
+						input.gamepads->isActivated = true;
 					}
 					if (e.type == SDL_FINGERDOWN) {
-						Amara::TouchPointer* pointer = input->touches->newPointer(e.tfinger.fingerId);
+						Amara::TouchPointer* pointer = input.touches->newPointer(e.tfinger.fingerId);
 						if (pointer) {
 							pointer->press();
 							pointer->virtualizeXY(e);
 						}
 
-						input->touches->isActivated = true;
+						input.touches->isActivated = true;
 					}
 					else if (e.type == SDL_FINGERMOTION) {
-						Amara::TouchPointer* pointer = input->touches->getPointer(e.tfinger.fingerId);
+						Amara::TouchPointer* pointer = input.touches->getPointer(e.tfinger.fingerId);
 						if (pointer) {
 							pointer->virtualizeXY(e);
 						}
 
-						input->touches->isActivated = true;
+						input.touches->isActivated = true;
 					}
 					else if (e.type == SDL_FINGERUP) {
-						Amara::TouchPointer* pointer = input->touches->getPointer(e.tfinger.fingerId);
+						Amara::TouchPointer* pointer = input.touches->getPointer(e.tfinger.fingerId);
 						if (pointer) {
 							pointer->release();
 							pointer->virtualizeXY(e);
 
-							input->touches->removePointer(pointer->id);
+							input.touches->removePointer(pointer->id);
 						}
 
-						input->touches->isActivated = true;
+						input.touches->isActivated = true;
 					}
 					else if( e.type == SDL_TEXTINPUT ) {
                         if( !( SDL_GetModState() & KMOD_CTRL && ( e.text.text[ 0 ] == 'c' || e.text.text[ 0 ] == 'C' || e.text.text[ 0 ] == 'v' || e.text.text[ 0 ] == 'V' ) ) ) {
-                            input->inputText += e.text.text;
+                            input.inputText += e.text.text;
                         }
                     }
 				}
 
-				controls->run();
-				input->mouse->afterManage();
+				controls.run();
+				input.mouse->afterManage();
 				
-				input->mode = InputMode_None;
-				if (input->keyboard->isActivated) {
-					input->mode |= InputMode_Keyboard;
-					input->lastMode = InputMode_Keyboard;
+				input.mode = InputMode_None;
+				if (input.keyboard->isActivated) {
+					input.mode |= InputMode_Keyboard;
+					input.lastMode = InputMode_Keyboard;
 				}
-				if (input->mouse->isActivated) {
-					input->mode |= InputMode_Mouse;
-					input->lastMode = InputMode_Mouse;
+				if (input.mouse->isActivated) {
+					input.mode |= InputMode_Mouse;
+					input.lastMode = InputMode_Mouse;
 				}
-				if (input->gamepads->isActivated) {
-					input->mode |= InputMode_Gamepad;
-					input->lastMode = InputMode_Gamepad;
+				if (input.gamepads->isActivated) {
+					input.mode |= InputMode_Gamepad;
+					input.lastMode = InputMode_Gamepad;
 				}
-				if (input->touches->isActivated) {
-					input->mode |= InputMode_Touch;
-					input->lastMode = InputMode_Touch;
+				if (input.touches->isActivated) {
+					input.mode |= InputMode_Touch;
+					input.lastMode = InputMode_Touch;
 				}
 			}
 	};

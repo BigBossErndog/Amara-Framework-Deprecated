@@ -6,6 +6,7 @@ namespace Amara {
 
             std::unordered_map<std::string, std::vector<std::string>> textureGroups;
 
+            AssetManager() {}
             AssetManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 loader = properties->loader;

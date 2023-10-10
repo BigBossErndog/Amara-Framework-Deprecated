@@ -21,7 +21,8 @@ namespace Amara {
 			bool replacementDefault = true;
 
 			nlohmann::json emptyJson = nullptr;
-
+			
+			Loader() {}
             Loader(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
 				game = properties->game;

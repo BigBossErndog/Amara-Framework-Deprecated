@@ -13,6 +13,7 @@ namespace Amara {
             std::list<Amara::Event*> eventList;
 			std::list<Amara::Event*> delayedEvents;
 
+            EventManager() {}
             EventManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 input = properties->input;

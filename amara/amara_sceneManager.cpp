@@ -9,6 +9,7 @@ namespace Amara {
 			std::vector<Amara::Scene*> sceneList;
 			std::vector<Amara::Scene*> copySceneList;
 
+			SceneManager() {}
 			SceneManager(Amara::GameProperties* gameProperties) {
 				properties = gameProperties;
 				game = properties->game;
