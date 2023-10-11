@@ -10,9 +10,9 @@ namespace Amara {
         public:
             Amara::GameProperties* properties = nullptr;
 
-            Amara::MouseButton* left = nullptr;
-			Amara::MouseButton* right = nullptr;
-            Amara::MouseButton* middle = nullptr;
+            Amara::MouseButton left;
+			Amara::MouseButton right;
+            Amara::MouseButton middle;
 
             int dx = 0;
             int dy = 0;
@@ -24,18 +24,19 @@ namespace Amara {
 
 			Amara::InteractionManager* interact = nullptr;
 
-			Mouse(Amara::GameProperties* gameProperties) {
+            Mouse() {}
+			Mouse(Amara::GameProperties* gameProperties): Mouse() {
                 properties = gameProperties;
 
-				left = new Amara::MouseButton();
-				right = new Amara::MouseButton();
-                middle = new Amara::MouseButton();
+				left = Amara::MouseButton();
+				right = Amara::MouseButton();
+                middle = Amara::MouseButton();
 			}
 
 			void manage() {
-				left->manage();
-				right->manage();
-                middle->manage();
+				left.manage();
+				right.manage();
+                middle.manage();
 
                 scrollX = 0;
                 scrollY = 0;
@@ -46,8 +47,8 @@ namespace Amara {
 			}
 
             void afterManage() {
-                isDown = left->isDown || right->isDown || middle->isDown;
-                justDown = left->justDown || right->justDown || middle->justDown;
+                isDown = left.isDown || right.isDown || middle.isDown;
+                justDown = left.justDown || right.justDown || middle.justDown;
             }
     };
 }

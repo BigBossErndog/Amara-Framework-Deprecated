@@ -102,8 +102,6 @@ namespace Amara {
     #include "amara_taskManager.cpp"
     #include "amara_debugging.cpp"
 
-    #include "amara_inputManager.cpp"
-
     #include "amara_keyCodes.cpp"
     #include "amara_key.cpp"
     #include "amara_keyboard.cpp"
@@ -116,8 +114,12 @@ namespace Amara {
 
     #include "amara_pointer.cpp"
     #include "amara_mouse.cpp"
-    #include "amara_touches.cpp"
+    #include "amara_touchPointer.cpp"
+    
     #include "amara_interactionManager.cpp"
+    #include "amara_touchManager.cpp"
+    
+    #include "amara_inputManager.cpp"
     #include "amara_events.cpp"
 
     #include "amara_animation.cpp"

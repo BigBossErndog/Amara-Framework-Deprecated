@@ -37,43 +37,43 @@ namespace Amara {
                 eventList = delayedEvents;
 				delayedEvents.clear();
 
-                Amara::Mouse* mouse = input->mouse;
-                if (mouse->left->justDown) {
+                Amara::Mouse& mouse = input->mouse;
+                if (mouse.left.justDown) {
                     addEvent(OBJECTLEFTCLICK);
                 }
-                if (mouse->right->justDown) {
+                if (mouse.right.justDown) {
                     addEvent(OBJECTRIGHTCLICK);
                 }
-                if (mouse->middle->justDown) {
+                if (mouse.middle.justDown) {
                     addEvent(OBJECTMIDDLECLICK);
                 }
-				if (mouse->left->justUp) {
+				if (mouse.left.justUp) {
                     addEvent(OBJECTLEFTRELEASE);
                 }
-                if (mouse->right->justUp) {
+                if (mouse.right.justUp) {
                     addEvent(OBJECTRIGHTRELEASE);
                 }
-                if (mouse->middle->justUp) {
+                if (mouse.middle.justUp) {
                     addEvent(OBJECTMIDDLECLICK);
                 }
 
-                std::vector<TouchPointer*>& fingers = input->touches->pointers;
-                for (TouchPointer* finger: fingers) {
-                    if (finger->justDown) addDelayedEvent(OBJECTTOUCHDOWN);
-                    if (finger->justUp) addDelayedEvent(OBJECTTOUCHUP);
+                std::vector<TouchPointer>& fingers = input->touches.pointers;
+                for (TouchPointer& finger: fingers) {
+                    if (finger.justDown) addDelayedEvent(OBJECTTOUCHDOWN);
+                    if (finger.justUp) addDelayedEvent(OBJECTTOUCHUP);
                 }
             }
 
 			void manageInteracts() {
-				if (input->mouse->interact) {
-					input->mouse->interact->mouseHover.press();
-					input->mouse->interact = nullptr;
+				if (input->mouse.interact) {
+					input->mouse.interact->mouseHover.press();
+					input->mouse.interact = nullptr;
 				}
-				std::vector<TouchPointer*>& fingers = input->touches->pointers;
-                for (TouchPointer* finger: fingers) {
-                    if (finger->interact) {
-						finger->interact->touchHover.press();
-						finger->interact = nullptr;
+				std::vector<TouchPointer>& fingers = input->touches.pointers;
+                for (TouchPointer& finger: fingers) {
+                    if (finger.interact) {
+						finger.interact->touchHover.press();
+						finger.interact = nullptr;
 					}
                 }
 			}

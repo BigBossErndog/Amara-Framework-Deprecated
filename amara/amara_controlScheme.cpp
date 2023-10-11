@@ -59,12 +59,12 @@ namespace Amara {
             }
 
             Amara::Control* addKey(std::string id, Amara::Keycode keyCode) {
-                Amara::Key* key = input->keyboard->get(keyCode);
+                Amara::Key* key = input->keyboard.get(keyCode);
                 if (key != nullptr) {
                     return addKey(id, key);
                 }
 
-                key = input->keyboard->addKey(keyCode);
+                key = input->keyboard.addKey(keyCode);
                 return addKey(id, key);
             }
 
@@ -80,12 +80,12 @@ namespace Amara {
             }
 
             Amara::Control* setKey(std::string id, Amara::Keycode keyCode) {
-                Amara::Key* key = input->keyboard->get(keyCode);
+                Amara::Key* key = input->keyboard.get(keyCode);
                 if (key != nullptr) {
                     return setKey(id, key);
                 }
 
-                key = input->keyboard->addKey(keyCode);
+                key = input->keyboard.addKey(keyCode);
                 return setKey(id, key);
             }
 

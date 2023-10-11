@@ -193,11 +193,7 @@ namespace Amara {
 				assets = Amara::AssetManager(&properties);
 				properties.assets = &assets;
 
-				input = Amara::InputManager();
-				input.keyboard = new Amara::Keyboard(&properties);
-				input.mouse = new Amara::Mouse(&properties);
-				input.gamepads = new Amara::GamepadManager(&properties);
-				input.touches = new Amara::TouchManager(&properties);
+				input = Amara::InputManager(&properties);
 				properties.input = &input;
 
 				messages = MessageQueue(&properties);
@@ -215,7 +211,7 @@ namespace Amara {
 				for (int i = 0; i < SDL_NumJoysticks(); i++) {
 					if (SDL_IsGameController(i)) {
 						SDL_GameController* controller = SDL_GameControllerOpen(i);
-						input.gamepads->connectGamepad(controller);
+						input.gamepads.connectGamepad(controller);
 					}
 				}
 
@@ -503,7 +499,6 @@ namespace Amara {
 				}
 				frameCounter += 1;
 				scenes.draw();
-
 				events.manageInteracts();
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
@@ -544,10 +539,10 @@ namespace Amara {
 
 			void handleEvents() {
 				// Handle events on queue
-				input.keyboard->manage();
-				input.mouse->manage();
-				input.gamepads->manage();
-				input.touches->manage();
+				input.keyboard.manage();
+				input.mouse.manage();
+				input.gamepads.manage();
+				input.touches.manage();
 
 				// manageControllers();
 
@@ -557,72 +552,72 @@ namespace Amara {
 						properties.quit = true;
 					}
 					else if (e.type == SDL_KEYDOWN) {
-						input.keyboard->press(e.key.keysym.sym);
-						input.keyboard->isActivated = true;
+						input.keyboard.press(e.key.keysym.sym);
+						input.keyboard.isActivated = true;
 					}
 					else if (e.type == SDL_KEYUP) {
-						input.keyboard->release(e.key.keysym.sym);
-						input.keyboard->isActivated = true;
+						input.keyboard.release(e.key.keysym.sym);
+						input.keyboard.isActivated = true;
 					}
 					else if (e.type == SDL_MOUSEMOTION || e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
 						int mx, my;
 						SDL_GetMouseState(&mx, &my);
-						input.mouse->dx = (mx * (float)resolution.width/(float)window.width);
-						input.mouse->dy = (my * (float)resolution.height/(float)window.height);
+						input.mouse.dx = (mx * (float)resolution.width/(float)window.width);
+						input.mouse.dy = (my * (float)resolution.height/(float)window.height);
 
-						input.mouse->x = input.mouse->dx;
-						input.mouse->y = input.mouse->dy;
+						input.mouse.x = input.mouse.dx;
+						input.mouse.y = input.mouse.dy;
 
 						float offset, upScale;
 						int vx, vy = 0;
 						float ratioRes = ((float)resolution.width / (float)resolution.height);
 						float ratioWin = ((float)window.width / (float)window.height);
 
-						input.mouse->isActivated = true;
-						if (e.type == SDL_MOUSEMOTION) input.mouse->moved = true;
+						input.mouse.isActivated = true;
+						if (e.type == SDL_MOUSEMOTION) input.mouse.moved = true;
 
 						if (ratioRes < ratioWin) {
 							upScale = ((float)window.height/(float)resolution.height);
 							offset = ((float)window.width - ((float)resolution.width * upScale))/2;
-							input.mouse->dx = mx/upScale;
-							input.mouse->x = (mx - offset)/upScale;
+							input.mouse.dx = mx/upScale;
+							input.mouse.x = (mx - offset)/upScale;
 						}
 						else if (ratioRes > ratioWin) {
 							upScale = ((float)window.width/(float)resolution.width);
 							offset = ((float)window.height - ((float)resolution.height * upScale))/2;
-							input.mouse->dy = my/upScale;
-							input.mouse->y = (my - offset)/upScale;
+							input.mouse.dy = my/upScale;
+							input.mouse.y = (my - offset)/upScale;
 						}
 
 						if (e.type == SDL_MOUSEBUTTONDOWN) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
-								input.mouse->left->press();
+								input.mouse.left.press();
 							}
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
-								input.mouse->right->press();
+								input.mouse.right.press();
 							}
 							else if (e.button.button == SDL_BUTTON_MIDDLE) {
-								input.mouse->middle->press();
+								input.mouse.middle.press();
 							}
 						}
 						else if (e.type == SDL_MOUSEBUTTONUP) {
 							if (e.button.button == SDL_BUTTON_LEFT) {
-								input.mouse->left->release();
+								input.mouse.left.release();
 							}
 							else if (e.button.button == SDL_BUTTON_RIGHT) {
-								input.mouse->right->release();
+								input.mouse.right.release();
 							}
 							else if (e.button.button == SDL_BUTTON_MIDDLE) {
-								input.mouse->middle->release();
+								input.mouse.middle.release();
 							}
 						}
 					}
 					else if (e.type == SDL_MOUSEWHEEL) {
 						int mul = (e.wheel.direction == SDL_MOUSEWHEEL_FLIPPED) ? -1 : 1;
-						input.mouse->scrollX = e.wheel.x * mul;
-						input.mouse->scrollY = e.wheel.y * mul;
+						input.mouse.scrollX = e.wheel.x * mul;
+						input.mouse.scrollY = e.wheel.y * mul;
 
-						input.mouse->isActivated = true;
+						input.mouse.isActivated = true;
 					}
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_MOVED)) {
 						dragged = true;
@@ -644,57 +639,57 @@ namespace Amara {
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEADDED) {
 						SDL_GameController* controller = SDL_GameControllerOpen(e.cdevice.which);
-						input.gamepads->connectGamepad(controller);
+						input.gamepads.connectGamepad(controller);
 					}
 					else if (e.type == SDL_CONTROLLERDEVICEREMOVED) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						input.gamepads->disconnectGamepad(controller);
+						input.gamepads.disconnectGamepad(controller);
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONDOWN) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						Amara::Gamepad* gamepad = input.gamepads->get(controller);
+						Amara::Gamepad* gamepad = input.gamepads.get(controller);
 						if (gamepad != nullptr) gamepad->press(e.cbutton.button);
-						input.gamepads->isActivated = true;
+						input.gamepads.isActivated = true;
 					}
 					else if (e.type == SDL_CONTROLLERBUTTONUP) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.cbutton.which);
-						Amara::Gamepad* gamepad = input.gamepads->get(controller);
+						Amara::Gamepad* gamepad = input.gamepads.get(controller);
 						if (gamepad != nullptr) gamepad->release(e.cbutton.button);
-						input.gamepads->isActivated = true;
+						input.gamepads.isActivated = true;
 					}
 					else if (e.type == SDL_CONTROLLERAXISMOTION) {
 						SDL_GameController* controller = SDL_GameControllerFromInstanceID(e.caxis.which);
-						Amara::Gamepad* gamepad = input.gamepads->get(controller);
+						Amara::Gamepad* gamepad = input.gamepads.get(controller);
 						if (gamepad != nullptr) gamepad->push(e.caxis.axis, e.caxis.value);
-						input.gamepads->isActivated = true;
+						input.gamepads.isActivated = true;
 					}
 					if (e.type == SDL_FINGERDOWN) {
-						Amara::TouchPointer* pointer = input.touches->newPointer(e.tfinger.fingerId);
+						Amara::TouchPointer* pointer = input.touches.newPointer(e.tfinger.fingerId);
 						if (pointer) {
 							pointer->press();
 							pointer->virtualizeXY(e);
 						}
 
-						input.touches->isActivated = true;
+						input.touches.isActivated = true;
 					}
 					else if (e.type == SDL_FINGERMOTION) {
-						Amara::TouchPointer* pointer = input.touches->getPointer(e.tfinger.fingerId);
+						Amara::TouchPointer* pointer = input.touches.getPointer(e.tfinger.fingerId);
 						if (pointer) {
 							pointer->virtualizeXY(e);
 						}
 
-						input.touches->isActivated = true;
+						input.touches.isActivated = true;
 					}
 					else if (e.type == SDL_FINGERUP) {
-						Amara::TouchPointer* pointer = input.touches->getPointer(e.tfinger.fingerId);
+						Amara::TouchPointer* pointer = input.touches.getPointer(e.tfinger.fingerId);
 						if (pointer) {
 							pointer->release();
 							pointer->virtualizeXY(e);
 
-							input.touches->removePointer(pointer->id);
+							input.touches.removePointer(pointer->id);
 						}
 
-						input.touches->isActivated = true;
+						input.touches.isActivated = true;
 					}
 					else if( e.type == SDL_TEXTINPUT ) {
                         if( !( SDL_GetModState() & KMOD_CTRL && ( e.text.text[ 0 ] == 'c' || e.text.text[ 0 ] == 'C' || e.text.text[ 0 ] == 'v' || e.text.text[ 0 ] == 'V' ) ) ) {
@@ -704,22 +699,22 @@ namespace Amara {
 				}
 
 				controls.run();
-				input.mouse->afterManage();
+				input.mouse.afterManage();
 				
 				input.mode = InputMode_None;
-				if (input.keyboard->isActivated) {
+				if (input.keyboard.isActivated) {
 					input.mode |= InputMode_Keyboard;
 					input.lastMode = InputMode_Keyboard;
 				}
-				if (input.mouse->isActivated) {
+				if (input.mouse.isActivated) {
 					input.mode |= InputMode_Mouse;
 					input.lastMode = InputMode_Mouse;
 				}
-				if (input.gamepads->isActivated) {
+				if (input.gamepads.isActivated) {
 					input.mode |= InputMode_Gamepad;
 					input.lastMode = InputMode_Gamepad;
 				}
-				if (input.touches->isActivated) {
+				if (input.touches.isActivated) {
 					input.mode |= InputMode_Touch;
 					input.lastMode = InputMode_Touch;
 				}

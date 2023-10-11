@@ -14,10 +14,11 @@ namespace Amara {
     
     class InputManager {
         public:
-            Amara::Keyboard* keyboard = nullptr;
-            Amara::Mouse* mouse = nullptr;
-            Amara::GamepadManager* gamepads = nullptr;
-            Amara::TouchManager* touches = nullptr;
+            Amara::GameProperties* properties = nullptr;
+            Amara::Keyboard keyboard;
+            Amara::Mouse mouse;
+            Amara::GamepadManager gamepads;
+            Amara::TouchManager touches;
 
             int mode = InputMode_None;
             InputMode lastMode = InputMode_None;
@@ -26,6 +27,13 @@ namespace Amara {
             bool textInputOn = false;
 
             InputManager() {}
+            InputManager(Amara::GameProperties* gProperties): Amara::InputManager() {
+                properties = gProperties;
+                keyboard = Amara::Keyboard(properties);
+				mouse = Amara::Mouse(properties);
+				gamepads = Amara::GamepadManager(properties);
+				touches = Amara::TouchManager(properties);
+            }
 
             void startTextInput() {
                 inputText.clear();
@@ -47,4 +55,4 @@ namespace Amara {
                 SDL_SetClipboardText(txt.c_str());
             }
     };
-}
+} 

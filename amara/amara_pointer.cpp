@@ -1,8 +1,6 @@
 namespace Amara {
-    class Pointer {
+    class Pointer: public FloatVector2 {
         public:
-            int x = 0;
-            int y = 0;
             bool isDown = false;
             bool justDown = false;
 

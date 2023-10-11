@@ -61,9 +61,9 @@ namespace Amara {
 					gh*properties->interactScaleY
 				};
 
-				Amara::Mouse* mouse = input->mouse;
-				Amara::TouchManager* touches = input->touches;
-				std::vector<TouchPointer*>& fingers = touches->pointers;
+				Amara::Mouse* mouse = &input->mouse;
+				Amara::TouchManager* touches = &input->touches;
+				std::vector<TouchPointer>& fingers = touches->pointers;
 
 				bool touchHovered = false;
 				bool mouseHovered = false;
@@ -77,10 +77,10 @@ namespace Amara {
 				if (overlapping(mouse->dx, mouse->dy, &box)) {
 					mouseHovered = true;
 				}
-				for (TouchPointer* finger: fingers) {
-					if ((finger->isDown || finger->tapped || finger->justUp) && overlapping(finger->dx, finger->dy, &box)) {
+				for (TouchPointer& finger: fingers) {
+					if ((finger.isDown || finger.tapped || finger.justUp) && overlapping(finger.dx, finger.dy, &box)) {
 						touchHovered = true;
-						interact.finger = finger;
+						interact.finger = &finger;
 					}
 				}
 

@@ -25,8 +25,15 @@ namespace Amara {
 
             bool isActivated = false;
             
-            Gamepad() {
+            Gamepad() {}
+            Gamepad(int gIndex): Gamepad() {
+                index = gIndex;
+            }
+
+            void setup() {
                 buttons.clear();
+                triggers.clear();
+
                 addButton(BUTTON_BACK);
                 addButton(BUTTON_GUIDE);
                 addButton(BUTTON_START);
@@ -184,9 +191,8 @@ namespace Amara {
             void manage() {
                 justConnected = false;
                 justDisconnected = false;
-                std::unordered_map<Uint8, Amara::Button*>::iterator it;
                 Amara::Button* btn;
-                for (it = buttons.begin(); it != buttons.end(); it++) {
+                for (auto it = buttons.begin(); it != buttons.end(); it++) {
                     btn = it->second;
                     btn->manage();
                 }

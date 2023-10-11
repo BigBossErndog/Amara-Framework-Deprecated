@@ -90,7 +90,7 @@ namespace Amara {
             float ox, oy;
 			bool stickMode = false;
 			if (input->lastMode == InputMode_Gamepad && allowFreeRangeStick) {
-				Gamepad* gamepad = input->gamepads->get(0);
+				Gamepad* gamepad = input->gamepads.get(0);
 				Stick* stick = gamepad->getStick(BUTTON_LEFTSTICK);
 
 				if (stick->xactive || stick->yactive) {
