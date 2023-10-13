@@ -89,6 +89,7 @@ namespace Amara {
     #include "amara_geometry.cpp"
     #include "amara_utility.cpp"
     #include "amara_ltimer.cpp"
+    #include "amara_random.cpp"
 
     #include "amara_fdeclarations.cpp"
     
@@ -144,7 +145,6 @@ namespace Amara {
     #include "amara_script.cpp"
     #include "amara_actor.cpp"
 
-    #include "amara_random.cpp"
     #include "amara_timer.cpp"
     #include "amara_textureGeneration.cpp"
 

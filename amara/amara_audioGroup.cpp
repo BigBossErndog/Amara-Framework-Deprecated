@@ -9,6 +9,8 @@ namespace Amara {
 
 			bool rootGroup = false;
 
+            using Amara::AudioBase::AudioBase;
+
             AudioGroup(std::string gKey) {
                 key = gKey;
             }
@@ -142,6 +144,14 @@ namespace Amara {
                 }
 
                 return audio;
+            }
+
+            Amara::AudioBase* play(int loops) {
+                if (sounds.size() == 0) return nullptr;
+                RNG* rng = properties->rng;
+                AudioBase* sound = rng->randomItem<Amara::AudioBase*>(sounds);
+                sound->play();
+                return sound;
             }
 
 			Amara::AudioBase* stop() {

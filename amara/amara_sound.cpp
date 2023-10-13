@@ -22,10 +22,6 @@ namespace Amara {
 			return this;
 		}
 
-		virtual Amara::AudioBase* play() {
-			return play(defaultLoops);
-		}
-
 		virtual Amara::AudioBase* stop() {
 			if (isPlaying && channel != -1) {
 				Mix_HaltChannel(channel);
@@ -114,10 +110,6 @@ namespace Amara {
 			Mix_HookMusicFinished(&hookMusicStopped);
 
 			return this;
-		}
-
-		Amara::AudioBase* play() {
-			return play(defaultLoops);
 		}
 
 		Amara::AudioBase* pause() {

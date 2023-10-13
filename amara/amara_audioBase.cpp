@@ -87,7 +87,7 @@ namespace Amara {
                 return this;
             }
 
-            virtual AudioBase* play() { play(defaultLoops); }
+            virtual AudioBase* play() { return play(defaultLoops); }
 			virtual AudioBase* play(int loops) { }
             virtual AudioBase* play(std::string) {}
             virtual AudioBase* pause() {}

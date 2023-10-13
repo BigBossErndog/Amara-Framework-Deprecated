@@ -6,8 +6,7 @@ namespace Amara {
 
 			Amara::GameProperties properties;
 
-			nlohmann::json globalData;
-			std::unordered_map<std::string, void*> globalObjects;
+			nlohmann::json data;
 			RNG rng;
 
 			Amara::MessageQueue messages;
@@ -45,7 +44,7 @@ namespace Amara {
 
 			SDL_Color backgroundColor = {255, 255, 255, 255};
 
-			Amara::AudioGroup* audio = nullptr;
+			Amara::AudioGroup audio;
 			Amara::EventManager events;
 			Amara::TaskManager taskManager;
 
@@ -203,7 +202,7 @@ namespace Amara {
 
 				writer = FileWriter();
 
-				globalData.clear();
+				data.clear();
 				rng.randomize();
 
 
@@ -227,9 +226,9 @@ namespace Amara {
 				events = Amara::EventManager(&properties);
 				properties.events = &events;
 
-				audio = new Amara::AudioGroup(&properties, "root");
-				properties.audio = audio;
-				audio->rootGroup = true;
+				audio = Amara::AudioGroup(&properties, "root");
+				properties.audio = &audio;
+				audio.rootGroup = true;
 
 				properties.rng = &rng;
 
@@ -333,32 +332,6 @@ namespace Amara {
                     if (obj) delete obj;
                 }
                 deleteQueue.clear();
-			}
-
-			void addGlobalObject(std::string gKey, void* gObj) {
-				globalObjects[gKey] = gObj;
-			}
-
-			void* getGlobalObject(std::string gKey) {
-				return globalObjects[gKey];
-			}
-
-			void* removeGlobalObject(std::string gKey, bool del) {
-				void* obj = globalObjects[gKey];
-				globalObjects.erase(gKey);
-				if (del) {
-					if (obj) delete obj;
-					return nullptr;
-				}
-				return obj;
-			}
-
-			void* removeGlobalObject(std::string gKey) {
-				return removeGlobalObject(gKey, false);
-			}
-
-			void deleteGlobalObject(std::string gKey) {
-				removeGlobalObject(gKey, true);
 			}
 
 			void setFPS(int newFps, bool lockLogicSpeed) {
@@ -485,7 +458,7 @@ namespace Amara {
 				events.manage();
 				scenes.run();
 				scenes.manageTasks();
-				audio->run(1);
+				audio.run(1);
 			}
 
 			void draw() {

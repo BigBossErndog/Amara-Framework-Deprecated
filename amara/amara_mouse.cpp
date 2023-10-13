@@ -7,48 +7,48 @@ namespace Amara {
     };
 
     class Mouse: public Amara::Pointer {
-        public:
-            Amara::GameProperties* properties = nullptr;
+    public:
+        Amara::GameProperties* properties = nullptr;
 
-            Amara::MouseButton left;
-			Amara::MouseButton right;
-            Amara::MouseButton middle;
+        Amara::MouseButton left;
+        Amara::MouseButton right;
+        Amara::MouseButton middle;
 
-            int dx = 0;
-            int dy = 0;
+        int dx = 0;
+        int dy = 0;
 
-            int scrollX = 0;
-            int scrollY = 0;
+        int scrollX = 0;
+        int scrollY = 0;
 
-            bool moved = false;
+        bool moved = false;
 
-			Amara::InteractionManager* interact = nullptr;
+        Amara::InteractionManager* interact = nullptr;
 
-            Mouse() {}
-			Mouse(Amara::GameProperties* gameProperties): Mouse() {
-                properties = gameProperties;
+        Mouse() {}
+        Mouse(Amara::GameProperties* gameProperties): Mouse() {
+            properties = gameProperties;
 
-				left = Amara::MouseButton();
-				right = Amara::MouseButton();
-                middle = Amara::MouseButton();
-			}
+            left = Amara::MouseButton();
+            right = Amara::MouseButton();
+            middle = Amara::MouseButton();
+        }
 
-			void manage() {
-				left.manage();
-				right.manage();
-                middle.manage();
+        void manage() {
+            left.manage();
+            right.manage();
+            middle.manage();
 
-                scrollX = 0;
-                scrollY = 0;
+            scrollX = 0;
+            scrollY = 0;
 
-                moved = false;
+            moved = false;
 
-				Amara::Pointer::manage();
-			}
+            Amara::Pointer::manage();
+        }
 
-            void afterManage() {
-                isDown = left.isDown || right.isDown || middle.isDown;
-                justDown = left.justDown || right.justDown || middle.justDown;
-            }
+        void afterManage() {
+            isDown = left.isDown || right.isDown || middle.isDown;
+            justDown = left.justDown || right.justDown || middle.justDown;
+        }
     };
 }
