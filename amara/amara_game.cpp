@@ -279,9 +279,6 @@ namespace Amara {
 				draw();
 				// Manage frame catch up and slow down
 				manageFPSEnd();
-				deleteEntities();
-				deleteObjects();
-				deleteTransitions();
 				taskManager.run();
 				if (renderTargetsReset || renderDeviceReset) {
 					reloadAssets = true;
@@ -290,48 +287,6 @@ namespace Amara {
 					reloadAssets = false;
 					load.regenerateAssets();
 				}
-			}
-
-			void deleteEntities() {
-				std::vector<Amara::Entity*>& deleteQueue = taskManager.getEntityQueue();
-				Amara::Entity* obj;
-                int size = deleteQueue.size();
-                if (testing && size > 0) {
-                    SDL_Log("TaskManager: Deleting %d entities.", size);
-                }
-                for (size_t i = 0; i < size; i++) {
-                    obj = deleteQueue.at(i);
-                    if (obj) delete obj;
-                }
-                deleteQueue.clear();
-			}
-
-			void deleteObjects() {
-				std::vector<void*>& deleteQueue = taskManager.getObjectQueue();
-				void* obj;
-                int size = deleteQueue.size();
-                if (testing && size > 0) {
-                    SDL_Log("TaskManager: Deleting %d objects.", size);
-                }
-                for (size_t i = 0; i < size; i++) {
-                    obj = deleteQueue.at(i);
-                    if (obj) delete obj;
-                }
-                deleteQueue.clear();
-			}
-
-			void deleteTransitions() {
-				std::vector<Amara::SceneTransitionBase*>& deleteQueue = taskManager.getTransitionQueue();
-				Amara::SceneTransitionBase* obj;
-                int size = deleteQueue.size();
-                if (testing && size > 0) {
-                    SDL_Log("TaskManager: Deleting %d transitions.", size);
-                }
-                for (size_t i = 0; i < size; i++) {
-                    obj = deleteQueue.at(i);
-                    if (obj) delete obj;
-                }
-                deleteQueue.clear();
 			}
 
 			void setFPS(int newFps, bool lockLogicSpeed) {

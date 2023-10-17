@@ -11,19 +11,42 @@ namespace Amara {
             ControlScheme(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
                 input = gameProperties->input;
-                controlList.clear();
+                clear();
             }
 
-            virtual void configure(nlohmann::json config) {
-
+            void configure(nlohmann::json config) {
+                std::string cKey;
+                nlohmann::json cData;
+                Amara::Control* control;
+                for (auto it = config.begin(); it != config.end(); ++it) {
+                    cKey = it.key();
+                    cData = it.value();
+                    control = get(cKey);
+                    if (!control) control = newControl(cKey);
+                    if (cData.find("keys") != cData.end()) {
+                        nlohmann::json keys = cData["keys"];
+                        for (nlohmann::json keyCode: keys)
+                            addKey(cKey, (Amara::KeyCode)keyCode);
+                    }
+                    if (cData.find("buttons") != cData.end()) {
+                        nlohmann::json buttons = cData["buttons"];
+                        for (nlohmann::json buttonCode: buttons)
+                            control->addButton((Amara::ButtonCode)buttonCode);
+                    }
+                }
             }
 
-            virtual nlohmann::json toData() {
+            nlohmann::json toData() {
                 nlohmann::json config;
                 for (Amara::Control* control: controlList) {
                     config[control->id] = control->toData();
                 }
                 return config;
+            }
+
+            void clear() {
+                controls.clear();
+                controlList.clear();
             }
 
             Amara::Control* newControl(std::string key) {
