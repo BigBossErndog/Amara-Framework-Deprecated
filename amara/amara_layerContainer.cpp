@@ -469,7 +469,7 @@ namespace Amara {
             float recAlpha = properties->alpha;
             bool skipDrawing = false;
 
-			if (properties->renderTargetsReset || properties->renderDeviceReset) {
+			if (properties->renderTargetsReset || properties->renderDeviceReset || textureWidth != width || textureHeight != height) {
 				createTexture();
 				pleaseUpdate = true;
 			}
@@ -525,7 +525,14 @@ namespace Amara {
 			properties->interactScaleX *= scaleX;
 			properties->interactScaleY *= scaleY;
 
+            recTarget = SDL_GetRenderTarget(properties->gRenderer);
+            SDL_SetRenderTarget(properties->gRenderer, tx);
+            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+            SDL_RenderClear(properties->gRenderer);
+
 			drawChildren();
+
+            SDL_SetRenderTarget(properties->gRenderer, recTarget);
 
 			properties->interactOffsetX -= vx + destRect.x;
 			properties->interactOffsetY -= vy + destRect.y;
@@ -569,20 +576,10 @@ namespace Amara {
 
 		void drawChildren() {
 			if (!textureLocked || pleaseUpdate) {
-                if (textureWidth != width || textureHeight != height) {
-                    createTexture();
-                }
                 if (!tx) return;
 				pleaseUpdate = false;
 
-                recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, tx);
-                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-                SDL_RenderClear(properties->gRenderer);
-
                 drawEntities(0, 0, width, height);
-
-                SDL_SetRenderTarget(properties->gRenderer, recTarget);
             }
             else {
                 if (!tx) return;

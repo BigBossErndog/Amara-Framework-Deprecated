@@ -508,7 +508,7 @@ namespace Amara {
 			virtual int numTasks() {}
 
             /*
-			 * Slow image.
+			 * Slow image, but better pixel manipulation.
 			 */
 			virtual bool surface(std::string key, std::string path, bool replace) {
 				path = fixPath(path);

@@ -31,8 +31,6 @@ class TestScene: public Scene, public StateManager {
 				{ "yFromCenter", -34 }
 			});
 			box->copyStateManager(this);
-
-			// add(showText = new TrueTypeFont(16, 16, "font", "WAITING"));
 		}
 
         void update() {
