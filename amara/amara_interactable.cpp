@@ -9,6 +9,7 @@ namespace Amara {
 
 			bool isInteractable = false;
 			bool isDraggable = false;
+			bool isBeingDragged = false;
             
             virtual void init(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -16,10 +17,10 @@ namespace Amara {
                 input = properties->input;
             }
 
-            void setInteractable(bool g) {
+            virtual void setInteractable(bool g) {
                 isInteractable = g;
             }
-            void setInteractable() {
+            virtual void setInteractable() {
                 setInteractable(true);
             }
 
@@ -54,10 +55,11 @@ namespace Amara {
 			}
 
 			void checkHover(float gx, float gy, float gw, float gh) {
+				if (!isInteractable) return;
 				Amara::FloatRect box = { 
 					properties->interactOffsetX + gx*properties->interactScaleX, 
-					properties->interactOffsetY + gy*properties->interactScaleY, 
-					gw*properties->interactScaleX, 
+					properties->interactOffsetY + gy*properties->interactScaleY,
+					gw*properties->interactScaleX,
 					gh*properties->interactScaleY
 				};
 

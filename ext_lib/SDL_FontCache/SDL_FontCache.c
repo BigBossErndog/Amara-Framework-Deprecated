@@ -1885,6 +1885,223 @@ static FC_StringList* FC_Explode(const char* text, char delimiter)
     return head;
 }
 
+static bool FC_IsInRange(unsigned char c, unsigned char a, unsigned char b)
+{
+    return (c >= a) && (c <= b);
+}
+
+static int FC_GetCharSequenceLength(const char* end) {
+    int seqlen = 0;
+    if( (*end & 0x80) == 0 ) seqlen = 1;
+    else if( (*end & 0xE0) == 0xC0 ) seqlen = 2;
+    else if( (*end & 0xF0) == 0xE0 ) seqlen = 3;
+    else if( (*end & 0xF8) == 0xF0 ) seqlen = 4;
+    return seqlen;
+}
+
+static unsigned long FC_ReadNextChar(const char* p) 
+{
+    // TODO: since UTF-8 is a variable-length
+    // encoding, you should pass in the input
+    // buffer's actual byte length so that you
+    // can determine if a malformed UTF-8
+    // sequence would exceed the end of the buffer...
+
+    unsigned char c1, c2, *ptr = (unsigned char*) p;
+    unsigned long uc = 0;
+    int seqlen;
+    // int datalen = ... available length of p ...;    
+
+    /*
+    if( datalen < 1 )
+    {
+        // malformed data, do something !!!
+        return (unsigned long) -1;
+    }
+    */
+
+    c1 = ptr[0];
+
+    if( (c1 & 0x80) == 0 )
+    {
+        uc = (unsigned long) (c1 & 0x7F);
+        seqlen = 1;
+    }
+    else if( (c1 & 0xE0) == 0xC0 )
+    {
+        uc = (unsigned long) (c1 & 0x1F);
+        seqlen = 2;
+    }
+    else if( (c1 & 0xF0) == 0xE0 )
+    {
+        uc = (unsigned long) (c1 & 0x0F);
+        seqlen = 3;
+    }
+    else if( (c1 & 0xF8) == 0xF0 )
+    {
+        uc = (unsigned long) (c1 & 0x07);
+        seqlen = 4;
+    }
+    else
+    {
+        // malformed data, do something !!!
+        return (unsigned long) -1;
+    }
+
+    /*
+    if( seqlen > datalen )
+    {
+        // malformed data, do something !!!
+        return (unsigned long) -1;
+    }
+    */
+
+    for(int i = 1; i < seqlen; ++i)
+    {
+        c1 = ptr[i];
+        
+        if( (c1 & 0xC0) != 0x80 )
+        {
+            // malformed data, do something !!!
+            return (unsigned long) -1;
+        }
+    }
+
+    switch( seqlen )
+    {
+        case 2:
+        {
+            c1 = ptr[0];
+
+            if( !FC_IsInRange(c1, 0xC2, 0xDF) )
+            {
+                // malformed data, do something !!!
+                return (unsigned long) -1;
+            }
+
+            break;
+        }
+
+        case 3:
+        {
+            c1 = ptr[0];
+            c2 = ptr[1];
+
+            switch (c1)
+            {
+                case 0xE0:
+                    if (!FC_IsInRange(c2, 0xA0, 0xBF))
+                    {
+                        // malformed data, do something !!!
+                        return (unsigned long) -1;
+                    }
+                    break;
+
+                case 0xED:
+                    if (!FC_IsInRange(c2, 0x80, 0x9F))
+                    {
+                        // malformed data, do something !!!
+                        return (unsigned long) -1;
+                    }
+                    break;
+
+                default:
+                    if (!FC_IsInRange(c1, 0xE1, 0xEC) && !FC_IsInRange(c1, 0xEE, 0xEF))
+                    {
+                        // malformed data, do something !!!
+                        return (unsigned long) -1;
+                    }
+                    break;
+            }
+
+            break;
+        }
+
+        case 4:
+        {
+            c1 = ptr[0];
+            c2 = ptr[1];
+
+            switch (c1)
+            {
+                case 0xF0:
+                    if (!FC_IsInRange(c2, 0x90, 0xBF))
+                    {
+                        // malformed data, do something !!!
+                        return (unsigned long) -1;
+                    }
+                    break;
+
+                case 0xF4:
+                    if (!FC_IsInRange(c2, 0x80, 0x8F))
+                    {
+                        // malformed data, do something !!!
+                        return (unsigned long) -1;
+                    }
+                    break;
+
+                default:
+                    if (!FC_IsInRange(c1, 0xF1, 0xF3))
+                    {
+                        // malformed data, do something !!!
+                        return (unsigned long) -1;
+                    }
+                    break;                
+            }
+
+            break;
+        }
+    }
+
+    for(int i = 1; i < seqlen; ++i)
+    {
+        uc = ((uc << 6) | (unsigned long)(ptr[i] & 0x3F));
+    }
+
+    p += seqlen;
+    return uc; 
+}
+
+static bool FC_IsPunctuation(unsigned long c) {
+    if (c >= 0x3000 && c <= 0x303f) return true;
+    if (c >= 0x2000 && c <= 0x206F) return true;
+    if (c >= 0x0020 && c <= 0x0040) return true;
+    if (c >= 0x02B0 && c <= 0x02FF) return true;
+    if (c >= 0x0300 && c <= 0x036F) return true;
+    return false;
+}
+
+static bool FC_IsLatinCharacter(unsigned long c) {
+    if (c >= 0x0041 && c <= 0x007F) return true;
+    if (c >= 0x00A0 && c <= 0x00FF) return true;
+    if (c >= 0x0100 && c <= 0x017F) return true;
+    if (c >= 0x0180 && c <= 0x024F) return true;
+    return false;
+}
+
+static bool FC_IsJapaneseCharacter(unsigned long c) {
+    return c >= 0x3000 && c <= 0x30ff;
+}
+
+static bool FC_IsChineseCharacter(unsigned long c) {
+    return c >= 0x4e00 && c <= 0x9FFF;
+}
+
+static bool FC_IsKoreanCharacter(unsigned long c) {
+    return c >= 0xac00 && c <= 0xd7a3;
+}
+
+static bool FC_IsCJKCharacter(unsigned long c) {
+    return FC_IsJapaneseCharacter(c) || FC_IsChineseCharacter(c) || FC_IsKoreanCharacter(c);
+}
+
+static bool FC_IsSameLanguage(unsigned long c1, unsigned long c2) {
+    if (FC_IsLatinCharacter(c1) && FC_IsLatinCharacter(c2)) return true;
+    if (FC_IsJapaneseCharacter(c1) && FC_IsJapaneseCharacter(c2)) return true;
+    if (FC_IsCJKCharacter(c1) && FC_IsCJKCharacter(c2)) return true;
+    return false;
+}
+
 static FC_StringList* FC_ExplodeBreakingSpace(const char* text, FC_StringList** spaces)
 {
     FC_StringList* head;
@@ -1904,10 +2121,32 @@ static FC_StringList* FC_ExplodeBreakingSpace(const char* text, FC_StringList** 
     // Doesn't technically support UTF-8, but it's probably fine, right?
     size = 0;
     start = end = text;
+    
+    unsigned long l_char;
+    int seqlen;
+    
     while(1)
     {
         // Add any characters here that should make separate words (except for \n?)
-        if(*end == ' ' || *end == '\t' || *end == '\0')
+        // if (*end & 0xc0) {
+        //     l_char = FC_ReadNextChar(end);
+        //     seqlen = FC_GetCharSequenceLength(end);
+            
+        //     for (int i = 1; i < seqlen; i++) {
+        //         ++end;
+        //         ++size;
+        //     }
+
+        //     if (FC_IsCJKCharacter(l_char)) {
+        //         FC_StringListPushBackBytes(node, start, size);
+        //         FC_StringListPushBackBytes(spaces, end, 1);
+                
+        //         node = &((*node)->next);
+        //         start = end+1;
+        //         size = 0;
+        //     }
+        // }
+        if(*end == ' ' || *end == '.' || *end == ',' || *end == '\t' || *end == '\0')
         {
             FC_StringListPushBackBytes(node, start, size);
             FC_StringListPushBackBytes(spaces, end, 1);
@@ -1919,8 +2158,9 @@ static FC_StringList* FC_ExplodeBreakingSpace(const char* text, FC_StringList** 
             start = end+1;
             size = 0;
         }
-        else
+        else {
             ++size;
+        }
 
         ++end;
     }

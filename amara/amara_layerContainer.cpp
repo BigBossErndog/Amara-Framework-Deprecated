@@ -279,23 +279,21 @@ namespace Amara {
             if (destRect.w <= 0) skipDrawing = true;
             if (destRect.h <= 0) skipDrawing = true;
 
-            if (!skipDrawing) {
-                if (tx != nullptr) {
-                    SDL_SetTextureBlendMode(tx, blendMode);
-                    SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
+            if (!skipDrawing && tx != nullptr) {
+                SDL_SetTextureBlendMode(tx, blendMode);
+                SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
 
-                    SDL_RenderCopyExF(
-                        properties->gRenderer,
-                        tx,
-                        NULL,
-                        &destRect,
-                        0,
-                        &origin,
-                        SDL_FLIP_NONE
-                    );
+                SDL_RenderCopyExF(
+                    properties->gRenderer,
+                    tx,
+                    NULL,
+                    &destRect,
+                    0,
+                    &origin,
+                    SDL_FLIP_NONE
+                );
 
-					checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
-                }
+                checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
             }
         }
 
@@ -498,7 +496,7 @@ namespace Amara {
             destRect.y = ((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
             destRect.w = ((width * scaleX) * nzoomX);
             destRect.h = ((height * scaleY) * nzoomY);
-
+            
             if (pixelLocked) {
                 destRect.x = floor(destRect.x);
                 destRect.y = floor(destRect.y);
@@ -540,37 +538,35 @@ namespace Amara {
 			properties->interactScaleX /= scaleX;
 			properties->interactScaleY /= scaleY;
 
-            if (!skipDrawing) {
-                if (tx != nullptr) {
-					viewport.x = vx;
-					viewport.y = vy;
-					viewport.w = vw;
-					viewport.h = vh;
-					SDL_RenderSetViewport(properties->gRenderer, &viewport);
+            if (!skipDrawing && tx != nullptr) {
+                viewport.x = vx;
+                viewport.y = vy;
+                viewport.w = vw;
+                viewport.h = vh;
+                SDL_RenderSetViewport(properties->gRenderer, &viewport);
 
-                    SDL_SetTextureBlendMode(tx, blendMode);
-                    SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
+                SDL_SetTextureBlendMode(tx, blendMode);
+                SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
 
-                    SDL_RendererFlip flipVal = SDL_FLIP_NONE;
-                    if (!flipHorizontal != !scaleFlipHorizontal) {
-                        flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_HORIZONTAL);
-                    }
-                    if (!flipVertical != !scaleFlipVertical) {
-                        flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
-                    }
-
-                    SDL_RenderCopyExF(
-                        properties->gRenderer,
-                        tx,
-                        NULL,
-                        &destRect,
-                        0,
-                        &origin,
-                        flipVal
-                    );
-
-					checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
+                SDL_RendererFlip flipVal = SDL_FLIP_NONE;
+                if (!flipHorizontal != !scaleFlipHorizontal) {
+                    flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_HORIZONTAL);
                 }
+                if (!flipVertical != !scaleFlipVertical) {
+                    flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
+                }
+
+                SDL_RenderCopyExF(
+                    properties->gRenderer,
+                    tx,
+                    NULL,
+                    &destRect,
+                    0,
+                    &origin,
+                    flipVal
+                );
+
+                checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
             }
         }
 

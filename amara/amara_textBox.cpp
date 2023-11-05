@@ -213,8 +213,6 @@ namespace Amara {
                 int nMarginRight = marginRight + extraMarginRight;
                 int wrapWidth = width - nMarginLeft - nMarginRight;
 
-                txt->setWordWrap((isProgressive) ? false : wrapWidth);
-
                 text = newText;
                 wrappedText = adjustText(newText, width - (nMarginLeft + nMarginRight));
                 recText = text;
@@ -229,11 +227,6 @@ namespace Amara {
             }
 
             std::string adjustText(std::string gText, float wrapWidth) {
-                txt->setWordWrap((isProgressive) ? false : wrapWidth);
-                if (!isProgressive) {
-                    return gText;
-                }
-
                 return StringParser::wrapString(txt->fontAsset->font, gText, wrapWidth);
             }
 
@@ -245,7 +238,6 @@ namespace Amara {
 
                 int wrapWidth = width - nMarginLeft - nMarginRight;
                 
-                txt->setWordWrap((isProgressive) ? false : wrapWidth);
                 txt->setText(wrappedText);
 
                 switch (horizontalAlignment) {

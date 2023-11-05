@@ -140,19 +140,6 @@ namespace Amara {
                 return this;
             }
 
-            std::string getWrappedText(std::string gText, float wrapWidth) {
-                int testSize = gText.size() * 2;
-                char wrapping[testSize];
-
-                FC_GetWrappedText(fontAsset->font, wrapping, testSize, wrapWidth,gText.c_str());
-
-                return wrapping;
-            }
-
-            Amara::TrueTypeFont* setWrappedText(std::string gText, float wrapWidth) {
-                return setText(getWrappedText(gText, wrapWidth));
-            }
-
             Amara::TrueTypeFont* setColor(int r, int g, int b, int a) {
                 color.r = r;
                 color.g = g;
@@ -253,11 +240,7 @@ namespace Amara {
                 }
             }
 
-            void run() {
-                Amara::Actor::run();
-            }
-
-            void drawText(float dx, float dy) {
+            void drawText(float dx, float dy, bool middle) {
 				switch (alignment) {
 					case ALIGN_LEFT:
 						effect.alignment = FC_ALIGN_LEFT;
@@ -310,7 +293,7 @@ namespace Amara {
                             txt
                         );
                         
-						checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, width * effect.scale.x, height * effect.scale.y);
+						if (middle) checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, width * effect.scale.x, height * effect.scale.y);
                     }
                     else {
                         int offsetX = 0;
@@ -332,7 +315,7 @@ namespace Amara {
                             txt
                         );
 
-						checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, txtWidth * effect.scale.x, txtHeight * effect.scale.y);
+						if (middle) checkHover(viewbox.x, viewbox.y, viewbox.width, viewbox.height, rx, ry, txtWidth * effect.scale.x, txtHeight * effect.scale.y);
                     }
                 }
             }
@@ -352,20 +335,20 @@ namespace Amara {
                     effect.color = outlineColor;
 					effect.color.a = outlineColor.a * pow(alpha, 1) * outlineAlpha;
                     for (int i = 0; i < outline+1; i++) {
-                        drawText(x+i,y);
-                        drawText(x-i,y);
+                        drawText(x+i,y, false);
+                        drawText(x-i,y, false);
                         for (int j = 0; j < outline+1; j++) {
                             if (outlineCorners || i != j || i != outline) {
-                                drawText(x+i,y+j);
-                                drawText(x-i,y-j);
-                                drawText(x+i,y-j);
-                                drawText(x-i,y+j);
+                                drawText(x+i,y+j, false);
+                                drawText(x-i,y-j, false);
+                                drawText(x+i,y-j, false);
+                                drawText(x-i,y+j, false);
                             }
                         }
                     }
                 }
                 effect.color = color;
-                drawText(x, y);
+                drawText(x, y, true);
 
                 Amara::Actor::draw(vx, vy, vw, vh);
             }

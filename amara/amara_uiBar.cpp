@@ -2,6 +2,7 @@ namespace Amara {
     class UIBar: public Actor {
     public:
         float value = 0;
+        float minValue = 0;
         float maxValue = 1;
         float displayValue = 0;
 
@@ -20,6 +21,8 @@ namespace Amara {
         int frontPaddingRight = 0;
         int frontPaddingTop = 0;
         int frontPaddingBottom = 0;
+
+        bool isBarHeld = false;
         
         Amara::Direction drainDirection = Left; 
 
@@ -41,6 +44,9 @@ namespace Amara {
             }
             if (config.find("displayValue") != config.end()) {
                 displayValue = config["displayValue"];
+            }
+            if (config.find("minValue") != config.end()) {
+                minValue = config["minValue"];
             }
             if (config.find("maxValue") != config.end()) {
                 maxValue = config["maxValue"];
@@ -83,15 +89,25 @@ namespace Amara {
             if (textDisplay) textDisplay->reloadAssets();
         }
 
+        void fixSetValue(float gVal) {
+            if (gVal < minValue) gVal = minValue;
+            if (gVal > maxValue) gVal = maxValue;
+            setValue(gVal);
+        }
+
         void setValue(float gVal) {
             value = gVal;
-            if (value > maxValue) {
-                maxValue = value;
-            }
+            if (value > maxValue) maxValue = maxValue;
+            if (value < minValue) minValue = value;
         }
         void setValueInstantly(float gVal) {
             displayValue = gVal;
             setValue(gVal);
+        }
+
+        void setPercentage(float val, bool roundIt) {
+            if (roundIt) setValue(round(val*maxValue));
+            else setValue(val*maxValue);
         }
 
         TrueTypeFont* addTextDisplay(TrueTypeFont* gTxt) {
@@ -114,7 +130,22 @@ namespace Amara {
             setSpeed(1, gDelay);
         }
 
+        void setInteractable(bool g) {
+            Actor::setInteractable(g);
+            backBar->setInteractable(g);
+        }
+
         void run() {
+            if (isInteractable) {
+                if (backBar->interact.isDown) isBarHeld = true;
+                if (input->lastMode == InputMode_Mouse && !input->mouse.isDown) isBarHeld = false;
+                if (input->lastMode == InputMode_Touch && backBar->interact.finger == nullptr) isBarHeld = false;
+                if (isBarHeld) {
+                    float unitsByPixels = maxValue/(float)frontBar->width;
+                    fixSetValue(value + unitsByPixels*backBar->interact.movementX);
+                }
+            }
+
             if (changeSpeed == -1) {
                 displayValue = value;
             }
@@ -139,22 +170,22 @@ namespace Amara {
             
             if (drainDirection == Left) {
                 frontBar->cropLeft = frontPaddingLeft;
-                frontBar->cropRight = frontBar->imageWidth - floor((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/(float)maxValue)) - frontPaddingLeft;
+                frontBar->cropRight = frontBar->imageWidth - floor((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/maxValue)) - frontPaddingLeft;
                 if (frontBar->cropRight < frontPaddingRight) frontBar->cropRight = frontPaddingRight;
             }
             else if (drainDirection == Right) {
                 frontBar->cropRight = frontPaddingRight;
-                frontBar->cropLeft = frontBar->imageWidth - floor((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/(float)maxValue)) - frontPaddingRight;
+                frontBar->cropLeft = frontBar->imageWidth - floor((frontBar->imageWidth - frontPaddingLeft - frontPaddingRight)*(displayValue/maxValue)) - frontPaddingRight;
                 if (frontBar->cropLeft < frontPaddingLeft) frontBar->cropLeft = frontPaddingLeft;
             }
             else if (drainDirection == Up) {
                 frontBar->cropTop = frontPaddingTop;
-                frontBar->cropBottom = frontBar->imageHeight - floor((frontBar->imageHeight - frontPaddingTop - frontPaddingBottom)*(displayValue/(float)maxValue)) - frontPaddingTop;
+                frontBar->cropBottom = frontBar->imageHeight - floor((frontBar->imageHeight - frontPaddingTop - frontPaddingBottom)*(displayValue/maxValue)) - frontPaddingTop;
                 if (frontBar->cropBottom < frontPaddingBottom) frontBar->cropBottom = frontPaddingBottom;
             }
             else if (drainDirection == Down) {
                 frontBar->cropBottom = frontPaddingBottom;
-                frontBar->cropTop = frontBar->imageHeight - floor((frontBar->imageHeight - frontPaddingTop - frontPaddingBottom)*(displayValue/(float)maxValue)) - frontPaddingBottom;
+                frontBar->cropTop = frontBar->imageHeight - floor((frontBar->imageHeight - frontPaddingTop - frontPaddingBottom)*(displayValue/maxValue)) - frontPaddingBottom;
                 if (frontBar->cropTop < frontPaddingTop) frontBar->cropTop = frontPaddingTop;
             }
 

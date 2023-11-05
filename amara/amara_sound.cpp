@@ -159,6 +159,7 @@ namespace Amara {
 					isPaused = false;
 					isPlaying = false;
 					forceStopped = true;
+					position = 0;
 					if (parent && parent->currentlyPlaying == this) {
 						parent->currentlyPlaying = nullptr;
 					}

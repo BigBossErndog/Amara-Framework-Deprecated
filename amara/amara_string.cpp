@@ -197,81 +197,47 @@ namespace Amara {
         static std::string wrapString(FC_Font* font, std::string input, float wrapWidth) {
             std::string recText = input;
             std::string fText = "";
-            std::string word = "";
             std::string pText = "";
             float textWidth = 0;
-            char c, lastC = 0;
+            unsigned long c, lastC = 0;
+            const char* end = input.c_str();
+            const char* start = end;
+            int seqlen = 0;
+            int byte = 0;
+            bool newLine = false;
 
-            for (int i = 0; i < input.length(); i++) {
-                c = input.at(i);
-                
-                if (c == ' ') {
-                    pText = fText + word;
-                    if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
-                        fText += '\n';
-                        fText += word;
-                    }
-                    else {
-                        fText += word;
-                    }
+            while (true) {
+                c = FC_ReadNextChar(end);
+                seqlen = FC_GetCharSequenceLength(end);
 
-                    pText = fText + c;
-                    if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
-                        fText += '\n';
-                    }
-                    else {
-                        fText += c;
-                    }
+                if (*end == '\0') break;
 
-                    word.clear();
-                }
-                else {
-                    if (StringParser::isPunctuation(c)) {
-                        word += c;
-                    }
-                    else if (!StringParser::isSameLanguage(lastC, c)) {
-                        pText = fText + word;
-                        if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
-                            fText += '\n';
-                            fText += word;
-                        }
-                        else {
-                            fText += word;
-                        }
-                        word = c;
-                    }
-                    else if (StringParser::isCJKCharacter(c)) {
-                        pText = fText + word;
-                        if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
-                            fText += L'\n';
-                            fText += word;
-                        }
-                        else {
-                            fText += word;
-                        }
-                        word = c;
-                    }
-                    else {
-                        word += c;
-                    }
+                if (c == ' ' || StringParser::isPunctuation(c) || StringParser::isCJKCharacter(c) || StringParser::isCJKCharacter(lastC) || (lastC != 0 && !StringParser::isSameLanguage(lastC, c))) {
+                    newLine = false;
+                    pText = fText;
+                    for (const char* p = start; p != end; ++p) pText += *p;
+                    if (newLine = FC_GetWidth(font, pText.c_str()) > wrapWidth) fText += '\n';
+                    for (const char* p = start; p != end; ++p) fText += *p;
+
+                    start = end;
+                    if (newLine && c == ' ') start += seqlen;
                 }
                 lastC = c;
+
+                end += seqlen;
             }
 
-            pText = fText + word;
-
-            if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
-                fText += '\n';
-                fText += word;
-            }
-            else {
-                fText += word;
+            if (start != end) {
+                pText = fText;
+                for (const char* p = start; p != end; ++p) pText += *p;
+                if (fText.size() > 0 && fText.back() != '\n' && FC_GetWidth(font, pText.c_str()) > wrapWidth) fText += '\n';
+                for (const char* p = start; p != end+seqlen; ++p) fText += *p;
             }
 
             return fText;
         }
         
-        static bool isPunctuation(char c) {
+        static bool isPunctuation(unsigned long c) {
             if (c >= 0x3000 && c <= 0x303f) return true;
             if (c >= 0x2000 && c <= 0x206F) return true;
             if (c >= 0x0020 && c <= 0x0040) return true;
@@ -280,15 +246,14 @@ namespace Amara {
             return false;
         }
 
-        static bool isSameLanguage(char c1, char c2) {
-            if (isLatinCharacter(c1) || isLatinCharacter(c2)) return true;
+        static bool isSameLanguage(unsigned long c1, unsigned long c2) {
             if (isLatinCharacter(c1) && isLatinCharacter(c2)) return true;
             if (isJapaneseCharacter(c1) && isJapaneseCharacter(c2)) return true;
             if (isCJKCharacter(c1) && isCJKCharacter(c2)) return true;
             return false;
         }
 
-        static bool isLatinCharacter(char c) {
+        static bool isLatinCharacter(unsigned long c) {
             if (c >= 0x0041 && c <= 0x007F) return true;
             if (c >= 0x00A0 && c <= 0x00FF) return true;
             if (c >= 0x0100 && c <= 0x017F) return true;
@@ -296,25 +261,19 @@ namespace Amara {
             return false;
         }
 
-        static bool isJapaneseCharacter(char c) {
-            std::regex expr("[\u3040-\u30ff]");
-            std::string strC = std::string(1, c);
-            return std::regex_match(strC, expr);
+        static bool isJapaneseCharacter(unsigned long c) {
+            return c >= 0x3000 && c <= 0x30ff;
         }
 
-        static bool isChineseCharacter(char c) {
-            std::regex expr("[\u4e00-\u9FFF]");
-            std::string strC = std::string(1, c);
-            return std::regex_match(strC, expr);
+        static bool isChineseCharacter(unsigned long c) {
+            return c >= 0x4e00 && c <= 0x9FFF;
         }
 
-        static bool isKoreanCharacter(char c) {
-            std::regex expr("[\uac00-\ud7a3]");
-            std::string strC = std::string(1, c);
-            return std::regex_match(strC, expr);
+        static bool isKoreanCharacter(unsigned long c) {
+            return c >= 0xac00 && c <= 0xd7a3;
         }
 
-        static bool isCJKCharacter(char c) {
+        static bool isCJKCharacter(unsigned long c) {
             return isJapaneseCharacter(c) || isChineseCharacter(c) || isKoreanCharacter(c);
         }
     };

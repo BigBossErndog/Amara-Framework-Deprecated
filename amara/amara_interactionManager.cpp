@@ -19,6 +19,8 @@ namespace Amara {
 			float movementY = 0;
 			float moveDistance = 0;
 
+			FloatVector2 firstPoint;
+
 			bool moved = false;
 
 			float interactScaleX = 1;
@@ -70,6 +72,7 @@ namespace Amara {
 					movementY = 0;
 					moved = false;
 					moveDistance = 0;
+					firstPoint = { gx, gy };
 				}
 				else {
 					movementX = (gx - pointX) / interactScaleX;
@@ -78,6 +81,7 @@ namespace Amara {
 				}
 				pointX = gx;
 				pointY = gy;
+
 				if (movementX != 0 || movementY != 0) {
 					moved = true;
 				}

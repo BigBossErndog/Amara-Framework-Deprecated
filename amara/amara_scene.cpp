@@ -75,6 +75,7 @@ namespace Amara {
 
 			virtual Amara::Entity* removeCamera(Amara::Camera* rem) {
 				Amara::Camera* cam;
+                if (mainCamera == rem) mainCamera = nullptr;
 				for (auto it = cameras.begin(); it != cameras.end();) {
                     cam = *it;
                     if (cam == rem) {
@@ -161,6 +162,7 @@ namespace Amara {
                 for (auto it = cameras.begin(); it != cameras.end();) {
                     cam = *it;
                     if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
+                        if (mainCamera == cam) mainCamera = nullptr;
                         it = cameras.erase(it);
                         continue;
                     }
@@ -207,6 +209,8 @@ namespace Amara {
 
 					properties->interactOffsetX = 0;
 					properties->interactOffsetY = 0;
+                    properties->interactScaleX = 1;
+                    properties->interactScaleY = 1;
 
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
                 }
