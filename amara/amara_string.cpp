@@ -203,8 +203,8 @@ namespace Amara {
             const char* end = input.c_str();
             const char* start = end;
             int seqlen = 0;
-            int byte = 0;
-            bool newLine = false;
+            bool otherCheck = true;
+            bool lastCheck = true;
 
             while (true) {
                 c = FC_ReadNextChar(end);
@@ -212,16 +212,29 @@ namespace Amara {
 
                 if (*end == '\0') break;
 
-                if (c == ' ' || StringParser::isPunctuation(c) || StringParser::isCJKCharacter(c) || StringParser::isCJKCharacter(lastC) || (lastC != 0 && !StringParser::isSameLanguage(lastC, c))) {
-                    newLine = false;
+                if (otherCheck = (c == ' ' || StringParser::isPunctuation(c))) {
                     pText = fText;
-                    for (const char* p = start; p != end; ++p) pText += *p;
-                    if (newLine = FC_GetWidth(font, pText.c_str()) > wrapWidth) fText += '\n';
-                    for (const char* p = start; p != end; ++p) fText += *p;
+                    for (const char* p = start; p < end+seqlen; ++p) pText += *p;
+                    if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
+                        if (fText.size() > 0 && fText.back() != '\n') fText += '\n';
+                        while (*start == ' ') start++;
+                    }
+                    for (const char* p = start; p < end+seqlen; ++p) fText += *p;
 
-                    start = end;
-                    if (newLine && c == ' ') start += seqlen;
+                    start = end+seqlen;
                 }
+                else if (StringParser::isCJKCharacter(c) || (!lastCheck && !StringParser::isSameLanguage(c, lastC))) {
+                    pText = fText;
+                    for (const char* p = start; p < end; ++p) pText += *p;
+                    if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
+                        if (fText.size() > 0 && fText.back() != '\n') fText += '\n';
+                        while (*start == ' ') start++;
+                    }
+                    for (const char* p = start; p < end; ++p) fText += *p;
+                    
+                    start = end;
+                }
+                lastCheck = otherCheck;
                 lastC = c;
 
                 end += seqlen;
@@ -231,7 +244,7 @@ namespace Amara {
                 pText = fText;
                 for (const char* p = start; p != end; ++p) pText += *p;
                 if (fText.size() > 0 && fText.back() != '\n' && FC_GetWidth(font, pText.c_str()) > wrapWidth) fText += '\n';
-                for (const char* p = start; p != end+seqlen; ++p) fText += *p;
+                for (const char* p = start; p < end+seqlen; ++p) fText += *p;
             }
 
             return fText;
