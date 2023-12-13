@@ -257,7 +257,7 @@ namespace Amara {
             virtual void onSleep() {}
             virtual void onWake() {}
 
-            ~Scene() {
+            virtual ~Scene() {
                 if (load) delete load;
             }
     };

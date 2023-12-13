@@ -225,11 +225,12 @@ namespace Amara {
             }
         }
 
-        ~RepeatedSprite() {
+        virtual void destroy(bool recursive) {
             if (canvas) {
                 SDL_DestroyTexture(canvas);
                 canvas = nullptr;
             }
+            Amara::Sprite::destroy(recursive);
         }
     };
 };

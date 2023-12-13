@@ -718,11 +718,13 @@ namespace Amara {
                 if (openSpeedY > 0) setOpenSize(openWidth, 0);
             }
 
-            ~UIBox() {
+            using Amara::Actor::destroy;
+            virtual void destroy(bool recursive) {
                 if (canvas) {
                     SDL_DestroyTexture(canvas);
                     canvas = nullptr;
                 }
+                Amara::Actor::destroy(recursive);
             }
     };
 

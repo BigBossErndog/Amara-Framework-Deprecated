@@ -332,6 +332,15 @@ namespace Amara {
                 }
             }
 
+            std::vector<int> getTileArray() {
+                std::vector<int> arr;
+                arr.clear();
+                for (Tile& tile: tiles) {
+                    arr.push_back(tile.id);
+                }
+                return arr;
+            }
+
             std::vector<int> toVector(int* setW, int* setH) {
                 std::vector<int> list;
                 list.resize(width * height);
@@ -589,10 +598,6 @@ namespace Amara {
             }
 
             void destroy();
-
-            ~TilemapLayer() {
-                if (drawTexture) SDL_DestroyTexture(drawTexture);
-            }
     };
     
     class Tilemap: public Amara::Actor, public Amara::WallFinder {
@@ -996,7 +1001,7 @@ namespace Amara {
                 Amara::Actor::destroy();
             }
     };
-
+    
     void Amara::TilemapLayer::destroy() {
         if (tilemap != nullptr) {
             if (tilemap->layers.find(id) != tilemap->layers.end()) {
@@ -1012,6 +1017,8 @@ namespace Amara {
                 ++it;
             }
         }
+
+        if (drawTexture) SDL_DestroyTexture(drawTexture);
         
         Amara::Actor::destroy();
     }

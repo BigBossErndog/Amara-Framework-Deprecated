@@ -203,6 +203,36 @@ namespace Amara {
 		}
 	};
 
+    class Tween_Rotate: public Tween {
+    public:
+        double rotateAmount = 0;
+        double targetAngle = 0;
+        double startAngle = 0;
+
+        Tween_Rotate(double amount, double tt, Amara::Easing gEasing) {
+            rotateAmount = amount;
+            time = tt;
+            easing = gEasing;
+        }
+        Tween_Rotate(double amount, double tt): Tween_Rotate(amount, tt, LINEAR) {}
+
+        void prepare() {
+            startAngle = parent->angle;
+            targetAngle = parent->angle + rotateAmount;
+        }
+
+        void script() {
+            Amara::Tween::progressFurther();
+            parent->angle = ease(startAngle, targetAngle, progress, easing);
+        }
+
+        void finish() {
+            parent->angle = fmod(targetAngle, 360);
+            while (parent->angle < 0) parent->angle += 360;
+            Tween::finish();
+        }
+    };
+
     class Tween_ShakeXY: public Tween {
         public:
             float startX;
@@ -676,9 +706,10 @@ namespace Amara {
 
     class Script_Configure: public Script {
     public:
-        Entity* target = nullptr;
+        Amara::Entity* target = nullptr;
         nlohmann::json config = nullptr;
 
+        Script_Configure() {}
         Script_Configure(nlohmann::json gConfig) {
             config = gConfig;
         }

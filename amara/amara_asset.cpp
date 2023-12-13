@@ -72,7 +72,7 @@ namespace Amara {
                 asset = givenAsset;
             }
 
-            ~ImageTexture() {
+            virtual ~ImageTexture() {
                 removeTexture();
             }
     };
@@ -82,7 +82,7 @@ namespace Amara {
             SDL_Color innerColor;
             SDL_Color outerColor;
             float fadeStart;
-
+            
             RadialGradientTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
 
             void configure(SDL_Color gInnerColor, SDL_Color gOuterColor, float gFadeStart) {

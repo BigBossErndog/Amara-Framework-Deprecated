@@ -201,7 +201,7 @@ namespace Amara {
             entityType = "textureLayer";
         }
 
-        void createTexture() {
+        virtual void createTexture() {
             if (tx) {
                 SDL_DestroyTexture(tx);
             }
@@ -214,6 +214,16 @@ namespace Amara {
             );
             textureWidth = properties->currentCamera->width;
             textureHeight = properties->currentCamera->height;
+            clearTexture();
+        }
+
+        void clearTexture() {
+            recTarget = SDL_GetRenderTarget(properties->gRenderer);
+            SDL_SetRenderTarget(properties->gRenderer, tx);
+            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+            SDL_RenderClear(properties->gRenderer);
+
+            SDL_SetRenderTarget(properties->gRenderer, recTarget);
         }
 
         void draw(int vx, int vy, int vw, int vh) {
@@ -350,11 +360,13 @@ namespace Amara {
             properties->alpha = recAlpha;
         }
 
-        ~TextureLayer() {
+        using Amara::Layer::destroy;
+        virtual void destroy(bool recursive) {
             if (tx) {
                 SDL_DestroyTexture(tx);
                 tx = nullptr;
             }
+            Amara::Layer::destroy(recursive);
         }
     };
 
@@ -431,7 +443,7 @@ namespace Amara {
 			}
 		}
 
-        void createTexture() {
+        virtual void createTexture() {
             if (tx) {
                 SDL_DestroyTexture(tx);
             }
@@ -444,6 +456,17 @@ namespace Amara {
             );
             textureWidth = width;
             textureHeight = height;
+
+            clearTexture();
+        }
+
+        void clearTexture() {
+            recTarget = SDL_GetRenderTarget(properties->gRenderer);
+            SDL_SetRenderTarget(properties->gRenderer, tx);
+            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+            SDL_RenderClear(properties->gRenderer);
+
+            SDL_SetRenderTarget(properties->gRenderer, recTarget);
         }
 
         Amara::TextureContainer* setOrigin(float gx, float gy) {
@@ -570,7 +593,7 @@ namespace Amara {
             }
         }
 
-		void drawChildren() {
+		virtual void drawChildren() {
 			if (!textureLocked || pleaseUpdate) {
                 if (!tx) return;
 				pleaseUpdate = false;
@@ -644,11 +667,13 @@ namespace Amara {
             properties->angle = recAngle;
         }
 
-        ~TextureContainer() {
+        using Amara::Layer::destroy;
+        virtual void destroy(bool recursive) {
             if (tx) {
                 SDL_DestroyTexture(tx);
                 tx = nullptr;
             }
+            Amara::Layer::destroy(recursive);
         }
     };
 }

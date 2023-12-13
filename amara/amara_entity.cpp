@@ -54,12 +54,13 @@ namespace Amara {
 		float zoomFactorX = 1;
 		float zoomFactorY = 1;
 
-		float angle = 0;
+		double angle = 0; // Using Degrees
 		float alpha = 1;
 
 		bool isActive = false;
 		bool isDestroyed = false;
 		bool isVisible = true;
+		bool isPaused = false;
 
 		bool shouldSortChildren = true;
 		bool sortChildrenOnce = false;
@@ -111,12 +112,10 @@ namespace Amara {
 				id = config["id"];
 			}
 
-			if (config.find("x") != config.end()) {
-				x = config["x"];
-			}
-			if (config.find("y") != config.end()) {
-				y = config["y"];
-			}
+			if (config.find("x") != config.end()) x = config["x"];
+			if (config.find("y") != config.end()) y = config["y"];
+			if (config.find("z") != config.end()) z = config["z"];
+
 			if (config.find("xFromRight") != config.end()) {
 				int xFromRight = config["xFromRight"];
 				x = properties->resolution->width - xFromRight;
@@ -181,6 +180,9 @@ namespace Amara {
 			if (config.find("isVisible") != config.end()) {
 				isVisible = config["isVisible"];
 			}
+			if (config.find("angle") != config.end()) {
+				angle = config["angle"];
+			}
 			if (config.find("alpha") != config.end()) {
 				alpha = config["alpha"];
 			}
@@ -226,6 +228,7 @@ namespace Amara {
 			config["entityType"] = entityType;
 			config["x"] = x;
 			config["y"] = y;
+			config["z"] = z;
 			config["scaleX"] = scaleX;
 			config["scaleY"] = scaleY;
 			config["scrollFactorX"] = scrollFactorX;
@@ -372,6 +375,13 @@ namespace Amara {
 			return this;
 		}
 
+		Amara::Entity* pause(bool p) {
+			isPaused = p;
+			return this;
+		}
+		Amara::Entity* pause() { return pause(true); }
+		Amara::Entity* unpause() { return pause(false); }
+
 		virtual void run() {
 			debugID = id;
 			if (debugging) {
@@ -434,7 +444,7 @@ namespace Amara {
 			for (auto it = children.begin(); it != children.end();) {
 				entity = *it;
 				++it;
-				if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
+				if (entity == nullptr || entity->isDestroyed || entity->parent != this || entity->isPaused) {
 					continue;
 				}
 				if (debugging) SDL_Log("%s (%s): Running Child %d \"%s\"", debugID.c_str(), entityType.c_str(), std::distance(it, children.begin()), entity->id.c_str());

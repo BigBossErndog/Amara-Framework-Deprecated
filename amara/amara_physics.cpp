@@ -112,7 +112,7 @@ namespace Amara {
             bumpDirections = 0;
             isPushing = false;
 
-            if (isPaused) {
+            if (isPaused || !isActive) {
                 updateProperties();
                 return;
             }

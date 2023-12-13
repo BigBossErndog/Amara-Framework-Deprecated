@@ -92,7 +92,5 @@ namespace Amara {
             void stop(std::vector<std::string> list) {
                 stopList.insert(stopList.end(), list.begin(), list.end());
             }
-
-            virtual ~SceneTransitionBase() {}
     };
 }

@@ -254,5 +254,8 @@ namespace Amara {
 			void pause() {
 				pause(true);
 			}
+			void unpause() {
+				pause(false);
+			}
 	};
 }

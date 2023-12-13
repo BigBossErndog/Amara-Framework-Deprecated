@@ -9,28 +9,24 @@ namespace Amara {
         float y = 0;
     } FloatVector2;
 
-    typedef struct IntVector3 {
-        int x = 0;
-        int y = 0;
-        int z = 0;
-    } IntVector;
+    class IntVector3: public IntVector2 {
+        public: int z = 0;
+    };
 
-    typedef struct FloatVector3 {
-        float x = 0;
-        float y = 0;
-        float z = 0;
-    } FloatVector3;
+    class FloatVector3: public FloatVector2 {
+        public: float z = 0;
+    };
 
     float distanceBetween(float sx, float sy, float ex, float ey) {
         float xDist = ex-sx;
         float yDist = ey-sy;
         return sqrt(xDist*xDist + yDist*yDist);
     }
-    float distanceBetween(IntVector2 s, IntVector2 e) {
-        return distanceBetween(s.x, s.y, e.x, e.y);
+    float distanceBetween(IntVector2* s, IntVector2* e) {
+        return distanceBetween(s->x, s->y, e->x, e->y);
     }
-    float distanceBetween(FloatVector2 s, FloatVector2 e) {
-        return distanceBetween(s.x, s.y, e.x, e.y);
+    float distanceBetween(FloatVector2* s, FloatVector2* e) {
+        return distanceBetween(s->x, s->y, e->x, e->y);
     }
 
     float radiansToDegrees(float rads) {
@@ -40,21 +36,18 @@ namespace Amara {
         return degrees*M_PI/180;
     }
 
-    float angleBetween(FloatVector2 p1, FloatVector2 p2) {
-        float angle = -atan2(p2.y-p1.y, p2.x-p1.x) + M_PI/2.0;
-        angle = fmod(angle, 2*M_PI);
-        while (angle < 0) {
-            angle += 2*M_PI;
-        }
-        return angle;
-    }
     float angleBetween(float p1x, float p1y, float p2x, float p2y) {
+        // Angle in Radians
         float angle = -atan2(p2y-p1y, p2x-p1x) + M_PI/2.0;
         angle = fmod(angle, 2*M_PI);
         while (angle < 0) {
             angle += 2*M_PI;
         }
         return angle;
+    }
+    float angleBetween(FloatVector2* p1, FloatVector2* p2) {
+        // Angle in Radians
+        return angleBetween(p1->x, p1->y, p2->x, p2->y);
     }
 
     typedef struct IntRect: public IntVector2 {
@@ -103,8 +96,8 @@ namespace Amara {
         std::vector<FloatVector2> points;
         points.clear();
 
-        float angle = angleBetween(line.p1, line.p2);
-        float fullDist = distanceBetween(line.p1, line.p2);
+        float angle = angleBetween(&line.p1, &line.p2);
+        float fullDist = distanceBetween(&line.p1, &line.p2);
 
         bool nowExit = false;
         float curDist = 0;
@@ -344,7 +337,7 @@ namespace Amara {
         return turnDirection(dir, DirectionsInOrder, turn);
     }
 
-    Amara::Direction directionBetween(int x1, int y1, int x2, int y2, std::vector<Amara::Direction> list) {
+    Amara::Direction directionBetween(float x1, float y1, float x2, float y2, std::vector<Amara::Direction> list) {
         if (x1 == x2 && y1 == y2) {
             return NoDir;
         }
@@ -358,14 +351,14 @@ namespace Amara {
 
         return direction;
     }
-	Amara::Direction directionBetween(int x1, int y1, int x2, int y2) {
+	Amara::Direction directionBetween(float x1, float y1, float x2, float y2) {
         return directionBetween(x1, y1, x2, y2, DirectionsInOrder);
     }
-	Amara::Direction directionBetween(IntVector2 p1, IntVector2 p2, std::vector<Amara::Direction> list) {
-        return directionBetween(p1.x, p1.y, p2.x, p2.y, list);
+	Amara::Direction directionBetween(FloatVector2* p1, FloatVector2* p2, std::vector<Amara::Direction> list) {
+        return directionBetween(p1->x, p1->y, p2->x, p2->y, list);
     }
-    Amara::Direction directionBetween(IntVector2 p1, IntVector2 p2) {
-        return directionBetween(p1.x, p1.y, p2.x, p2.y);
+    Amara::Direction directionBetween(FloatVector2* p1, FloatVector2* p2) {
+        return directionBetween(p1->x, p1->y, p2->x, p2->y);
     }
 
 	Amara::Direction directionFromString(std::string dir) {

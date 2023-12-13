@@ -202,6 +202,13 @@ namespace Amara {
             checkChildren();
         }
 
+        using Amara::Entity::destroy;
+        
+        virtual void destroy(bool recursiveDestroy) {
+            clearScripts();
+            Amara::Entity::destroy(recursiveDestroy);
+        }
+
         Amara::Actor* clearScripts() {
             for (Amara::Script* script: scripts) {
                 script->deleteScript();
@@ -284,10 +291,6 @@ namespace Amara {
         Amara::Actor* resumeActing() {
             actingPaused = false;
             return this;
-        }
-
-        ~Actor() {
-            clearScripts();
         }
     };
 }

@@ -417,8 +417,10 @@ namespace Amara {
                 return this;
             }
 
-			~Image() {
-				removeTexture();
-			}
+            using Amara::Actor::destroy;
+            virtual void destroy(bool recursive) {
+                removeTexture();
+                Amara::Actor::destroy(recursive);
+            }
     };
 }

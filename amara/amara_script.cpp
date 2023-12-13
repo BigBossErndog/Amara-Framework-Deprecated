@@ -99,7 +99,7 @@ namespace Amara {
                 if (!manualDeletion) properties->taskManager->queueDeletion(this);
             }
             
-            ~Script() {
+            virtual ~Script() {
                 if (deleteChained && chainedScript) {
                     chainedScript->properties = properties;
                     chainedScript->deleteScript();

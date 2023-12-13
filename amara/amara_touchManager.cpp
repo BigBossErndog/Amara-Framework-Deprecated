@@ -51,6 +51,20 @@ namespace Amara {
             }
         }
 
+        bool inDown() {
+            for (TouchPointer& pointer: pointers) {
+                if (pointer.isDown) return true;
+            }
+            return false;
+        }
+
+        bool justDown() {
+            for (TouchPointer& pointer: pointers) {
+                if (pointer.justDown) return true;
+            }
+            return false;
+        }
+
         void manage() {
             isActivated = false;
             touchCenter.x = 0;
