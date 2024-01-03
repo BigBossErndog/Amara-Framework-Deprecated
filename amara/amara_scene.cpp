@@ -142,10 +142,21 @@ namespace Amara {
             }
 
             virtual void updateScene() {
+                properties->entityDepth = 0;
+                properties->scrollX = 0;
+                properties->scrollY = 0;
+                properties->offsetX = 0;
+                properties->offsetY = 0;
+                properties->zoomX = 1;
+                properties->zoomY = 1;
+                properties->zoomFactorX = 1;
+                properties->zoomFactorY = 1;
+                properties->angle = 0;
+                properties->alpha = 1;
+                
                 update();
                 reciteScripts();
-                
-                properties->entityDepth = 0;
+
                 runChildren();
                 checkChildren();
 

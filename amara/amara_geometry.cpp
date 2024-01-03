@@ -49,6 +49,13 @@ namespace Amara {
         // Angle in Radians
         return angleBetween(p1->x, p1->y, p2->x, p2->y);
     }
+    float degreesBetween(float p1x, float p1y, float p2x, float p2y) {
+        return radiansToDegrees(angleBetween(p1x, p1y, p2x, p2y));
+    }
+    float degreesBetween(FloatVector2* p1, FloatVector2* p2) {
+        // Angle in Radians
+        return degreesBetween(p1->x, p1->y, p2->x, p2->y);
+    }
 
     typedef struct IntRect: public IntVector2 {
         int width = 0;
@@ -117,6 +124,13 @@ namespace Amara {
             }
         }
         return points;
+    }
+
+    FloatVector2 positionAtAngle(float px, float py, float angle, float distance) {
+        return { px + sin(angle)*distance, py + cos(angle)*distance };
+    }
+    FloatVector2 positionAtAngle(FloatVector2* p, float angle, float distance) {
+        return positionAtAngle(p->x, p->y, angle, distance);
     }
 
     bool overlapping(float px, float py, FloatCircle* circle) {

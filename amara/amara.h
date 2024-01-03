@@ -85,8 +85,8 @@ namespace Amara {
 #define AMARA_LIBRARY
     #include "amara_string.cpp"
     #include "amara_math.cpp"
-    #include "amara_easing.cpp"
     #include "amara_geometry.cpp"
+    #include "amara_easing.cpp"
     #include "amara_utility.cpp"
     #include "amara_ltimer.cpp"
     #include "amara_random.cpp"

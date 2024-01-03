@@ -4,9 +4,11 @@ namespace Amara {
         SINE_INOUT,
         SINE_IN,
         SINE_OUT,
-        SINE_INOUT_BACKROUND
+        SINE_INTHENOUT, // Circular but sine in/out as it leaves/reaches start value.
+        CIRCULAR
     };
 
+    // Progress is between 0 and 1.
     double linearEase(float startVal, float endVal, double progress) {
         return startVal + (endVal - startVal)*progress;
     }   
@@ -23,12 +25,16 @@ namespace Amara {
         return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI/2) + 1);
     }
 
-    double sineInOutBackRoundEase(float startVal, float endVal, double progress) {
+    double sineInThenOutEase(float startVal, float endVal, double progress) {
         return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI*2) + 1)/2;
     }
 
-    double sineHardInOutEase(float startVal, float endVal, double progress) {
-        return startVal + (endVal - startVal)*(sin(M_PI * progress));
+    double circularEase(float startVal, float endVal, double progress) {
+        return startVal + positionAtAngle(
+            1, 0,
+            linearEase(-M_PI/2.0, M_PI/2.0, progress),
+            1
+        ).y * (endVal - startVal);
     }
 
     double ease(float startVal, float endVal, double progress, Amara::Easing easing) {
@@ -44,6 +50,12 @@ namespace Amara {
                 break;
              case SINE_OUT:
                 return sineOutEase(startVal, endVal, progress);
+                break;
+            case SINE_INTHENOUT:
+                return sineInThenOutEase(startVal, endVal, progress);
+                break;
+            case CIRCULAR:
+                return circularEase(startVal, endVal, progress);
                 break;
         }
         return linearEase(startVal, endVal, progress);

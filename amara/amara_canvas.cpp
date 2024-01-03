@@ -61,7 +61,6 @@ namespace Amara {
                 SDL_SetRenderDrawBlendMode(properties->gRenderer, gBlendMode);
 
                 resetPassOnProperties();
-                
             } 
             void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
                 beginFill(r, g, b, a, SDL_BLENDMODE_NONE);
@@ -114,9 +113,25 @@ namespace Amara {
                 drawnRect.h = rh;
                 SDL_RenderFillRect(properties->gRenderer, &drawnRect);
             }
+            void fillRect(IntRect rect) {
+                fillRect(rect.x, rect.y, rect.width, rect.height);
+            }
+            void fillRect(FloatRect rect) {
+                fillRect(floor(rect.x), floor(rect.y), floor(rect.width), floor(rect.height));
+            }
 
             void fillPixel(int gx, int gy) {
                 SDL_RenderDrawPoint(properties->gRenderer, gx, gy);
+            }
+
+            void fillLine(int x1, int y1, int x2, int y2) {
+                SDL_RenderDrawLine(properties->gRenderer, x1, y1, x2, y2);
+            }
+            void fillLine(IntVector2 p1, IntVector2 p2) {
+                fillLine(p1.x, p1.y, p2.x, p2.y);
+            }
+            void fillLine(FloatVector2 p1, FloatVector2 p2) {
+                fillLine(floor(p1.x), floor(p1.y), floor(p2.x), floor(p2.y));
             }
 
             void copy(std::string textureKey, int gx, int gy, int gFrame, float originX, float originY, float scaleX, float scaleY, float angle) {

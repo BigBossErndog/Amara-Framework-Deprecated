@@ -438,7 +438,7 @@ namespace Amara {
             Tween::progressFurther();
             actor->x = linearEase(startX, targetX, progress);
             actor->y = linearEase(startY, targetY, progress);
-            actor->z = sineHardInOutEase(startZ, maxZ, progress);
+            actor->z = circularEase(startZ, maxZ, progress);
         }
     };
 
