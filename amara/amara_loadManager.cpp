@@ -20,7 +20,7 @@ namespace Amara {
         public:
             Amara::Loader* load = nullptr;
 
-            std::deque<Amara::LoadTask*> tasks;
+            std::deque<Amara::LoadTask> tasks;
 
             LoadManager(Amara::GameProperties* gameProperties): Amara::Loader(gameProperties) {
                 load = properties->loader;
@@ -28,9 +28,6 @@ namespace Amara {
             }
 
             void reset() {
-                for (Amara::LoadTask* task : tasks) {
-                    delete task;
-                }
                 tasks.clear();
                 load->clearBasePath();
             }
@@ -63,6 +60,10 @@ namespace Amara {
                 return load->add(key, newAsset, false);
             }
 
+            virtual void clearAssets() {
+                load->clearAssets();
+            }
+
             void regenerateAssets() {
                 load->regenerateAssets();
             }
@@ -79,13 +80,13 @@ namespace Amara {
                 load->setPseudonyms(config);
             }
             
-            int numTasks() {
+            virtual int numberOfTasksLeft() {
                 return tasks.size();
             }
 
             void run() {
                 stillLoading = false;
-                Amara::LoadTask* task;
+                Amara::LoadTask task;
                 int count = 0;
                 bool success = false;
                 while (tasks.size() > 0 && count < load->loadSpeed) {
@@ -93,57 +94,57 @@ namespace Amara {
                     success = false;
                     stillLoading  = true;
 
-                    switch (task->type) {
+                    switch (task.type) {
                         case ASSETPATH:
-                            load->setBasePath(task->path);
+                            load->setBasePath(task.path);
                             success = true;
                             break;
 						case SURFACE:
-							success = load->surface(task->key, task->path, task->replace);
+							success = load->surface(task.key, task.path, task.replace);
 							break;
                         case IMAGE:
-                            success = load->image(task->key, task->path, task->replace);
+                            success = load->image(task.key, task.path, task.replace);
                             break;
                         case SPRITESHEET:
-                            success = load->spritesheet(task->key, task->path, task->frameWidth, task->frameHeight, task->replace);
+                            success = load->spritesheet(task.key, task.path, task.frameWidth, task.frameHeight, task.replace);
                             break;
                         case STRINGFILE:
-                            success = load->string(task->key, task->path, task->replace);
+                            success = load->string(task.key, task.path, task.replace);
                             break;
                         case JSONFILE:
-                            success = load->json(task->key, task->path, task->replace);
+                            success = load->json(task.key, task.path, task.replace);
                             break;
                         case TTF:
-                            success = load->ttf(task->key, task->path, task->size, task->color, task->style, task->replace);
+                            success = load->ttf(task.key, task.path, task.size, task.color, task.style, task.replace);
                             break;
                         case SOUND:
-                            success = load->sound(task->key, task->path, task->replace);
+                            success = load->sound(task.key, task.path, task.replace);
                             break;
                         case MUSIC:
-                            success = load->music(task->key, task->path, task->replace);
+                            success = load->music(task.key, task.path, task.replace);
                             break;
                         case LINEBYLINE:
-                            success = load->lineByLine(task->key, task->path, task->replace);
+                            success = load->lineByLine(task.key, task.path, task.replace);
                             break;
                         case CSVFILE:
-                            success = load->csv(task->key, task->path, task->replace);
+                            success = load->csv(task.key, task.path, task.replace);
                             break;
                     }
 
                     count += 1;
+                    progress = 1 - (numberOfTasksLeft()/(float)numberOfTasks);
 
                     if (success) {
-                        delete task;
                         tasks.pop_front();
                     }
 					else {
-						if (task->tries < numberOfTries) {
-							task->tries += 1;
+						if (task.tries < numberOfTries) {
+							task.tries += 1;
 						}
 						else {
-                            SDL_Log("Gave up on load task: %s", task->key.c_str());
-							delete task;
+                            SDL_Log("Gave up on load task: %s", task.key.c_str());
                             tasks.pop_front();
+                            failedTasks += 1;
 						}
 					}
                 }
@@ -153,110 +154,111 @@ namespace Amara {
                 load->setLoadSpeed(speed);
             }
 
-            void pushTask(std::string key, Amara::LoadTask* asset) {
-                asset->key = key;
+            void pushTask(std::string key, Amara::LoadTask asset) {
+                asset.key = key;
                 tasks.push_back(asset);
+                numberOfTasks += 1;
             }
 
             void setBasePath(std::string path) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = ASSETPATH;
-                t->path = path;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = ASSETPATH;
+                t.path = path;
                 pushTask("setPath", t);
             }
 
 			bool surface(std::string key, std::string path, bool replace) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = SURFACE;
-                t->path = path;
-                t->replace = replace;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = SURFACE;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
             }
 
             bool image(std::string key, std::string path, bool replace) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = IMAGE;
-                t->path = path;
-                t->replace = replace;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = IMAGE;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
             }
 
             bool spritesheet(std::string key, std::string path, int frameWidth, int frameHeight, bool replace) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = SPRITESHEET;
-                t->path = path;
-                t->replace = replace;
-                t->frameWidth = frameWidth;
-                t->frameHeight = frameHeight;
-                t->replace = replace;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = SPRITESHEET;
+                t.path = path;
+                t.replace = replace;
+                t.frameWidth = frameWidth;
+                t.frameHeight = frameHeight;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
             }
 
             bool sound(std::string key, std::string path, bool replace) {
-				Amara::LoadTask* t = new Amara::LoadTask();
-                t->type = SOUND;
-                t->path = path;
-                t->replace = replace;
+				Amara::LoadTask t = Amara::LoadTask();
+                t.type = SOUND;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
 			}
 
             bool music(std::string key, std::string path, bool replace) {
-				Amara::LoadTask* t = new Amara::LoadTask();
-                t->type = MUSIC;
-                t->path = path;
-                t->replace = replace;
+				Amara::LoadTask t = Amara::LoadTask();
+                t.type = MUSIC;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
 			}
 
             bool string(std::string key, std::string path, bool replace) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = STRINGFILE;
-                t->path = path;
-                t->replace = replace;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = STRINGFILE;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
             }
 
             bool json(std::string key, std::string path, bool replace) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = JSONFILE;
-                t->path = path;
-                t->replace = replace;
+                Amara::LoadTask t  = Amara::LoadTask();
+                t.type = JSONFILE;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
             }
 
             bool ttf(std::string key, std::string path, int size, Amara::Color color, int style, bool replace) {
-                Amara::LoadTask* t = new Amara::LoadTask();
-                t->type = TTF;
-                t->path = path;
-                t->replace = replace;
-                t->size = size;
-                t->color = color;
-                t->style = style;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = TTF;
+                t.path = path;
+                t.replace = replace;
+                t.size = size;
+                t.color = color;
+                t.style = style;
                 pushTask(key, t);
                 return true;
             }
 
             bool lineByLine(std::string key, std::string path, bool replace) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = LINEBYLINE;
-                t->path = path;
-                t->replace = replace;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = LINEBYLINE;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
             }
 
             bool csv(std::string key, std::string path, bool replace) {
-                Amara::LoadTask* t  = new Amara::LoadTask();
-                t->type = CSVFILE;
-                t->path = path;
-                t->replace = replace;
+                Amara::LoadTask t = Amara::LoadTask();
+                t.type = CSVFILE;
+                t.path = path;
+                t.replace = replace;
                 pushTask(key, t);
                 return true;
             }

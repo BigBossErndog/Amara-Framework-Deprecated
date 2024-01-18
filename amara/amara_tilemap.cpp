@@ -66,7 +66,6 @@ namespace Amara {
 
             bool pleaseUpdate = true;
             bool textureLocked = false;
-            static bool textureLockDefault;
 
             Amara::Tile nullTile = Amara::Tile();
 
@@ -128,6 +127,10 @@ namespace Amara {
             void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
 
+                if (config.find("texture") != config.end()) {
+                    setTexture(config["texture"]);
+                }
+                
                 if (config.find("tiles") != config.end()) {
                     nlohmann::json& jtiles = config["tiles"];
                     for (int i = 0; i < jtiles.size(); i++) {
@@ -762,6 +765,11 @@ namespace Amara {
             }
 
             void destroy();
+
+            static bool textureLockDefault;
+            static void setTextureLockDefault(bool gLock) {
+                textureLockDefault = gLock;
+            }
     };
     bool TilemapLayer::textureLockDefault = false;
     
@@ -1166,6 +1174,7 @@ namespace Amara {
                 Amara::Actor::destroy();
             }
     };
+    
     
     void Amara::TilemapLayer::destroy() {
         if (tilemap != nullptr) {

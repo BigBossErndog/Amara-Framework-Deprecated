@@ -195,7 +195,7 @@ namespace Amara {
     #include "amara_textBox.cpp"
 
     #include "amara_sceneTransition.cpp"
-    #include "amara_transitions.cpp"
+    #include "amara_sceneTransitions.cpp"
 
     #include "amara_game.cpp"
 #endif

@@ -61,7 +61,7 @@ namespace Amara {
             UIBox() {}
 
             UIBox(Amara::StateManager* gsm) {
-                copyStateManager(gsm);
+                registerStateManager(gsm);
                 setVisible(false);
             }
 
@@ -529,10 +529,10 @@ namespace Amara {
                 return setOriginPosition(g, g);
             }
 
-            void copyStateManager(Amara::StateManager* gsm) {
+            void registerStateManager(Amara::StateManager* gsm) {
                 copySm = gsm;
             }
-            void copyStateManager(Amara::StateManager& gsm) {
+            void registerStateManager(Amara::StateManager& gsm) {
                 copySm = &gsm;
             }
 
@@ -737,7 +737,7 @@ namespace Amara {
 
 		void prepare() {
 			if (box == nullptr) box = (UIBox*)parent;
-			box->copyStateManager(this);
+			box->registerStateManager(this);
 		}
 
 		void script() {
@@ -745,7 +745,7 @@ namespace Amara {
 				finish();
 				return;
 			}
-			box->copyStateManager(this);
+			box->registerStateManager(this);
 			start();
 			box->open();
 			finishEvt();
@@ -768,7 +768,7 @@ namespace Amara {
 				finish();
 				return;
 			}
-			box->copyStateManager(this);
+			box->registerStateManager(this);
 			start();
 			box->close();
 			finishEvt();

@@ -12,8 +12,11 @@ namespace Amara {
 			std::unordered_map<std::string, std::string> pseudonyms;
 
 			bool stillLoading = false;
-			int loadSpeed = 64;
-			int numberOfTries = 8;
+			int loadSpeed = 32;
+			int numberOfTries = 4;
+			float progress = 1;
+			int failedTasks = 0;
+			int numberOfTasks = 0;
 
 			std::string currentBasePath = "";
 			std::string fixedPath = "";
@@ -224,6 +227,13 @@ namespace Amara {
 
 			virtual void addPseudonym(std::string pseudo, std::string key) {
 				pseudonyms[pseudo] = key;
+			}
+
+			virtual void clearAssets() {
+				for (auto it = assets.begin(); it != assets.end(); it++) {
+					delete it->second;
+				}
+				assets.clear();
 			}
 
 			void loadSurfacesFromJSON(nlohmann::json& config) {
@@ -505,7 +515,7 @@ namespace Amara {
 
 			virtual void reset() {}
 			virtual void run() {}
-			virtual int numTasks() {}
+			virtual int numberOfTasksLeft() {}
 
             /*
 			 * Slow image, but better pixel manipulation.

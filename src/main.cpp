@@ -21,6 +21,8 @@ class TestScene: public Scene, public StateManager {
         }
 
         void create() {
+			reset();
+			
 			controls->addKey("confirm", KEY_SPACE);
 
 			testText = assets->getJSON("testText");
@@ -30,13 +32,16 @@ class TestScene: public Scene, public StateManager {
 				{ "xFromCenter", -120 },
 				{ "yFromCenter", -34 }
 			});
-			box->copyStateManager(this);
+			box->registerStateManager(this);
 		}
 
         void update() {
 			start();
 			for (int i = 0; i < testText.size(); i++) {
 				box->say(testText[i]);
+			}
+			if (once()) {
+				startTransition(new FillTransition("test", 0.01, 0.01));
 			}
         }
 };
