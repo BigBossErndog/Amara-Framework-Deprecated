@@ -42,6 +42,50 @@ namespace Amara {
             }
     };
 
+    class Tween_X: public Tween {
+    public:
+        float startX = 0;
+        float targetX = 0;
+
+        Tween_X(float tx, double tt, Amara::Easing gEasing) {
+            targetX = tx;
+            time = tt;
+            easing = gEasing;
+        }
+        Tween_X(float tx, double tt): Tween_X(tx, tt, LINEAR) {}
+
+        void prepare(Amara::Actor* actor) {
+            startX = actor->x;
+        }
+
+        void script(Amara::Actor* actor) {
+            Amara::Tween::progressFurther();
+            actor->x = ease(startX, targetX, progress, easing);
+        }
+    };
+
+    class Tween_Y: public Tween {
+    public:
+        float startY = 0;
+        float targetY = 0;
+
+        Tween_Y(float ty, double tt, Amara::Easing gEasing) {
+            targetY = ty;
+            time = tt;
+            easing = gEasing;
+        }
+        Tween_Y(float ty, double tt): Tween_Y(ty, tt, LINEAR) {}
+
+        void prepare(Amara::Actor* actor) {
+            startY = actor->y;
+        }
+
+        void script(Amara::Actor* actor) {
+            Amara::Tween::progressFurther();
+            actor->y = ease(startY, targetY, progress, easing);
+        }
+    };
+
     class Tween_RelativeXY: public Tween {
         public:
             float startX = 0;
@@ -66,24 +110,8 @@ namespace Amara {
 
             void script(Amara::Actor* actor) {
                 Amara::Tween::progressFurther();
-                switch (easing) {
-                    case LINEAR:
-                        actor->x = linearEase(startX, targetX, progress);
-                        actor->y = linearEase(startY, targetY, progress);
-                        break;
-                    case SINE_INOUT:
-                        actor->x = sineInOutEase(startX, targetX, progress);
-                        actor->y = sineInOutEase(startY, targetY, progress);
-                        break;
-                    case SINE_IN:
-                        actor->x = sineInEase(startX, targetX, progress);
-                        actor->y = sineInEase(startY, targetY, progress);
-                        break;
-                    case SINE_OUT:
-                        actor->x = sineOutEase(startX, targetX, progress);
-                        actor->y = sineOutEase(startY, targetY, progress);
-                        break;
-                }
+                actor->x = ease(startX, targetX, progress, easing);
+                actor->y = ease(startY, targetY, progress, easing);
             }
     };
 
@@ -113,28 +141,9 @@ namespace Amara {
 
             void script(Amara::Actor* actor) {
                 Amara::Tween::progressFurther();
-                switch (easing) {
-                    case LINEAR:
-                        actor->x = linearEase(startX, targetX, progress);
-                        actor->y = linearEase(startY, targetY, progress);
-						actor->z = linearEase(startZ, targetZ, progress);
-                        break;
-                    case SINE_INOUT:
-                        actor->x = sineInOutEase(startX, targetX, progress);
-                        actor->y = sineInOutEase(startY, targetY, progress);
-						actor->z = sineInOutEase(startZ, targetZ, progress);
-                        break;
-                    case SINE_IN:
-                        actor->x = sineInEase(startX, targetX, progress);
-                        actor->y = sineInEase(startY, targetY, progress);
-						actor->z = sineInEase(startZ, targetZ, progress);
-                        break;
-                    case SINE_OUT:
-                        actor->x = sineOutEase(startX, targetX, progress);
-                        actor->y = sineOutEase(startY, targetY, progress);
-						actor->z = sineOutEase(startZ, targetZ, progress);
-                        break;
-                }
+                actor->x = ease(startX, targetX, progress, easing);
+                actor->y = ease(startY, targetY, progress, easing);
+                actor->z = ease(startZ, targetZ, progress, easing);
             }
     };
 
@@ -161,24 +170,8 @@ namespace Amara {
 
             void script(Amara::Actor* actor) {
                 Amara::Tween::progressFurther();
-                switch (easing) {
-                    case LINEAR:
-                        actor->scaleX = linearEase(startScaleX, targetScaleX, progress);
-                        actor->scaleY = linearEase(startScaleY, targetScaleY, progress);
-                        break;
-                    case SINE_INOUT:
-                        actor->scaleX = sineInOutEase(startScaleX, targetScaleX, progress);
-                        actor->scaleY = sineInOutEase(startScaleY, targetScaleY, progress);
-                        break;
-                    case SINE_IN:
-                        actor->scaleX = sineInEase(startScaleX, targetScaleX, progress);
-                        actor->scaleY = sineInEase(startScaleY, targetScaleY, progress);
-                        break;
-                    case SINE_OUT:
-                        actor->scaleX = sineOutEase(startScaleX, targetScaleX, progress);
-                        actor->scaleY = sineOutEase(startScaleY, targetScaleY, progress);
-                        break;
-                }
+                actor->scaleX = ease(startScaleX, targetScaleX, progress, easing);
+                actor->scaleY = ease(startScaleY, targetScaleY, progress, easing);
             }
     };
 	
@@ -274,26 +267,13 @@ namespace Amara {
 
             void script(Amara::Actor* actor) {
                 Amara::Tween::progressFurther();
+
                 float shakeAmountX;
                 float shakeAmountY;
-                switch (easing) {
-                    case LINEAR:
-                        shakeAmountX = linearEase(maxShakeX, targetX, progress);
-                        shakeAmountY = linearEase(maxShakeY, targetY, progress);
-                        break;
-                    case SINE_INOUT:
-                        shakeAmountX = sineInOutEase(maxShakeX, targetX, progress);
-                        shakeAmountY = sineInOutEase(maxShakeY, targetY, progress);
-                        break;
-                    case SINE_IN:
-                        shakeAmountX = sineInEase(maxShakeX, targetX, progress);
-                        shakeAmountY = sineInEase(maxShakeY, targetY, progress);
-                        break;
-                    case SINE_OUT:
-                        shakeAmountX = sineOutEase(maxShakeX, targetX, progress);
-                        shakeAmountY = sineOutEase(maxShakeY, targetY, progress);
-                        break;
-                }
+
+                shakeAmountX = ease(maxShakeX, targetX, progress, easing);
+                shakeAmountY = ease(maxShakeY, targetY, progress, easing);
+                
                 actor->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
                 actor->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
             }
@@ -334,26 +314,13 @@ namespace Amara {
 
             void script(Amara::Actor* actor) {
                 Amara::Tween::progressFurther();
+
                 float shakeAmountX;
                 float shakeAmountY;
-                switch (easing) {
-                    case LINEAR:
-                        shakeAmountX = linearEase(maxShakeX, 0, (1-progress));
-                        shakeAmountY = linearEase(maxShakeY, 0, (1-progress));
-                        break;
-                    case SINE_INOUT:
-                        shakeAmountX = sineInOutEase(maxShakeX, 0, (1-progress));
-                        shakeAmountY = sineInOutEase(maxShakeY, 0, (1-progress));
-                        break;
-                    case SINE_IN:
-                        shakeAmountX = sineInEase(maxShakeX, 0, (1-progress));
-                        shakeAmountY = sineInEase(maxShakeY, 0, (1-progress));
-                        break;
-                    case SINE_OUT:
-                        shakeAmountX = sineOutEase(maxShakeX, 0, (1-progress));
-                        shakeAmountY = sineOutEase(maxShakeY, 0, (1-progress));
-                        break;
-                }
+
+                shakeAmountX = ease(maxShakeX, 0, (1-progress), easing);
+                shakeAmountY = ease(maxShakeY, 0, (1-progress), easing);
+
                 actor->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
                 actor->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
             }
@@ -389,20 +356,7 @@ namespace Amara {
 
             void script(Amara::Actor* actor) {
                 Amara::Tween::progressFurther();
-                switch (easing) {
-                    case LINEAR:
-                        actor->alpha = linearEase(startAlpha, targetAlpha, progress);
-                        break;
-                    case SINE_INOUT:
-                        actor->alpha = sineInOutEase(startAlpha, targetAlpha, progress);
-                        break;
-                    case SINE_IN:
-                        actor->alpha = sineInEase(startAlpha, targetAlpha, progress);
-                        break;
-                    case SINE_OUT:
-                        actor->alpha = sineOutEase(startAlpha, targetAlpha, progress);
-                        break;
-                }
+                actor->alpha = ease(startAlpha, targetAlpha, progress, easing);
             }
 
             void finish() {
@@ -497,20 +451,7 @@ namespace Amara {
 
         void script(Amara::Actor* actor) {
             Amara::Tween::progressFurther();
-            switch (easing) {
-                case LINEAR:
-                    actor->depth = linearEase(startDepth, targetDepth, progress);
-                    break;
-                case SINE_INOUT:
-                    actor->depth = sineInOutEase(startDepth, targetDepth, progress);
-                    break;
-                case SINE_IN:
-                    actor->depth = sineInEase(startDepth, targetDepth, progress);
-                    break;
-                case SINE_OUT:
-                    actor->depth = sineOutEase(startDepth, targetDepth, progress);
-                    break;
-            }
+            actor->depth = ease(startDepth, targetDepth, progress, easing);
         }
 
         void finish() {
@@ -544,24 +485,8 @@ namespace Amara {
 
         void script(Amara::Actor* actor) {
             Amara::Tween::progressFurther();
-            switch (easing) {
-                case LINEAR:
-                    rect->width = linearEase(startW, targetW, progress);
-                    rect->height = linearEase(startH, targetH, progress);
-                    break;
-                case SINE_INOUT:
-                    rect->width = sineInOutEase(startW, targetW, progress);
-                    rect->height = sineInOutEase(startH, targetH, progress);
-                    break;
-                case SINE_IN:
-                    rect->width = sineInEase(startW, targetW, progress);
-                    rect->height = sineInEase(startH, targetH, progress);
-                    break;
-                case SINE_OUT:
-                    rect->width = sineOutEase(startW, targetW, progress);
-                    rect->height = sineOutEase(startH, targetH, progress);
-                    break;
-            }
+            rect->width = ease(startW, targetW, progress, easing);
+            rect->height = ease(startH, targetH, progress, easing);
         }
 
         void finish() {
@@ -592,32 +517,10 @@ namespace Amara {
 
         void script(Amara::Actor* actor) {
             Amara::Tween::progressFurther();
-            switch (easing) {
-                case LINEAR:
-                    affectColor->r = linearEase(startColor.r, endColor.r, progress);
-                    affectColor->g = linearEase(startColor.g, endColor.g, progress);
-                    affectColor->b = linearEase(startColor.b, endColor.b, progress);
-                    affectColor->a = linearEase(startColor.a, endColor.a, progress);
-                    break;
-                case SINE_INOUT:
-                    affectColor->r = sineInOutEase(startColor.r, endColor.r, progress);
-                    affectColor->g = sineInOutEase(startColor.g, endColor.g, progress);
-                    affectColor->b = sineInOutEase(startColor.b, endColor.b, progress);
-                    affectColor->a = sineInOutEase(startColor.a, endColor.a, progress);
-                    break;
-                case SINE_IN:
-                    affectColor->r = sineInEase(startColor.r, endColor.r, progress);
-                    affectColor->g = sineInEase(startColor.g, endColor.g, progress);
-                    affectColor->b = sineInEase(startColor.b, endColor.b, progress);
-                    affectColor->a = sineInEase(startColor.a, endColor.a, progress);
-                    break;
-                case SINE_OUT:
-                    affectColor->r = sineOutEase(startColor.r, endColor.r, progress);
-                    affectColor->g = sineOutEase(startColor.g, endColor.g, progress);
-                    affectColor->b = sineOutEase(startColor.b, endColor.b, progress);
-                    affectColor->a = sineOutEase(startColor.a, endColor.a, progress);
-                    break;
-            }
+            affectColor->r = ease(startColor.r, endColor.r, progress, easing);
+            affectColor->g = ease(startColor.g, endColor.g, progress, easing);
+            affectColor->b = ease(startColor.b, endColor.b, progress, easing);
+            affectColor->a = ease(startColor.a, endColor.a, progress, easing);
         }
 
         void finish() {

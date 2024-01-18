@@ -29,10 +29,17 @@ namespace Amara {
         return distanceBetween(s->x, s->y, e->x, e->y);
     }
 
-    float radiansToDegrees(float rads) {
-        return rads*180/M_PI;
+    /**
+     * Converts an angle in radians to degrees.
+    */
+    float toDegrees(float radians) {
+        return radians*180/M_PI;
     }
-    float degreesToRadians(float degrees) {
+
+    /**
+     * Converts an angle in degrees to radians.
+    */
+    float toRadians(float degrees) {
         return degrees*M_PI/180;
     }
 
@@ -50,7 +57,7 @@ namespace Amara {
         return angleBetween(p1->x, p1->y, p2->x, p2->y);
     }
     float degreesBetween(float p1x, float p1y, float p2x, float p2y) {
-        return radiansToDegrees(angleBetween(p1x, p1y, p2x, p2y));
+        return toDegrees(angleBetween(p1x, p1y, p2x, p2y));
     }
     float degreesBetween(FloatVector2* p1, FloatVector2* p2) {
         // Angle in Radians
@@ -386,7 +393,7 @@ namespace Amara {
 		if (dir.compare("downRight") == 0) return DownRight;
 		return NoDir;
 	}
-	std::string getStringFromDirection(Amara::Direction dir) {
+	std::string stringFromDirection(Amara::Direction dir) {
 		switch (dir) {
 			case Up:
 				return "up";

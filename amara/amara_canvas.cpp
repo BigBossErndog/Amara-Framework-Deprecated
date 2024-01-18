@@ -71,6 +71,9 @@ namespace Amara {
             void beginFill() {
                 beginFill(0, 0, 0);
             }
+            void beginFill(Amara::Color color) {
+                beginFill(color.r, color.g, color.b, color.a);
+            }
 
             void endFill() {
                 SDL_SetRenderDrawColor(properties->gRenderer, recColor.r, recColor.g, recColor.b, recColor.a);

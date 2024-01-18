@@ -289,5 +289,20 @@ namespace Amara {
         static bool isCJKCharacter(unsigned long c) {
             return isJapaneseCharacter(c) || isChineseCharacter(c) || isKoreanCharacter(c);
         }
+
+        static int stringContains(std::string s, std::string f) {
+            bool isSame;
+            for (int i = 0; i < s.size(); i++) {
+                isSame = true;
+                for (int j = 0; j < f.size(); j++) {
+                    if (i+j >= s.size() || s[i + j] != f[j]) {
+                        isSame = false;
+                        break;
+                    }
+                }
+                if (isSame) return i;
+            }
+            return -1;
+        }
     };
 }

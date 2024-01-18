@@ -635,7 +635,7 @@ namespace Amara {
 		}
 		
 		float setRadianAngle(float gAngle) {
-			angle = radiansToDegrees(gAngle);
+			angle = toDegrees(gAngle);
 			return angle;
 		}
 

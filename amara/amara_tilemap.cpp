@@ -64,6 +64,10 @@ namespace Amara {
 
             bool extruded = false;
 
+            bool pleaseUpdate = true;
+            bool textureLocked = false;
+            static bool textureLockDefault;
+
             Amara::Tile nullTile = Amara::Tile();
 
             std::unordered_map<int, Amara::TileAnimation> animations;
@@ -98,6 +102,8 @@ namespace Amara {
             }
 
             void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
+                textureLocked = textureLockDefault;
+
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
                 gRenderer = properties->gRenderer;
 
@@ -130,6 +136,9 @@ namespace Amara {
                 }
                 if (config.find("extruded") != config.end()) {
                     extruded = config["extruded"];
+                }
+                if (config.find("textureLocked") != config.end()) {
+                    setTextureLock(config["textureLocked"]);
                 }
             }
 
@@ -244,6 +253,11 @@ namespace Amara {
                     std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
                 }
                 return false;
+            }
+
+            void setTextureLock(bool gLock) {
+                textureLocked = gLock;
+                pleaseUpdate = true;
             }
 
             void reloadAssets() {
@@ -364,6 +378,7 @@ namespace Amara {
                     widthInPixels,
                     heightInPixels
                 );
+                pleaseUpdate = true;
             }
 
             void run() {
@@ -376,36 +391,18 @@ namespace Amara {
                 Amara::Actor::run();
             }
 
-            void draw(int vx, int vy, int vw, int vh) {
-                if (!isVisible) return;
-                if (alpha < 0) alpha = 0;
-                if (alpha > 1) alpha = 1;
-				
-				if (properties->renderTargetsReset || properties->renderDeviceReset) {
-					createDrawTexture();
-				}
-
+            void drawTiles(int vx, int vy, int vw, int vh) {
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
 
-                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
-                SDL_RenderSetViewport(gRenderer, NULL);
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
+
                 SDL_SetTextureBlendMode(texture->asset, SDL_BLENDMODE_BLEND);
 				SDL_SetTextureAlphaMod(texture->asset, 255);
                 SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
                 SDL_RenderClear(properties->gRenderer);
-
-                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
-                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
-
-                float px = 0;
-                float py = 0;
-                if (tilemapEntity) {
-                    px = tilemapEntity->x;
-                    py = tilemapEntity->y;
-                }
 
                 Amara::Camera* cam = properties->currentCamera;
                 Amara::Tile& startTile = getTileAtXY(properties->scrollX, properties->scrollY);
@@ -527,6 +524,173 @@ namespace Amara {
                         }
                     }
                 }
+            }
+
+            void drawAllTiles(int vx, int vy, int vw, int vh) {
+                int frame, maxFrame = 0;
+                float tileAngle = 0;
+                float tx, ty;
+
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
+
+                SDL_SetTextureBlendMode(texture->asset, SDL_BLENDMODE_BLEND);
+				SDL_SetTextureAlphaMod(texture->asset, 255);
+                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(properties->gRenderer);
+
+                Amara::Camera* cam = properties->currentCamera;
+                Amara::Tile& startTile = tiles[0];
+                Amara::Tile& endTile = tiles[tiles.size() - 1];
+                int startX = startTile.x;
+                int startY = startTile.y;
+                int endX = endTile.x;
+                int endY = endTile.y;
+
+                if (startX < 0) startX = 0;
+                if (startY < 0) startY = 0;
+                if (endX >= width) endX = width - 1;
+                if (endY >= height) endY = height - 1;
+
+                origin.x = 0;
+                origin.y = 0;
+                destRect.w = tileWidth;
+                destRect.h = tileHeight;
+                
+                for (int i = startX; i <= endX; i++) {
+                    for (int j = startY; j <= endY ; j++) {
+                        Amara::Tile& tile = getTileAt(i, j);
+                        frame = tile.id;
+
+                        if (frame == -1) {
+                            continue;
+                        }
+
+                        tileAngle = 0;
+                        flip = SDL_FLIP_NONE;
+                        if (tile.fhorizontal) {
+                            if (tile.fvertical) {
+                                if (tile.fdiagonal) {
+                                    tileAngle = 90;
+                                    flip = SDL_FLIP_VERTICAL;
+                                }
+                                else {
+                                    tileAngle = 180;
+                                }
+                            }
+                            else if (tile.fdiagonal) {
+                                tileAngle = 90;
+                            }
+                            else {
+                                flip = SDL_FLIP_HORIZONTAL;
+                            }
+                        }
+                        else if (tile.fvertical) {
+                            if (tile.fdiagonal) {
+                                tileAngle = -90;
+                            }
+                            else {
+                                flip = SDL_FLIP_VERTICAL;
+                            }
+                        }
+                        
+                        tx = tile.x * tileWidth;
+                        ty = tile.y * tileHeight;
+
+                        bool skipDrawing = false;
+                        
+                        destRect.x = tx;
+                        destRect.y = ty;
+
+                        if (destRect.x + destRect.w <= 0) skipDrawing = true;
+                        if (destRect.y + destRect.h <= 0) skipDrawing = true;
+                        if (destRect.w <= 0) skipDrawing = true;
+                        if (destRect.h <= 0) skipDrawing = true;
+
+                        if (!skipDrawing) {
+                            int hx = 0, hy = 0, hw = 0, hh = 0;
+                            hw = destRect.w;
+                            hh = destRect.h;
+
+                            if (destRect.x >= 0) {
+                                hx = destRect.x + vx;
+                            }
+                            else {
+                                hw -= -(destRect.x);
+                                hx = vx;
+                            }
+                            if (destRect.y >= 0) {
+                                hy = destRect.y + vy;
+                            }
+                            else {
+                                hh -= -(destRect.h);
+                                hy = vy;
+                            }
+                            if (hx + hw > vx + vw) hw = (vx - hx);
+                            if (hy + hh > vy + vh) hh = (vy - hy);
+                            
+                            auto got = animations.find(frame);
+                            if (got != animations.end()) {
+                                frame = got->second.currentTileId;
+                            }
+
+                            if (texture != nullptr) {
+                                SDL_Texture* tex = (SDL_Texture*)texture->asset;
+                                maxFrame = ((texture->width / tileWidth) * (texture->height / tileHeight));
+                                frame = frame % maxFrame;
+
+                                srcRect.x = (frame % (texture->width / tileWidth)) * tileHeight;
+                                srcRect.y = floor(frame / (texture->width / tileWidth)) * tileHeight;
+                                srcRect.w = tileWidth;
+                                srcRect.h = tileHeight;
+
+                                SDL_SetTextureAlphaMod(tex, properties->alpha * tile.alpha * 255);
+								
+                                SDL_RenderCopyEx(
+                                    gRenderer,
+                                    tex,
+                                    &srcRect,
+                                    &destRect,
+                                    angle + tileAngle,
+                                    &originN,
+                                    flip
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
+            void draw(int vx, int vy, int vw, int vh) {
+                if (!isVisible) return;
+                if (alpha < 0) alpha = 0;
+                if (alpha > 1) alpha = 1;
+				
+				if (properties->renderTargetsReset || properties->renderDeviceReset) {
+					createDrawTexture();
+				}
+
+                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
+                SDL_RenderSetViewport(gRenderer, NULL);
+                
+
+                if (!textureLocked || pleaseUpdate) {
+                    pleaseUpdate = false;
+
+                    if (textureLocked) drawAllTiles(vx, vy, vw, vh);
+                    else drawTiles(vx, vy, vw, vh);
+                }
+
+                float px = 0;
+                float py = 0;
+                if (tilemapEntity) {
+                    px = tilemapEntity->x;
+                    py = tilemapEntity->y;
+                }
+
+                float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
+                float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
                 SDL_SetRenderTarget(properties->gRenderer, recTarget);
                 viewport.x = vx;
@@ -599,6 +763,7 @@ namespace Amara {
 
             void destroy();
     };
+    bool TilemapLayer::textureLockDefault = false;
     
     class Tilemap: public Amara::Actor, public Amara::WallFinder {
         public:

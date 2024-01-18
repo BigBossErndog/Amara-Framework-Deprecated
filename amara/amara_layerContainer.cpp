@@ -201,6 +201,14 @@ namespace Amara {
             entityType = "textureLayer";
         }
 
+        virtual void configure(nlohmann::json config) {
+            Amara::Layer::configure(config);
+
+            if (config.find("textureLocked") != config.end()) {
+                setTextureLock(config["textureLocked"]);
+            }
+        }
+
         virtual void createTexture() {
             if (tx) {
                 SDL_DestroyTexture(tx);
@@ -215,6 +223,8 @@ namespace Amara {
             textureWidth = properties->currentCamera->width;
             textureHeight = properties->currentCamera->height;
             clearTexture();
+
+            pleaseUpdate = true;
         }
 
         void clearTexture() {
@@ -224,6 +234,11 @@ namespace Amara {
             SDL_RenderClear(properties->gRenderer);
 
             SDL_SetRenderTarget(properties->gRenderer, recTarget);
+        }
+
+        void setTextureLock(bool gLock) {
+            textureLocked = gLock;
+            pleaseUpdate = true;
         }
 
         void draw(int vx, int vy, int vw, int vh) {
@@ -441,6 +456,9 @@ namespace Amara {
 				originX = config["originPosition"];
 				setOriginPosition(originX, originX);
 			}
+            if (config.find("textureLocked") != config.end()) {
+                setTextureLock(config["textureLocked"]);
+            }
 		}
 
         virtual void createTexture() {
@@ -458,6 +476,8 @@ namespace Amara {
             textureHeight = height;
 
             clearTexture();
+
+            pleaseUpdate = true;
         }
 
         void clearTexture() {
@@ -467,6 +487,11 @@ namespace Amara {
             SDL_RenderClear(properties->gRenderer);
 
             SDL_SetRenderTarget(properties->gRenderer, recTarget);
+        }
+
+        void setTextureLock(bool gLock) {
+            textureLocked = gLock;
+            pleaseUpdate = true;
         }
 
         Amara::TextureContainer* setOrigin(float gx, float gy) {
@@ -540,34 +565,34 @@ namespace Amara {
             if (destRect.w <= 0) skipDrawing = true;
             if (destRect.h <= 0) skipDrawing = true;
 
-			properties->interactOffsetX += vx + destRect.x;
-			properties->interactOffsetY += vy + destRect.y;
-
-			properties->interactScaleX *= scaleX;
-			properties->interactScaleY *= scaleY;
-
-            recTarget = SDL_GetRenderTarget(properties->gRenderer);
-            SDL_SetRenderTarget(properties->gRenderer, tx);
-            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-            SDL_RenderClear(properties->gRenderer);
-
-			drawChildren();
-
-            SDL_SetRenderTarget(properties->gRenderer, recTarget);
-
-			properties->interactOffsetX -= vx + destRect.x;
-			properties->interactOffsetY -= vy + destRect.y;
-
-			properties->interactScaleX /= scaleX;
-			properties->interactScaleY /= scaleY;
-
             if (!skipDrawing && tx != nullptr) {
+                properties->interactOffsetX += vx + destRect.x;
+                properties->interactOffsetY += vy + destRect.y;
+
+                properties->interactScaleX *= scaleX;
+                properties->interactScaleY *= scaleY;
+
+                recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, tx);
+                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(properties->gRenderer);
+
+                drawChildren();
+
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
+
+                properties->interactOffsetX -= vx + destRect.x;
+                properties->interactOffsetY -= vy + destRect.y;
+
+                properties->interactScaleX /= scaleX;
+                properties->interactScaleY /= scaleY;
+
                 viewport.x = vx;
                 viewport.y = vy;
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(properties->gRenderer, &viewport);
-
+                
                 SDL_SetTextureBlendMode(tx, blendMode);
                 SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
 
