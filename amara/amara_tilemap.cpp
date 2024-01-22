@@ -771,7 +771,7 @@ namespace Amara {
                 textureLockDefault = gLock;
             }
     };
-    bool TilemapLayer::textureLockDefault = false;
+    bool TilemapLayer::textureLockDefault = true;
     
     class Tilemap: public Amara::Actor, public Amara::WallFinder {
         public:

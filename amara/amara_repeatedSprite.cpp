@@ -123,11 +123,7 @@ namespace Amara {
         }
 
         void drawTexture(int vx, int vy, int vw, int vh) {
-            if (!isVisible) return;
-            if (alpha <= 0) {
-                alpha = 0;
-                return;
-            }
+            if (alpha < 0) alpha = 0;
             if (texture == nullptr) return;
             if (recWidth != width || recHeight != height) {
                 createNewCanvasTexture();
@@ -149,7 +145,7 @@ namespace Amara {
             SDL_SetRenderTarget(properties->gRenderer, recTarget);
         
             bool skipDrawing = false;
-
+            
             if (alpha < 0) alpha = 0;
             if (alpha > 1) alpha = 1;  
 

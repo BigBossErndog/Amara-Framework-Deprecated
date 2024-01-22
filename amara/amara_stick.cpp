@@ -64,7 +64,15 @@ namespace Amara {
             }
 
 			void manage() {
+                xactive = false;
+                yactive = false;
+
 				Amara::Button::manage();
+                up->manage();
+                down->manage();
+                left->manage();
+                right->manage();
+                
 				angle = angleBetween(0, 0, xvalue, yvalue);
 			}
     };
