@@ -1,10 +1,7 @@
 namespace Amara {
     class Sprite: public Amara::Image, public Amara::Animated {
         public:
-            Sprite(float gx, float gy, std::string tx): Amara::Image(gx, gy, tx) {}
-            Sprite(float gx, float gy): Amara::Image(gx, gy) {}
-            Sprite(std::string tx): Amara::Image(tx) {}
-            Sprite(): Amara::Image() {};
+            using Amara::Image::Image;
 
             using Amara::Image::init;
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {

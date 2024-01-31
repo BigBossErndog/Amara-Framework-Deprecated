@@ -222,6 +222,12 @@ namespace Amara {
 			}
 		}
 
+		void configure(std::string key, nlohmann::json val) {
+			nlohmann::json config = nlohmann::json::object();
+			config[key] = val;
+			configure(config);
+		}
+
 		virtual nlohmann::json toData() {
 			nlohmann::json config;
 			config["id"] = id;

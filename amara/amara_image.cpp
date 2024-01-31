@@ -41,19 +41,25 @@ namespace Amara {
             Image(): Actor() {
                 textureKey.clear();
             }
-
             Image(float gx, float gy) {
                 x = gx;
                 y = gy;
             }
-
-            Image(std::string givenKey): Amara::Actor() {
-                textureKey = givenKey;
+            Image(std::string gKey): Amara::Actor() {
+                textureKey = gKey;
             }
-
-            Image(float gx, float gy, std::string givenKey): Image(givenKey) {
+            Image(float gx, float gy, std::string gKey): Image(gKey) {
                 x = gx;
                 y = gy;
+            }
+
+            Image(FloatVector2 v2): Image(v2.x, v2.y) {}
+            Image(FloatVector2 v2, std::string gKey): Image(v2.x, v2.y, gKey) {}
+            Image(FloatVector3 v3): Image(v3.x, v3.y) {
+                z = v3.z;
+            }
+            Image(FloatVector3 v3, std::string gKey): Image(v3.x, v3.y, gKey) {
+                z = v3.z;
             }
             
             using Amara::Actor::init;

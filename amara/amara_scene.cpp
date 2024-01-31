@@ -103,7 +103,7 @@ namespace Amara {
                     }
 
                     if (transition == nullptr || 
-                        (transition->startScene == this && transition->endScene != this) || 
+                        (transition->startScene == this && !transition->waitingForPermission && !transition->permissionGranted) || 
                         (transition->endScene == this && transition->permissionGranted)
                     ) {
                         if (!initialLoaded) {
