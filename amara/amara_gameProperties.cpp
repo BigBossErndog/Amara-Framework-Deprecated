@@ -72,7 +72,8 @@ namespace Amara {
 
             int fps = 60;
             int lps = fps;
-            int realFPS = fps;
+            double realFPS = fps;
+            double deltaTime = 1;
 
             Amara::Loader* loader = nullptr;
             Amara::AssetManager* assets = nullptr;

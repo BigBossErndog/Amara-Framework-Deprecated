@@ -19,7 +19,7 @@ namespace Amara {
 		}
 	};
 
-	class Entity : public Amara::SortedEntity, public Amara::Interactable, public Amara::Broadcaster, public Amara::FloatVector3 {
+	class Entity : public Amara::SortedEntity, public Amara::Interactable, public Amara::Broadcaster, public Amara::FloatVector3, public Amara::DataObject {
 	public:
 		Amara::Game*  game = nullptr;
 		Amara::Scene* scene = nullptr;
@@ -37,8 +37,6 @@ namespace Amara {
 		std::list<Amara::Entity*> children;
 
 		Amara::PhysicsBase* physics = nullptr;
-
-		nlohmann::json data = nullptr;
 
 		std::string id;
 		std::string entityType;
@@ -107,6 +105,7 @@ namespace Amara {
 
 		virtual void init() {}
 
+		using Amara::DataObject::configure;
 		virtual void configure(nlohmann::json config) {
 			if (config.find("id") != config.end()) {
 				id = config["id"];
@@ -222,12 +221,6 @@ namespace Amara {
 			}
 		}
 
-		void configure(std::string key, nlohmann::json val) {
-			nlohmann::json config = nlohmann::json::object();
-			config[key] = val;
-			configure(config);
-		}
-
 		virtual nlohmann::json toData() {
 			nlohmann::json config;
 			config["id"] = id;
@@ -254,24 +247,6 @@ namespace Amara {
 		Amara::Entity* setId(std::string newId) {
 			id = newId;
 			return this;
-		}
-
-		bool hasDataProperty(std::string gKey) {
-			if (data.find(gKey) != data.end()) {
-				return true;
-			} 
-			return false;
-		}
-
-		bool isDataProperty(std::string gKey) {
-			if (hasDataProperty(gKey) && data[gKey].is_boolean() && data[gKey]) {
-				return true;
-			}
-			return false;
-		}
-
-		void eraseDataProperty(std::string key) {
-			if (hasDataProperty(key)) data.erase(key);
 		}
 
 		Amara::Entity* sortChildren() {

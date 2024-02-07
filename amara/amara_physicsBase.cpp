@@ -108,6 +108,8 @@ namespace Amara {
 			
 			float correctionRate = 0.1;
 
+			bool useDeltaTime = true;
+
 			int bumpDirections = 0;
 			Amara::PhysicsBase* bumped = nullptr;
 

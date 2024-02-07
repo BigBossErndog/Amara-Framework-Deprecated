@@ -103,6 +103,8 @@ namespace Amara {
     #include "amara_taskManager.cpp"
     #include "amara_debugging.cpp"
 
+    #include "amara_dataObject.cpp"
+
     #include "amara_keyCodes.cpp"
     #include "amara_key.cpp"
     #include "amara_keyboard.cpp"

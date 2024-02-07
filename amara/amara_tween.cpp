@@ -4,6 +4,7 @@ namespace Amara {
             Amara::Easing easing;
             double progress = 0;
             double time = 0;
+            bool useDeltaTime = true;
 
             virtual void progressFurther() {
                 progress += 1/(time*properties->lps);

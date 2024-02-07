@@ -331,24 +331,26 @@ namespace Amara {
 
                 color.a = alpha * properties->alpha * 255;
 
+                int dx = floor(x), dy = floor(y);
+
                 if (outline) {
                     effect.color = outlineColor;
 					effect.color.a = outlineColor.a * pow(alpha, 1) * outlineAlpha;
                     for (int i = 0; i < outline+1; i++) {
-                        drawText(x+i,y, false);
-                        drawText(x-i,y, false);
+                        drawText(dx+i,dy, false);
+                        drawText(dx-i,dy, false);
                         for (int j = 0; j < outline+1; j++) {
                             if (outlineCorners || i != j || i != outline) {
-                                drawText(x+i,y+j, false);
-                                drawText(x-i,y-j, false);
-                                drawText(x+i,y-j, false);
-                                drawText(x-i,y+j, false);
+                                drawText(dx+i,dy+j, false);
+                                drawText(dx-i,dy-j, false);
+                                drawText(dx+i,dy-j, false);
+                                drawText(dx-i,dy+j, false);
                             }
                         }
                     }
                 }
                 effect.color = color;
-                drawText(x, y, true);
+                drawText(dx, dy, true);
 
                 Amara::Actor::draw(vx, vy, vw, vh);
             }

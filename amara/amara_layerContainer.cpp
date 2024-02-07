@@ -172,7 +172,7 @@ namespace Amara {
             setOriginPosition(g, g);
         }
     };
-
+    
     class TextureLayer: public Amara::Layer {
     public:
         SDL_Texture* tx = nullptr;
@@ -375,6 +375,11 @@ namespace Amara {
             properties->alpha = recAlpha;
         }
 
+        void drawOnce() {
+            textureLocked = true;
+            pleaseUpdate = true;
+        }
+
         using Amara::Layer::destroy;
         virtual void destroy(bool recursive) {
             if (tx) {
@@ -572,14 +577,18 @@ namespace Amara {
                 properties->interactScaleX *= scaleX;
                 properties->interactScaleY *= scaleY;
 
-                recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, tx);
-                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-                SDL_RenderClear(properties->gRenderer);
+                if (!textureLocked || pleaseUpdate) {
+                    pleaseUpdate = false;
 
-                drawChildren();
+                    recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                    SDL_SetRenderTarget(properties->gRenderer, tx);
+                    SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                    SDL_RenderClear(properties->gRenderer);
 
-                SDL_SetRenderTarget(properties->gRenderer, recTarget);
+                    drawChildren();
+
+                    SDL_SetRenderTarget(properties->gRenderer, recTarget);
+                }
 
                 properties->interactOffsetX -= vx + destRect.x;
                 properties->interactOffsetY -= vy + destRect.y;
@@ -619,15 +628,8 @@ namespace Amara {
         }
 
 		virtual void drawChildren() {
-			if (!textureLocked || pleaseUpdate) {
-                if (!tx) return;
-				pleaseUpdate = false;
-
-                drawEntities(0, 0, width, height);
-            }
-            else {
-                if (!tx) return;
-            }
+            if (!tx) return;
+            drawEntities(0, 0, width, height);
 		}
 
         void drawEntities(int vx, int vy, int vw, int vh) {
@@ -690,6 +692,11 @@ namespace Amara {
             properties->zoomFactorX = recZoomFactorX;
             properties->zoomFactorY = recZoomFactorY;
             properties->angle = recAngle;
+        }
+
+        void drawOnce() {
+            textureLocked = true;
+            pleaseUpdate = true;
         }
 
         using Amara::Layer::destroy;

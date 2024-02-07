@@ -1,12 +1,11 @@
 namespace Amara {
-	class Game {
+	class Game: public Amara::DataObject {
 		public:
 			SDL_version compiledVersion;
             SDL_version linkedVersion;
 
 			Amara::GameProperties properties;
 
-			nlohmann::json data;
 			RNG rng;
 
 			Amara::MessageQueue messages;
@@ -54,7 +53,8 @@ namespace Amara {
 			int fps = 60;
 			int tps = 1000 / fps;
 			int lps = fps;
-			int realFPS = fps;
+			double realFPS = fps;
+			double deltaTime = 1;
 			LTimer capTimer;
 			
 			int frameCounter = 0;
@@ -400,6 +400,7 @@ namespace Amara {
 				properties.fps = fps;
 				properties.lps = lps;
 				properties.realFPS = realFPS;
+				properties.deltaTime = deltaTime;
 
 				properties.backgroundColor = backgroundColor;
 			}
@@ -458,6 +459,7 @@ namespace Amara {
 					totalWait += (tps - frameTicks);
 				}
 				realFPS = fps / (frameTicks / 1000.f);
+				deltaTime = fps / realFPS;
 
 				// Delay if game has not caught up
 				if (totalWait > 0) {
