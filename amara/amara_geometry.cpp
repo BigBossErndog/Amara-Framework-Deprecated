@@ -17,6 +17,45 @@ namespace Amara {
         public: float z = 0;
     };
 
+    typedef struct IntRect: public IntVector2 {
+        int width = 0;
+        int height = 0;
+    } IntRect;
+
+    typedef struct FloatRect: public FloatVector2 {
+        float width = 0;
+        float height = 0;
+    } FloatRect;
+
+    typedef struct FloatCircle: public FloatVector2 {
+        float radius = 0;
+    } FloatCircle;
+    
+    typedef struct FloatLine {
+        FloatVector2 p1 = {0, 0};
+        FloatVector2 p2 = {0, 0};
+    } FloatLine;
+
+    IntVector2 floorVector(Amara::FloatVector2 v2) {
+        return { floor(v2.x), floor(v2.y) };
+    }
+    IntVector2 ceilVector(Amara::FloatVector2 v2) {
+        return { ceil(v2.x), ceil(v2.y) };
+    }
+    IntVector2 roundVector(Amara::FloatVector2 v2) {
+        return { round(v2.x), round(v2.y) };
+    }
+
+    IntRect floorRect(Amara::FloatRect rect) {
+        return { floor(rect.x), floor(rect.y), floor(rect.width), floor(rect.height) };
+    }
+    IntRect ceilRect(Amara::FloatRect rect) {
+        return { ceil(rect.x), ceil(rect.y), ceil(rect.width), ceil(rect.height) };
+    }
+    IntRect roundRect(Amara::FloatRect rect) {
+        return { round(rect.x), round(rect.y), round(rect.width), round(rect.height) };
+    }
+
     float distanceBetween(float sx, float sy, float ex, float ey) {
         float xDist = ex-sx;
         float yDist = ey-sy;
@@ -63,25 +102,6 @@ namespace Amara {
         // Angle in Radians
         return degreesBetween(p1->x, p1->y, p2->x, p2->y);
     }
-
-    typedef struct IntRect: public IntVector2 {
-        int width = 0;
-        int height = 0;
-    } IntRect;
-
-    typedef struct FloatRect: public FloatVector2 {
-        float width = 0;
-        float height = 0;
-    } FloatRect;
-
-    typedef struct FloatCircle: public FloatVector2 {
-        float radius = 0;
-    } FloatCircle;
-    
-    typedef struct FloatLine {
-        FloatVector2 p1 = {0, 0};
-        FloatVector2 p2 = {0, 0};
-    } FloatLine;
 
     std::vector<FloatVector2> getPointsAlongLine(FloatLine line, int divisions) {
         std::vector<FloatVector2> points;
@@ -131,6 +151,10 @@ namespace Amara {
             }
         }
         return points;
+    }
+
+    FloatVector2 vectorOfLine(FloatLine* line) {
+        return { line->p2.x - line->p1.x, line->p2.y - line->p2.y };
     }
 
     FloatVector2 positionAtAngle(float px, float py, float angle, float distance) {

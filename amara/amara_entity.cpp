@@ -350,11 +350,16 @@ namespace Amara {
 			x = gx; y = gy;
 			return this;
 		}
+		Amara::Entity* goToXY(FloatVector2 v) { return goToXY(v.x, v.y); }
+		Amara::Entity* goToXY(IntVector2 v) { return goToXY(v.x, v.y); }
+
 		Amara::Entity* goToXYZ(float gx, float gy, float gz) {
 			goToXY(gx, gy);
 			x = gz;
 			return this;
 		}
+		Amara::Entity* goToXY(FloatVector3 v) { return goToXYZ(v.x, v.y, v.z); }
+		Amara::Entity* goToXY(IntVector3 v) { return goToXYZ(v.x, v.y, v.z); }
 
 		Amara::Entity* pause(bool p) {
 			isPaused = p;
@@ -450,13 +455,13 @@ namespace Amara {
 			return nullptr;
 		}
 
+		/**
+		 * Do not use this within its own run loop or parent's run loop.
+		*/
 		virtual Amara::Entity* add(Amara::Entity* entity) {
 			if (entity == nullptr || entity->isDestroyed) return nullptr;
-			for (Amara::Entity* check: children) {
-				if (check == entity) {
-					entity->parent = this;
-					return entity;
-				}
+			if (entity->parent) {
+				return entity->setParent(this);
 			}
 			children.push_back(entity);
 			entity->init(properties, scene, this);
@@ -482,6 +487,17 @@ namespace Amara {
 				if (entity->parent == this) entity->parent = nullptr;
 			}
 			children.clear();
+			return this;
+		}
+
+		/**
+		 * Do not use this within its own run loop or parent's run loop.
+		*/
+		Amara::Entity* setParent(Entity* newParent) {
+			if (isDestroyed) return this;
+			if (parent && !parent->isDestroyed) parent->remove(this);
+			parent = newParent;
+			parent->children.push_back(this);
 			return this;
 		}
 
@@ -639,13 +655,7 @@ namespace Amara {
 			return this;
 		}
 
-		Amara::Entity* fixOnCamera() {
-			setScrollFactor(0);
-			setZoomFactor(0);
-			return this;
-		}
-
-		Amara::Entity* fixCameraPosition() {
+		Amara::Entity* fixToCamera() {
 			setScrollFactor(0);
 			setZoomFactor(0);
 			return this;

@@ -65,6 +65,7 @@ namespace Amara {
                 parent = parentActor;
                 parentEntity = (Amara::Entity*)parent;
                 initiated = true;
+                Amara::StateManager::init(gameProperties);
                 init(gameProperties);
             }
 

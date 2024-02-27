@@ -28,6 +28,9 @@ namespace Amara {
             int width = 0;
             int height = 0;
 
+            float renderOffsetX = 0;
+            float renderOffsetY = 0;
+
             bool wordWrap = false;
             Uint16 wordWrapWidth = 0;
 
@@ -281,8 +284,8 @@ namespace Amara {
                             offsetX = width;
                         }
 
-						float rx = floor((dx - properties->scrollX*scrollFactorX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
-						float ry = floor((dy-z - properties->scrollY*scrollFactorY + properties->offsetY - (height * originY)) * nzoomY);
+						float rx = floor((dx+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
+						float ry = floor((dy-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (height * originY)) * nzoomY);
                         
                         FC_DrawColumnEffect(
                             fontAsset->font,
@@ -304,8 +307,8 @@ namespace Amara {
                             offsetX = width;
                         }
 
-						float rx = floor((dx - properties->scrollX*scrollFactorX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
-						float ry = floor((dy-z - properties->scrollY*scrollFactorY + properties->offsetY - (height * originY)) * nzoomY);
+						float rx = floor((dx+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
+						float ry = floor((dy-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (height * originY)) * nzoomY);
 
                         FC_DrawEffect(
                             fontAsset->font,
@@ -326,7 +329,7 @@ namespace Amara {
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
-
+                
 				viewbox = { vx, vy, vw, vh };
 
                 color.a = alpha * properties->alpha * 255;

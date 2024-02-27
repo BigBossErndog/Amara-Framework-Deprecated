@@ -38,4 +38,12 @@ namespace Amara {
         SDL_GetRGBA(pixelData, gSurface->format, &rgba.r, &rgba.g, &rgba.b, &rgba.a);
         return rgba;
     }
+
+    bool json_has(nlohmann::json data, std::string key) {
+        return data.find(key) != data.end();
+    }
+
+    bool json_is(nlohmann::json data, std::string key) {
+        return json_has(data, key) && data[key].is_boolean() && data[key];
+    }
 }

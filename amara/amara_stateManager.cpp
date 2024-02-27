@@ -27,6 +27,8 @@ namespace Amara {
 
             std::string jumpFlag;
 
+            StateManager* stateCopy = nullptr;
+
             StateManager() {
                 reset();
             }
@@ -40,7 +42,18 @@ namespace Amara {
                 properties = gProperties;
             }
 
+            void copy(StateManager* other) {
+                stateCopy = other;
+            }
+            void copy(StateManager& other) {
+                copy(&other);
+            }
+
             void reset() {
+                if (stateCopy) {
+                    stateCopy->reset();
+                    return;
+                }
                 currentState.clear();
                 lastState.clear();
                 currentEvent = 1;
@@ -49,6 +62,8 @@ namespace Amara {
             }
 
             bool resetEvt() {
+                if (stateCopy) return stateCopy->resetEvt();
+
                 if (evt()) {
                     reset();
                     return true;
@@ -57,8 +72,14 @@ namespace Amara {
             }
 
             bool state(std::string key) {
+                if (stateCopy) return stateCopy->state(key);
+
                 if (currentState.empty()) {
                     currentState = key;
+
+                    if (properties && properties->testing && !killLog) {
+                        SDL_Log("STARTSTATE: %s", key.c_str());
+                    }
                 }
 
                 if (currentState.compare(key) == 0) {
@@ -70,6 +91,8 @@ namespace Amara {
             }
 
             bool inState(std::string key) {
+                if (stateCopy) return stateCopy->inState(key);
+
                 if (currentState.compare(key) == 0) {
                     return true;
                 }
@@ -77,6 +100,8 @@ namespace Amara {
             }
 
             bool start() {
+                if (stateCopy) return stateCopy->start();
+
                 if (currentState.empty()) {
                     eventLooker = 0;
                     return true;
@@ -85,6 +110,11 @@ namespace Amara {
             }
 
             void switchState(std::string key) {
+                if (stateCopy) {
+                    stateCopy->switchState(key);
+                    return;
+                }
+
                 if (!currentState.empty()) {
                     lastState = currentState;
                     Amara::StateRecord record = {currentState, data, currentEvent, jumpFlag};
@@ -101,6 +131,8 @@ namespace Amara {
             }
 
             bool switchStateEvt(std::string key) {
+                if (stateCopy) return stateCopy->switchStateEvt(key);
+
                 if (once()) {
                     switchState(key);
                     return true;
@@ -109,6 +141,11 @@ namespace Amara {
             }
 
             void returnState() {
+                if (stateCopy) {
+                    stateCopy->returnState();
+                    return;
+                }
+
                 if (stateRecords.empty()) {
                     reset();
                 }
@@ -129,6 +166,8 @@ namespace Amara {
             }
 
             bool returnStateEvt() {
+                if (stateCopy) return stateCopy->returnStateEvt();
+
                 if (evt()) {
                     returnState();
                     return true;
@@ -137,21 +176,30 @@ namespace Amara {
             }
 
             void restartState() {
+                if (stateCopy) {
+                    stateCopy->returnState();
+                    return;
+                }
+
                 currentEvent = 1;
+                if (properties && properties->testing && !killLog) {
+                    SDL_Log("RESTARTSTATE: %s", currentState.c_str());
+                }
             }
 
             bool restartStateEvt() {
+                if (stateCopy) return stateCopy->returnStateEvt();
+
                 if (evt()) {
                     restartState();
-                    if (properties && properties->testing && !killLog) {
-                        SDL_Log("RESTARTSTATE: %s", currentState.c_str());
-                    }
                     return true;
                 }
                 return false;
             }
 
             bool evt() {
+                if (stateCopy) return stateCopy->evt();
+
                 eventLooker += 1;
                 if (currentEvent == eventLooker) {
 
@@ -166,6 +214,8 @@ namespace Amara {
             }
 
             bool once() {
+                if (stateCopy) return stateCopy->once();
+
                 if (evt()) {
                     nextEvt();
                     return true;
@@ -174,11 +224,18 @@ namespace Amara {
             }
 
             void nextEvt() {
+                if (stateCopy) {
+                    stateCopy->nextEvt();
+                    return;
+                }
+
                 currentEvent += 1;
                 skipEvent = true;
             }
 
             bool nextEvtOn(bool cond) {
+                if (stateCopy) return stateCopy->nextEvtOn(cond);
+
                 if (cond) {
                     nextEvt();
                     return true;
@@ -187,6 +244,8 @@ namespace Amara {
             }
 
             bool wait(float time, bool skip) {
+                if (stateCopy) return stateCopy->wait(time, skip);
+
                 bool ret = false;
 
                 if (once()) {
@@ -219,6 +278,8 @@ namespace Amara {
 			}
 
             bool waitUntil(bool condition) {
+                if (stateCopy) return stateCopy->waitUntil(condition);
+
                 if (evt()) {
                     if (condition) nextEvt();
                     return true;
@@ -227,6 +288,8 @@ namespace Amara {
             }
 
             bool repeat(int num) {
+                if (stateCopy) return stateCopy->repeat(num);
+
                 bool ret = false;
                 for (int i = 0; i < num; i++) {
                     if (once()) {
@@ -237,6 +300,8 @@ namespace Amara {
             }
 
             bool bookmark(std::string flag) {
+                if (stateCopy) return stateCopy->bookmark(flag);
+
                 bool toReturn = false;
 
                 if (once()) {}
@@ -253,10 +318,17 @@ namespace Amara {
             }
 
             void jump(std::string flag) {
+                if (stateCopy) {
+                    stateCopy->jump(flag);
+                    return;
+                }
+
                 jumpFlag = flag;
             }
 
             bool jumpEvt(std::string flag) {
+                if (stateCopy) return stateCopy->jumpEvt(flag);
+
                 if (evt()) {
                     jump(flag);
                     return true;

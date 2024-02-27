@@ -12,7 +12,7 @@ namespace Amara {
         }
         
         virtual nlohmann::json toData() {
-            return nullptr;
+            return data;
         }
 
         bool hasDataProperty(std::string gKey) {

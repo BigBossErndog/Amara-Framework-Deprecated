@@ -61,6 +61,21 @@ namespace Amara {
 				return list;
 			}
 
+            std::vector<nlohmann::json> randomItems(nlohmann::json list, int numItems, bool useItemOnce) {
+                std::vector<nlohmann::json> newList;
+                int index;
+                for (int i = 0; i < numItems; i++) {
+                    if (list.size() == 0) break;
+                    index = floor(random() * list.size());
+                    newList.push_back(list[index]);
+                    if (useItemOnce) list.erase(list.begin() + index);
+                }
+                return newList;
+            }
+            std::vector<nlohmann::json> randomItems(nlohmann::json list, int numItems) {
+                return randomItems(list, numItems, true);
+            }
+
             template <typename T >int randomIndex(std::vector<T> list) {
                 return floor(random()*list.size());
             }
@@ -73,6 +88,12 @@ namespace Amara {
                 return {
                     rect.x + floor(random()*rect.width),
                     rect.y + floor(random()*rect.height)
+                };
+            }
+            FloatVector2 spotWithin(FloatRect rect) {
+                return {
+                    rect.x + random()*rect.width,
+                    rect.y + random()* rect.height
                 };
             }
 
