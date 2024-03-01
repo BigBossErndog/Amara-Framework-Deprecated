@@ -199,30 +199,45 @@ namespace Amara {
             std::string fText = "";
             std::string pText = "";
             float textWidth = 0;
-            unsigned long c, lastC = 0;
+            unsigned long c, lastC = 0, checkC;
             const char* end = input.c_str();
             const char* start = end;
             int seqlen = 0;
             bool otherCheck = true;
             bool lastCheck = true;
+            bool newLine = false;
 
             while (true) {
                 c = FC_ReadNextChar(end);
                 seqlen = FC_GetCharSequenceLength(end);
 
                 if (*end == '\0') break;
-
-                if (otherCheck = (c == ' ' || StringParser::isPunctuation(c))) {
+                newLine = false;
+                if (otherCheck = StringParser::isSentenceSpacer(c)) {
                     pText = fText;
                     for (const char* p = start; p < end+seqlen; ++p) pText += *p;
                     if (FC_GetWidth(font, pText.c_str()) > wrapWidth) {
-                        if (fText.size() > 0 && fText.back() != '\n') fText += '\n';
-                        while (*start == ' ') start++;
+                        if (fText.size() > 0 && fText.back() != '\n') {
+                            fText += '\n';
+                            newLine = true;
+                        }
                     }
                     for (const char* p = start; p < end+seqlen; ++p) fText += *p;
 
-                    start = end+seqlen;
+                    end += seqlen;
+                    
+                    if (newLine) {
+                        checkC = FC_ReadNextChar(end);
+                        seqlen = FC_GetCharSequenceLength(end);
+                        while (StringParser::isSentenceSpacer(checkC)) {
+                            end += seqlen;
+                            checkC = FC_ReadNextChar(end);
+                            seqlen = FC_GetCharSequenceLength(end);
+                        }
+                    }
+                    start = end;
                 }
+                else if (StringParser::isPunctuation(c)) end += seqlen;
                 else if (StringParser::isCJKCharacter(c) || (!lastCheck && !StringParser::isSameLanguage(c, lastC))) {
                     pText = fText;
                     for (const char* p = start; p < end; ++p) pText += *p;
@@ -233,11 +248,12 @@ namespace Amara {
                     for (const char* p = start; p < end; ++p) fText += *p;
                     
                     start = end;
+                    end += seqlen;
                 }
+                else end += seqlen;
+
                 lastCheck = otherCheck;
                 lastC = c;
-
-                end += seqlen;
             }
 
             if (start != end) {
@@ -248,6 +264,13 @@ namespace Amara {
             }
 
             return fText;
+        }
+
+        static bool isSentenceSpacer(unsigned long c) {
+            if (vector_contains<unsigned long>({
+                ' ', '\t'
+            }, c)) return true;
+            return false;
         }
         
         static bool isPunctuation(unsigned long c) {
