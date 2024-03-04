@@ -26,6 +26,7 @@ namespace Amara {
             int cropRight = 0;
 
             int frame = 0;
+            int maxFrame = 0;
 
             float originX = 0;
             float originY = 0;
@@ -243,9 +244,8 @@ namespace Amara {
                                 srcRect.h = imageHeight - cropTop - cropBottom;
                                 break;
                             case SPRITESHEET:
+                                setFrame(frame);
                                 Amara::Spritesheet* spr = (Amara::Spritesheet*)texture;
-                                int maxFrame = ((texture->width / spr->frameWidth) * (texture->height / spr->frameHeight));
-                                frame = frame % maxFrame;
 
                                 srcRect.x = (frame % (texture->width / spr->frameWidth)) * spr->frameWidth + cropLeft;
                                 srcRect.y = floor(frame / (texture->width / spr->frameWidth)) * spr->frameHeight + cropTop;
@@ -299,15 +299,20 @@ namespace Amara {
                     if (texture->type == SPRITESHEET) {
                         width = ((Amara::Spritesheet*)texture)->frameWidth;
                         height = ((Amara::Spritesheet*)texture)->frameHeight;
+                        Amara::Spritesheet* spr = (Amara::Spritesheet*)texture;
+                        maxFrame = ((texture->width / spr->frameWidth) * (texture->height / spr->frameHeight));
+                        setFrame(frame);
                     }
                     else {
                         width = texture->width;
                         height = texture->height;
+                        maxFrame = 0;
+                        frame = 0;
                     }
 
                     imageWidth = width;
                     imageHeight = height;
-
+                    
                     return true;
                 }
                 else {
@@ -329,6 +334,8 @@ namespace Amara {
                 imageWidth = texture->width;
                 imageWidth = texture->height;
                 textureKey = "temp";
+                maxFrame = 0;
+                frame = 0;
 
                 return true;
             }
@@ -342,6 +349,8 @@ namespace Amara {
                 imageWidth = texture->width;
                 imageWidth = texture->height;
                 textureKey = "temp";
+                maxFrame = 0;
+                frame = 0;
                 
                 return true;
             }
@@ -355,10 +364,15 @@ namespace Amara {
                 if (texture->type == SPRITESHEET) {
                     width = ((Amara::Spritesheet*)texture)->frameWidth;
                     height = ((Amara::Spritesheet*)texture)->frameHeight;
+                    Amara::Spritesheet* spr = (Amara::Spritesheet*)texture;
+                    maxFrame = ((texture->width / spr->frameWidth) * (texture->height / spr->frameHeight));
+                    setFrame(frame);
                 }
                 else {
                     width = texture->width;
                     height = texture->height;
+                    maxFrame = 0;
+                    frame = 0;
                 }
 
                 imageWidth = width;
@@ -373,7 +387,7 @@ namespace Amara {
                 texture = nullptr;
                 return this;
             }
-
+            
             Amara::Image* setOrigin(float gx, float gy) {
                 originX = gx;
                 originY = gy;
@@ -402,7 +416,8 @@ namespace Amara {
             }
 
             Amara::Image* setFrame(int fr) {
-                frame = fr;
+                if (maxFrame == 0) frame = 0;
+                else frame = fr % maxFrame;
                 return this;
             }
 
