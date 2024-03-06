@@ -193,7 +193,7 @@ namespace Amara {
                         }
                     }
                     else {
-                        std::cout << "JSON with key: \"" << tiledJsonKey << "\" was not found." << std::endl;
+                        SDL_Log("JSON with key: \"%s\" was not found.", tiledJsonKey.c_str());
                     }
                 }
             }
@@ -253,7 +253,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
+                    SDL_Log("Texture with key: \"%s\" was not found.", gTextureKey);
                 }
                 return false;
             }
@@ -904,7 +904,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
+                    SDL_Log("Texture with key: \"%s\" was not found.", gTextureKey.c_str());
                 }
                 return false;
             }

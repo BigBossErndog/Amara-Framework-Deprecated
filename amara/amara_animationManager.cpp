@@ -25,7 +25,7 @@ namespace Amara {
                 }
                 Amara::Animation* anim = ((Amara::Spritesheet*)texture)->getAnim(animKey);
                 if (anim == nullptr) {
-                    std::cout << "Spritesheet \"" << texture->key << "\" does not have the animation \"" << animKey << "\"." << std::endl;
+                    SDL_Log("Spritesheet \"%s\" does not have the animation \"%s\".", texture->key.c_str(), animKey.c_str());
                 }
                 if (anim != currentAnim || (anim != nullptr && isFinished)) {
 					if (currentAnim != nullptr && currentAnim->deleteOnFinish) properties->taskManager->queueDeletion(currentAnim);

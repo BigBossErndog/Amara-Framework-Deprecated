@@ -12,7 +12,7 @@ namespace Amara {
 		virtual Amara::AudioBase* play(int loops) {
 			channel = Mix_PlayChannel(-1, sound, loops);
 			if (channel == -1) {
-				std::cout << "Error playing sound: \"" << key << "\"" << std::endl;
+				SDL_Log("Error playing sound: \"%s\"", key.c_str());
 				return this;
 			}
 			Mix_Volume(channel, floor(volume * masterVolume * MIX_MAX_VOLUME));

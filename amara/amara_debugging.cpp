@@ -12,7 +12,7 @@ namespace Amara {
     }
 
     void error(std::string msg) {
-        std::cout << "Amara::Error: " << msg << std::endl;
+        SDL_Log("Amara::Error: ", msg.c_str());
         Amara::Error* e = nullptr;
         e->breakGame();
     }

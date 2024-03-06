@@ -316,7 +316,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    std::cout << "Texture with key: \"" << gTextureKey << "\" was not found." << std::endl;
+                    SDL_Log("Texture with key: \"%s\" was not found.", gTextureKey.c_str());
                 }
                 return false;
             }

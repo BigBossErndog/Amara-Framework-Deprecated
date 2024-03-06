@@ -68,7 +68,7 @@ namespace Amara {
             Amara::Animation* addAnim(std::string textureKey, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
                 Amara::Asset* asset = get(textureKey);
                 if (asset == nullptr) {
-                    std::cout << "Couldn't find texture \"" << textureKey << "\" for animation \"" << animKey << "\"" << std::endl;
+                    SDL_Log("Couldn't find texture \"%s\" for animation \"%s\".", textureKey.c_str(), animKey.c_str());
                     return nullptr;
                 }
                 if (asset->type == SPRITESHEET) {
@@ -262,7 +262,7 @@ namespace Amara {
                     configureAnimations(configAsset->getJSON());
                 }
                 else {
-                    std::cout << "JSON animations not found: \"" << key << "\"" << std::endl;
+                    SDL_Log("Animations JSON file/asset \"%s\" was not found.", key.c_str());
                 }
             }
 

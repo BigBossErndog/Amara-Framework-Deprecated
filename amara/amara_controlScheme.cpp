@@ -51,7 +51,7 @@ namespace Amara {
 
             Amara::Control* newControl(std::string key) {
                 if (get(key) != nullptr) {
-                    std::cout << "Control \"" << key << "\" already exists." << std::endl;
+                    SDL_Log("Control \"%s\" already exists.", key.c_str());
                     return get(key);
                 }
 
