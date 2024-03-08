@@ -456,7 +456,7 @@ namespace Amara {
 		}
 
 		/**
-		 * Do not use this within its own run loop or parent's run loop.
+		 * Do not use this within its own run loop.
 		*/
 		virtual Amara::Entity* add(Amara::Entity* entity) {
 			if (entity == nullptr || entity->isDestroyed) return nullptr;
@@ -479,7 +479,7 @@ namespace Amara {
 				}
 				++it;
 			}
-			return nullptr;
+			return this;
 		}
 
 		Amara::Entity* removeEntities() {

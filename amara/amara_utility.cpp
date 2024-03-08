@@ -46,4 +46,22 @@ namespace Amara {
         SDL_GetRGBA(pixelData, gSurface->format, &rgba.r, &rgba.g, &rgba.b, &rgba.a);
         return rgba;
     }
+
+    SDL_BlendMode AMARA_BLENDMODE_MASK = SDL_ComposeCustomBlendMode(
+        SDL_BLENDFACTOR_ZERO,
+        SDL_BLENDFACTOR_SRC_COLOR,
+        SDL_BLENDOPERATION_ADD,
+        SDL_BLENDFACTOR_ZERO,
+        SDL_BLENDFACTOR_SRC_ALPHA,
+        SDL_BLENDOPERATION_ADD
+    );
+
+    SDL_BlendMode AMARA_BLENDMODE_COLOR = SDL_ComposeCustomBlendMode(
+        SDL_BLENDFACTOR_ZERO,
+        SDL_BLENDFACTOR_DST_COLOR,
+        SDL_BLENDOPERATION_ADD,
+        SDL_BLENDFACTOR_ZERO,
+        SDL_BLENDFACTOR_SRC_ALPHA,
+        SDL_BLENDOPERATION_ADD
+    );
 }
