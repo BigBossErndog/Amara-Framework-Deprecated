@@ -629,4 +629,32 @@ namespace Amara {
             finish();
         }
     };
+
+    class Script_Animate: public Amara::Script {
+    public:
+        Amara::Sprite* sprite = nullptr;
+        std::string animKey;
+
+        Script_Animate(std::string gKey) {
+            animKey = gKey;
+        }
+        Script_Animate(Amara::Sprite* gSprite, std::string key): Script_Animate(key) {
+            sprite = gSprite;
+        }
+
+        void prepare() {
+            if (sprite == nullptr) sprite = (Amara::Sprite*)parent;
+            sprite->play(animKey);
+        }
+
+        void script() {
+            start();
+            if (evt()) {
+                if (!sprite->anims.isActive || (sprite->anims.currentAnim != nullptr && sprite->anims.currentAnim->loop)) {
+                    nextEvt();
+                }
+            }
+            finishEvt();
+        }
+    };
 }
