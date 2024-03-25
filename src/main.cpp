@@ -4,6 +4,7 @@ using namespace Amara;
 using namespace std;
 
 // This is all test code and may not be necessarily helpful as an example.
+// Shows a textbox with scrolling text. Demonstrating line breaking and UTF-16 parsing.
 
 class TestScene: public Scene, public StateManager {
     public:

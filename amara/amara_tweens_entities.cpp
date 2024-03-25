@@ -630,6 +630,28 @@ namespace Amara {
         }
     };
 
+    class Script_SetFrame: public Amara::Script {
+    public:
+        Amara::Image* image = nullptr;
+        int frame = 0;
+
+        Script_SetFrame(int gFrame) {
+            frame = gFrame;
+        }
+        Script_SetFrame(Amara::Image* gImage, int gFrame): Script_SetFrame(gFrame) {
+            image = gImage;
+        }
+
+        void prepare() {
+            if (image == nullptr) image = (Image*)parent;
+        }
+
+        void script() {
+            image->setFrame(frame);
+            finish();
+        }
+    };
+
     class Script_Animate: public Amara::Script {
     public:
         Amara::Sprite* sprite = nullptr;
