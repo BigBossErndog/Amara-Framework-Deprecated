@@ -23,7 +23,7 @@ namespace Amara {
 
 			bool initiated = false;
 
-            Amara::Script* chainedScript = nullptr;
+            std::vector<Amara::Script*> chainedScripts;
 
             Script(bool deleteWhenDone): Amara::StateManager() {
                 manualDeletion = deleteWhenDone;
@@ -31,16 +31,30 @@ namespace Amara {
 
             Script(): Script(true) {}
 
-            Amara::Script* chain(Amara::Script* gScript) {
-                if (chainedScript) chainedScript->chain(gScript);
-                else chainedScript = gScript;
-                return chainedScript;
+            Amara::Script* chain(Amara::Script* gScript, bool parallel) {
+                if (parallel || chainedScripts.size() == 0) chainedScripts.push_back(gScript);
+                else chainedScripts[0]->chain(gScript);
+                return gScript;
             }
 
-            Amara::Script* unchain() {
-                Amara::Script* recScript = chainedScript;
-                chainedScript = nullptr;
-                return recScript;
+            Amara::Script* chain(Amara::Script* gScript) {
+                return chain(gScript, false);
+            }
+
+            std::vector<Amara::Script*> unchain() {
+                std::vector<Amara::Script*> recScripts = chainedScripts;
+                chainedScripts.clear();
+                return recScripts;
+            }
+
+            void destroyChains() {
+                if (chainedScripts.size() > 0) {
+                    for (Amara::Script* chainedScript: chainedScripts) {
+                        chainedScript->properties = properties;
+                        chainedScript->deleteScript();
+                    }
+                    chainedScripts.clear();
+                }
             }
 
             virtual void init(Amara::GameProperties* gameProperties) {
@@ -92,19 +106,28 @@ namespace Amara {
 			virtual void cancel(Amara::Actor* actor) {}
 
             virtual void deleteScript() {
-                if (chainedScript && deleteChained) {
-                    chainedScript->properties = properties;
-                    chainedScript->deleteScript();
-                    chainedScript = nullptr;
+                if (deleteChained) {
+                    destroyChains();
                 }
                 if (!manualDeletion) properties->taskManager->queueDeletion(this);
             }
             
             virtual ~Script() {
-                if (deleteChained && chainedScript) {
-                    chainedScript->properties = properties;
-                    chainedScript->deleteScript();
-                }
+                if (deleteChained) destroyChains();
             }
     };
+
+    bool StateManager::waitOnScript(Amara::Script* script) {
+        if (evt()) {
+            if (script == nullptr) nextEvt();
+            else {
+                script->manualDeletion = true;
+                if (nextEvtOn(script->isFinished)) {
+                    delete script;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 }

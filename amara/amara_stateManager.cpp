@@ -1,4 +1,6 @@
 namespace Amara {
+    class Script;
+
     struct StateRecord {
         std::string name;
 		nlohmann::json data;
@@ -286,6 +288,8 @@ namespace Amara {
                 }
                 return false;
             }
+
+            bool waitOnScript(Amara::Script* script);
 
             bool repeat(int num) {
                 if (stateCopy) return stateCopy->repeat(num);
