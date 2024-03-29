@@ -1,9 +1,18 @@
 namespace Amara {
-    class FileWriter {
+    class FileManager {
     public:
-        FileWriter() {}
+        FileManager() {}
 
-        bool write(std::string input, std::string path) {
+		bool findFile(std::string path) {
+			std::ifstream in(path, std::ios::in | std::ios::binary);
+			if (in) {
+				in.close();
+				return true;	
+			}
+			return false;
+		}
+
+        bool writeFile(std::string input, std::string path) {
             std::ofstream file(path);
 			if (file.fail()) {
 				SDL_Log("Failed to write to path: %s", path.c_str());
@@ -17,5 +26,10 @@ namespace Amara {
 			}
 			return false;
         }
+
+		bool deleteFile(std::string path) {
+			if (std::remove(path.c_str()) == 0) return true;
+			else return false;
+		}
     };
 }

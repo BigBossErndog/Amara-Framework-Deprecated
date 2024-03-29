@@ -33,7 +33,7 @@ namespace Amara {
 
             Amara::Script* chain(Amara::Script* gScript, bool parallel) {
                 if (parallel || chainedScripts.size() == 0) chainedScripts.push_back(gScript);
-                else chainedScripts[0]->chain(gScript);
+                else chainedScripts.back()->chain(gScript);
                 return gScript;
             }
 

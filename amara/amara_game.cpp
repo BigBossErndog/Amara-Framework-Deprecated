@@ -47,7 +47,7 @@ namespace Amara {
 			Amara::EventManager events;
 			Amara::TaskManager taskManager;
 
-			Amara::FileWriter writer;
+			Amara::FileManager files;
 
 			bool vsync = false;
 			int fps = 60;
@@ -200,7 +200,7 @@ namespace Amara {
 
 				properties.messages = &messages;
 
-				writer = FileWriter();
+				files = FileManager();
 
 				data.clear();
 				rng.randomize();
