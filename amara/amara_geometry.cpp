@@ -103,6 +103,47 @@ namespace Amara {
         return degreesBetween(p1->x, p1->y, p2->x, p2->y);
     }
 
+    float angleDifference(float a1, float a2) {
+        // Angles in radians.
+        if (a1 < 0) a1 += 2*M_PI * (1 + abs(a1 / 2*M_PI));
+        a1 = fmod(a1, 2*M_PI);
+
+        if (a2 < 0) a2 += 2*M_PI * (1 + abs(a2 / 2*M_PI));
+        a2 = fmod(a2, 2*M_PI);
+
+        if (a2 < a1) {
+            float c = a1;
+            a2 = a1;
+            a1 = c;
+        }
+
+        float diff1 = a2 - a1;
+        float diff2 = a1 - (a2 - 2*M_PI);
+        return (diff1 < diff2) ? diff1 : diff2;
+    }
+
+    float nearestEquivalentAngle(float a1, float a2) {
+        // Angles in radians.
+        if (a2 < 0) a2 += 2*M_PI * (1 + abs(a2 / 2*M_PI));
+        a2 = fmod(a2, 2*M_PI) + a1/(2*M_PI);
+
+        float closest = a2, diff = abs(a1 - a2), na, d;
+        
+        na = a2 + 2*M_PI;
+        if ((d = abs(a1 - na)) < diff) {
+            closest = na;
+            diff = d;
+        }
+
+        na = a2 - 2*M_PI;
+        if ((d = abs(a1 - na)) < diff) {
+            closest = na;
+            diff = d;
+        }
+
+        return closest;
+    }
+
     std::vector<FloatVector2> getPointsAlongLine(FloatLine line, int divisions) {
         std::vector<FloatVector2> points;
         points.clear();
