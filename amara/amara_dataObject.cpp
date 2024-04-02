@@ -3,6 +3,12 @@ namespace Amara {
     public:
         nlohmann::json data = nullptr;
 
+        static DataObject createObject(nlohmann::json gData) {
+            DataObject obj;
+            obj.data = gData;
+            return obj;
+        }
+
         virtual void configure(nlohmann::json config) {}
 
         void configure(std::string key, nlohmann::json val) {

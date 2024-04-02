@@ -290,6 +290,9 @@ namespace Amara {
     public:
         std::vector<nlohmann::json> items;
         bool invalid = false;
+        
+        int itemCount = 0;
+        std::string originalLine;
 
         CSVLine() {}
         CSVLine(std::string line) {
@@ -304,12 +307,38 @@ namespace Amara {
             return line.at(index);
         }
 
+        bool acceptItem(std::string stringItem, bool throwItem) {
+            if (stringItem.size() == 0) {
+                if (!throwItem) items.push_back(stringItem);
+                return false;
+            }
+            if (stringItem.compare("TRUE") == 0) {
+                items.push_back(true);
+            }
+            else if (stringItem.compare("FALSE") == 0) {
+                items.push_back(false);
+            }
+            else if (nlohmann::json::accept(stringItem)) {
+                nlohmann::json obj = nlohmann::json::parse(stringItem);
+                if (obj.is_string()) items.push_back(stringItem);
+                else items.push_back(obj);
+            }
+            else {
+                items.push_back(stringItem);
+            }
+            itemCount = items.size();
+            return true;
+        }
+
         void setLine(std::string line) {
+            originalLine = line;
+
             char c;
             std::string stringItem = "";
             bool inString = false;
             bool escapeChar = false;
 
+            itemCount = 0;
             items.clear();
 
             for (int i = 0; i < line.size(); i++) {
@@ -333,40 +362,16 @@ namespace Amara {
                     }
                 }
                 else if (!inString && c == ',') {
-                    if (stringItem.size() > 0) {
-                        if (stringItem.compare("TRUE") == 0) {
-                            items.push_back(true);
-                        }
-                        else if (stringItem.compare("FALSE") == 0) {
-                            items.push_back(false);
-                        }
-                        if (nlohmann::json::accept(stringItem)) {
-                            nlohmann::json obj = nlohmann::json::parse(stringItem);
-                            if (obj.is_string()) items.push_back(stringItem);
-                            else items.push_back(obj);
-                        }
-                        else {
-                            items.push_back(stringItem);
-                        }
-                    }
-                    else {
-                        items.push_back(stringItem);
-                    }
+                    acceptItem(stringItem, false); 
                     stringItem = "";
                 }
                 else {
                     stringItem += c;
                 }
             }
-            if (stringItem.size() > 0) {
-                if (nlohmann::json::accept(stringItem)) {
-                    nlohmann::json obj = nlohmann::json::parse(stringItem);
-                    if (obj.is_string()) items.push_back(stringItem);
-                    else items.push_back(obj);
-                }
-                else {
-                    items.push_back(stringItem);
-                }
+            acceptItem(stringItem, false);
+            while (items.size() > itemCount) {
+                items.pop_back();
             }
         }
 

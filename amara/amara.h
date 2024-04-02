@@ -90,6 +90,7 @@ namespace Amara {
     #include "amara_ltimer.cpp"
     #include "amara_string.cpp"
     #include "amara_random.cpp"
+    #include "amara_dataObject.cpp"
 
     #include "amara_fdeclarations.cpp"
     
@@ -102,8 +103,6 @@ namespace Amara {
     #include "amara_stateManager.cpp"
     #include "amara_taskManager.cpp"
     #include "amara_debugging.cpp"
-
-    #include "amara_dataObject.cpp"
 
     #include "amara_keyCodes.cpp"
     #include "amara_key.cpp"
