@@ -1,10 +1,10 @@
 # Amara
-A C++ game framework built on top of SDL2. Revolves around Actors reciting Scripts, with a flow inspired by the Phaser.io JS framework.
+A cross platform C++ game framework built on top of SDL2. Revolves around Actors reciting Scripts, with a flow inspired by the Phaser.io JS framework.
 
 Being used to make the games for Project: Retched Garden.  
 https://twitter.com/RetchedGarden
 
-Currently being used to make Pry Into The Void:  
+Currently being used to make Pry Into The Void, coming to PC and consoles:  
 https://store.steampowered.com/app/1234990/Pry_Into_The_Void/
 
 ## State of the project
