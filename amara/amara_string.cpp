@@ -327,5 +327,41 @@ namespace Amara {
             }
             return -1;
         }
+
+        static std::string substr(std::string s, int startCharacter, int numCharacters) {
+            std::string n;
+            int count = 0;
+            const char* end = s.c_str();
+            const char* start = end;
+            unsigned long c = FC_ReadNextChar(end);
+            int seqlen = 0;
+
+            while (count < startCharacter) {
+                c = FC_ReadNextChar(end);
+                seqlen = FC_GetCharSequenceLength(end);
+                if (c == '\0') break;
+                end += seqlen;
+                count += 1;
+            }
+
+            if (c == '\0') return n;
+
+            count = 0;
+            start = end;
+            while (count < numCharacters) {
+                c = FC_ReadNextChar(end);
+                seqlen = FC_GetCharSequenceLength(end);
+                if (c == '\0') break;
+                end += seqlen;
+                count += 1;
+            }
+            for (const char* p = start; p < end; ++p) n += *p;
+
+            return n;
+        }
+
+        static std::string substr(std::string s, int numCharacters) {
+            return substr(s, 0, numCharacters);
+        }
     };
 }

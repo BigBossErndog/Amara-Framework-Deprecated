@@ -3,7 +3,7 @@ namespace Amara {
     public:
         FileManager() {}
 
-		bool findFile(std::string path) {
+		bool fileExists(std::string path) {
 			std::ifstream in(path, std::ios::in | std::ios::binary);
 			if (in) {
 				in.close();
