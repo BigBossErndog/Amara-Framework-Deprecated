@@ -55,6 +55,7 @@ int main(int argc, char** args) {
     #endif
     game.init(480, 360);
     game.setWindowSize(960, 720);
+	game.setWindowPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
     game.scenes.add("test", new TestScene());
     game.start("test");

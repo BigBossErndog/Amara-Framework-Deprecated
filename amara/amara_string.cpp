@@ -363,5 +363,23 @@ namespace Amara {
         static std::string substr(std::string s, int numCharacters) {
             return substr(s, 0, numCharacters);
         }
+
+        // Real number of characetrs per string with respect to Unicode 16 wide characters.
+        static int realSize(std::string s) {
+            int count = 0;
+            const char* end = s.c_str();
+            unsigned long c = 0;
+            int seqlen = 0;
+
+            while (true) {
+                c = FC_ReadNextChar(end);
+                seqlen = FC_GetCharSequenceLength(end);
+                if (c == '\0') break;
+                end += seqlen;
+                count += 1;
+            }
+
+            return count;
+        }
     };
 }

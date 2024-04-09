@@ -12,7 +12,6 @@ namespace Amara {
 
 			std::string name;
 			bool quit = false;
-			bool dragged = false;
 
 			SDL_Window* gWindow = NULL;
 			SDL_Renderer* gRenderer = NULL;
@@ -20,6 +19,7 @@ namespace Amara {
 			int width = 0;
 			int height = 0;
 
+			int displayIndex = 0;
 			Amara::IntRect display;
 			Amara::IntRect resolution;
 			Amara::IntRect window;
@@ -27,6 +27,7 @@ namespace Amara {
 			bool lagging = false;
 			int lagCounter = 0;
 
+			bool windowMoved = false;
 			bool windowFocused = false;
 			bool isFullscreen = false;
 
@@ -173,8 +174,11 @@ namespace Amara {
 
 				// Setting game logical size
 				SDL_RenderSetLogicalSize(gRenderer, width, height);
-
-				display = Amara::IntRect{ 0, 0, dm.w, dm.h };
+				
+				displayIndex = SDL_GetWindowDisplayIndex(gWindow);
+				SDL_Rect displayRect;
+				SDL_GetDisplayBounds(displayIndex, &displayRect);
+				display = Amara::IntRect{ displayRect.x, displayRect.y, displayRect.w, displayRect.h };
 				properties.display = &display;
 
 				resolution = Amara::IntRect{ 0, 0, width, height };
@@ -183,8 +187,8 @@ namespace Amara {
 				window = Amara::IntRect{ 0, 0, width, height };
 				properties.window = &window;
 
+				// Update window position.
 				SDL_GetWindowPosition(gWindow, &window.x, &window.y);
-				// SDL_Log("Game Info: Display width: %d, Display height: %d\n", dm.w, dm.h);
 
 				load = Amara::Loader(&properties);
 				properties.loader = &load;
@@ -342,6 +346,23 @@ namespace Amara {
 				}
 			}
 
+			void setWindowRelativePosition(int newx, int newy) {
+				int displayIndex = SDL_GetWindowDisplayIndex(gWindow);
+				SDL_Rect rect;
+				SDL_GetDisplayBounds(displayIndex, &rect);
+				setWindowPosition(rect.x + newx, rect.y + newy);
+			}
+
+			void centerWindowPosition() {
+				int displayIndex = SDL_GetWindowDisplayIndex(gWindow);
+				SDL_Rect rect;
+				SDL_GetDisplayBounds(displayIndex, &rect);
+				setWindowPosition(
+					rect.x + rect.w/2.0 - window.width/2.0, 
+					rect.y + rect.h/2.0 - window.height/2.0
+				);
+			}
+
 			void setResolution(int neww, int newh) {
 				if (gRenderer != NULL) {
 					SDL_RenderSetLogicalSize(gRenderer, neww, newh);
@@ -395,7 +416,7 @@ namespace Amara {
 				properties.renderDeviceReset = renderDeviceReset;
 
 				properties.lagging = lagging;
-				properties.dragged = dragged;
+				properties.windowMoved = windowMoved;
 
 				properties.fps = fps;
 				properties.lps = lps;
@@ -474,6 +495,8 @@ namespace Amara {
 				input.gamepads.manage();
 				input.touches.manage();
 
+				windowMoved = false;
+
 				// manageControllers();
 
 				while (SDL_PollEvent(&e) != 0) {
@@ -550,8 +573,15 @@ namespace Amara {
 						input.mouse.isActivated = true;
 					}
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_MOVED)) {
-						dragged = true;
-						properties.dragged = true;
+						windowMoved = true;
+						properties.windowMoved = true;
+						window.x = e.window.data1;
+						window.y = e.window.data2;
+
+						displayIndex = SDL_GetWindowDisplayIndex(gWindow);
+						SDL_Rect displayRect;
+						SDL_GetDisplayBounds(displayIndex, &displayRect);
+						display = Amara::IntRect{ displayRect.x, displayRect.y, displayRect.w, displayRect.h };
 					}
 					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_LEAVE)) {
 						windowFocused = false;

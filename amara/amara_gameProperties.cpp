@@ -63,7 +63,7 @@ namespace Amara {
             Amara::FloatVector2* scale = nullptr;
 
             bool lagging = false;
-            bool dragged = false;
+            bool windowMoved = false;
             bool windowFocused = false;
 			bool isFullscreen = false;
 
