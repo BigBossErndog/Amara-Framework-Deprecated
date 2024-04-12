@@ -21,7 +21,11 @@ namespace Amara {
             bool manualDeletion = false;
             bool deleteChained = true;
 
+            bool repeatable = false;
+
 			bool initiated = false;
+
+            nlohmann::json endConfig = nullptr;
 
             std::vector<Amara::Script*> chainedScripts;
 
@@ -41,6 +45,11 @@ namespace Amara {
                 return chain(gScript, false);
             }
 
+            Amara::Script* parallel(Amara::Script* gScript) {
+                chain(gScript, true);
+                return this;
+            }
+
             std::vector<Amara::Script*> unchain() {
                 std::vector<Amara::Script*> recScripts = chainedScripts;
                 chainedScripts.clear();
@@ -55,6 +64,18 @@ namespace Amara {
                     }
                     chainedScripts.clear();
                 }
+            }
+
+            Amara::Script* thenConfigure(nlohmann::json config) {
+                if (endConfig.is_null()) endConfig = nlohmann::json::object();
+                endConfig.update(config);
+                return this;
+            }
+
+            Amara::Script* thenConfigure(std::string key, nlohmann::json val) {
+                nlohmann::json config = nlohmann::json::object();
+                config[key] = val;
+                return thenConfigure(config);
             }
 
             virtual void init(Amara::GameProperties* gameProperties) {
@@ -97,13 +118,8 @@ namespace Amara {
             }
 
             virtual void prepare() {}
-            virtual void prepare(Amara::Actor* actor) {}
-
             virtual void script() {}
-            virtual void script(Amara::Actor* actor) {}
-
 			virtual void cancel() {}
-			virtual void cancel(Amara::Actor* actor) {}
 
             virtual void deleteScript() {
                 if (deleteChained) {

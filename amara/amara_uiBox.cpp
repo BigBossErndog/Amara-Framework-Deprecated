@@ -357,10 +357,6 @@ namespace Amara {
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
 
-                int hx, hy, hw, hh = 0;
-                hw = destRect.w;
-                hh = destRect.h;
-
                 if (destRect.x + destRect.w <= 0) skipDrawing = true;
                 if (destRect.y + destRect.h <= 0) skipDrawing = true;
                 if (destRect.x >= vw) skipDrawing = true;
@@ -369,23 +365,6 @@ namespace Amara {
                 if (destRect.h <= 0) skipDrawing = true;
 
                 if (!skipDrawing) {
-                    if (destRect.x >= 0) {
-                        hx = destRect.x + vx;
-                    }
-                    else {
-                        hw -= -(destRect.x);
-                        hx = vx;
-                    }
-                    if (destRect.y >= 0) {
-                        hy = destRect.y + vy;
-                    }
-                    else {
-                        hh -= -(destRect.y);
-                        hy = vy;
-                    }
-                    if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
-                    if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
-
                     if (canvas != nullptr) {
                         SDL_SetTextureBlendMode(canvas, blendMode);
 				        SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);

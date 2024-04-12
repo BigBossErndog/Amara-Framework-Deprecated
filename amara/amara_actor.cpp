@@ -58,7 +58,6 @@ namespace Amara {
             }
             script->init(properties, this);
             script->prepare();
-            script->prepare(this);
             return script;
         }
 
@@ -83,7 +82,6 @@ namespace Amara {
                     script->receiveMessages();
                     script->updateMessages();
                     if (!isDestroyed && !script->isFinished) script->script();
-                    if (!isDestroyed && !script->isFinished) script->script(this);
                     if (isDestroyed) break;
                 }
                 if (isDestroyed) {
@@ -100,6 +98,7 @@ namespace Amara {
             for (auto it = scripts.begin(); it != scripts.end();) {
                 script = *it;
                 if (script->isFinished) {
+                    if (!script->endConfig.is_null()) configure(script->endConfig);
                     if (script->chainedScripts.size() > 0) {
                         if (!isDestroyed) {
                             for (Amara::Script* chainedScript: script->chainedScripts) chained.push_back(chainedScript);
@@ -267,7 +266,6 @@ namespace Amara {
         Amara::Actor* cancelScripts() {
             for (Amara::Script* script: scripts) {
                 script->cancel();
-                script->cancel(this);
                 if (!script->manualDeletion) {
                     properties->taskManager->queueDeletion(script);
                 }
@@ -275,7 +273,6 @@ namespace Amara {
             scripts.clear();
             for (Amara::Script* script: scriptBuffer) {
                 script->cancel();
-                script->cancel(this);
                 if (!script->manualDeletion) {
                     properties->taskManager->queueDeletion(script);
                 }

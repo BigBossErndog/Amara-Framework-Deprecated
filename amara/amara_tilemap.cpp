@@ -476,27 +476,6 @@ namespace Amara {
                         if (destRect.h <= 0) skipDrawing = true;
 
                         if (!skipDrawing) {
-                            int hx = 0, hy = 0, hw = 0, hh = 0;
-                            hw = destRect.w;
-                            hh = destRect.h;
-
-                            if (destRect.x >= 0) {
-                                hx = destRect.x + vx;
-                            }
-                            else {
-                                hw -= -(destRect.x);
-                                hx = vx;
-                            }
-                            if (destRect.y >= 0) {
-                                hy = destRect.y + vy;
-                            }
-                            else {
-                                hh -= -(destRect.h);
-                                hy = vy;
-                            }
-                            if (hx + hw > vx + vw) hw = (vx - hx);
-                            if (hy + hh > vy + vh) hh = (vy - hy);
-                            
                             auto got = animations.find(frame);
                             if (got != animations.end()) {
                                 frame = got->second.currentTileId;
@@ -611,27 +590,6 @@ namespace Amara {
                         if (destRect.h <= 0) skipDrawing = true;
 
                         if (!skipDrawing) {
-                            int hx = 0, hy = 0, hw = 0, hh = 0;
-                            hw = destRect.w;
-                            hh = destRect.h;
-
-                            if (destRect.x >= 0) {
-                                hx = destRect.x + vx;
-                            }
-                            else {
-                                hw -= -(destRect.x);
-                                hx = vx;
-                            }
-                            if (destRect.y >= 0) {
-                                hy = destRect.y + vy;
-                            }
-                            else {
-                                hh -= -(destRect.h);
-                                hy = vy;
-                            }
-                            if (hx + hw > vx + vw) hw = (vx - hx);
-                            if (hy + hh > vy + vh) hh = (vy - hy);
-                            
                             auto got = animations.find(frame);
                             if (got != animations.end()) {
                                 frame = got->second.currentTileId;

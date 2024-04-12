@@ -24,8 +24,8 @@ namespace Amara {
             Tween_ScrollCamera(float tx, float ty, float tt): Tween_ScrollCamera(tx, ty, tt, LINEAR) {}
             Tween_ScrollCamera(float tx, float ty): Tween_ScrollCamera(tx, ty, 1) {}
 
-            void prepare(Amara::Actor* gCam) {
-                cam = (Amara::Camera*)gCam;
+            void prepare() {
+                cam = (Amara::Camera*)parent;
 				cam->stopFollow();
 
                 if (center) {
@@ -124,8 +124,8 @@ namespace Amara {
             }
             Tween_CameraZoom(float gTarget, double tt): Tween_CameraZoom(gTarget, tt, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                cam = (Amara::Camera*)actor;
+            void prepare() {
+                cam = (Amara::Camera*)parent;
                 zStartX = cam->zoomX;
                 zStartY = cam->zoomY;
             }
@@ -189,8 +189,8 @@ namespace Amara {
 		Tween_ShakeCamera(float tx, float ty, float tt): Tween_ShakeCamera(tx, ty, tt, LINEAR) {}
 		Tween_ShakeCamera(float tx, float ty): Tween_ShakeCamera(tx, ty, 1) {}
 
-		void prepare(Amara::Actor* actor) {
-			cam = (Amara::Camera*)actor;
+		void prepare() {
+			cam = (Amara::Camera*)parent;
 
 			if (shakeEndX == -1) shakeEndX = shakeStartX;
 			if (shakeEndY == -1) shakeEndY = shakeStartY;
@@ -247,8 +247,8 @@ namespace Amara {
             easing = gEase;
         }
 
-        void prepare(Amara::Actor* actor) {
-            if (cam == nullptr) cam = (Amara::Camera*)actor;
+        void prepare() {
+            if (cam == nullptr) cam = (Amara::Camera*)parent;
 
             startRect = { cam->x, cam->y, cam->width, cam->height };
         }

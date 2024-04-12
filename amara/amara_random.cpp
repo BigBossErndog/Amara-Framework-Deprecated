@@ -1,6 +1,7 @@
 namespace Amara {
     class RNG {
         public:
+            std::string lastSeed;
             std::random_device rd;
             std::default_random_engine e;
 
@@ -20,6 +21,7 @@ namespace Amara {
                 uint32_t sn; 
                 MurmurHash3_x86_32(s.c_str(), s.size(), st, &sn);
 				seed(sn);
+                lastSeed = s;
 				return this;
             }
 

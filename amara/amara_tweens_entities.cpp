@@ -14,29 +14,29 @@ namespace Amara {
             }
             Tween_XY(float tx, float ty, double tt): Tween_XY(tx, ty, tt, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                startX = actor->x;
-                startY = actor->y;
+            void prepare() {
+                startX = parent->x;
+                startY = parent->y;
             }
 
-            void script(Amara::Actor* actor) {
+            void script() {
                 Amara::Tween::progressFurther();
                 switch (easing) {
                     case LINEAR:
-                        actor->x = linearEase(startX, targetX, progress);
-                        actor->y = linearEase(startY, targetY, progress);
+                        parent->x = linearEase(startX, targetX, progress);
+                        parent->y = linearEase(startY, targetY, progress);
                         break;
                     case SINE_INOUT:
-                        actor->x = sineInOutEase(startX, targetX, progress);
-                        actor->y = sineInOutEase(startY, targetY, progress);
+                        parent->x = sineInOutEase(startX, targetX, progress);
+                        parent->y = sineInOutEase(startY, targetY, progress);
                         break;
                     case SINE_IN:
-                        actor->x = sineInEase(startX, targetX, progress);
-                        actor->y = sineInEase(startY, targetY, progress);
+                        parent->x = sineInEase(startX, targetX, progress);
+                        parent->y = sineInEase(startY, targetY, progress);
                         break;
                     case SINE_OUT:
-                        actor->x = sineOutEase(startX, targetX, progress);
-                        actor->y = sineOutEase(startY, targetY, progress);
+                        parent->x = sineOutEase(startX, targetX, progress);
+                        parent->y = sineOutEase(startY, targetY, progress);
                         break;
                 }
             }
@@ -54,13 +54,13 @@ namespace Amara {
         }
         Tween_X(float tx, double tt): Tween_X(tx, tt, LINEAR) {}
 
-        void prepare(Amara::Actor* actor) {
-            startX = actor->x;
+        void prepare() {
+            startX = parent->x;
         }
 
-        void script(Amara::Actor* actor) {
+        void script() {
             Amara::Tween::progressFurther();
-            actor->x = ease(startX, targetX, progress, easing);
+            parent->x = ease(startX, targetX, progress, easing);
         }
     };
 
@@ -76,13 +76,13 @@ namespace Amara {
         }
         Tween_Y(float ty, double tt): Tween_Y(ty, tt, LINEAR) {}
 
-        void prepare(Amara::Actor* actor) {
-            startY = actor->y;
+        void prepare() {
+            startY = parent->y;
         }
 
-        void script(Amara::Actor* actor) {
+        void script() {
             Amara::Tween::progressFurther();
-            actor->y = ease(startY, targetY, progress, easing);
+            parent->y = ease(startY, targetY, progress, easing);
         }
     };
 
@@ -101,17 +101,17 @@ namespace Amara {
             }
             Tween_RelativeXY(float tx, float ty, double tt): Tween_RelativeXY(tx, ty, tt, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                startX = actor->x;
-                startY = actor->y;
-                targetX += actor->x;
-                targetY += actor->y;
+            void prepare() {
+                startX = parent->x;
+                startY = parent->y;
+                targetX += parent->x;
+                targetY += parent->y;
             }
 
-            void script(Amara::Actor* actor) {
+            void script() {
                 Amara::Tween::progressFurther();
-                actor->x = ease(startX, targetX, progress, easing);
-                actor->y = ease(startY, targetY, progress, easing);
+                parent->x = ease(startX, targetX, progress, easing);
+                parent->y = ease(startY, targetY, progress, easing);
             }
     };
 
@@ -133,17 +133,17 @@ namespace Amara {
             }
             Tween_XYZ(float tx, float ty, float tz, double tt): Tween_XYZ(tx, ty, tz, tt, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                startX = actor->x;
-                startY = actor->y;
-				startZ = actor->z;
+            void prepare() {
+                startX = parent->x;
+                startY = parent->y;
+				startZ = parent->z;
             }
 
-            void script(Amara::Actor* actor) {
+            void script() {
                 Amara::Tween::progressFurther();
-                actor->x = ease(startX, targetX, progress, easing);
-                actor->y = ease(startY, targetY, progress, easing);
-                actor->z = ease(startZ, targetZ, progress, easing);
+                parent->x = ease(startX, targetX, progress, easing);
+                parent->y = ease(startY, targetY, progress, easing);
+                parent->z = ease(startZ, targetZ, progress, easing);
             }
     };
 
@@ -163,15 +163,15 @@ namespace Amara {
 			Tween_ScaleXY(float ts, double tt, Amara::Easing gEasing): Tween_ScaleXY(ts, ts, tt, gEasing) {}
             Tween_ScaleXY(float ts, double tt): Tween_ScaleXY(ts, tt, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                startScaleX = actor->scaleX;
-                startScaleY = actor->scaleY;
+            void prepare() {
+                startScaleX = parent->scaleX;
+                startScaleY = parent->scaleY;
             }
 
-            void script(Amara::Actor* actor) {
+            void script() {
                 Amara::Tween::progressFurther();
-                actor->scaleX = ease(startScaleX, targetScaleX, progress, easing);
-                actor->scaleY = ease(startScaleY, targetScaleY, progress, easing);
+                parent->scaleX = ease(startScaleX, targetScaleX, progress, easing);
+                parent->scaleY = ease(startScaleY, targetScaleY, progress, easing);
             }
     };
 	
@@ -235,8 +235,6 @@ namespace Amara {
 			float targetX;
 			float targetY;
 
-            Actor* ent;
-
 			Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float gTargetX, float gTargetY, float tt, Amara::Easing gEasing) {
 				maxShakeX = gMaxShakeX;
                 maxShakeY = gMaxShakeY;
@@ -250,10 +248,9 @@ namespace Amara {
             Tween_ShakeXY(float gMaxShake, float tt): Tween_ShakeXY(gMaxShake, tt, LINEAR) {}
 			Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float gTargetX, float gTargetY, float tt): Tween_ShakeXY(gMaxShakeX, gMaxShakeY, gTargetX, gTargetY, tt, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                startX = actor->x;
-                startY = actor->y;
-                ent = actor;
+            void prepare() {
+                startX = parent->x;
+                startY = parent->y;
 
 				if (targetX == -1) targetX = maxShakeX;
 				if (targetY == -1) targetY = maxShakeY;
@@ -261,11 +258,11 @@ namespace Amara {
 
             void finish() {
                 Tween::finish();
-                ent->x = startX;
-                ent->y = startY;
+                parent->x = startX;
+                parent->y = startY;
             }
 
-            void script(Amara::Actor* actor) {
+            void script() {
                 Amara::Tween::progressFurther();
 
                 float shakeAmountX;
@@ -274,13 +271,13 @@ namespace Amara {
                 shakeAmountX = ease(maxShakeX, targetX, progress, easing);
                 shakeAmountY = ease(maxShakeY, targetY, progress, easing);
                 
-                actor->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
-                actor->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
+                parent->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
+                parent->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
             }
 
-			void cancel(Amara::Actor* actor) {
-				actor->x = startX;
-				actor->y = startY;
+			void cancel() {
+				parent->x = startX;
+				parent->y = startY;
 			}
     };
 
@@ -291,8 +288,6 @@ namespace Amara {
             float maxShakeX;
             float maxShakeY;
 
-            Actor* ent;
-
             Tween_ReverseShakeXY(float gMaxShakeX, float gMaxShakeY, float tt, Amara::Easing gEasing) {
                 maxShakeX = gMaxShakeX;
                 maxShakeY = gMaxShakeY;
@@ -302,17 +297,16 @@ namespace Amara {
             Tween_ReverseShakeXY(float gMaxShake, float tt, Amara::Easing gEasing): Tween_ReverseShakeXY(gMaxShake, gMaxShake, tt, gEasing) {}
             Tween_ReverseShakeXY(float gMaxShake, float tt): Tween_ReverseShakeXY(gMaxShake, tt, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                startX = actor->x;
-                startY = actor->y;
-                ent = actor;
+            void prepare() {
+                startX = parent->x;
+                startY = parent->y;
             }
 
             void finish() {
                 Tween::finish();
             }
 
-            void script(Amara::Actor* actor) {
+            void script() {
                 Amara::Tween::progressFurther();
 
                 float shakeAmountX;
@@ -321,13 +315,13 @@ namespace Amara {
                 shakeAmountX = ease(maxShakeX, 0, (1-progress), easing);
                 shakeAmountY = ease(maxShakeY, 0, (1-progress), easing);
 
-                actor->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
-                actor->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
+                parent->x = startX + properties->rng->random()*shakeAmountX - shakeAmountX/2.0;
+                parent->y = startY + properties->rng->random()*shakeAmountY - shakeAmountY/2.0;
             }
 
-			void cancel(Amara::Actor* actor) {
-				actor->x = startX;
-				actor->y = startY;
+			void cancel() {
+				parent->x = startX;
+				parent->y = startY;
 			}
     };
 
@@ -350,13 +344,13 @@ namespace Amara {
             }
             Tween_Alpha(float gStart, float gTarget, float gTime): Tween_Alpha(gStart, gTarget, gTime, LINEAR) {}
 
-            void prepare(Amara::Actor* actor) {
-                if (startAlpha == -1) startAlpha = actor->alpha;
+            void prepare() {
+                if (startAlpha == -1) startAlpha = parent->alpha;
             }
 
-            void script(Amara::Actor* actor) {
+            void script() {
                 Amara::Tween::progressFurther();
-                actor->alpha = ease(startAlpha, targetAlpha, progress, easing);
+                parent->alpha = ease(startAlpha, targetAlpha, progress, easing);
             }
 
             void finish() {
@@ -382,17 +376,17 @@ namespace Amara {
             time = gt;
         }
 
-        void prepare(Actor* actor) {
-            startX = actor->x;
-            startY = actor->y;
-            startZ = actor->z;
+        void prepare() {
+            startX = parent->x;
+            startY = parent->y;
+            startZ = parent->z;
         }
 
-        void script(Actor* actor) {
+        void script() {
             Tween::progressFurther();
-            actor->x = linearEase(startX, targetX, progress);
-            actor->y = linearEase(startY, targetY, progress);
-            actor->z = circularEase(startZ, maxZ, progress);
+            parent->x = linearEase(startX, targetX, progress);
+            parent->y = linearEase(startY, targetY, progress);
+            parent->z = circularEase(startZ, maxZ, progress);
         }
     };
 
@@ -436,11 +430,11 @@ namespace Amara {
         Tween_Depth(float gTime): Tween_Depth(-1, gTime) {}
         Tween_Depth(): Tween_Depth(0) {}
 
-        void prepare(Amara::Actor* actor) {
-            startDepth = actor->depth;
+        void prepare() {
+            startDepth = parent->depth;
             if (targetDepth = -1) {
                 Amara::Entity* entity;
-                for (auto it = actor->children.begin(); it != actor->children.end();) {
+                for (auto it = parent->children.begin(); it != parent->children.end();) {
                     entity = *it;
                     if (entity->depth > targetDepth) {
                         targetDepth = entity->depth + 0.1;
@@ -449,9 +443,9 @@ namespace Amara {
             }
         }
 
-        void script(Amara::Actor* actor) {
+        void script() {
             Amara::Tween::progressFurther();
-            actor->depth = ease(startDepth, targetDepth, progress, easing);
+            parent->depth = ease(startDepth, targetDepth, progress, easing);
         }
 
         void finish() {
@@ -483,7 +477,7 @@ namespace Amara {
             startH = rect->height;
         }
 
-        void script(Amara::Actor* actor) {
+        void script() {
             Amara::Tween::progressFurther();
             rect->width = ease(startW, targetW, progress, easing);
             rect->height = ease(startH, targetH, progress, easing);
@@ -515,7 +509,7 @@ namespace Amara {
         Tween_Color(FillRect* rect, SDL_Color gEnd, float tt, Amara::Easing gEasing): Tween_Color(rect->color,gEnd, tt, gEasing) {}
         Tween_Color(FillRect* rect, SDL_Color gEnd, float tt): Tween_Color(rect, gEnd, tt, LINEAR) {}
 
-        void script(Amara::Actor* actor) {
+        void script() {
             Amara::Tween::progressFurther();
             affectColor->r = ease(startColor.r, endColor.r, progress, easing);
             affectColor->g = ease(startColor.g, endColor.g, progress, easing);

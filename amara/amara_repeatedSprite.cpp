@@ -15,7 +15,7 @@ namespace Amara {
 
         bool pixelLocked = false;
 
-        SDL_FRect destRectF;
+        SDL_Rect destRectInt;
         SDL_Texture* canvas = nullptr;
 
         using Amara::Sprite::Sprite;
@@ -105,17 +105,17 @@ namespace Amara {
                         srcRect.h = spr->frameHeight - cropTop - cropBottom;
                         break;
                 }
-                destRect.w = srcRect.w;
-                destRect.h = srcRect.h;
+                destRectInt.w = srcRect.w;
+                destRectInt.h = srcRect.h;
                 for (int i = 0; i < pw; i++) {
                     for (int j = 0; j < ph; j++) {
-                        destRect.x = ix + i*Amara::Sprite::width + cropLeft;
-                        destRect.y = iy + j*Amara::Sprite::height + cropTop;
-                        SDL_RenderCopyF(
+                        destRectInt.x = ix + i*Amara::Sprite::width + cropLeft;
+                        destRectInt.y = iy + j*Amara::Sprite::height + cropTop;
+                        SDL_RenderCopy(
                             gRenderer,
                             (SDL_Texture*)(texture->asset),
                             &srcRect,
-                            &destRect
+                            &destRectInt
                         );
                     }
                 }
@@ -132,92 +132,72 @@ namespace Amara {
                 createNewCanvasTexture();
             }
 
-            SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-            SDL_SetRenderTarget(properties->gRenderer, canvas);
-            SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
-            SDL_SetTextureAlphaMod(canvas, 255);
-            SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-            SDL_RenderClear(gRenderer);
-            SDL_RenderSetViewport(properties->gRenderer, NULL);
-            
-            drawPattern();
-
-            SDL_SetRenderTarget(properties->gRenderer, recTarget);
-        
             bool skipDrawing = false;
             
-            if (alpha < 0) alpha = 0;
-            if (alpha > 1) alpha = 1;  
+            if (alpha < 0) {
+                alpha = 0;
+                return;
+            }
+            if (alpha > 1) alpha = 1;
 
             viewport.x = vx;
             viewport.y = vy;
             viewport.w = vw;
             viewport.h = vh;
-            SDL_RenderSetViewport(properties->gRenderer, &viewport);
 
             float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
             float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
-            destRectF.x = ((x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-            destRectF.y = ((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
-            destRectF.w = ((width * scaleX) * nzoomX);
-            destRectF.h = ((height * scaleY) * nzoomY);
+            destRect.x = ((x*scaleX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+            destRect.y = ((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+            destRect.w = ((width * scaleX) * nzoomX);
+            destRect.h = ((height * scaleY) * nzoomY);
 
             if (pixelLocked) {
-                destRectF.x = floor(destRectF.x);
-                destRectF.y = floor(destRectF.y);
-                destRectF.w = ceil(destRectF.w);
-                destRectF.h = ceil(destRectF.h);
+                destRect.x = floor(destRect.x);
+                destRect.y = floor(destRect.y);
+                destRect.w = ceil(destRect.w);
+                destRect.h = ceil(destRect.h);
             }
 
-            origin.x = destRectF.w * originX;
-            origin.y = destRectF.h * originY;
+            origin.x = destRect.w * originX;
+            origin.y = destRect.h * originY;
 
-            int hx, hy, hw, hh = 0;
-            hw = destRectF.w;
-            hh = destRectF.h;
+            if (destRect.x + destRect.w <= 0) skipDrawing = true;
+            if (destRect.y + destRect.h <= 0) skipDrawing = true;
+            if (destRect.x >= vw) skipDrawing = true;
+            if (destRect.y >= vh) skipDrawing = true;
+            if (destRect.w <= 0) skipDrawing = true;
+            if (destRect.h <= 0) skipDrawing = true;
 
-            if (destRectF.x + destRectF.w <= 0) skipDrawing = true;
-            if (destRectF.y + destRectF.h <= 0) skipDrawing = true;
-            if (destRectF.x >= vw) skipDrawing = true;
-            if (destRectF.y >= vh) skipDrawing = true;
-            if (destRectF.w <= 0) skipDrawing = true;
-            if (destRectF.h <= 0) skipDrawing = true;
+            if (!skipDrawing && canvas != nullptr) {
+                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, canvas);
+                SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_NONE);
+                SDL_SetTextureAlphaMod(canvas, 255);
+                SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(gRenderer);
+                SDL_RenderSetViewport(properties->gRenderer, NULL);
+                
+                drawPattern();
 
-            if (!skipDrawing) {
-                if (destRectF.x >= 0) {
-                    hx = destRectF.x + vx;
-                }
-                else {
-                    hw -= -(destRectF.x);
-                    hx = vx;
-                }
-                if (destRectF.y >= 0) {
-                    hy = destRectF.y + vy;
-                }
-                else {
-                    hh -= -(destRectF.y);
-                    hy = vy;
-                }
-                if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
-                if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
+                SDL_RenderSetViewport(properties->gRenderer, &viewport);
 
-                if (canvas != nullptr) {
-                    SDL_SetTextureBlendMode(canvas, blendMode);
-                    SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);
+                SDL_SetTextureBlendMode(canvas, blendMode);
+                SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);
 
-                    SDL_RenderCopyExF(
-                        properties->gRenderer,
-                        canvas,
-                        NULL,
-                        &destRectF,
-                        angle + properties->angle,
-                        &origin,
-                        SDL_FLIP_NONE
-                    );
+                SDL_RenderCopyExF(
+                    properties->gRenderer,
+                    canvas,
+                    NULL,
+                    &destRect,
+                    angle + properties->angle,
+                    &origin,
+                    SDL_FLIP_NONE
+                );
 
-                    checkHover(vx, vy, vw, vh, destRectF.x, destRectF.y, destRectF.w, destRectF.h);
-                }
+                checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
             }
         }
 

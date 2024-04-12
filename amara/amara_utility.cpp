@@ -10,7 +10,7 @@ namespace Amara {
     }
 
     bool json_has(nlohmann::json data, std::string key) {
-        return data.find(key) != data.end();
+        return (data.find(key) != data.end()) ? true : false;
     }
 
     bool json_is(nlohmann::json data, std::string key) {

@@ -146,27 +146,6 @@ namespace Amara {
 			if (destRect.h <= 0) skipDrawing = true;
 
 			if (!skipDrawing) {
-				int hx, hy, hw, hh = 0;
-				hw = destRect.w;
-				hh = destRect.h;
-
-				if (destRect.x >= 0) {
-					hx = destRect.x + vx;
-				}
-				else {
-					hw -= -(destRect.x);
-					hx = vx;
-				}
-				if (destRect.y >= 0) {
-					hy = destRect.y + vy;
-				}
-				else {
-					hh -= -(destRect.y);
-					hy = vy;
-				}
-				if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
-				if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
-				
 				int newAlpha = (float)color.a * alpha * properties->alpha;
 
 				checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);

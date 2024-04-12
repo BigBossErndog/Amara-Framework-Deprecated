@@ -210,28 +210,7 @@ namespace Amara {
                 if (destRect.h <= 0) skipDrawing = true;
 				
                 if (!skipDrawing) {
-                    int hx, hy, hw, hh = 0;
-                    hw = destRect.w;
-                    hh = destRect.h;
-
                     onCamera = true;
-
-                    if (destRect.x >= 0) {
-                        hx = destRect.x + vx;
-                    }
-                    else {
-                        hw -= -(destRect.x);
-                        hx = vx;
-                    }
-                    if (destRect.y >= 0) {
-                        hy = destRect.y + vy;
-                    }
-                    else {
-                        hh -= -(destRect.y);
-                        hy = vy;
-                    }
-                    if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
-                    if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
 
                     if (texture != nullptr) {
                         SDL_Texture* tx = (SDL_Texture*)texture->asset;

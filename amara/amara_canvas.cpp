@@ -248,30 +248,9 @@ namespace Amara {
                     destRect.w = ceil(destRect.w);
                     destRect.h = ceil(destRect.h);
                 }
-
+                
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
-
-                int hx, hy, hw, hh = 0;
-                hw = destRect.w;
-                hh = destRect.h;
-
-                if (destRect.x >= 0) {
-                    hx = destRect.x + vx;
-                }
-                else {
-                    hw -= -(destRect.x);
-                    hx = vx;
-                }
-                if (destRect.y >= 0) {
-                    hy = destRect.y + vy;
-                }
-                else {
-                    hh -= -(destRect.y);
-                    hy = vy;
-                }
-                if (hx + hw > vx + vw) hw = ((vx + vw) - hx);
-                if (hy + hh > vy + vh) hh = ((vy + vh) - hy);
 				
                 if (destRect.x + destRect.w <= 0) skipDrawing = true;
                 if (destRect.y + destRect.h <= 0) skipDrawing = true;
