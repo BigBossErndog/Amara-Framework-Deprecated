@@ -395,6 +395,10 @@ namespace Amara {
             }
 
             void drawTiles(int vx, int vy, int vw, int vh) {
+                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
+                SDL_RenderSetViewport(gRenderer, NULL);
+
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
@@ -506,9 +510,15 @@ namespace Amara {
                         }
                     }
                 }
+
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
             }
 
             void drawAllTiles(int vx, int vy, int vw, int vh) {
+                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
+                SDL_RenderSetViewport(gRenderer, NULL);
+
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
@@ -620,6 +630,8 @@ namespace Amara {
                         }
                     }
                 }
+
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
             }
 
             void draw(int vx, int vy, int vw, int vh) {
@@ -630,11 +642,6 @@ namespace Amara {
 				if (properties->renderTargetsReset || properties->renderDeviceReset) {
 					createDrawTexture();
 				}
-
-                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
-                SDL_RenderSetViewport(gRenderer, NULL);
-                
 
                 if (!textureLocked || pleaseUpdate) {
                     pleaseUpdate = false;
@@ -653,7 +660,6 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
-                SDL_SetRenderTarget(properties->gRenderer, recTarget);
                 viewport.x = vx;
                 viewport.y = vy;
                 viewport.w = vw;
