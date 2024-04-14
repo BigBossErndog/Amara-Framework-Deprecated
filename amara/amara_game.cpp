@@ -49,8 +49,7 @@ namespace Amara {
 			Amara::TaskManager taskManager;
 
 			Amara::FileManager files;
-
-			bool vsync = false;
+			
 			int fps = 60;
 			int tps = 1000 / fps;
 			int lps = fps;
@@ -135,7 +134,7 @@ namespace Amara {
 					SDL_Log("Started on Hardware Accelerated Rendering.");
 				}
 				else {
-					gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_TARGETTEXTURE);
+					gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_SOFTWARE | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
 					SDL_Log("Started on Software Rendering.");
 				}
 				if (gRenderer == NULL) {

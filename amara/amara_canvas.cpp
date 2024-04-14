@@ -21,8 +21,6 @@ namespace Amara {
             SDL_FPoint origin;
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
-            bool pixelLocked = false;
-
             float originX = 0;
             float originY = 0;
 
@@ -241,13 +239,6 @@ namespace Amara {
                 destRect.y = ((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
                 destRect.w = ((imageWidth * scaleX) * properties->zoomX);
                 destRect.h = ((imageHeight * scaleY) * properties->zoomY);
-
-                if (pixelLocked) {
-                    destRect.x = floor(destRect.x);
-                    destRect.y = floor(destRect.y);
-                    destRect.w = ceil(destRect.w);
-                    destRect.h = ceil(destRect.h);
-                }
                 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;

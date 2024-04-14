@@ -9,8 +9,6 @@ namespace Amara {
 		SDL_FRect destRect;
 		SDL_Point origin;
 
-		bool pixelLocked = false;
-
 		SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
 		float width = 0;
@@ -127,13 +125,6 @@ namespace Amara {
 			destRect.y = ((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
 			destRect.w = ((width * scaleX) * nzoomX);
 			destRect.h = ((height * scaleY) * nzoomY);
-
-			if (pixelLocked) {
-				destRect.x = floor(destRect.x);
-				destRect.y = floor(destRect.y);
-				destRect.w = ceil(destRect.w);
-				destRect.h = ceil(destRect.h);
-			}
 
 			origin.x = destRect.w * originX;
 			origin.y = destRect.h * originY;

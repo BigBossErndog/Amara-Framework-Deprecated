@@ -409,8 +409,6 @@ namespace Amara {
         SDL_FRect destRect;
         SDL_FPoint origin = { 0, 0 };
 
-        bool pixelLocked = false;
-
         SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
         bool textureLocked = false;
@@ -549,13 +547,6 @@ namespace Amara {
             destRect.y = ((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
             destRect.w = ((width * scaleX) * nzoomX);
             destRect.h = ((height * scaleY) * nzoomY);
-            
-            if (pixelLocked) {
-                destRect.x = floor(destRect.x);
-                destRect.y = floor(destRect.y);
-                destRect.w = ceil(destRect.w);
-                destRect.h = ceil(destRect.h);
-            }
 
             scaleX = recScaleX;
             scaleY = recScaleY;

@@ -13,8 +13,6 @@ namespace Amara {
         float recWidth = -1;
         float recHeight = -1;
 
-        bool pixelLocked = false;
-
         SDL_Rect destRectInt;
         SDL_Texture* canvas = nullptr;
 
@@ -152,13 +150,6 @@ namespace Amara {
             destRect.y = ((y*scaleY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
             destRect.w = ((width * scaleX) * nzoomX);
             destRect.h = ((height * scaleY) * nzoomY);
-
-            if (pixelLocked) {
-                destRect.x = floor(destRect.x);
-                destRect.y = floor(destRect.y);
-                destRect.w = ceil(destRect.w);
-                destRect.h = ceil(destRect.h);
-            }
 
             origin.x = destRect.w * originX;
             origin.y = destRect.h * originY;

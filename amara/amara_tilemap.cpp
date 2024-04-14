@@ -49,8 +49,6 @@ namespace Amara {
 			SDL_Point originN;
             SDL_RendererFlip flip;
 
-            bool pixelLocked = false;
-
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
             
             int tileWidth = 0;
@@ -395,10 +393,6 @@ namespace Amara {
             }
 
             void drawTiles(int vx, int vy, int vw, int vh) {
-                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
-                SDL_RenderSetViewport(gRenderer, NULL);
-
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
@@ -515,10 +509,6 @@ namespace Amara {
             }
 
             void drawAllTiles(int vx, int vy, int vw, int vh) {
-                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, drawTexture);
-                SDL_RenderSetViewport(gRenderer, NULL);
-
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
@@ -630,8 +620,6 @@ namespace Amara {
                         }
                     }
                 }
-
-                SDL_SetRenderTarget(properties->gRenderer, recTarget);
             }
 
             void draw(int vx, int vy, int vw, int vh) {
@@ -646,8 +634,14 @@ namespace Amara {
                 if (!textureLocked || pleaseUpdate) {
                     pleaseUpdate = false;
 
+                    SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                    SDL_SetRenderTarget(properties->gRenderer, drawTexture);
+                    SDL_RenderSetViewport(gRenderer, NULL);
+
                     if (textureLocked) drawAllTiles(vx, vy, vw, vh);
                     else drawTiles(vx, vy, vw, vh);
+
+                    SDL_SetRenderTarget(properties->gRenderer, recTarget);
                 }
 
                 float px = 0;
@@ -670,13 +664,6 @@ namespace Amara {
                 destRectF.y = ((y-z+py - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
                 destRectF.w = (widthInPixels*scaleX*nzoomX);
                 destRectF.h = (heightInPixels*scaleY*nzoomY);
-
-                if (pixelLocked) {
-                    destRectF.x = floor(destRectF.x);
-                    destRectF.y = floor(destRectF.y);
-                    destRectF.w = ceil(destRectF.w);
-                    destRectF.h = ceil(destRectF.h);
-                }
 
                 origin.x = destRectF.w * originX;
                 origin.y = destRectF.h * originY;
