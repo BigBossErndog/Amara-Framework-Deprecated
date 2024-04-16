@@ -27,7 +27,7 @@ namespace Amara {
 
             std::vector<Amara::Tile> tiles;
 
-            std::unordered_map<int, Amara::PhysicsProperties> tilePhysics;
+            std::unordered_map<int, Amara::PhysicsProperties> tileHitboxes;
 
             Amara::Tilemap* tilemap = nullptr;
             Amara::Entity* tilemapEntity = nullptr;
@@ -104,7 +104,7 @@ namespace Amara {
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
                 gRenderer = properties->gRenderer;
 
-                tilePhysics.clear();
+                tileHitboxes.clear();
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);
@@ -356,6 +356,10 @@ namespace Amara {
                 return arr;
             }
 
+            void setTileHitbox(int gid, FloatRect rect) {
+                tileHitboxes[gid] = PhysicsProperties::newRect(rect);
+            }
+
             std::vector<int> toVector(int* setW, int* setH) {
                 std::vector<int> list;
                 list.resize(width * height);
@@ -392,7 +396,7 @@ namespace Amara {
                 Amara::Actor::run();
             }
 
-            void drawTiles(int vx, int vy, int vw, int vh) {
+            void drawLimitedTiles(int vx, int vy, int vw, int vh) {
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
@@ -504,8 +508,6 @@ namespace Amara {
                         }
                     }
                 }
-
-                SDL_SetRenderTarget(properties->gRenderer, recTarget);
             }
 
             void drawAllTiles(int vx, int vy, int vw, int vh) {
@@ -639,7 +641,7 @@ namespace Amara {
                     SDL_RenderSetViewport(gRenderer, NULL);
 
                     if (textureLocked) drawAllTiles(vx, vy, vw, vh);
-                    else drawTiles(vx, vy, vw, vh);
+                    else drawLimitedTiles(vx, vy, vw, vh);
 
                     SDL_SetRenderTarget(properties->gRenderer, recTarget);
                 }
@@ -684,6 +686,11 @@ namespace Amara {
 				checkHover(vx, vy, vw, vh, destRectF.x, destRectF.y, destRectF.w, destRectF.h);
                 
                 Amara::Actor::draw(vx, vy, vw, vh);
+            }
+
+            void drawOnce() {
+                textureLocked = true;
+                pleaseUpdate = true;
             }
 
             void setCameraBounds(Amara::Camera* cam) {
@@ -742,7 +749,7 @@ namespace Amara {
             bool offMapIsWall = true;
 
             std::unordered_map<std::string, Amara::TilemapLayer*> layers;
-            std::list<Amara::TilemapLayer*> walls;
+            std::vector<Amara::TilemapLayer*> walls;
             std::unordered_map<int, Amara::Direction> wallTypes;
 
             Tilemap(): Amara::Actor() {}
@@ -1010,7 +1017,7 @@ namespace Amara {
                 }
             }
 
-            std::list<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
+            std::vector<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
                 Amara::TilemapLayer* layer;
                 for (std::string layerKey: wallKeys) {
                     layer = getLayer(layerKey);
@@ -1021,7 +1028,7 @@ namespace Amara {
                 return walls;
             }
 
-			std::list<Amara::TilemapLayer*> setWall(std::string wallKey) {
+			std::vector<Amara::TilemapLayer*> setWall(std::string wallKey) {
 				Amara::TilemapLayer* layer = getLayer(wallKey);
 				if (layer) {
 					walls.push_back(layer);

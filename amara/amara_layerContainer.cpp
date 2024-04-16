@@ -267,7 +267,7 @@ namespace Amara {
 				properties->interactScaleX *= scaleX;
 				properties->interactScaleY *= scaleY;
                 
-                drawEntities(vx, vy, vw, vh);
+                drawContent(vx, vy, vw, vh);
 
 				properties->interactOffsetX -= vx;
 				properties->interactOffsetY -= vy;
@@ -378,6 +378,10 @@ namespace Amara {
         void drawOnce() {
             textureLocked = true;
             pleaseUpdate = true;
+        }
+
+        virtual void drawContent(int vx, int vy, int vw, int vh) {
+            drawEntities(vx, vy, vw, vh);
         }
 
         using Amara::Layer::destroy;
@@ -528,7 +532,7 @@ namespace Amara {
 
             float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
             float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
-
+            
             bool scaleFlipHorizontal = false;
             bool scaleFlipVertical = false;
             float recScaleX = scaleX;
@@ -576,7 +580,7 @@ namespace Amara {
                     SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
                     SDL_RenderClear(properties->gRenderer);
 
-                    drawChildren();
+                    if (tx) drawContent();
 
                     SDL_SetRenderTarget(properties->gRenderer, recTarget);
                 }
@@ -618,8 +622,7 @@ namespace Amara {
             }
         }
 
-		virtual void drawChildren() {
-            if (!tx) return;
+		virtual void drawContent() {
             drawEntities(0, 0, width, height);
 		}
 

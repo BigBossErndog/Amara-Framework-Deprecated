@@ -406,8 +406,8 @@ namespace Amara {
                 tx = tile.x * tilemapLayer->tileWidth + px;
                 ty = tile.y * tilemapLayer->tileHeight + py;
 
-                if (tilemapLayer->tilePhysics.find(tile.id) != tilemapLayer->tilePhysics.end()) {
-                    tileProperties = tilemapLayer->tilePhysics[tile.id];
+                if (tilemapLayer->tileHitboxes.find(tile.id) != tilemapLayer->tileHitboxes.end()) {
+                    tileProperties = tilemapLayer->tileHitboxes[tile.id];
                 }
                 else {
                     tileProperties.setRect(tilemapLayer->x + tx, tilemapLayer->y + ty, tilemapLayer->tileWidth, tilemapLayer->tileHeight);
@@ -471,8 +471,8 @@ namespace Amara {
                     tx = tile.x * tilemapLayer->tileWidth + px;
                     ty = tile.y * tilemapLayer->tileHeight + py;
 
-                    if (tilemapLayer->tilePhysics.find(tile.id) != tilemapLayer->tilePhysics.end()) {
-                        tileProperties = tilemapLayer->tilePhysics[tile.id];
+                    if (tilemapLayer->tileHitboxes.find(tile.id) != tilemapLayer->tileHitboxes.end()) {
+                        tileProperties = tilemapLayer->tileHitboxes[tile.id];
                     }
                     else {
                         tileProperties.setRect(tilemapLayer->x + tx, tilemapLayer->y + ty, tilemapLayer->tileWidth, tilemapLayer->tileHeight);
@@ -561,7 +561,7 @@ namespace Amara {
 
     class PhysicsCollisionGroup: public PhysicsBody {
     public:
-        std::list<Amara::PhysicsBase*>members;
+        std::vector<Amara::PhysicsBase*>members;
 
         PhysicsCollisionGroup() {
             members.clear();

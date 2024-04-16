@@ -205,7 +205,7 @@ namespace Amara {
             StringFile(std::string givenKey, AssetType givenType, std::string gContents): Amara::Asset(givenKey, STRINGFILE) {
                 contents = gContents;
             }
-
+            
             std::string getString() {
                 return contents;
             }

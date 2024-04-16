@@ -166,7 +166,7 @@ namespace Amara {
 			void setAcceleration(float ga) {
 				setAcceleration(ga, ga);
 			} 
-
+			
 			void setFriction(float gx, float gy) {
 				frictionX = gx;
 				frictionY = gy;

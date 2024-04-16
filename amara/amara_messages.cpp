@@ -15,7 +15,7 @@ namespace Amara {
     class MessageQueue {
     public:
         Amara::GameProperties* properties = nullptr;
-        std::list<Message> queue;
+        std::vector<Message> queue;
 
         static Message nullMessage;
         
@@ -38,10 +38,10 @@ namespace Amara {
             }
         }
 
-        std::list<Message>::iterator begin() {
+        std::vector<Message>::iterator begin() {
             return queue.begin();
         }
-        std::list<Message>::iterator end() {
+        std::vector<Message>::iterator end() {
             return queue.end();
         }
 

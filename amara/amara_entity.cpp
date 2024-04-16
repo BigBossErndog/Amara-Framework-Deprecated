@@ -34,7 +34,7 @@ namespace Amara {
 		Amara::AssetManager* assets = nullptr;
 		Amara::Loader* load = nullptr;
 
-		std::list<Amara::Entity*> children;
+		std::vector<Amara::Entity*> children;
 
 		Amara::PhysicsBase* physics = nullptr;
 
@@ -250,7 +250,7 @@ namespace Amara {
 		}
 
 		Amara::Entity* sortChildren() {
-			children.sort(sortEntitiesByDepth());
+			std::stable_sort(children.begin(), children.end(), sortEntitiesByDepth());
 			return this;
 		}
 		Amara::Entity* delayedSorting() {
@@ -415,7 +415,6 @@ namespace Amara {
 			}
 
 			runChildren();
-			checkChildren();
 		}
 
 		virtual void runChildren() {
@@ -676,7 +675,7 @@ namespace Amara {
 
 		Amara::Entity* bringToFront() {
 			if (parent) {
-				std::list<Amara::Entity*>& rSceneEntities = parent->children;
+				std::vector<Amara::Entity*>& rSceneEntities = parent->children;
 				for (Amara::Entity* entity: rSceneEntities) {
 					if (entity != this && !entity->isDestroyed && depth <= entity->depth) {
 						depth = entity->depth + 1;
@@ -688,7 +687,7 @@ namespace Amara {
 		}
 
 		Amara::Entity* sendToBack() {
-			std::list<Amara::Entity*>& rSceneEntities = parent->children;
+			std::vector<Amara::Entity*>& rSceneEntities = parent->children;
 			for (Amara::Entity* entity: rSceneEntities) {
 				if (entity != this && !entity->isDestroyed && depth >= entity->depth) {
 					depth = entity->depth - 1;

@@ -3,9 +3,9 @@ namespace Amara {
     class Actor: public Amara::Entity {
     private:
         bool inRecital = false;
-        std::list<Amara::Script*> scriptBuffer;
+        std::vector<Amara::Script*> scriptBuffer;
     public:
-        std::list<Amara::Script*> scripts;
+        std::vector<Amara::Script*> scripts;
         bool actingPaused = false;
 
         Actor(): Amara::Entity() {}
