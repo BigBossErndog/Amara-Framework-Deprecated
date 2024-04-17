@@ -24,6 +24,8 @@ namespace Amara {
 
             int openWidth = 0;
             int openHeight = 0;
+            int recOpenWidth = -1;
+            int recOpenHeight = -1;
             bool lockOpen = false;
 
             int openSpeedX = 0;
@@ -45,6 +47,9 @@ namespace Amara {
 
             float originX = 0;
             float originY = 0;
+
+            bool textureLocked = true;
+            bool pleaseUpdate = false;
 
             Amara::Alignment boxHorizontalAlignment = ALIGN_CENTER;
             Amara::Alignment boxVerticalAlignment = ALIGN_CENTER;
@@ -297,36 +302,48 @@ namespace Amara {
                 if (openWidth < minWidth) openWidth = minWidth;
                 if (openHeight < minHeight) openHeight = minHeight;
 
+                if (alpha < 0) {
+                    alpha = 0;
+                    return;
+                }
+                if (alpha > 1) alpha = 1;
+
                 if (recWidth != width || recHeight != height) {
                     if (openWidth > width) openWidth = width;
                     if (openHeight > height) openHeight = height;
-                    createNewCanvasTexture();
+                    createTexture();
                 }
 				else if (properties->renderTargetsReset || properties->renderDeviceReset) {
-					createNewCanvasTexture();
+					createTexture();
 				}
 
                 if (lockOpen) {
                     openWidth = width;
                     openHeight = height;
                 }
-                
-                SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, canvas);
-                SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
-                SDL_SetTextureAlphaMod(canvas, 255);
-                SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-                SDL_RenderClear(gRenderer);
-                SDL_RenderSetViewport(properties->gRenderer, NULL);
-                for (int i = 0; i < 9; i++) {
-                    drawBoxPart(i);
+                if (recOpenWidth != openWidth || recOpenHeight != openHeight) {
+                    pleaseUpdate = true;
+                    recOpenWidth = openWidth;
+                    recOpenHeight = openHeight;
                 }
-                SDL_SetRenderTarget(properties->gRenderer, recTarget);
+                
+                if (pleaseUpdate || !textureLocked) {
+                    pleaseUpdate = false;
+
+                    SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                    SDL_SetRenderTarget(properties->gRenderer, canvas);
+                    SDL_SetTextureBlendMode(canvas, SDL_BLENDMODE_BLEND);
+                    SDL_SetTextureAlphaMod(canvas, 255);
+                    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+                    SDL_RenderClear(gRenderer);
+                    SDL_RenderSetViewport(properties->gRenderer, NULL);
+                    for (int i = 0; i < 9; i++) {
+                        drawBoxPart(i);
+                    }
+                    SDL_SetRenderTarget(properties->gRenderer, recTarget);
+                }
 
                 bool skipDrawing = false;
-
-                if (alpha < 0) alpha = 0;
-                if (alpha > 1) alpha = 1;
 
                 viewport.x = vx;
                 viewport.y = vy;
@@ -379,7 +396,7 @@ namespace Amara {
                 }
             }
 
-            void createNewCanvasTexture() {
+            void createTexture() {
                 recWidth = width;
                 recHeight = height;
                 if (canvas != nullptr) {
@@ -420,6 +437,8 @@ namespace Amara {
                     partitionRight = imageWidth/3.0;
                     partitionTop = imageHeight/3.0;
                     partitionBottom = imageHeight/3.0;
+
+                    pleaseUpdate = true;
 
                     return true;
                 }
@@ -686,6 +705,11 @@ namespace Amara {
             void resetOpenSize() {
                 if (openSpeedX > 0) setOpenSize(0, openHeight);
                 if (openSpeedY > 0) setOpenSize(openWidth, 0);
+            }
+
+            void drawOnce() {
+                textureLocked = true;
+                pleaseUpdate = true;
             }
 
             using Amara::Actor::destroy;

@@ -678,9 +678,8 @@ namespace Amara {
 
 		Amara::Entity* bringToFront() {
 			if (parent) {
-				std::vector<Amara::Entity*>& rSceneEntities = parent->children;
-				for (Amara::Entity* entity: rSceneEntities) {
-					if (entity != this && !entity->isDestroyed && depth <= entity->depth) {
+				for (Amara::Entity* entity: parent->children) {
+					if (entity != this && entity->parent == parent && !entity->isDestroyed && depth <= entity->depth) {
 						depth = entity->depth + 1;
 					}
 				}
@@ -690,8 +689,7 @@ namespace Amara {
 		}
 
 		Amara::Entity* sendToBack() {
-			std::vector<Amara::Entity*>& rSceneEntities = parent->children;
-			for (Amara::Entity* entity: rSceneEntities) {
+			for (Amara::Entity* entity: parent->children) {
 				if (entity != this && !entity->isDestroyed && depth >= entity->depth) {
 					depth = entity->depth - 1;
 				}

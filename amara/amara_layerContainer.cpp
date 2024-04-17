@@ -176,8 +176,8 @@ namespace Amara {
     class TextureLayer: public Amara::Layer {
     public:
         SDL_Texture* tx = nullptr;
-        int textureWidth;
-        int textureHeight;
+        int textureWidth = -1;
+        int textureHeight = -1;
 
         SDL_Texture* recTarget;
         SDL_Rect viewport;
@@ -241,25 +241,30 @@ namespace Amara {
             pleaseUpdate = true;
         }
 
+        void drawOnce() {
+            textureLocked = true;
+            pleaseUpdate = true;
+        }
+
         void draw(int vx, int vy, int vw, int vh) {
             float recAlpha = properties->alpha;
 
 			if (properties->renderTargetsReset || properties->renderDeviceReset) {
 				createTexture();
-				pleaseUpdate = true;
 			}
+            else if (textureWidth != properties->currentCamera->width || textureHeight != properties->currentCamera->height) {
+                createTexture();
+            }
+            if (!tx) return;
 
             if (!textureLocked || pleaseUpdate) {
-                if (textureWidth != properties->currentCamera->width || textureHeight != properties->currentCamera->height) {
-                    createTexture();
-                }
-                if (!tx) return;
 				pleaseUpdate = false;
 
                 recTarget = SDL_GetRenderTarget(properties->gRenderer);
                 SDL_SetRenderTarget(properties->gRenderer, tx);
                 SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
                 SDL_RenderClear(properties->gRenderer);
+                SDL_RenderSetViewport(properties->gRenderer, nullptr);
 
 				properties->interactOffsetX += vx;
 				properties->interactOffsetY += vy;
@@ -276,9 +281,6 @@ namespace Amara {
 				properties->interactScaleY /= scaleY;
 
                 SDL_SetRenderTarget(properties->gRenderer, recTarget);
-            }
-            else {
-                if (!tx) return;
             }
 
             bool skipDrawing = false;
@@ -375,11 +377,6 @@ namespace Amara {
             properties->alpha = recAlpha;
         }
 
-        void drawOnce() {
-            textureLocked = true;
-            pleaseUpdate = true;
-        }
-
         virtual void drawContent(int vx, int vy, int vw, int vh) {
             drawEntities(vx, vy, vw, vh);
         }
@@ -397,8 +394,8 @@ namespace Amara {
     class TextureContainer: public Amara::Layer {
     public:
         SDL_Texture* tx = nullptr;
-        int textureWidth;
-        int textureHeight;
+        int textureWidth = -1;
+        int textureHeight = -1;
 
         float width = 0;
         float height = 0;
@@ -522,13 +519,29 @@ namespace Amara {
             float recAlpha = properties->alpha;
             bool skipDrawing = false;
 
-			if (properties->renderTargetsReset || properties->renderDeviceReset || textureWidth != width || textureHeight != height) {
+            if (alpha < 0) {
+                alpha = 0;
+                return;
+            }
+            if (alpha > 1) alpha = 1;
+
+            if (properties->renderTargetsReset || properties->renderDeviceReset || textureWidth != width || textureHeight != height) {
 				createTexture();
-				pleaseUpdate = true;
 			}
 
-            if (alpha < 0) alpha = 0;
-            if (alpha > 1) alpha = 1;
+            if (!textureLocked || pleaseUpdate) {
+                pleaseUpdate = false;
+
+                recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                SDL_SetRenderTarget(properties->gRenderer, tx);
+                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(properties->gRenderer);
+                SDL_RenderSetViewport(properties->gRenderer, nullptr);
+
+                drawContent();
+
+                SDL_SetRenderTarget(properties->gRenderer, recTarget);
+            }
 
             float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
             float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
@@ -571,19 +584,6 @@ namespace Amara {
 
                 properties->interactScaleX *= scaleX;
                 properties->interactScaleY *= scaleY;
-
-                if (!textureLocked || pleaseUpdate) {
-                    pleaseUpdate = false;
-
-                    recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                    SDL_SetRenderTarget(properties->gRenderer, tx);
-                    SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-                    SDL_RenderClear(properties->gRenderer);
-
-                    if (tx) drawContent();
-
-                    SDL_SetRenderTarget(properties->gRenderer, recTarget);
-                }
 
                 properties->interactOffsetX -= vx + destRect.x;
                 properties->interactOffsetY -= vy + destRect.y;

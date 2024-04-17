@@ -41,44 +41,46 @@
 #ifndef AMARA_DIRECTIONS
 #define AMARA_DIRECTIONS
 
-namespace Amara {
-    enum Direction {
-        NoDir = 0,
-        Up = 1,
-        UpLeft = 2,
-        UpRight = 4,
-        Down = 8,
-        DownLeft = 16,
-        DownRight = 32,
-        Left = 64,
-        Right = 128
-    };
+    namespace Amara {
+        enum Direction {
+            NoDir = 0,
+            Up = 1,
+            UpLeft = 2,
+            UpRight = 4,
+            Down = 8,
+            DownLeft = 16,
+            DownRight = 32,
+            Left = 64,
+            Right = 128
+        };
 
-    std::vector<Amara::Direction> DirectionsInOrder = { Right, DownRight, Down, DownLeft, Left, UpLeft, Up, UpRight };
-    std::vector<Amara::Direction> CardinalDirections = { Right, Down, Left, Up };
-    std::vector<Amara::Direction> OrdinalDirections = { DownLeft, UpLeft, UpRight, DownRight };
-}
+        std::vector<Amara::Direction> DirectionsInOrder = { Right, DownRight, Down, DownLeft, Left, UpLeft, Up, UpRight };
+        std::vector<Amara::Direction> CardinalDirections = { Right, Down, Left, Up };
+        std::vector<Amara::Direction> OrdinalDirections = { DownLeft, UpLeft, UpRight, DownRight };
+    }
 
 #endif
 
 #ifndef AMARA_CONSTS
 #define AMARA_CONSTS
-namespace Amara {
-    typedef SDL_Color Color;
+    namespace Amara {
+        typedef SDL_Color Color;
 
-	enum EventType {
-        OBJECTLEFTCLICK,
-        OBJECTRIGHTCLICK,
-        OBJECTMIDDLECLICK,
+        typedef SDL_Texture Texture;
 
-        OBJECTLEFTRELEASE,
-        OBJECTRIGHTRELEASE,
-        OBJECTMIDDLERELEASE,
+        enum EventType {
+            OBJECTLEFTCLICK,
+            OBJECTRIGHTCLICK,
+            OBJECTMIDDLECLICK,
 
-        OBJECTTOUCHDOWN,
-        OBJECTTOUCHUP
-    };
-}
+            OBJECTLEFTRELEASE,
+            OBJECTRIGHTRELEASE,
+            OBJECTMIDDLERELEASE,
+
+            OBJECTTOUCHDOWN,
+            OBJECTTOUCHUP
+        };
+    }
 #endif
 
 #ifndef AMARA_LIBRARY

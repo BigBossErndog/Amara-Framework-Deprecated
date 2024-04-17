@@ -200,9 +200,8 @@ namespace Amara {
 
                 checkHover(dx, dy, dw, dh, 0, 0, dw, dh);
 
-                std::vector<Amara::Entity*>& rSceneEntities = parent->children;
                 Amara::Entity* entity;
-                for (auto it = rSceneEntities.begin(); it != rSceneEntities.end();) {
+                for (auto it = parent->children.begin(); it != parent->children.end();) {
                     entity = *it;
                     if (entity == nullptr || entity->isDestroyed || entity->scene != scene) {
                         ++it;

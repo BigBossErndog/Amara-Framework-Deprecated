@@ -15,6 +15,8 @@ class TestScene: public Scene, public StateManager {
 		TrueTypeFont* showText;
 		int progress = 0;
 
+		TextureLayer* layer = nullptr;
+
         void preload() {
             load->image("box", "assets/orangeTextbox.png");
 			load->ttf("font", "assets/PixelMplus10-Regular.ttf", 10);
@@ -28,7 +30,9 @@ class TestScene: public Scene, public StateManager {
 
 			testText = assets->getJSON("testText");
 
-			add(box = new TextBox(0, 0, 240, 68, "box", "font"));
+			add(layer = new TextureLayer());
+
+			layer->add(box = new TextBox(0, 0, 240, 68, "box", "font"));
 			box->configure({
 				{ "xFromCenter", -120 },
 				{ "yFromCenter", -34 }
