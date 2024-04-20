@@ -67,13 +67,11 @@ namespace Amara {
 			void manageInteracts() {
 				if (input->mouse.interact) {
 					input->mouse.interact->mouseHover.press();
-					input->mouse.interact = nullptr;
 				}
 				std::vector<TouchPointer>& fingers = input->touches.pointers;
                 for (TouchPointer& finger: fingers) {
                     if (finger.interact) {
 						finger.interact->touchHover.press();
-						finger.interact = nullptr;
 					}
                 }
 			}

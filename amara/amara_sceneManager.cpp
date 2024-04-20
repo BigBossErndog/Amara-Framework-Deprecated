@@ -17,6 +17,7 @@ namespace Amara {
 
 			Amara::Scene* add(std::string key, Amara::Scene* scene, bool willStart) {
 				sceneMap[key] = scene;
+				scene->depth = sceneList.size()*0.001;
 				sceneList.push_back(scene);
 				scene->setup(properties, new ScenePlugin(key, properties, scene, &sceneMap, &sceneList));
 				scene->key = key;
@@ -57,6 +58,8 @@ namespace Amara {
 			void draw() {
 				Amara::Scene* scene;
 				Amara::ScenePlugin* scenes;
+
+				std::sort(sceneList.begin(), sceneList.end(), sortEntitiesByDepth());
 
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);

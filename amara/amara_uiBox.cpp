@@ -409,6 +409,8 @@ namespace Amara {
                     floor(width),
                     floor(height)
                 );
+                
+                pleaseUpdate = true;
             }
 
             bool setTexture(std::string gTextureKey) {

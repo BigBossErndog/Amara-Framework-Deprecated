@@ -10,6 +10,9 @@ namespace Amara {
 			Amara::Key mouseHover;
 			Amara::Key touchHover;
 
+			bool isDraggable = false;
+			bool isBeingDragged = false;
+
 			bool isHovered = false;
 			bool justHovered = false;
 
@@ -29,10 +32,17 @@ namespace Amara {
 			Amara::Mouse* mouse = nullptr;
 			Amara::TouchPointer* finger = nullptr;
 
+			Amara::FloatRect hitbox;
+
 			void preManage() {
+				tapped = mouseLeft.tapped || touch.tapped;
+				
 				mouseLeft.manage();
 				mouseRight.manage();
 				mouseMiddle.manage();
+
+				isHovered = mouseHover.isDown || touchHover.isDown;
+				justHovered = mouseHover.justDown || touchHover.justDown;
 
 				mouseHover.manage();
 				touchHover.manage();
@@ -47,9 +57,6 @@ namespace Amara {
 				else {
 					release();
 				}
-				tapped = mouseLeft.tapped || touch.tapped;
-				isHovered = mouseHover.isDown || touchHover.isDown;
-				justHovered = mouseHover.justDown || touchHover.justDown;
 
 				if (isDown) {
 					if (finger) {
@@ -90,28 +97,28 @@ namespace Amara {
 			void executeEvent(EventType type) {
 				switch (type) {
 					case OBJECTLEFTCLICK:
-						mouseLeft.press();
+						if (mouseHover.isDown) mouseLeft.press();
 						break;
 					case OBJECTRIGHTCLICK:
-						mouseRight.press();
+						if (mouseHover.isDown) mouseRight.press();
 						break;
 					case OBJECTMIDDLECLICK:
-						mouseMiddle.press();
+						if (mouseHover.isDown) mouseMiddle.press();
 						break;
 					case OBJECTLEFTRELEASE:
-						mouseLeft.release();
+						if (mouseLeft.isDown) mouseLeft.release();
 						break;
 					case OBJECTRIGHTRELEASE:
-						mouseRight.release();
+						if (mouseRight.isDown) mouseRight.release();
 						break;
 					case OBJECTMIDDLERELEASE:
-						mouseMiddle.release();
+						if (mouseMiddle.isDown) mouseMiddle.release();
 						break;
 					case OBJECTTOUCHDOWN:
-						touch.press();
+						if (touchHover.isDown) touch.press();
 						break;
 					case OBJECTTOUCHUP:
-						touch.release();
+						if (touch.isDown) touch.release();
 						break;
 				}
 			}

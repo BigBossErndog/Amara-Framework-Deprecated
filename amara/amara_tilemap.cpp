@@ -65,6 +65,9 @@ namespace Amara {
             bool pleaseUpdate = true;
             bool textureLocked = false;
 
+            bool merged = false;
+            std::vector<TilemapLayer*> mergedLayers;
+
             Amara::Tile nullTile = Amara::Tile();
 
             std::unordered_map<int, Amara::TileAnimation> animations;
@@ -105,6 +108,7 @@ namespace Amara {
                 gRenderer = properties->gRenderer;
 
                 tileHitboxes.clear();
+                mergedLayers.clear();
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);
@@ -140,6 +144,17 @@ namespace Amara {
                 }
                 if (config.find("textureLocked") != config.end()) {
                     setTextureLock(config["textureLocked"]);
+                }
+                if (config.find("hitbox") != config.end()) {
+                    nlohmann::json hitboxData = config["hitbox"];
+                    if (hitboxData.is_object()) {
+                        setTileHitbox(hitboxData);
+                    }
+                    else if (hitboxData.is_array()) {
+                        for (nlohmann::json hitbox: hitboxData) {
+                            setTileHitbox(hitbox);
+                        }
+                    }
                 }
             }
 
@@ -356,8 +371,23 @@ namespace Amara {
                 return arr;
             }
 
-            void setTileHitbox(int gid, FloatRect rect) {
+            TilemapLayer* setTileHitbox(int gid, FloatRect rect) {
                 tileHitboxes[gid] = PhysicsProperties::newRect(rect);
+                return this;
+            }
+            TilemapLayer* setTileHitbox(int gid, FloatLine line) {
+                tileHitboxes[gid] = PhysicsProperties::newLine(line);
+                return this;
+            }
+
+            TilemapLayer* setTileHitbox(nlohmann::json gData) {
+                if (json_is(gData, "rectangle")) {
+                    return setTileHitbox(gData["tileID"], (FloatRect){ gData["x"], gData["y"], gData["w"], gData["h"] });
+                }
+                if (json_is(gData, "line")) {
+                    return setTileHitbox(gData["tileID"], (FloatLine){ { gData["x1"], gData["y1"] }, { gData["x2"], gData["y2"] } });
+                }
+                return this;
             }
 
             std::vector<int> toVector(int* setW, int* setH) {
@@ -625,7 +655,7 @@ namespace Amara {
             }
 
             void draw(int vx, int vy, int vw, int vh) {
-                if (!isVisible) return;
+                if (!isVisible || merged) return;
                 if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
 				

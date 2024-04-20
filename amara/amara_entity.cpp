@@ -383,8 +383,8 @@ namespace Amara {
 			updateMessages();
 
 			Amara::Interactable::run();
-			if (isInteractable && isDraggable && interact.isDown) {
-				isBeingDragged = true;
+			if (isInteractable && interact.isDraggable && interact.isDown) {
+				interact.isBeingDragged = true;
 				if (physics) {
 					physics->velocityX = interact.movementX;
 					physics->velocityY = interact.movementY;
@@ -394,7 +394,7 @@ namespace Amara {
 					y += interact.movementY;
 				}
 			}
-			else isBeingDragged = false;
+			else interact.isBeingDragged = false;
 
 			update();
 
@@ -680,7 +680,7 @@ namespace Amara {
 			if (parent) {
 				for (Amara::Entity* entity: parent->children) {
 					if (entity != this && entity->parent == parent && !entity->isDestroyed && depth <= entity->depth) {
-						depth = entity->depth + 1;
+						depth = entity->depth + 0.1;
 					}
 				}
 				parent->sortChildrenOnce = true;

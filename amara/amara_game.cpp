@@ -94,7 +94,7 @@ namespace Amara {
                 compiledVersion.major, compiledVersion.minor, compiledVersion.patch);
             	SDL_Log("Linking against SDL version %d.%d.%d.\n",
                 linkedVersion.major, linkedVersion.minor, linkedVersion.patch);
-
+				
 				// Creating the video context
 				if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 					SDL_Log("Game Error: Failed to initialize Video.");
@@ -286,7 +286,7 @@ namespace Amara {
 				if (renderTargetsReset || renderDeviceReset) {
 					reloadAssets = true;
 				}
-				else if (reloadAssets) {
+				else if (reloadAssets && windowFocused) {
 					reloadAssets = false;
 					load.regenerateAssets();
 				}
@@ -416,6 +416,7 @@ namespace Amara {
 
 				properties.lagging = lagging;
 				properties.windowMoved = windowMoved;
+				properties.windowFocused = windowFocused;
 
 				properties.fps = fps;
 				properties.lps = lps;
@@ -582,14 +583,6 @@ namespace Amara {
 						SDL_GetDisplayBounds(displayIndex, &displayRect);
 						display = Amara::IntRect{ displayRect.x, displayRect.y, displayRect.w, displayRect.h };
 					}
-					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_LEAVE)) {
-						windowFocused = false;
-						properties.windowFocused = false;
-					}
-					else if (e.type == SDL_WINDOWEVENT && (e.window.event == SDL_WINDOWEVENT_ENTER)) {
-						windowFocused = true;
-						properties.windowFocused = true;
-					}
 					else if (e.type == SDL_RENDER_TARGETS_RESET) {
 						renderTargetsReset = true;
 					}
@@ -677,6 +670,12 @@ namespace Amara {
 					input.mode |= InputMode_Touch;
 					input.lastMode = InputMode_Touch;
 				}
+
+				Uint32 winFlags = SDL_GetWindowFlags(gWindow);
+				if (winFlags & SDL_WINDOW_MOUSE_FOCUS) {
+					windowFocused = true;
+				}
+				else windowFocused = false;
 			}
 	};
 }

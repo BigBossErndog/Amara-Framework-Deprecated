@@ -149,6 +149,8 @@ namespace Amara {
 				SDL_RenderFillRectF(properties->gRenderer, &destRect);
 
 				SDL_SetRenderDrawColor(properties->gRenderer, recColor.r, recColor.g, recColor.b, recColor.a);
+
+				checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
 			}
 
 			Amara::Actor::draw(vx, vy, vw, vh);

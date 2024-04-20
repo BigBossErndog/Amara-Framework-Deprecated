@@ -269,10 +269,8 @@ namespace Amara {
 						case SCENETASK_BRINGTOFRONT:
 							for (int i = 0; i < sceneList->size(); i++) {
 								Scene* s = sceneList->at(i);
-								if (s == scene) {
-									sceneList->erase(sceneList->begin() + i);
-									sceneList->push_back(s);
-									break;
+								if (scene->depth <= s->depth) {
+									scene->depth = s->depth + 0.1;
 								}
 							}
 							break;
@@ -282,4 +280,8 @@ namespace Amara {
                 scene->isActive = isActive;
             }
     };
+
+    void Scene::bringToFront() {
+        scenes->bringToFront();
+    }
 }

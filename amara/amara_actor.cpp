@@ -165,22 +165,25 @@ namespace Amara {
             updateMessages();
 
             Amara::Interactable::run();
-            if (isInteractable && isDraggable && interact.isDown) {
-                if (physics) {
-                    physics->velocityX = interact.movementX;
-                    physics->velocityY = interact.movementY;
-                }
-                else {
-                    x += interact.movementX;
-                    y += interact.movementY;
-                }
-            }
+            if (isInteractable && interact.isDraggable && interact.isDown) {
+				interact.isBeingDragged = true;
+				if (physics) {
+					physics->velocityX = interact.movementX;
+					physics->velocityY = interact.movementY;
+				}
+				else {
+					x += interact.movementX;
+					y += interact.movementY;
+				}
+			}
+			else interact.isBeingDragged = false;
+
 
             update();
 
             if (physics != nullptr) {
                 if (physics->isActive) physics->run();
-
+                
                 if (physics->isDestroyed) {
                     removePhysics();
                 }

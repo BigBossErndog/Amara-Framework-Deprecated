@@ -330,7 +330,10 @@ namespace Amara {
                 physics->checkActiveCollisionTargets();
             }
 
-            if (alpha < 0) alpha = 0;
+            if (alpha < 0) {
+                alpha = 0;
+                return;
+            }
             if (alpha > 1) alpha = 1;
 
             float recScrollX = properties->scrollX * scrollFactorX;
@@ -529,20 +532,6 @@ namespace Amara {
 				createTexture();
 			}
 
-            if (!textureLocked || pleaseUpdate) {
-                pleaseUpdate = false;
-
-                recTarget = SDL_GetRenderTarget(properties->gRenderer);
-                SDL_SetRenderTarget(properties->gRenderer, tx);
-                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-                SDL_RenderClear(properties->gRenderer);
-                SDL_RenderSetViewport(properties->gRenderer, nullptr);
-
-                drawContent();
-
-                SDL_SetRenderTarget(properties->gRenderer, recTarget);
-            }
-
             float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
             float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
             
@@ -579,17 +568,31 @@ namespace Amara {
             if (destRect.h <= 0) skipDrawing = true;
 
             if (!skipDrawing && tx != nullptr) {
-                properties->interactOffsetX += vx + destRect.x;
-                properties->interactOffsetY += vy + destRect.y;
+                if (!textureLocked || pleaseUpdate) {
+                    pleaseUpdate = false;
 
-                properties->interactScaleX *= scaleX;
-                properties->interactScaleY *= scaleY;
+                    properties->interactOffsetX += vx + destRect.x;
+                    properties->interactOffsetY += vy + destRect.y;
 
-                properties->interactOffsetX -= vx + destRect.x;
-                properties->interactOffsetY -= vy + destRect.y;
+                    properties->interactScaleX *= scaleX;
+                    properties->interactScaleY *= scaleY;
 
-                properties->interactScaleX /= scaleX;
-                properties->interactScaleY /= scaleY;
+                    recTarget = SDL_GetRenderTarget(properties->gRenderer);
+                    SDL_SetRenderTarget(properties->gRenderer, tx);
+                    SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                    SDL_RenderClear(properties->gRenderer); 
+                    SDL_RenderSetViewport(properties->gRenderer, nullptr);
+
+                    drawContent();
+                    
+                    properties->interactOffsetX -= vx + destRect.x;
+                    properties->interactOffsetY -= vy + destRect.y;
+
+                    properties->interactScaleX /= scaleX;
+                    properties->interactScaleY /= scaleY;
+                    
+                    SDL_SetRenderTarget(properties->gRenderer, recTarget);
+                }
 
                 viewport.x = vx;
                 viewport.y = vy;

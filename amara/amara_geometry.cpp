@@ -36,6 +36,12 @@ namespace Amara {
         FloatVector2 p2 = {0, 0};
     } FloatLine;
 
+    typedef struct FloatTriangle {
+        FloatVector2 p1 = {0, 0};
+        FloatVector2 p2 = {0, 0};
+        FloatVector2 p3 = {0, 0};
+    } FloatTriangle;
+
     IntVector2 floorVector(Amara::FloatVector2 v2) {
         return { floor(v2.x), floor(v2.y) };
     }
@@ -144,7 +150,7 @@ namespace Amara {
         return closest;
     }
 
-    std::vector<FloatVector2> getPointsAlongLine(FloatLine line, int divisions) {
+    std::vector<FloatVector2> pointsAlongLine(FloatLine line, int divisions) {
         std::vector<FloatVector2> points;
         points.clear();
         
@@ -160,11 +166,11 @@ namespace Amara {
 
         return points;
     }
-    std::vector<FloatVector2> getPointsAlongLine(FloatVector2 start, FloatVector2 end, int divisions) {
-        return getPointsAlongLine({start, end}, divisions);
+    std::vector<FloatVector2> pointsAlongLine(FloatVector2 start, FloatVector2 end, int divisions) {
+        return pointsAlongLine({start, end}, divisions);
     }
-    std::vector<FloatVector2> getPointsAlongLine(float x1, float y1, float x2, float y2, float divisions) {
-        return getPointsAlongLine({{x1, y1}, {x2, y2}}, divisions);
+    std::vector<FloatVector2> pointsAlongLine(float x1, float y1, float x2, float y2, float divisions) {
+        return pointsAlongLine({{x1, y1}, {x2, y2}}, divisions);
     }
 
     std::vector<FloatVector2> travelAlongLine(FloatLine line, float step) {
@@ -203,6 +209,16 @@ namespace Amara {
     }
     FloatVector2 positionAtAngle(FloatVector2* p, float angle, float distance) {
         return positionAtAngle(p->x, p->y, angle, distance);
+    }
+    
+    float areaOfRectangle(FloatRect* rect) {
+        return rect->width * rect->height;
+    }
+    float areaOfTriangle(FloatTriangle* tri) {
+        FloatVector2* p1 = &tri->p1;
+        FloatVector2* p2 = &tri->p2;
+        FloatVector2* p3 = &tri->p3;
+        return abs(p1->x*(p2->y - p3->y) + p2->x*(p3->y - p1->y) + p3->x*(p1->y - p2->y))/2.0;
     }
 
     bool overlapping(float px, float py, FloatCircle* circle) {
@@ -324,6 +340,22 @@ namespace Amara {
     }
     bool overlapping(FloatCircle* circle, FloatLine* line) {
         return overlapping(line, circle);
+    }
+
+    bool overlapping(FloatTriangle* tri, FloatVector2* p) {
+        double checkArea = areaOfTriangle(tri);
+        double totalArea = 0;
+
+        FloatTriangle nTri;
+
+        nTri = { tri->p1, tri->p2, *p };
+        totalArea += areaOfTriangle(&nTri);
+        nTri = { tri->p2, tri->p3, *p };
+        totalArea += areaOfTriangle(&nTri);
+        nTri = { tri->p1, tri->p3, *p };
+        totalArea += areaOfTriangle(&nTri);
+
+        return totalArea == checkArea;
     }
 
     int getOffsetX(Amara::Direction dir) {
