@@ -444,17 +444,15 @@ namespace Amara {
             }
 
             void drawLimitedTiles(int vx, int vy, int vw, int vh) {
+                SDL_SetTextureBlendMode(texture->asset, SDL_BLENDMODE_BLEND);
+				SDL_SetTextureAlphaMod(texture->asset, 255);
+                
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
-
-                SDL_SetTextureBlendMode(texture->asset, SDL_BLENDMODE_BLEND);
-				SDL_SetTextureAlphaMod(texture->asset, 255);
-                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-                SDL_RenderClear(properties->gRenderer);
 
                 Amara::Camera* cam = properties->currentCamera;
                 Amara::Tile& startTile = getTileAtXY(properties->scrollX, properties->scrollY);
@@ -558,17 +556,15 @@ namespace Amara {
             }
 
             void drawAllTiles(int vx, int vy, int vw, int vh) {
+                SDL_SetTextureBlendMode(texture->asset, SDL_BLENDMODE_BLEND);
+				SDL_SetTextureAlphaMod(texture->asset, 255);
+
                 int frame, maxFrame = 0;
                 float tileAngle = 0;
                 float tx, ty;
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
-
-                SDL_SetTextureBlendMode(texture->asset, SDL_BLENDMODE_BLEND);
-				SDL_SetTextureAlphaMod(texture->asset, 255);
-                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-                SDL_RenderClear(properties->gRenderer);
 
                 Amara::Camera* cam = properties->currentCamera;
                 Amara::Tile& startTile = tiles[0];
@@ -712,7 +708,9 @@ namespace Amara {
                     SDL_Texture* recTarget = SDL_GetRenderTarget(properties->gRenderer);
                     SDL_SetRenderTarget(properties->gRenderer, drawTexture);
                     SDL_RenderSetViewport(gRenderer, NULL);
-
+                    SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                    SDL_RenderClear(properties->gRenderer);
+                    
                     if (textureLocked) drawAllTiles(vx, vy, vw, vh);
                     else drawLimitedTiles(vx, vy, vw, vh);
 

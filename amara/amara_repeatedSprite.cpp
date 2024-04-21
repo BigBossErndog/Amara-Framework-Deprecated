@@ -121,7 +121,11 @@ namespace Amara {
         }
 
         void drawTexture(int vx, int vy, int vw, int vh) {
-            if (alpha < 0) alpha = 0;
+            if (alpha < 0) {
+                alpha = 0;
+                return;
+            }
+            if (alpha > 1) alpha = 1;
             if (texture == nullptr) return;
             if (recWidth != width || recHeight != height) {
                 createNewCanvasTexture();
@@ -131,12 +135,6 @@ namespace Amara {
             }
 
             bool skipDrawing = false;
-            
-            if (alpha < 0) {
-                alpha = 0;
-                return;
-            }
-            if (alpha > 1) alpha = 1;
 
             viewport.x = vx;
             viewport.y = vy;
