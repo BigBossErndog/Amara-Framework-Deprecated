@@ -4,8 +4,9 @@ namespace Amara {
     private:
         bool inRecital = false;
         std::vector<Amara::Script*> scriptBuffer;
+        
     public:
-        std::vector<Amara::Script*> scripts;
+        std::list<Amara::Script*> scripts;
         bool actingPaused = false;
 
         Actor(): Amara::Entity() {}
@@ -246,7 +247,7 @@ namespace Amara {
                     if (script->chainedScripts.size() > 0) {
                         for (Amara::Script* chainedScript: script->chainedScripts) recite(chainedScript);
                     }
-                    it = scripts.erase(it);
+                    it = scriptBuffer.erase(it);
                     if (!script->manualDeletion) {
                         properties->taskManager->queueDeletion(script);
                     }

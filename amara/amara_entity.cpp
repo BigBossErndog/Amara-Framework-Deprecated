@@ -34,7 +34,7 @@ namespace Amara {
 		Amara::AssetManager* assets = nullptr;
 		Amara::Loader* load = nullptr;
 
-		std::vector<Amara::Entity*> children;
+		std::list<Amara::Entity*> children;
 
 		Amara::PhysicsBase* physics = nullptr;
 
@@ -62,7 +62,6 @@ namespace Amara {
 
 		bool shouldSortChildren = true;
 		bool sortChildrenOnce = false;
-		bool stableChildrenSorting = false;
 
 		int sortingDelay = 0;
 		int sortingDelayCounter = 0;
@@ -251,8 +250,7 @@ namespace Amara {
 		}
 
 		Amara::Entity* sortChildren() {
-			if (stableChildrenSorting) std::stable_sort(children.begin(), children.end(), sortEntitiesByDepth());
-			else std::sort(children.begin(), children.end(), sortEntitiesByDepth());
+			children.sort(sortEntitiesByDepth());
 			return this;
 		}
 		Amara::Entity* delayedSorting() {
@@ -430,12 +428,17 @@ namespace Amara {
 			}
 			for (auto it = children.begin(); it != children.end();) {
 				entity = *it;
-				++it;
 				if (entity == nullptr || entity->isDestroyed || entity->parent != this || entity->isPaused) {
+					it = children.erase(it);
 					continue;
 				}
 				if (debugging) SDL_Log("%s (%s): Running Child %d \"%s\"", debugID.c_str(), entityType.c_str(), std::distance(it, children.begin()), entity->id.c_str());
 				entity->run();
+				if (entity->isDestroyed) {
+					it = children.erase(it);
+					continue;
+				}
+				++it;
 			}
 			properties->entityDepth -= 1;
 		}
@@ -464,7 +467,6 @@ namespace Amara {
 			if (entity->parent) {
 				return entity->setParent(this);
 			}
-			entity->depth = children.size()*0.0001;
 			children.push_back(entity);
 			entity->init(properties, scene, this);
 			return entity;

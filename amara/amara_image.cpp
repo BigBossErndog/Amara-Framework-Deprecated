@@ -408,6 +408,14 @@ namespace Amara {
                 return this;
             }
 
+            Amara::Image* cropToSection(int gx, int gy, int gw, int gh) {
+                cropLeft = gx;
+                cropTop = gy;
+                cropRight = width - gx - gw;
+                cropBottom = height - gy - gh;
+                return this;
+            }
+
             using Amara::Actor::destroy;
             virtual void destroy(bool recursive) {
                 removeTexture();
