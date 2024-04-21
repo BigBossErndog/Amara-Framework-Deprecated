@@ -65,7 +65,7 @@ namespace Amara {
             bool pleaseUpdate = true;
             bool textureLocked = false;
 
-            bool merged = false;
+            TilemapLayer* merged = nullptr;
             std::vector<TilemapLayer*> mergedLayers;
 
             Amara::Tile nullTile = Amara::Tile();
@@ -115,9 +115,6 @@ namespace Amara {
                 }
                 if (!tiledJsonKey.empty()) {
                     setTiledJson(tiledJsonKey);
-                }
-                else {
-                    createDrawTexture();
                 }
                 if (!tiledLayerKey.empty()) {
                     setupTiledLayer(tiledLayerKey);
@@ -191,7 +188,6 @@ namespace Amara {
 
                         Amara::Tile tile;
                         tiles.resize(width*height, tile);
-                        createDrawTexture();
 
                         animations.clear();
                         if (tiledJson.find("tilesets") != tiledJson.end()) {
@@ -402,6 +398,27 @@ namespace Amara {
             }
             std::vector<int> toVector() {
                 return toVector(nullptr, nullptr);
+            }
+
+            TilemapLayer* removeMergedLayer(TilemapLayer* other) {
+                TilemapLayer* layer;
+                for (auto it = mergedLayers.begin(); it != mergedLayers.end();) {
+                    layer = *it;
+                    if (layer == other) {
+                        layer->merged = nullptr;
+                        it = mergedLayers.erase(it);
+                        continue;
+                    }
+                    ++it;
+                }
+            }
+
+            TilemapLayer* mergeInto(TilemapLayer* other) {
+                if (merged == other) return this;
+                if (merged) merged->removeMergedLayer(this);
+                merged = other;
+                other->mergedLayers.push_back(this);
+                return this;
             }
 
             void createDrawTexture() {
@@ -654,12 +671,38 @@ namespace Amara {
                 }
             }
 
+            void drawMergedLayers(int vx, int vy, int vw, int vh) {
+                TilemapLayer* layer;
+                for (auto it = mergedLayers.begin(); it != mergedLayers.end();) {
+                    layer = *it;
+                    if (layer->isDestroyed) {
+                        it = mergedLayers.erase(it);
+                        continue;
+                    }
+
+                    if (layer->isVisible) {
+                        if (layer->textureLocked) layer->drawAllTiles(vx, vy, vw, vh);
+                        else layer->drawLimitedTiles(vx, vy, vw, vh);
+                    }
+
+                    ++it;
+                }
+            }
+
             void draw(int vx, int vy, int vw, int vh) {
-                if (!isVisible || merged) return;
+                if (merged) {
+                    if (drawTexture) {
+                        SDL_DestroyTexture(drawTexture);
+                        drawTexture = nullptr;
+                    }
+                    return;
+                }
+
+                if (!isVisible) return;
                 if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
 				
-				if (properties->renderTargetsReset || properties->renderDeviceReset) {
+				if (drawTexture == nullptr || properties->renderTargetsReset || properties->renderDeviceReset) {
 					createDrawTexture();
 				}
 
@@ -672,6 +715,8 @@ namespace Amara {
 
                     if (textureLocked) drawAllTiles(vx, vy, vw, vh);
                     else drawLimitedTiles(vx, vy, vw, vh);
+
+                    drawMergedLayers(vx, vy, vw, vh);
 
                     SDL_SetRenderTarget(properties->gRenderer, recTarget);
                 }
