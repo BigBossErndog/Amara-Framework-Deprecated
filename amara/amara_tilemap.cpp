@@ -679,6 +679,7 @@ namespace Amara {
                     if (layer->isVisible) {
                         if (layer->textureLocked) layer->drawAllTiles(vx, vy, vw, vh);
                         else layer->drawLimitedTiles(vx, vy, vw, vh);
+                        layer->drawMergedLayers(vx, vy, vw, vh);
                     }
 
                     ++it;
