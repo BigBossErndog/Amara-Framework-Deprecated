@@ -6,6 +6,11 @@ namespace Amara {
             double time = 0;
             bool useDeltaTime = true;
 
+            void init() {
+                Script::init();
+                progress = 0;
+            }
+
             virtual void progressFurther() {
                 progress += 1/(time*properties->lps);
                 if (progress >= 1) {

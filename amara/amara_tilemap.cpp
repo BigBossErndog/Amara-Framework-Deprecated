@@ -679,11 +679,68 @@ namespace Amara {
                     if (layer->isVisible) {
                         if (layer->textureLocked) layer->drawAllTiles(vx, vy, vw, vh);
                         else layer->drawLimitedTiles(vx, vy, vw, vh);
+                        layer->drawEntities(vx, vy, vw, vh);
                         layer->drawMergedLayers(vx, vy, vw, vh);
                     }
 
                     ++it;
                 }
+            }
+
+            void drawEntities(int vx, int vy, int vw, int vh) {
+                if (properties->quit) return;
+                if (physics) {
+                    physics->checkActiveCollisionTargets();
+                }
+
+                if (alpha < 0) {
+                    alpha = 0;
+                    return;
+                }
+                if (alpha > 1) alpha = 1;
+
+                float recScrollX = properties->scrollX * scrollFactorX;
+                float recScrollY = properties->scrollY * scrollFactorY;
+                float recOffsetX = properties->offsetX + x;
+                float recOffsetY = properties->offsetY + y;
+                float recZoomX = properties->zoomX * scaleX;
+                float recZoomY = properties->zoomY * scaleY;
+                float recZoomFactorX = properties->zoomFactorX * zoomFactorX;
+                float recZoomFactorY = properties->zoomFactorY * zoomFactorY;
+                float recAngle = properties->angle + angle;
+                float recAlpha = properties->alpha;
+                properties->alpha = 1;
+
+                if (shouldSortChildren || sortChildrenOnce) {
+                    sortChildrenOnce = false;
+                    delayedSorting();
+                }
+
+                Amara::Entity* entity;
+                for (auto it = children.begin(); it != children.end();) {
+                    entity = *it;
+
+                    if (entity->isDestroyed || entity->parent != this) {
+                        it = children.erase(it);
+                        continue;
+                    }
+                    if (entity->isVisible) {
+                        properties->scrollX = recScrollX;
+                        properties->scrollY = recScrollY;
+                        properties->offsetX = recOffsetX;
+                        properties->offsetY = recOffsetY;
+                        properties->zoomX = recZoomX;
+                        properties->zoomY = recZoomY;
+                        properties->zoomFactorX = recZoomFactorX;
+                        properties->zoomFactorY = recZoomFactorY;
+                        properties->angle = recAngle;
+                        properties->alpha = 1;
+                        entity->draw(vx, vy, vw, vh);
+                    }
+
+                    ++it;
+                }
+                properties->alpha = recAlpha;
             }
 
             void draw(int vx, int vy, int vw, int vh) {
@@ -714,6 +771,7 @@ namespace Amara {
                     
                     if (textureLocked) drawAllTiles(vx, vy, vw, vh);
                     else drawLimitedTiles(vx, vy, vw, vh);
+                    drawEntities(vx, vy, vw, vh);
 
                     drawMergedLayers(vx, vy, vw, vh);
 
@@ -758,8 +816,6 @@ namespace Amara {
                 );
 
 				checkHover(vx, vy, vw, vh, destRectF.x, destRectF.y, destRectF.w, destRectF.h);
-                
-                Amara::Actor::draw(vx, vy, vw, vh);
             }
 
             void drawOnce() {

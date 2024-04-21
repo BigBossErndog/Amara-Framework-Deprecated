@@ -62,7 +62,7 @@ namespace Amara {
 
 		bool shouldSortChildren = true;
 		bool sortChildrenOnce = false;
-		bool stableSortChildren = false;
+		bool stableChildrenSorting = false;
 
 		int sortingDelay = 0;
 		int sortingDelayCounter = 0;
@@ -251,7 +251,7 @@ namespace Amara {
 		}
 
 		Amara::Entity* sortChildren() {
-			if (stableSortChildren) std::stable_sort(children.begin(), children.end(), sortEntitiesByDepth());
+			if (stableChildrenSorting) std::stable_sort(children.begin(), children.end(), sortEntitiesByDepth());
 			else std::sort(children.begin(), children.end(), sortEntitiesByDepth());
 			return this;
 		}
@@ -464,7 +464,7 @@ namespace Amara {
 			if (entity->parent) {
 				return entity->setParent(this);
 			}
-			entity->depth = children.size()*0.001;
+			entity->depth = children.size()*0.0001;
 			children.push_back(entity);
 			entity->init(properties, scene, this);
 			return entity;
