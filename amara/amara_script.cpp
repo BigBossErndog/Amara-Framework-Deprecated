@@ -20,11 +20,10 @@ namespace Amara {
 
             bool manualDeletion = false;
             bool deleteChained = true;
-
-            bool repeatable = false;
+            bool inQueue = false;
 
 			bool initiated = false;
-
+            
             nlohmann::json endConfig = nullptr;
 
             std::vector<Amara::Script*> chainedScripts;
@@ -106,6 +105,13 @@ namespace Amara {
 
             virtual void init() {}
 
+            bool notActing() {
+                return isFinished && !inQueue;
+            }
+            bool isActing() {
+                return !notActing();
+            }
+
             bool isFinished = false;
 
             virtual void finish() {
@@ -141,7 +147,7 @@ namespace Amara {
             }
             else {
                 script->manualDeletion = true;
-                if (nextEvtOn(script->isFinished)) {
+                if (nextEvtOn(script->notActing())) {
                     delete script;
                 }
             }

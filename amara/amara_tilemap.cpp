@@ -64,7 +64,7 @@ namespace Amara {
             bool textureLocked = false;
 
             TilemapLayer* merged = nullptr;
-            std::vector<TilemapLayer*> mergedLayers;
+            std::list<TilemapLayer*> mergedLayers;
 
             Amara::Tile nullTile = Amara::Tile();
 
@@ -413,7 +413,7 @@ namespace Amara {
             }
 
             TilemapLayer* mergeInto(TilemapLayer* other) {
-                if (merged == other || other == nullptr) return this;
+                if (merged == other || other == nullptr || other->isDestroyed) return this;
                 if (merged) merged->removeMergedLayer(this);
                 merged = other;
                 other->mergedLayers.push_back(this);
@@ -675,6 +675,7 @@ namespace Amara {
                 TilemapLayer* layer;
                 for (auto it = mergedLayers.begin(); it != mergedLayers.end();) {
                     layer = *it;
+
                     if (layer->isDestroyed) {
                         it = mergedLayers.erase(it);
                         continue;
@@ -748,13 +749,14 @@ namespace Amara {
             }
 
             void draw(int vx, int vy, int vw, int vh) {
-                if (merged) {
+                if (merged && !merged->isDestroyed) {
                     if (drawTexture) {
                         SDL_DestroyTexture(drawTexture);
                         drawTexture = nullptr;
                     }
                     return;
                 }
+                else if (merged) merged = nullptr;
 
                 if (!isVisible) return;
                 if (alpha < 0) alpha = 0;

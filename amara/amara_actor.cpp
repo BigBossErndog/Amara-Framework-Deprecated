@@ -57,6 +57,7 @@ namespace Amara {
             else {
                 scriptBuffer.push_back(script);
             }
+            script->inQueue = true;
             script->init(properties, this);
             script->prepare();
             return script;
@@ -88,7 +89,7 @@ namespace Amara {
                 if (isDestroyed) {
                     clearScripts();
                     inRecital = false;
-                    return;
+                    break;
                 }
             }
 
@@ -106,8 +107,11 @@ namespace Amara {
                         }
                         script->chainedScripts.clear();
                     }
+                    script->inQueue = false;
+                    if (!script->manualDeletion) {
+                        properties->taskManager->queueDeletion(script);
+                    }
                     it = scripts.erase(it);
-                    if (!script->manualDeletion) properties->taskManager->queueDeletion(script);
                     continue;
                 }
                 ++it;

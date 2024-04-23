@@ -66,6 +66,7 @@ namespace Amara {
             bool windowMoved = false;
             bool windowFocused = false;
 			bool isFullscreen = false;
+            bool isWindowed = true;
 
             bool renderTargetsReset = false;
             bool renderDeviceReset = false;

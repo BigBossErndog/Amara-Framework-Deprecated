@@ -30,6 +30,7 @@ namespace Amara {
 			bool windowMoved = false;
 			bool windowFocused = false;
 			bool isFullscreen = false;
+			bool isWindowed = true;
 
 			bool renderTargetsReset = false;
 			bool renderDeviceReset = false;
@@ -286,7 +287,7 @@ namespace Amara {
 				if (renderTargetsReset || renderDeviceReset) {
 					reloadAssets = true;
 				}
-				else if (reloadAssets && windowFocused) {
+				else if (reloadAssets && (isWindowed || windowFocused)) {
 					reloadAssets = false;
 					load.regenerateAssets();
 				}
@@ -381,16 +382,19 @@ namespace Amara {
 			void startFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN);
 				isFullscreen = true;
+				isWindowed = false;
 			}
 
 			void startWindowedFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 				isFullscreen = true;
+				isWindowed = true;
 			}
 
 			void exitFullscreen() {
 				SDL_SetWindowFullscreen(gWindow, 0);
 				isFullscreen = false;
+				isWindowed = true;
 			}
 
 			void setWindowIcon(SDL_Surface* sf) {
@@ -410,6 +414,7 @@ namespace Amara {
 				properties.height = height;
 
 				properties.isFullscreen = isFullscreen;
+				properties.isWindowed = isWindowed;
 
 				properties.renderTargetsReset = renderTargetsReset;
 				properties.renderDeviceReset = renderDeviceReset;
@@ -448,7 +453,7 @@ namespace Amara {
 					frameCounter = 0;
 				}
 				frameCounter += 1;
-				scenes.draw();
+				if (isWindowed || windowFocused) scenes.draw();
 				events.manageInteracts();
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
