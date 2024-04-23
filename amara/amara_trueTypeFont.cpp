@@ -244,6 +244,8 @@ namespace Amara {
             }
 
             void drawText(float dx, float dy, bool middle) {
+                if (fontAsset == nullptr) return;
+
 				switch (alignment) {
 					case ALIGN_LEFT:
 						effect.alignment = FC_ALIGN_LEFT;
@@ -309,7 +311,7 @@ namespace Amara {
 
 						float rx = floor((dx+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (width * originX) + offsetX) * nzoomX);
 						float ry = floor((dy-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (height * originY)) * nzoomY);
-
+                        
                         FC_DrawEffect(
                             fontAsset->font,
                             gRenderer,
@@ -332,28 +334,30 @@ namespace Amara {
                 
 				viewbox = { vx, vy, vw, vh };
 
-                color.a = alpha * properties->alpha * 255;
+                if (fontAsset != nullptr) {
+                    color.a = alpha * properties->alpha * 255;
 
-                int dx = floor(x), dy = floor(y);
+                    int dx = floor(x), dy = floor(y);
 
-                if (outline) {
-                    effect.color = outlineColor;
-					effect.color.a = outlineColor.a * pow(alpha, 1) * outlineAlpha;
-                    for (int i = 0; i < outline+1; i++) {
-                        drawText(dx+i,dy, false);
-                        drawText(dx-i,dy, false);
-                        for (int j = 0; j < outline+1; j++) {
-                            if (outlineCorners || i != j || i != outline) {
-                                drawText(dx+i,dy+j, false);
-                                drawText(dx-i,dy-j, false);
-                                drawText(dx+i,dy-j, false);
-                                drawText(dx-i,dy+j, false);
+                    if (outline) {
+                        effect.color = outlineColor;
+                        effect.color.a = outlineColor.a * pow(alpha, 1) * outlineAlpha;
+                        for (int i = 0; i < outline+1; i++) {
+                            drawText(dx+i,dy, false);
+                            drawText(dx-i,dy, false);
+                            for (int j = 0; j < outline+1; j++) {
+                                if (outlineCorners || i != j || i != outline) {
+                                    drawText(dx+i,dy+j, false);
+                                    drawText(dx-i,dy-j, false);
+                                    drawText(dx+i,dy-j, false);
+                                    drawText(dx-i,dy+j, false);
+                                }
                             }
                         }
                     }
+                    effect.color = color;
+                    drawText(dx, dy, true);
                 }
-                effect.color = color;
-                drawText(dx, dy, true);
 
                 Amara::Actor::draw(vx, vy, vw, vh);
             }

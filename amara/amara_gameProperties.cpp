@@ -70,6 +70,8 @@ namespace Amara {
             bool renderTargetsReset = false;
             bool renderDeviceReset = false;
 
+            bool inSceneDrawing = false;
+
             int fps = 60;
             int lps = fps;
             double realFPS = fps;

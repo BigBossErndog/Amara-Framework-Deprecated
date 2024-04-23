@@ -61,6 +61,7 @@ namespace Amara {
 
 				std::sort(sceneList.begin(), sceneList.end(), sortEntitiesByDepth());
 
+				properties->inSceneDrawing = true;
 				for (size_t i = 0; i < sceneList.size(); i++) {
 					scene = sceneList.at(i);
 					scenes = scene->scenes;
@@ -69,6 +70,7 @@ namespace Amara {
 					if (scenes->isSleeping) continue;
 					scene->draw();
 				}
+				properties->inSceneDrawing = false;
 			}
 
 			Amara::Scene* get(std::string key) {

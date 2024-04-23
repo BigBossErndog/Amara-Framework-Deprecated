@@ -307,7 +307,8 @@ namespace Amara {
 				entity = *it;
 
 				if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
-					it = children.erase(it);
+					if (properties->inSceneDrawing) it = children.erase(it);
+					else ++it;
 					continue;
 				}
 				if (entity->isVisible) {
@@ -428,18 +429,14 @@ namespace Amara {
 			}
 			for (auto it = children.begin(); it != children.end();) {
 				entity = *it;
+				++it;
 				if (entity == nullptr || entity->isDestroyed || entity->parent != this || entity->isPaused) {
-					it = children.erase(it);
 					continue;
 				}
 				if (debugging) SDL_Log("%s (%s): Running Child %d \"%s\"", debugID.c_str(), entityType.c_str(), std::distance(it, children.begin()), entity->id.c_str());
 				entity->run();
-				if (entity->isDestroyed) {
-					it = children.erase(it);
-					continue;
-				}
-				++it;
 			}
+			checkChildren();
 			properties->entityDepth -= 1;
 		}
 
