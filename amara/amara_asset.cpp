@@ -31,7 +31,7 @@ namespace Amara {
                 type = givenType;
             }
 
-            virtual void regenerate(SDL_Renderer*) {}
+            virtual void regenerate(SDL_Renderer*, Amara::TaskManager*) {}
     };
 
     class SurfaceAsset: public Amara::Asset {
@@ -93,8 +93,8 @@ namespace Amara {
                 toRegenerate = true;
             }
 
-            void regenerate(SDL_Renderer* gRenderer) {
-                SDL_DestroyTexture(Amara::ImageTexture::asset);
+            void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
+                tasks->queueDeletion(Amara::ImageTexture::asset);
                 Amara::ImageTexture::asset = createRadialGradientTexture(gRenderer, width, height, innerColor, outerColor, fadeStart);
             }
     };
@@ -113,8 +113,8 @@ namespace Amara {
 				toRegenerate = true;
 			}
 
-			void regenerate(SDL_Renderer* gRenderer) {
-				SDL_DestroyTexture(Amara::ImageTexture::asset);
+			void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
+				tasks->queueDeletion(Amara::ImageTexture::asset);
 				Amara::ImageTexture::asset = createCircleTexture(gRenderer, radius, color);
 			}
 	};
@@ -135,8 +135,8 @@ namespace Amara {
 				toRegenerate = true;
 			}
 
-			void regenerate(SDL_Renderer* gRenderer) {
-				SDL_DestroyTexture(Amara::ImageTexture::asset);
+			void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
+				tasks->queueDeletion(Amara::ImageTexture::asset);
 				Amara::ImageTexture::asset = createGradientTexture(gRenderer, width, height, dir, colorIn, colorOut);
 			}
 	};
@@ -248,7 +248,7 @@ namespace Amara {
                 FC_LoadFont(font, gRenderer, path.c_str(), size, color, style);
             }
 
-            void regenerate(SDL_Renderer* gRenderer) {
+            void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
                 reloadFontCache(gRenderer);
             }
     };

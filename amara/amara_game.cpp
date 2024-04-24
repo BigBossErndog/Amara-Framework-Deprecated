@@ -281,6 +281,10 @@ namespace Amara {
 				renderDeviceReset = false;
 				manageFPSStart();
 				writeProperties();
+				// Run game logic
+				if (debugGameLoop) SDL_Log("Amara Game: Start Logic");
+				logic();
+				if (debugGameLoop) SDL_Log("Amara Game: End Logic");
 				// Draw Screen
 				if (debugGameLoop) SDL_Log("Amara Game: Start Drawing");
 				draw();
@@ -288,8 +292,7 @@ namespace Amara {
 				// Manage frame catch up and slow down
 				if (debugGameLoop) SDL_Log("Amara Game: Manage FPS");
 				manageFPSEnd();
-				if (debugGameLoop) SDL_Log("Amara Game: Run Tasks");
-				taskManager.run();
+
 				if (renderTargetsReset || renderDeviceReset) {
 					reloadAssets = true;
 				}
@@ -299,6 +302,8 @@ namespace Amara {
 					load.regenerateAssets();
 					if (debugGameLoop) SDL_Log("Amara Game: End Reload Assets");
 				}
+				if (debugGameLoop) SDL_Log("Amara Game: Run Tasks");
+				taskManager.run();
 			}
 
 			void setFPS(int newFps, bool lockLogicSpeed) {
@@ -473,17 +478,8 @@ namespace Amara {
 				if (debugGameLoop) SDL_Log("Amara Game: End Render");
 			}
 
-			void manageFPSStart() {
-				capTimer.start();
-			}
-
-			void manageFPSEnd() {
-				// Check if frame finished early
-				if (quit) return;
-				int totalWait = 0;
+			void logic() {
 				logicDelay = 0;
-				lagging = false;
-
 				if (fps < lps) {
 					for (int i = 1; i < lps/fps; i++) {
 						update();
@@ -492,6 +488,17 @@ namespace Amara {
 				else if (fps > lps) {
 					logicDelay = floor(fps/(float)lps);
 				}
+			}
+
+			void manageFPSStart() {
+				capTimer.start();
+			}
+
+			void manageFPSEnd() {
+				// Check if frame finished early
+				if (quit) return;
+				int totalWait = 0;
+				lagging = false;
 
 				int frameTicks = capTimer.getTicks();
 				if (frameTicks < tps) {

@@ -231,7 +231,7 @@ namespace Amara {
 
 			virtual void clearAssets() {
 				for (auto it = assets.begin(); it != assets.end(); it++) {
-					delete it->second;
+					properties->taskManager->queueDeletion(it->second);
 				}
 				assets.clear();
 			}
@@ -901,7 +901,7 @@ namespace Amara {
 				std::unordered_map<std::string, Amara::Asset*>::iterator it = assets.begin();
 				while (it != assets.end()) {
 					if (it->second->toRegenerate) {
-						it->second->regenerate(gRenderer);
+						it->second->regenerate(gRenderer, properties->taskManager);
 					}
 					it++;
 				}
