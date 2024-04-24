@@ -10,8 +10,8 @@ namespace Amara {
             Amara::GameProperties* properties = nullptr;
             Amara::InputManager* input = nullptr;
 
-            std::vector<Amara::Event*> eventList;
-			std::vector<Amara::Event*> delayedEvents;
+            std::vector<Amara::Event> eventList;
+			std::vector<Amara::Event> eventBuffer;
 
             EventManager() {}
             EventManager(Amara::GameProperties* gameProperties) {
@@ -20,22 +20,19 @@ namespace Amara {
             }
             
             void addEvent(Amara::EventType type) {
-                Amara::Event* evt = new Amara::Event();
-                evt->type = type;
+                Amara::Event evt;
+                evt.type = type;
                 eventList.push_back(evt);
             }
-			void addDelayedEvent(Amara::EventType type) {
-				Amara::Event* evt = new Amara::Event();
-                evt->type = type;
-                delayedEvents.push_back(evt);
+			void bufferEvent(Amara::EventType type) {
+				Amara::Event evt;
+                evt.type = type;
+                eventBuffer.push_back(evt);
 			}
 
             void manage() {
-                for (Amara::Event* evt : eventList) {
-                    delete evt;
-                }
-                eventList = delayedEvents;
-				delayedEvents.clear();
+                eventList = eventBuffer;
+				eventBuffer.clear();
 
                 Amara::Mouse& mouse = input->mouse;
                 if (mouse.left.justDown) {
@@ -59,8 +56,8 @@ namespace Amara {
 
                 std::vector<TouchPointer>& fingers = input->touches.pointers;
                 for (TouchPointer& finger: fingers) {
-                    if (finger.justDown) addDelayedEvent(OBJECTTOUCHDOWN);
-                    if (finger.justUp) addDelayedEvent(OBJECTTOUCHUP);
+                    if (finger.justDown) bufferEvent(OBJECTTOUCHDOWN);
+                    if (finger.justUp) bufferEvent(OBJECTTOUCHUP);
                 }
             }
 

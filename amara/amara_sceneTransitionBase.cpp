@@ -13,6 +13,7 @@ namespace Amara {
             bool waitingForPermission = false;
             bool permissionGranted = false;
             bool isFinished = false;
+            bool isDestroyed = false;
 
             bool sleepScene = false;
             bool wakeScene = false;
@@ -82,6 +83,8 @@ namespace Amara {
             }
 
             virtual void complete() {
+                if (isDestroyed) return;
+                isDestroyed = true;
                 Amara::Actor::properties->taskManager->queueDeletion(this);
 				destroyEntities();
             }

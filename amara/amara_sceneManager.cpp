@@ -6,8 +6,8 @@ namespace Amara {
 			Amara::Game* game = nullptr;
 			Amara::GameProperties* properties = nullptr;
 			std::unordered_map<std::string, Amara::Scene*> sceneMap;
-			std::vector<Amara::Scene*> sceneList;
-			std::vector<Amara::Scene*> copySceneList;
+			std::list<Amara::Scene*> sceneList;
+			std::list<Amara::Scene*> copySceneList;
 
 			SceneManager() {}
 			SceneManager(Amara::GameProperties* gameProperties) {
@@ -41,34 +41,38 @@ namespace Amara {
 
 			void run() {
 				Amara::Scene* scene;
-				Amara::ScenePlugin* scenes;
+				Amara::ScenePlugin* scenePlugin;
+				
+				for (auto it = sceneList.begin(); it != sceneList.end();) {
+					scene = *it;
+					scenePlugin = scene->scenes;
 
-				for (size_t i = 0; i < sceneList.size(); i++) {
-					scene = sceneList.at(i);
-					scenes = scene->scenes;
-
-					if (!scenes->isActive) continue;
-					if (scenes->isPaused) continue;
-					if (scenes->isSleeping) continue;
-
+					if (!scenePlugin->isActive || scenePlugin->isPaused || scenePlugin->isSleeping) {
+						++it;
+						continue;
+					}
 					scene->run();
+					++it;
 				}
 			}
 
 			void draw() {
 				Amara::Scene* scene;
-				Amara::ScenePlugin* scenes;
+				Amara::ScenePlugin* scenePlugin;
 
-				std::sort(sceneList.begin(), sceneList.end(), sortEntitiesByDepth());
+				sceneList.sort(sortEntitiesByDepth());
 
 				properties->inSceneDrawing = true;
-				for (size_t i = 0; i < sceneList.size(); i++) {
-					scene = sceneList.at(i);
-					scenes = scene->scenes;
+				for (auto it = sceneList.begin(); it != sceneList.end();) {
+					scene = *it;
+					scenePlugin = scene->scenes;
 
-					if (!scenes->isActive) continue;
-					if (scenes->isSleeping) continue;
+					if (!scenePlugin->isActive || scenePlugin->isSleeping) {
+						++it;
+						continue;
+					}
 					scene->draw();
+					++it;
 				}
 				properties->inSceneDrawing = false;
 			}
@@ -101,22 +105,23 @@ namespace Amara {
 
 			void manageTasks() {
 				Amara::Scene* scene;
-				Amara::ScenePlugin* scenes;
+				Amara::ScenePlugin* scenePlugin;
 				copySceneList = sceneList;
 
-				for (size_t i = 0; i < copySceneList.size(); i++) {
-					scene = copySceneList.at(i);
-					scenes = scene->scenes;
-
-					scenes->manageTasks();
+				for (auto it = copySceneList.begin(); it != copySceneList.end();) {
+					scene = *it;
+					scenePlugin = scene->scenes;
+					scenePlugin->manageTasks();
+					++it;
 				}
 			}
 
 			void checkChildren() {
 				Amara::Scene* scene;
-				for (size_t i = 0; i < sceneList.size(); i++) {
-					scene = sceneList.at(i);
+				for (auto it = sceneList.begin(); it != sceneList.end();) {
+					scene = *it;
 					scene->checkChildren(true);
+					++it;
 				}
 			}
 	};

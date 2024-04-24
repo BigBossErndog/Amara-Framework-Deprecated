@@ -211,7 +211,7 @@ namespace Amara {
 
         virtual void createTexture() {
             if (tx) {
-                SDL_DestroyTexture(tx);
+                tasks->queueDeletion(tx);
             }
             tx = SDL_CreateTexture(
                 properties->gRenderer,
@@ -387,7 +387,7 @@ namespace Amara {
         using Amara::Layer::destroy;
         virtual void destroy(bool recursive) {
             if (tx) {
-                SDL_DestroyTexture(tx);
+                tasks->queueDeletion(tx);
                 tx = nullptr;
             }
             Amara::Layer::destroy(recursive);
@@ -470,7 +470,7 @@ namespace Amara {
 
         virtual void createTexture() {
             if (tx) {
-                SDL_DestroyTexture(tx);
+                tasks->queueDeletion(tx);
             }
             tx = SDL_CreateTexture(
                 properties->gRenderer,
@@ -699,7 +699,7 @@ namespace Amara {
         using Amara::Layer::destroy;
         virtual void destroy(bool recursive) {
             if (tx) {
-                SDL_DestroyTexture(tx);
+                tasks->queueDeletion(tx);
                 tx = nullptr;
             }
             Amara::Layer::destroy(recursive);

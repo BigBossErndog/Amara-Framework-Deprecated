@@ -120,9 +120,9 @@ namespace Amara {
             virtual void run() {
                 if (isInteractable) {
 					interact.preManage();
-                    for (Amara::Event* event : events->eventList) {
-                        if (event->disabled) continue;
-                        interact.executeEvent(event->type);
+                    for (Amara::Event event : events->eventList) {
+                        if (event.disabled) continue;
+                        interact.executeEvent(event.type);
                     }
 					interact.postManage();
                 }

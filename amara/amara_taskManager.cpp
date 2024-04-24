@@ -5,78 +5,82 @@ namespace Amara {
     class TaskManager {
         public:
             Amara::GameProperties* properties = nullptr;
-            std::vector<Amara::Entity*> entityDeletionQueue;
-            std::vector<Amara::SceneTransitionBase*> transitionDeletionQueue;
-            std::vector<void*> objectDeletionQueue;
+            std::vector<void*> garbageQueue;
+            std::vector<void*> garbageBuffer;
+
+            std::vector<SDL_Texture*> textureQueue;
+            std::vector<SDL_Texture*> textureBuffer;
+
+            bool automaticGarbageClearing = true;
+            bool pleaseClear = false;
+            bool inTaskRunner = false;
+            
+            bool intervalClearing = 4;
+            bool intervalCounter = 0;
 
             TaskManager() {}
             TaskManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
-            }
 
-            void queueDeletion(Amara::Entity* obj) {
-                entityDeletionQueue.push_back(obj);
-            }
+                garbageQueue.clear();
+                garbageBuffer.clear();
 
-            void queueDeletion(Amara::SceneTransitionBase* transition) {
-                transitionDeletionQueue.push_back(transition);
+                textureQueue.clear();
+                textureBuffer.clear();
             }
 
             void queueDeletion(void* obj) {
-                objectDeletionQueue.push_back(obj);
+                if (obj == nullptr) return;
+                garbageBuffer.push_back(obj);
             }
 
-            std::vector<Amara::Entity*>& getEntityQueue() {
-                return entityDeletionQueue;
+            void queueDeletion(SDL_Texture* tx) {
+                if (tx == nullptr) return;
+                textureBuffer.push_back(tx);
             }
-            std::vector<Amara::SceneTransitionBase*>& getTransitionQueue() {
-                return transitionDeletionQueue;
-            }
+
             std::vector<void*>& getObjectQueue() {
-                return objectDeletionQueue;
+                return garbageQueue;
             }
 
             void run() {
-                clearGarbage();
+                inTaskRunner = true;
+                if (pleaseClear) clearGarbage();
+                else if (automaticGarbageClearing) {
+                    intervalCounter += 1;
+                    if (intervalCounter % intervalClearing == 0) {
+                        clearGarbage();
+                    }
+                }
+                inTaskRunner = false;
             }
 
             void clearGarbage() {
-                deleteEntities();
-                deleteObjects();
-                deleteTransitions();
-            }
-
-            void deleteEntities() {
-                int size = entityDeletionQueue.size();
-                if (properties->testing && size > 0) {
-                    SDL_Log("TaskManager: Deleting %d entities.", entityDeletionQueue.size());
+                if (!inTaskRunner) {
+                    pleaseClear = true;
+                    return;
                 }
-                for (Amara::Entity* entity: entityDeletionQueue) {
-                    delete entity;
-                }
-                entityDeletionQueue.clear();
-			}
-
-			void deleteObjects() {
-                int size = objectDeletionQueue.size();
+                pleaseClear = false;
+                intervalCounter = 0;
+                int size = garbageQueue.size();
                 if (properties->testing && size > 0) {
                     SDL_Log("TaskManager: Deleting %d objects.", size);
                 }
-                for (void* obj: objectDeletionQueue) {
+                for (void* obj: garbageQueue) {
                     delete obj;
                 }
-                objectDeletionQueue.clear();
-			}
+                garbageQueue = garbageBuffer;
+                garbageBuffer.clear();
 
-			void deleteTransitions() {
-                int size = transitionDeletionQueue.size();
+                size = textureQueue.size();
                 if (properties->testing && size > 0) {
-                    SDL_Log("TaskManager: Deleting %d transitions.", size);
+                    SDL_Log("TaskManager: Deleting %d textures.", size);
                 }
-                for (Amara::SceneTransitionBase* transition: transitionDeletionQueue) {
-                    delete transition;
+                for (SDL_Texture* tx: textureQueue) {
+                    SDL_DestroyTexture(tx);
                 }
-                transitionDeletionQueue.clear();
-			}
+                textureQueue = textureBuffer;
+                textureBuffer.clear();
+            }
     };
 }

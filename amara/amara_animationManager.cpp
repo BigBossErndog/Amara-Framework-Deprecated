@@ -28,7 +28,9 @@ namespace Amara {
                     SDL_Log("Spritesheet \"%s\" does not have the animation \"%s\".", texture->key.c_str(), animKey.c_str());
                 }
                 if (anim != currentAnim || (anim != nullptr && isFinished)) {
-					if (currentAnim != nullptr && currentAnim->deleteOnFinish) properties->taskManager->queueDeletion(currentAnim);
+					if (currentAnim != nullptr && currentAnim != anim && currentAnim->deleteOnFinish) {
+                        properties->taskManager->queueDeletion(currentAnim);
+                    }
                     currentAnim = anim;
 
                     currentIndex = 0;
@@ -54,7 +56,9 @@ namespace Amara {
             }
 			void play(Amara::ImageTexture* texture, Amara::Animation* anim) {
 				if (anim != currentAnim || (anim != nullptr && isFinished)) {
-					if (currentAnim != nullptr && currentAnim->deleteOnFinish && currentAnim != anim) properties->taskManager->queueDeletion(currentAnim);
+					if (currentAnim != nullptr && currentAnim != anim && currentAnim->deleteOnFinish && currentAnim != anim) {
+                        properties->taskManager->queueDeletion(currentAnim);
+                    }
                     currentAnim = anim;
 
                     currentIndex = 0;
@@ -94,7 +98,9 @@ namespace Amara {
             }
 
             void stop() {
-				if (currentAnim != nullptr && currentAnim->deleteOnFinish) properties->taskManager->queueDeletion(currentAnim);
+				if (currentAnim != nullptr && currentAnim->deleteOnFinish) {
+                    properties->taskManager->queueDeletion(currentAnim);
+                }
                 currentAnim = nullptr;
 				isFinished = true;
             }
@@ -155,7 +161,9 @@ namespace Amara {
                         }
                         else {
                             currentFrame = currentAnim->frameAt(currentAnim->length() - 1);
-							if (currentAnim != nullptr && currentAnim->deleteOnFinish) properties->taskManager->queueDeletion(currentAnim);
+							if (currentAnim != nullptr && currentAnim->deleteOnFinish) {
+                                properties->taskManager->queueDeletion(currentAnim);
+                            }
                             currentAnim = nullptr;
 							isFinished = true;
 							isActive = false;

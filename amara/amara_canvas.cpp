@@ -95,7 +95,7 @@ namespace Amara {
 
             void createNewCanvasTexture() {
                 if (canvas != nullptr) {
-                    SDL_DestroyTexture(canvas);
+                    tasks->queueDeletion(canvas);
                 }
                 canvas = SDL_CreateTexture(
                     properties->gRenderer,
@@ -277,7 +277,7 @@ namespace Amara {
             }
 
             ~Canvas() {
-                SDL_DestroyTexture(canvas);
+                if (tasks) tasks->queueDeletion(canvas);
             }
     };
 }

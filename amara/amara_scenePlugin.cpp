@@ -22,7 +22,7 @@ namespace Amara {
             std::string key;
 
             std::unordered_map<std::string, Amara::Scene*>* sceneMap = nullptr;
-            std::vector<Amara::Scene*>* sceneList = nullptr;
+            std::list<Amara::Scene*>* sceneList = nullptr;
 
             std::vector<SceneTask> tasks;
 
@@ -30,7 +30,7 @@ namespace Amara {
             bool isPaused = false;
             bool isSleeping = false;
 
-            ScenePlugin(std::string givenKey, Amara::GameProperties* gameProperties, Amara::Scene* givenScene, std::unordered_map<std::string, Amara::Scene*>* givenSceneMap, std::vector<Amara::Scene*>* givenSceneList) {
+            ScenePlugin(std::string givenKey, Amara::GameProperties* gameProperties, Amara::Scene* givenScene, std::unordered_map<std::string, Amara::Scene*>* givenSceneMap, std::list<Amara::Scene*>* givenSceneList) {
                 key = givenKey;
                 givenScene->id = key;
 
@@ -186,8 +186,7 @@ namespace Amara {
 			}
             
             void manageTasks() {
-                for (size_t i = 0; i < tasks.size(); i++) {
-                    SceneTask curTask = tasks.at(i);
+                for (SceneTask curTask: tasks) {
                     switch (curTask) {
                         case SCENETASK_RUN:
                             if (!isActive) {
@@ -267,8 +266,7 @@ namespace Amara {
                             }
                             break;
 						case SCENETASK_BRINGTOFRONT:
-							for (int i = 0; i < sceneList->size(); i++) {
-								Scene* s = sceneList->at(i);
+							for (Scene* s: *sceneList) {
 								if (scene->depth <= s->depth) {
 									scene->depth = s->depth + 0.1;
 								}

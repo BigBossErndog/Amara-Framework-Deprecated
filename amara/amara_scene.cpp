@@ -12,7 +12,7 @@ namespace Amara {
             Amara::SceneTransitionBase* transition = nullptr;
 
             Amara::Camera* mainCamera = nullptr;
-            std::vector<Amara::Camera*> cameras;
+            std::list<Amara::Camera*> cameras;
 
             bool initialLoaded = false;
 
@@ -32,7 +32,7 @@ namespace Amara {
                 messages = properties->messages;
 
                 scene = this;
-
+                
                 if (loadManager != nullptr) {
                     properties->taskManager->queueDeletion(loadManager);
                 }
@@ -135,6 +135,16 @@ namespace Amara {
             }
 
             virtual void updateScene() {
+                debugID = id;
+                std::string debugCopy;
+                if (debugging) {
+                    debugID = "";
+                    for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
+                    debugID += id;
+                    SDL_Log("%s (%s): Running. - depth %d", debugID.c_str(), entityType.c_str(), properties->entityDepth);
+                    debugCopy = debugID;
+                }
+
                 receiveMessages();
                 updateMessages();
                 
@@ -151,8 +161,10 @@ namespace Amara {
                 properties->alpha = 1;
                 
                 update();
-                reciteScripts();
 
+                if (debugging) SDL_Log("%s (%s): Reciting Scripts (%d).", debugCopy.c_str(), entityType.c_str(), scripts.size());
+                reciteScripts();
+                
                 runChildren();
                 checkChildren();
 
@@ -166,15 +178,8 @@ namespace Amara {
                         cam->run();
                     }
                 }
-                for (auto it = cameras.begin(); it != cameras.end();) {
-                    cam = *it;
-                    if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
-                        if (mainCamera == cam) mainCamera = nullptr;
-                        it = cameras.erase(it);
-                        continue;
-                    }
-                    ++it;
-                }
+
+                if (debugging) SDL_Log("%s (%s): Finished Running.", debugCopy.c_str(), entityType.c_str());
             }
 
             virtual void draw() {
@@ -183,10 +188,8 @@ namespace Amara {
 				properties->scrollX = 0;
 				properties->scrollY = 0;
 
-                if (sortCameras) {
-                    if (stableSortCameras) std::stable_sort(cameras.begin(), cameras.end(), sortEntitiesByDepth());
-                    else std::sort(cameras.begin(), cameras.end(), sortEntitiesByDepth());
-                }
+                if (sortCameras) cameras.sort(sortEntitiesByDepth());
+
                 if (shouldSortChildren || sortChildrenOnce) {
                     sortChildrenOnce = false;
                     delayedSorting();
@@ -209,9 +212,10 @@ namespace Amara {
                 }
 
                 Amara::Camera* cam;
-                for (std::vector<Amara::Camera*>::iterator it = cameras.begin(); it != cameras.end(); it++) {
+                for (auto it = cameras.begin(); it != cameras.end();) {
                     cam = *it;
                     if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
+                        it = cameras.erase(it);
                         continue;
                     }
                     cam->transition = transition;
@@ -223,6 +227,7 @@ namespace Amara {
                     properties->interactScaleY = 1;
 
                     cam->draw(vx, vy, properties->resolution->width, properties->resolution->height);
+                    ++it;
                 }
             }
 
@@ -269,9 +274,5 @@ namespace Amara {
             virtual void onWake() {}
 
             void bringToFront();
-
-            virtual ~Scene() {
-                if (load) delete load;
-            }
     };
 }

@@ -28,6 +28,12 @@ namespace Amara {
         }
 
         void destroyScript(Amara::Script* script) {
+            if (script == nullptr) return;
+            if (script->properties == nullptr && !script->manualDeletion) {
+                tasks->queueDeletion(script);
+                return;
+            }
+
             if (script != nullptr) {
                 Script* check;
                 for (auto it = scripts.begin(); it != scripts.end();) {
@@ -38,8 +44,8 @@ namespace Amara {
                     }
                     ++it;
                 }
-                if (!script->manualDeletion) properties->taskManager->queueDeletion(script);
-            } 
+                if (!script->manualDeletion) script->destroyScript();
+            }
         }
 
         virtual Amara::Script* recite(Amara::Script* script) {
@@ -47,18 +53,18 @@ namespace Amara {
                 SDL_Log("Null script was given.");
                 return nullptr;
             }
-            if (isDestroyed) {
-                destroyScript(script);
-                return script;
-            }
             if (!inRecital) {
                 scripts.push_back(script);
             }
             else {
                 scriptBuffer.push_back(script);
             }
-            script->inQueue = true;
             script->init(properties, this);
+            if (isDestroyed) {
+                if (!script->manualDeletion) script->destroyScript();
+                return script;
+            }
+            script->inQueue = true;
             script->prepare();
             return script;
         }
@@ -108,9 +114,7 @@ namespace Amara {
                         script->chainedScripts.clear();
                     }
                     script->inQueue = false;
-                    if (!script->manualDeletion) {
-                        properties->taskManager->queueDeletion(script);
-                    }
+                    if (!script->manualDeletion) script->destroyScript();
                     it = scripts.erase(it);
                     continue;
                 }
@@ -159,15 +163,19 @@ namespace Amara {
         }
 
         void run() {
+			debugID = id;
+			std::string debugCopy;
 			if (debugging) {
 				debugID = "";
 				for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
 				debugID += id;
-				SDL_Log("%s (%s): Running.", debugID.c_str(), entityType.c_str());
+				SDL_Log("%s (%s): Running. - depth %d", debugID.c_str(), entityType.c_str(), properties->entityDepth);
+				debugCopy = debugID;
 			}
             
             receiveMessages();
             updateMessages();
+            if (isDestroyed) return;
 
             Amara::Interactable::run();
             if (isInteractable && interact.isDraggable && interact.isDown) {
@@ -185,6 +193,7 @@ namespace Amara {
 
 
             update();
+            if (isDestroyed) return;
 
             if (physics != nullptr) {
                 if (physics->isActive) physics->run();
@@ -204,10 +213,13 @@ namespace Amara {
                 }
             }
             
+            if (debugging) SDL_Log("%s (%s): Reciting Scripts.", debugCopy.c_str(), entityType.c_str());
             reciteScripts();
+            if (isDestroyed) return;
 
             runChildren();
-            checkChildren();
+
+            if (debugging) SDL_Log("%s (%s): Finished Running.", debugCopy.c_str(), entityType.c_str());
         }
 
         using Amara::Entity::destroy;
@@ -219,11 +231,11 @@ namespace Amara {
 
         Amara::Actor* clearScripts() {
             for (Amara::Script* script: scripts) {
-                script->deleteScript();
+                if (!script->manualDeletion) script->destroyScript();
             }
             scripts.clear();
             for (Amara::Script* script: scriptBuffer) {
-                script->deleteScript();
+                if (!script->manualDeletion) script->destroyScript();
             }
             scriptBuffer.clear();
             return this;
@@ -238,9 +250,7 @@ namespace Amara {
                         for (Amara::Script* chainedScript: script->chainedScripts) recite(chainedScript);
                     }
                     it = scripts.erase(it);
-                    if (!script->manualDeletion) {
-                        properties->taskManager->queueDeletion(script);
-                    }
+                    if (!script->manualDeletion) script->destroyScript();
                     break;
                 }
                 ++it;
@@ -252,9 +262,7 @@ namespace Amara {
                         for (Amara::Script* chainedScript: script->chainedScripts) recite(chainedScript);
                     }
                     it = scriptBuffer.erase(it);
-                    if (!script->manualDeletion) {
-                        properties->taskManager->queueDeletion(script);
-                    }
+                    if (!script->manualDeletion) script->destroyScript();
                     break;
                 }
                 ++it;
@@ -274,16 +282,12 @@ namespace Amara {
         Amara::Actor* cancelScripts() {
             for (Amara::Script* script: scripts) {
                 script->cancel();
-                if (!script->manualDeletion) {
-                    properties->taskManager->queueDeletion(script);
-                }
+                if (!script->manualDeletion) script->destroyScript();
             }
             scripts.clear();
             for (Amara::Script* script: scriptBuffer) {
                 script->cancel();
-                if (!script->manualDeletion) {
-                    properties->taskManager->queueDeletion(script);
-                }
+                if (!script->manualDeletion) script->destroyScript();
             }
             scriptBuffer.clear();
 

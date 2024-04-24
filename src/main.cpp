@@ -42,11 +42,8 @@ class TestScene: public Scene, public StateManager {
 
         void update() {
 			start();
-			for (int i = 0; i < testText.size(); i++) {
-				box->say(testText[i]);
-			}
 			if (once()) {
-				startTransition(new FillTransition("test", 0.01, 0.01));
+				box->recite(new Tween_Alpha(0, 1));
 			}
         }
 };
@@ -60,6 +57,9 @@ int main(int argc, char** args) {
     game.init(480, 360);
     game.setWindowSize(960, 720);
 	game.setWindowPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+	
+	game.debugGameLoop = true;
+	Amara::Entity::debuggingDefault = true;
 
     game.scenes.add("test", new TestScene());
     game.start("test");

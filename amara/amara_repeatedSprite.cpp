@@ -54,7 +54,7 @@ namespace Amara {
             recWidth = width;
             recHeight = height;
             if (canvas != nullptr) {
-                SDL_DestroyTexture(canvas);
+                tasks->queueDeletion(canvas);
             }
             canvas = SDL_CreateTexture(
                 properties->gRenderer,
@@ -192,7 +192,7 @@ namespace Amara {
 
         virtual void destroy(bool recursive) {
             if (canvas) {
-                SDL_DestroyTexture(canvas);
+                tasks->queueDeletion(canvas);
                 canvas = nullptr;
             }
             Amara::Sprite::destroy(recursive);

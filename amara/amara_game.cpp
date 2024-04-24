@@ -68,6 +68,8 @@ namespace Amara {
 			bool testing = true;
 			bool hardwareRendering = true;
 
+			bool debugGameLoop = false;
+
 			Game() {}
 
 			Game(std::string givenName, bool gRendering) {
@@ -280,16 +282,22 @@ namespace Amara {
 				manageFPSStart();
 				writeProperties();
 				// Draw Screen
+				if (debugGameLoop) SDL_Log("Amara Game: Start Drawing");
 				draw();
+				if (debugGameLoop) SDL_Log("Amara Game: End Drawing");
 				// Manage frame catch up and slow down
+				if (debugGameLoop) SDL_Log("Amara Game: Manage FPS");
 				manageFPSEnd();
+				if (debugGameLoop) SDL_Log("Amara Game: Run Tasks");
 				taskManager.run();
 				if (renderTargetsReset || renderDeviceReset) {
 					reloadAssets = true;
 				}
 				else if (reloadAssets && (isWindowed || windowFocused)) {
 					reloadAssets = false;
+					if (debugGameLoop) SDL_Log("Amara Game: Reload Assets");
 					load.regenerateAssets();
+					if (debugGameLoop) SDL_Log("Amara Game: End Reload Assets");
 				}
 			}
 
@@ -432,6 +440,7 @@ namespace Amara {
 			}
 
 			void update() {
+				if (debugGameLoop) SDL_Log("Amara Game: Update");
 				if (quit) return;
 				handleEvents();
 				writeProperties();
@@ -441,6 +450,7 @@ namespace Amara {
 				scenes.run();
 				scenes.manageTasks();
 				audio.run(1);
+				if (debugGameLoop) SDL_Log("Amara Game: End Update");
 			}
 
 			void draw() {
@@ -453,10 +463,14 @@ namespace Amara {
 					frameCounter = 0;
 				}
 				frameCounter += 1;
+				if (debugGameLoop) SDL_Log("Amara Game: Draw Scenes");
 				if (isWindowed || windowFocused) scenes.draw();
+				if (debugGameLoop) SDL_Log("Amara Game: Manage Interacts");
 				events.manageInteracts();
+				if (debugGameLoop) SDL_Log("Amara Game Render Present");
 				/// Draw to renderer
 				SDL_RenderPresent(gRenderer);
+				if (debugGameLoop) SDL_Log("Amara Game: End Render");
 			}
 
 			void manageFPSStart() {
@@ -486,7 +500,8 @@ namespace Amara {
 				}
 				realFPS = fps / (frameTicks / 1000.f);
 				deltaTime = fps / realFPS;
-
+				
+				if (debugGameLoop) SDL_Log("Amara Game: Delay");
 				// Delay if game has not caught up
 				if (totalWait > 0) {
 					SDL_Delay(totalWait);
