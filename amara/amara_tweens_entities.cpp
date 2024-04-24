@@ -440,6 +440,12 @@ namespace Amara {
                         targetDepth = entity->depth + 0.1;
                     }
                 }
+                for (auto it = parent->entityBuffer.begin(); it != parent->entityBuffer.end();) {
+                    entity = *it;
+                    if (entity->depth > targetDepth) {
+                        targetDepth = entity->depth + 0.1;
+                    }
+                }
             }
         }
 

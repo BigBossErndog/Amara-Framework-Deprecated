@@ -453,8 +453,8 @@ namespace Amara {
 				++it;
 				if (isDestroyed) break;
 			}
-			if (!isDestroyed) pipeEntityBuffer();
 			runningEntities = false;
+			if (!isDestroyed) pipeEntityBuffer();
 			properties->entityDepth -= 1;
 		}
 
@@ -471,6 +471,16 @@ namespace Amara {
 					return entity;
 				}
 			}
+			for (auto it = entityBuffer.begin(); it != entityBuffer.end();) {
+				entity = *it;
+				++it;
+				if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
+					continue;
+				}
+				if (entity->id.compare(find) == 0) {
+					return entity;
+				}
+			}
 			return nullptr;
 		}
 
@@ -478,12 +488,16 @@ namespace Amara {
 		 * Do not use this within its own run loop.
 		*/
 		virtual Amara::Entity* add(Amara::Entity* entity) {
-			if (runningEntities) entityBuffer.push_back(entity);
 			if (entity == nullptr || entity->isDestroyed) return nullptr;
 			if (entity->parent) {
 				return entity->setParent(this);
 			}
-			else children.push_back(entity);
+			else {
+				if (runningEntities) {
+					entityBuffer.push_back(entity);
+				}
+				else children.push_back(entity);
+			}
 			entity->init(properties, scene, this);
 			return entity;
 		}
@@ -494,8 +508,13 @@ namespace Amara {
 				child = *it;
 				if (child == entity) {
 					if (entity->parent == this) entity->parent = nullptr;
-					it = children.erase(it);
-					continue;
+				}
+				++it;
+			}
+			for (auto it = entityBuffer.begin(); it != entityBuffer.end();) {
+				child = *it;
+				if (child == entity) {
+					if (entity->parent == this) entity->parent = nullptr;
 				}
 				++it;
 			}
@@ -539,7 +558,7 @@ namespace Amara {
 
 		void pipeEntityBuffer() {
 			for (Amara::Entity* entity: entityBuffer) {
-				add(entity);
+				children.push_back(entity);
 			}
 			entityBuffer.clear();
 		}
@@ -704,6 +723,11 @@ namespace Amara {
 		Amara::Entity* bringToFront() {
 			if (parent) {
 				for (Amara::Entity* entity: parent->children) {
+					if (entity != this && entity->parent == parent && !entity->isDestroyed && depth <= entity->depth) {
+						depth = entity->depth + 0.1;
+					}
+				}
+				for (Amara::Entity* entity: parent->entityBuffer) {
 					if (entity != this && entity->parent == parent && !entity->isDestroyed && depth <= entity->depth) {
 						depth = entity->depth + 0.1;
 					}

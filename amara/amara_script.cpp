@@ -92,8 +92,10 @@ namespace Amara {
                 load = properties->loader;
                 messages = properties->messages;
                 tasks = properties->taskManager;
-                
+
+                initiated = true;
                 isFinished = false;
+                
                 reset();
                 init();
             }
@@ -101,7 +103,6 @@ namespace Amara {
             virtual void init(Amara::GameProperties* gameProperties, Amara::Actor* parentActor) {
                 parent = parentActor;
                 parentEntity = (Amara::Entity*)parent;
-                initiated = true;
                 Amara::StateManager::init(gameProperties);
                 init(gameProperties);
             }

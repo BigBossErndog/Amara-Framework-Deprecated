@@ -18,7 +18,7 @@ namespace Amara {
                 std::string cKey;
                 nlohmann::json cData;
                 Amara::Control* control;
-                for (auto it = config.begin(); it != config.end(); ++it) {
+                for (auto it = config.begin(); it != config.end();) {
                     cKey = it.key();
                     cData = it.value();
                     control = get(cKey);
@@ -33,6 +33,7 @@ namespace Amara {
                         for (nlohmann::json buttonCode: buttons)
                             control->addButton((Amara::ButtonCode)buttonCode);
                     }
+                    ++it;
                 }
             }
 

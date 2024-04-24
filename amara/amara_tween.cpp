@@ -6,6 +6,7 @@ namespace Amara {
             double time = 0;
             bool useDeltaTime = true;
 
+            using Script::init;
             void init() {
                 Script::init();
                 progress = 0;

@@ -462,12 +462,6 @@ namespace Amara {
 				// Clear the Renderer
 				SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 				SDL_RenderClear(gRenderer);
-
-				if (frameCounter >= logicDelay) {
-					update();
-					frameCounter = 0;
-				}
-				frameCounter += 1;
 				if (debugGameLoop) SDL_Log("Amara Game: Draw Scenes");
 				if (isWindowed || windowFocused) scenes.draw();
 				if (debugGameLoop) SDL_Log("Amara Game: Manage Interacts");
@@ -488,6 +482,12 @@ namespace Amara {
 				else if (fps > lps) {
 					logicDelay = floor(fps/(float)lps);
 				}
+
+				if (frameCounter >= logicDelay) {
+					update();
+					frameCounter = 0;
+				}
+				frameCounter += 1;
 			}
 
 			void manageFPSStart() {

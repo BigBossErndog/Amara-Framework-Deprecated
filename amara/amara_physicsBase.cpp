@@ -213,17 +213,7 @@ namespace Amara {
 			}
 			virtual Amara::PhysicsBase* removeCollisionTarget(Amara::Entity* other) {}
 
-			void checkActiveCollisionTargets() {
-				Amara::PhysicsBase* other;
-				for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
-					other = *it;
-					if (other->isDestroyed) {
-						it = collisionTargets.erase(it);
-						continue;
-					}
-					++it;
-				}
-			}
+			void checkActiveCollisionTargets();
 
 			void activate() {
 				isActive = true;

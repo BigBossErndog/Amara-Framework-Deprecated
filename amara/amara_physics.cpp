@@ -1,4 +1,16 @@
 namespace Amara {
+    void Amara::PhysicsBase::checkActiveCollisionTargets() {
+        Amara::PhysicsBase* other;
+        for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
+            other = *it;
+            if (other->isDestroyed || (other->parent != nullptr && other->parent->isDestroyed)) {
+                it = collisionTargets.erase(it);
+                continue;
+            }
+            ++it;
+        }
+    }
+
     class PhysicsBody: public Amara::PhysicsBase {
     public:
         using Amara::PhysicsBase::addCollisionTarget;
@@ -58,7 +70,7 @@ namespace Amara {
             for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
                 body = *it;
                 if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
-                    it = collisionTargets.erase(it);
+                    ++it;
                     continue;
                 }
 				else if (!body->isActive) {
@@ -81,7 +93,7 @@ namespace Amara {
             for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
                 body = *it;
                 if (body->isDestroyed || (body->parent != nullptr && body->parent->isDestroyed)) {
-                    it = collisionTargets.erase(it);
+                    ++it;
                     continue;
                 }
 				else if (!body->isActive) { ++it; continue; }
@@ -607,6 +619,7 @@ namespace Amara {
                 if (body->collidesWith(other)) {
                     return true;
                 }
+                ++it;
             }
             return false;
         }
