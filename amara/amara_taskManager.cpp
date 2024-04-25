@@ -33,6 +33,7 @@ namespace Amara {
                 if (obj == nullptr) return;
                 garbageBuffer.push_back(obj);
             }
+            void queueDeletion(Amara::Entity* entity);
 
             void queueDeletion(SDL_Texture* tx) {
                 if (tx == nullptr) return;

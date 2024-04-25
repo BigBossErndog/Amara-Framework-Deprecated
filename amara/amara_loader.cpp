@@ -540,7 +540,7 @@ namespace Amara {
 				}
 				else {
 					// Convert surface to screen format.
-					SDL_PixelFormat *format = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32);
+					SDL_PixelFormat *format = SDL_AllocFormat(SDL_PIXELFORMAT_ARGB8888);
 					optimizedSurface = SDL_ConvertSurface(loadedSurface, format, 0);
 					SDL_FreeFormat(format);
 					

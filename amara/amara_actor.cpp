@@ -66,22 +66,22 @@ namespace Amara {
         }
 
         virtual void reciteScripts() {
-            if (scripts.size() == 0 || actingPaused) return;
+            if (scripts.size() == 0 || isDestroyed || actingPaused) return;
             scriptsCanceled = false;
             
             inRecital = true;
             for (Amara::Script* script: scripts) {
                 if (!script->isFinished) {
                     script->receiveMessages();
-                    script->updateMessages();
+                    if (!isDestroyed && !script->isFinished && !script->isDestroyed) script->updateMessages();
                     if (!isDestroyed && !script->isFinished && !script->isDestroyed) script->script();
                     if (isDestroyed || scriptsCanceled) break;
                 }
-                if (isDestroyed) {
-                    clearScripts();
-                    inRecital = false;
-                    break;
-                }
+            }
+
+            if (isDestroyed || scriptsCanceled) {
+                inRecital = false;
+                return;
             }
 
             std::vector<Script*> chained;
@@ -92,6 +92,7 @@ namespace Amara {
                 script = *it;
                 if (script->isDestroyed) {
                     it = scripts.erase(it);
+                    continue;
                 }
                 else if (script->isFinished) {
                     if (!script->endConfig.is_null()) configure(script->endConfig);
@@ -230,6 +231,8 @@ namespace Amara {
                 if (!script->manualDeletion) script->destroyScript();
             }
             scriptBuffer.clear();
+
+            scriptsCanceled = true;
             return this;
         }
 

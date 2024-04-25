@@ -6,7 +6,7 @@ namespace Amara {
     class Scene: public Amara::Actor {
         public:
             std::string key;
-            Amara::LoadManager* loadManager = nullptr;
+            Amara::LoadManager loadManager;
             Amara::ScenePlugin* scenes = nullptr;
 
             Amara::SceneTransitionBase* transition = nullptr;
@@ -32,12 +32,9 @@ namespace Amara {
                 messages = properties->messages;
 
                 scene = this;
-                
-                if (loadManager != nullptr) {
-                    properties->taskManager->queueDeletion(loadManager);
-                }
-                loadManager = new Amara::LoadManager(properties);
-                setLoader(loadManager);
+
+                loadManager = Amara::LoadManager(properties);
+                setLoader(&loadManager);
 
                 transition = nullptr;
 
@@ -48,7 +45,7 @@ namespace Amara {
             virtual void init() {
                 initialLoaded = false;
 
-                setLoader(loadManager);
+                setLoader(&loadManager);
                 load->reset();
 
                 destroyEntities();

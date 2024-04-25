@@ -149,14 +149,14 @@ namespace Amara {
         if (evt()) {
             if (script == nullptr || script->notActing())  {
                 if (script && script->manualDeletion) {
-                    script->tasks->queueDeletion(script);
+                    script->destroyScript();
                 }
                 nextEvt();
             }
             else {
                 script->manualDeletion = true;
                 if (nextEvtOn(script->notActing())) {
-                    script->tasks->queueDeletion(script);
+                    script->destroyScript();
                 }
             }
             return true;

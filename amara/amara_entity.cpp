@@ -812,4 +812,10 @@ namespace Amara {
 		}
 	};
 	bool Amara::Entity::debuggingDefault = false;
+
+	void TaskManager::queueDeletion(Amara::Entity* entity) {
+		if (entity == nullptr) return;
+		entity->isDestroyed = true;
+		garbageBuffer.push_back(entity);
+	}
 }

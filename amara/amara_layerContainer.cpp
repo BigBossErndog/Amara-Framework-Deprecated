@@ -215,7 +215,7 @@ namespace Amara {
             }
             tx = SDL_CreateTexture(
                 properties->gRenderer,
-                SDL_PIXELFORMAT_RGBA8888,
+                SDL_PIXELFORMAT_ARGB8888,
                 SDL_TEXTUREACCESS_TARGET,
                 properties->currentCamera->width,
                 properties->currentCamera->height
@@ -357,10 +357,11 @@ namespace Amara {
             for (auto it = children.begin(); it != children.end();) {
                 entity = *it;
 
-                if (entity->isDestroyed || entity->parent != this) {
-                    it = children.erase(it);
-                    continue;
-                }
+                if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
+					if (properties->inSceneDrawing) it = children.erase(it);
+					else ++it;
+					continue;
+				}
                 if (entity->isVisible) {
                     properties->scrollX = recScrollX;
                     properties->scrollY = recScrollY;
@@ -474,7 +475,7 @@ namespace Amara {
             }
             tx = SDL_CreateTexture(
                 properties->gRenderer,
-                SDL_PIXELFORMAT_RGBA8888,
+                SDL_PIXELFORMAT_ARGB8888,
                 SDL_TEXTUREACCESS_TARGET,
                 width,
                 height
@@ -660,10 +661,11 @@ namespace Amara {
             for (auto it = children.begin(); it != children.end();) {
                 entity = *it;
 
-                if (entity->isDestroyed || entity->parent != this) {
-                    it = children.erase(it);
-                    continue;
-                }
+                if (entity == nullptr || entity->isDestroyed || entity->parent != this) {
+					if (properties->inSceneDrawing) it = children.erase(it);
+					else ++it;
+					continue;
+				}
                 if (entity->isVisible) {
                     properties->scrollX = 0;
                     properties->scrollY = 0;
