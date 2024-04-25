@@ -429,7 +429,7 @@ namespace Amara {
                 if (drawTexture) tasks->queueDeletion(drawTexture);
                 drawTexture = SDL_CreateTexture(
                     properties->gRenderer,
-                    SDL_PIXELFORMAT_ARGB8888,
+                    SDL_PIXELFORMAT_RGBA8888,
                     SDL_TEXTUREACCESS_TARGET,
                     widthInPixels,
                     heightInPixels
