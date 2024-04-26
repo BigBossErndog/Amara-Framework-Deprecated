@@ -91,6 +91,7 @@ namespace Amara {
             for (auto it = scripts.begin(); it != scripts.end();) {
                 script = *it;
                 if (script->isDestroyed) {
+                    script->inQueue = false;
                     it = scripts.erase(it);
                     continue;
                 }
@@ -111,9 +112,8 @@ namespace Amara {
                 ++it;
             }
 
-            if (isDestroyed) {
+            if (isDestroyed || scriptsCanceled) {
                 inRecital = false;
-                clearScripts();
                 return;
             }
 
@@ -216,6 +216,7 @@ namespace Amara {
         using Amara::Entity::destroy;
         
         virtual void destroy(bool recursiveDestroy) {
+            if (isDestroyed) return;
             clearScripts();
             Amara::Entity::destroy(recursiveDestroy);
         }

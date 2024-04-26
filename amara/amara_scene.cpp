@@ -147,6 +147,7 @@ namespace Amara {
 
                 receiveMessages();
                 updateMessages();
+                if (isDestroyed) return;
                 
                 properties->entityDepth = 0;
                 properties->scrollX = 0;
@@ -161,22 +162,27 @@ namespace Amara {
                 properties->alpha = 1;
                 
                 update();
+                if (isDestroyed) return;
 
                 if (debugging) SDL_Log("%s (%s): Reciting Scripts (%d).", debugCopy.c_str(), entityType.c_str(), scripts.size());
                 reciteScripts();
+                if (isDestroyed) return;
                 
                 runChildren();
                 checkChildren();
+                if (isDestroyed) return;
 
                 Amara::Camera* cam;
-                for (auto it = cameras.begin(); it != cameras.end(); ++it) {
+                for (auto it = cameras.begin(); it != cameras.end();) {
                     cam = *it;
                     if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
+                        ++it;
                         continue;
                     }
                     else {
                         cam->run();
                     }
+                    ++it;
                 }
 
                 if (debugging) SDL_Log("%s (%s): Finished Running.", debugCopy.c_str(), entityType.c_str());
