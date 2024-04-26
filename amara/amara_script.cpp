@@ -170,4 +170,10 @@ namespace Amara {
         }
         return false;
     }
+
+    void TaskManager::queueDeletion(Amara::Script* script) {
+		if (script == nullptr) return;
+		script->isDestroyed = true;
+		scriptBuffer.push_back(script);
+	}
 }

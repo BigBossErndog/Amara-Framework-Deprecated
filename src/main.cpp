@@ -41,9 +41,21 @@ class TestScene: public Scene, public StateManager {
 		}
 
         void update() {
-			start();
-			if (once()) {
-				box->recite(new Tween_Alpha(0, 1));
+			if (state("1")) {
+				for (int i = 0; i < testText.size(); i++) {
+					box->say(testText[i]);
+				}
+				switchStateEvt("2");
+			}
+			else if (state("2")) {
+				if (once()) {
+					box->recite(new Tween_Alpha(0, 1))->chain(new Tween_Alpha(1, 1));
+				}
+				wait(0.5);
+				if (once()) {
+					box->chain(new Tween_Alpha(0, 1))->chain(new Script_Destroy());
+					box = nullptr;
+				}
 			}
         }
 };
@@ -58,8 +70,8 @@ int main(int argc, char** args) {
     game.setWindowSize(960, 720);
 	game.setWindowPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	
-	game.debugGameLoop = true;
-	Amara::Entity::debuggingDefault = true;
+	// game.debugGameLoop = true;
+	// Amara::Entity::debuggingDefault = true;
 
     game.scenes.add("test", new TestScene());
     game.start("test");

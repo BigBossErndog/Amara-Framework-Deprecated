@@ -42,7 +42,7 @@ namespace Amara {
                 asset = surface;
             }
 
-            ~SurfaceAsset() {
+            virtual ~SurfaceAsset() {
                 SDL_FreeSurface(asset);
             }
     };

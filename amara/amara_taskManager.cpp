@@ -11,6 +11,12 @@ namespace Amara {
             std::vector<SDL_Texture*> textureQueue;
             std::vector<SDL_Texture*> textureBuffer;
 
+            std::vector<Amara::Entity*> entityQueue;
+            std::vector<Amara::Entity*> entityBuffer;
+
+            std::vector<Amara::Script*> scriptQueue;
+            std::vector<Amara::Script*> scriptBuffer;
+
             bool automaticGarbageClearing = true;
             bool pleaseClear = false;
             bool inTaskRunner = false;
@@ -34,6 +40,7 @@ namespace Amara {
                 garbageBuffer.push_back(obj);
             }
             void queueDeletion(Amara::Entity* entity);
+            void queueDeletion(Amara::Script* script);
 
             void queueDeletion(SDL_Texture* tx) {
                 if (tx == nullptr) return;
@@ -63,15 +70,38 @@ namespace Amara {
                 }
                 pleaseClear = false;
                 intervalCounter = 0;
+
+                SDL_Log("Amara TaskManager: New Task");
+
                 int size = garbageQueue.size();
                 if (properties->testing && size > 0) {
-                    SDL_Log("TaskManager: Deleting %d objects.", size);
+                    SDL_Log("/tAmara TaskManager: Deleting %d objects.", size);
                 }
                 for (void* obj: garbageQueue) {
                     delete obj;
                 }
                 garbageQueue = garbageBuffer;
                 garbageBuffer.clear();
+
+                size = entityQueue.size();
+                if (properties->testing && size > 0) {
+                    SDL_Log("\tAmara TaskManager: Deleting %d entities.", size);
+                }
+                for (void* entity: entityQueue) {
+                    delete entity;
+                }
+                entityQueue = entityBuffer;
+                entityBuffer.clear();
+
+                size = scriptQueue.size();
+                if (properties->testing && size > 0) {
+                    SDL_Log("\tAmara TaskManager: Deleting %d scripts.", size);
+                }
+                for (void* script: scriptQueue) {
+                    delete script;
+                }
+                scriptQueue = scriptBuffer;
+                scriptBuffer.clear();
 
                 size = textureQueue.size();
                 if (properties->testing && size > 0) {

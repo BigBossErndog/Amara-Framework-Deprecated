@@ -819,6 +819,6 @@ namespace Amara {
 	void TaskManager::queueDeletion(Amara::Entity* entity) {
 		if (entity == nullptr) return;
 		entity->isDestroyed = true;
-		garbageBuffer.push_back(entity);
+		entityBuffer.push_back(entity);
 	}
 }

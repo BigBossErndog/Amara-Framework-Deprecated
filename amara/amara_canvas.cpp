@@ -276,7 +276,7 @@ namespace Amara {
                 if (clearEveryFrame) clear();
             }
 
-            ~Canvas() {
+            virtual ~Canvas() {
                 if (tasks) tasks->queueDeletion(canvas);
             }
     };

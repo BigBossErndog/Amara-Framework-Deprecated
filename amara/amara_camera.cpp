@@ -477,7 +477,5 @@ namespace Amara {
                 if (recX != scrollX || recY != scrollY) return true;
                 return false;
             }
-
-            ~Camera() {}
     };
 }

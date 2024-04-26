@@ -75,7 +75,10 @@ playlinux:
 	cp -R assets/ build/
 	./$(BUILD_EXECUTABLE_LINUX)
 
-
+valgrind:
+	rm -rf build/assets/*
+	cp -R assets/ build/
+	valgrind --leak-check=yes ./$(BUILD_EXECUTABLE_LINUX)
 
 setup-apt64:
 	sudo apt-get install libsdl2-2.0-0

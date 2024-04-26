@@ -94,7 +94,6 @@ namespace Amara {
                     ++it;
                     continue;
                 }
-                if (debugging) SDL_Log("4");
                 if (!script->isFinished) {
                     script->receiveMessages();
                     script->updateMessages();
