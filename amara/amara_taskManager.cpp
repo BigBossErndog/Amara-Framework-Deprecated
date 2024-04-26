@@ -31,6 +31,12 @@ namespace Amara {
                 garbageQueue.clear();
                 garbageBuffer.clear();
 
+                entityQueue.clear();
+                entityBuffer.clear();
+
+                scriptQueue.clear();
+                scriptBuffer.clear();
+
                 textureQueue.clear();
                 textureBuffer.clear();
             }
@@ -71,7 +77,9 @@ namespace Amara {
                 pleaseClear = false;
                 intervalCounter = 0;
 
-                SDL_Log("Amara TaskManager: New Task");
+                if (garbageQueue.size() > 0 && entityQueue.size() && scriptQueue.size()) {
+                    SDL_Log("Amara TaskManager: New Task");
+                }
 
                 int size = garbageQueue.size();
                 if (properties->testing && size > 0) {
