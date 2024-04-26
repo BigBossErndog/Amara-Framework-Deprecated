@@ -41,16 +41,17 @@ namespace Amara {
                 textureBuffer.clear();
             }
 
-            void queueDeletion(void* obj) {
-                if (obj == nullptr) return;
-                garbageBuffer.push_back(obj);
-            }
             void queueDeletion(Amara::Entity* entity);
             void queueDeletion(Amara::Script* script);
 
             void queueDeletion(SDL_Texture* tx) {
                 if (tx == nullptr) return;
                 textureBuffer.push_back(tx);
+            }
+
+            void queueDeletion(void* obj) {
+                if (obj == nullptr) return;
+                garbageBuffer.push_back(obj);
             }
 
             std::vector<void*>& getObjectQueue() {
@@ -77,13 +78,13 @@ namespace Amara {
                 pleaseClear = false;
                 intervalCounter = 0;
 
-                if (garbageQueue.size() > 0 && entityQueue.size() && scriptQueue.size()) {
+                if (garbageQueue.size() > 0 || entityQueue.size() > 0 || scriptQueue.size() > 0) {
                     SDL_Log("Amara TaskManager: New Task");
                 }
 
                 int size = garbageQueue.size();
                 if (properties->testing && size > 0) {
-                    SDL_Log("/tAmara TaskManager: Deleting %d objects.", size);
+                    SDL_Log("\tAmara TaskManager: Deleting %d objects.", size);
                 }
                 for (void* obj: garbageQueue) {
                     delete obj;
@@ -113,7 +114,7 @@ namespace Amara {
 
                 size = textureQueue.size();
                 if (properties->testing && size > 0) {
-                    SDL_Log("TaskManager: Deleting %d textures.", size);
+                    SDL_Log("\tAmara TaskManager: Deleting %d textures.", size);
                 }
                 for (SDL_Texture* tx: textureQueue) {
                     SDL_DestroyTexture(tx);
