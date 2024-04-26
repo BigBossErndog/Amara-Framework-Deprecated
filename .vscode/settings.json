@@ -54,6 +54,7 @@
         "numbers": "cpp",
         "cinttypes": "cpp",
         "sstream": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "optional": "cpp"
     }
 }

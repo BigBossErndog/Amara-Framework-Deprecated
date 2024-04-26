@@ -3,9 +3,11 @@ namespace Amara {
         public:
             std::string lastSeed;
             std::random_device rd;
-            std::default_random_engine e;
+            std::mt19937 e;
 
-            RNG() {}
+            RNG() {
+                randomize();
+            }
 
             RNG* randomize() {
                 e.seed(time(0));
@@ -31,7 +33,8 @@ namespace Amara {
 
             double between(double min, double max) {
                 std::uniform_real_distribution<double> dist(min, max);
-                return dist(e);
+                double result = dist(e);
+                return result;
             }
 
             double random() {

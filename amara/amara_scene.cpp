@@ -170,8 +170,7 @@ namespace Amara {
                 
                 runChildren();
                 if (isDestroyed) return;
-
-                checkChildren();
+                
                 Amara::Camera* cam;
                 for (auto it = cameras.begin(); it != cameras.end();) {
                     cam = *it;

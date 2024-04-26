@@ -37,8 +37,15 @@ namespace Amara {
             Script(): Script(true) {}
 
             Amara::Script* chain(Amara::Script* gScript, bool parallel) {
+                if (gScript == nullptr) {
+                    SDL_Log("Amara Actor: Null script was given to script chain.");
+                    return nullptr;
+                }
                 if (parallel || chainedScripts.size() == 0) chainedScripts.push_back(gScript);
-                else chainedScripts.back()->chain(gScript);
+                else {
+                    Amara:Script* last = chainedScripts.back();
+                    if (last) last->chain(gScript);
+                }
                 return gScript;
             }
 

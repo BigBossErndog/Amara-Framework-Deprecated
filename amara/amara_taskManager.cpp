@@ -15,7 +15,7 @@ namespace Amara {
             bool pleaseClear = false;
             bool inTaskRunner = false;
             
-            bool intervalClearing = 4;
+            bool intervalClearing = 0;
             bool intervalCounter = 0;
 
             TaskManager() {}
@@ -49,7 +49,7 @@ namespace Amara {
                 if (pleaseClear) clearGarbage();
                 else if (automaticGarbageClearing) {
                     intervalCounter += 1;
-                    if (intervalCounter % intervalClearing == 0) {
+                    if (intervalClearing == 0 || intervalCounter % intervalClearing == 0) {
                         clearGarbage();
                     }
                 }

@@ -63,6 +63,7 @@ namespace Amara {
 
 		bool shouldSortChildren = true;
 		bool sortChildrenOnce = false;
+		bool noChildrenLogic = false;
 
 		int sortingDelay = 0;
 		int sortingDelayCounter = 0;
@@ -433,7 +434,7 @@ namespace Amara {
 		}
 
 		virtual void runChildren() {
-			if (isDestroyed) return;
+			if (isDestroyed || noChildrenLogic) return;
 			Amara::Entity* entity;
 			properties->entityDepth += 1;
 			runningEntities = true;
@@ -455,6 +456,7 @@ namespace Amara {
 			}
 			runningEntities = false;
 			if (!isDestroyed) pipeEntityBuffer();
+			checkChildren();
 			properties->entityDepth -= 1;
 		}
 

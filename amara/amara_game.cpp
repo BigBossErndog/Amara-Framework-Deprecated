@@ -197,7 +197,7 @@ namespace Amara {
 
 				assets = Amara::AssetManager(&properties);
 				properties.assets = &assets;
-
+				
 				input = Amara::InputManager(&properties);
 				properties.input = &input;
 
@@ -277,6 +277,7 @@ namespace Amara {
 			}
 
 			void gameLoop() {
+				if (debugGameLoop) SDL_Log("Amara Game: Start Game Loop");
 				renderTargetsReset = false;
 				renderDeviceReset = false;
 				manageFPSStart();
@@ -304,6 +305,7 @@ namespace Amara {
 				}
 				if (debugGameLoop) SDL_Log("Amara Game: Run Tasks");
 				taskManager.run();
+				if (debugGameLoop) SDL_Log("Amara Game: End Game Loop");
 			}
 
 			void setFPS(int newFps, bool lockLogicSpeed) {
