@@ -211,7 +211,6 @@ namespace Amara {
                         entity->draw(dx, dy, dw, dh);
                     }
                     ++it;
-
                 }
 
                 if (transition != nullptr) {

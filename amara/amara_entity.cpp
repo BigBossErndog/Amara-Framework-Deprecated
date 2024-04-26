@@ -541,6 +541,7 @@ namespace Amara {
 		}
 
 		void checkChildren(bool recursive) {
+			if (runningEntities) return;
 			Amara::Entity* entity;
 			for (auto it = children.begin(); it != children.end();) {
 				entity = *it;

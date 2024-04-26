@@ -44,10 +44,6 @@ namespace Amara {
                 scriptBuffer.push_back(script);
             }
             script->init(properties, this);
-            if (isDestroyed) {
-                if (!script->manualDeletion) script->destroyScript();
-                return script;
-            }
             script->inQueue = true;
             script->prepare();
             return script;

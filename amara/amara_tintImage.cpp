@@ -35,7 +35,7 @@ namespace Amara {
             height = img->imageHeight;
             depth = img->depth + 0.0001;
             angle = img->angle;
-
+            
             setOrigin(img->originX, img->originY);
             setScale(img->scaleX, img->scaleY);
             setZoomFactor(img->zoomFactorX, img->zoomFactorY);

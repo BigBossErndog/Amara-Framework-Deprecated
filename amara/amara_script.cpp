@@ -61,7 +61,7 @@ namespace Amara {
                 if (chainedScripts.size() > 0) {
                     for (Amara::Script* chainedScript: chainedScripts) {
                         chainedScript->properties = properties;
-                        chainedScript->destroyScript();
+                        if (!chainedScript->manualDeletion) chainedScript->destroyScript();
                     }
                     chainedScripts.clear();
                 }
