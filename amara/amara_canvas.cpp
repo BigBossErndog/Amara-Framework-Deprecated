@@ -220,7 +220,7 @@ namespace Amara {
             virtual void draw(int vx, int vy, int vw, int vh) override {
                 bool skipDrawing = false;
 
-				if (properties->renderTargetsReset || properties->renderDeviceReset) {
+				if (properties->reloadAssets) {
 					createNewCanvasTexture();
 				}
 

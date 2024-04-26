@@ -313,7 +313,7 @@ namespace Amara {
                     if (openHeight > height) openHeight = height;
                     createTexture();
                 }
-				else if (properties->renderTargetsReset || properties->renderDeviceReset) {
+				else if (properties->reloadAssets) {
 					createTexture();
 				}
 

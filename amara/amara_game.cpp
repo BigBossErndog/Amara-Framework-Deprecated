@@ -61,8 +61,6 @@ namespace Amara {
 			int frameCounter = 0;
 			int logicDelay = 0;
 
-			bool reloadAssets = false;
-
 			SDL_Event e;
 
 			bool testing = true;
@@ -197,7 +195,7 @@ namespace Amara {
 
 				assets = Amara::AssetManager(&properties);
 				properties.assets = &assets;
-				
+
 				input = Amara::InputManager(&properties);
 				properties.input = &input;
 
@@ -293,12 +291,12 @@ namespace Amara {
 				// Manage frame catch up and slow down
 				if (debugGameLoop) SDL_Log("Amara Game: Manage FPS");
 				manageFPSEnd();
-
+				
 				if (renderTargetsReset || renderDeviceReset) {
-					reloadAssets = true;
+					properties.reloadAssets = true;
 				}
-				else if (reloadAssets && (isWindowed || windowFocused)) {
-					reloadAssets = false;
+				else if (properties.reloadAssets && (isWindowed || windowFocused)) {
+					properties.reloadAssets = false;
 					if (debugGameLoop) SDL_Log("Amara Game: Reload Assets");
 					load.regenerateAssets();
 					if (debugGameLoop) SDL_Log("Amara Game: End Reload Assets");

@@ -249,7 +249,7 @@ namespace Amara {
         void draw(int vx, int vy, int vw, int vh) {
             float recAlpha = properties->alpha;
 
-			if (properties->renderTargetsReset || properties->renderDeviceReset) {
+			if (properties->reloadAssets) {
 				createTexture();
 			}
             else if (textureWidth != properties->currentCamera->width || textureHeight != properties->currentCamera->height) {
@@ -529,7 +529,7 @@ namespace Amara {
             }
             if (alpha > 1) alpha = 1;
 
-            if (properties->renderTargetsReset || properties->renderDeviceReset || textureWidth != width || textureHeight != height) {
+            if (properties->reloadAssets || textureWidth != width || textureHeight != height) {
 				createTexture();
 			}
 

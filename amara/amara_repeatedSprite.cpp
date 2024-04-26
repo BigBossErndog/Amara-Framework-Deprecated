@@ -130,7 +130,7 @@ namespace Amara {
             if (recWidth != width || recHeight != height) {
                 createNewCanvasTexture();
             }
-            else if (properties->renderTargetsReset || properties->renderDeviceReset) {
+            else if (properties->reloadAssets) {
                 createNewCanvasTexture();
             }
 

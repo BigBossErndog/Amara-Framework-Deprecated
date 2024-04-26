@@ -70,6 +70,7 @@ namespace Amara {
 
             bool renderTargetsReset = false;
             bool renderDeviceReset = false;
+            bool reloadAssets = false;
 
             bool inSceneDrawing = false;
 

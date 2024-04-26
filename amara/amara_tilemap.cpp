@@ -762,7 +762,7 @@ namespace Amara {
                 if (alpha < 0) alpha = 0;
                 if (alpha > 1) alpha = 1;
 				
-				if (drawTexture == nullptr || properties->renderTargetsReset || properties->renderDeviceReset) {
+				if (drawTexture == nullptr || properties->reloadAssets) {
 					createDrawTexture();
 				}
 
