@@ -147,7 +147,7 @@ namespace Amara {
 				Amara::Asset* asset = get(key);
 				if (asset != nullptr) {
 					assets.erase(key);
-					if (andDelete) properties->taskManager->queueObject(asset);
+					if (andDelete) properties->taskManager->queueAsset(asset);
 					return true;
 				}
 				return false;
@@ -234,7 +234,7 @@ namespace Amara {
 
 			virtual void clearAssets() {
 				for (auto it = assets.begin(); it != assets.end(); it++) {
-					properties->taskManager->queueObject(it->second);
+					properties->taskManager->queueAsset(it->second);
 				}
 				assets.clear();
 			}

@@ -10,6 +10,12 @@ namespace Amara {
         bool isActive = true;
         bool isNull = false;
         bool skip = false;
+
+        bool is(std::string check) {
+            if (key.compare(check) == 0) return true;
+            if (json_is(data, check)) return true;
+            return false;
+        }
     } Message;
 
     class MessageQueue {

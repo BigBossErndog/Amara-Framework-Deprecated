@@ -354,7 +354,7 @@ namespace Amara {
             Amara::Image* removeTexture() {
                 textureKey.clear();
                 if (texture != nullptr && texture->temp) {
-                    properties->taskManager->queueObject(texture);
+                    properties->taskManager->queueAsset(texture);
                 }
                 texture = nullptr;
                 return this;

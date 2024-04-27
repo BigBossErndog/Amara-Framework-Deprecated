@@ -32,6 +32,8 @@ namespace Amara {
             }
 
             virtual void regenerate(SDL_Renderer*, Amara::TaskManager*) {}
+
+            virtual ~Asset() {};
     };
 
     class SurfaceAsset: public Amara::Asset {
@@ -427,4 +429,9 @@ namespace Amara {
             return lines.size();
         }
     };
+
+    void Amara::TaskManager::queueAsset(Amara::Asset* asset) {
+        if (asset == nullptr) return;
+        assetBuffer.push_back(asset);
+    }
 }

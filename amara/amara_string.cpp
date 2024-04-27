@@ -237,7 +237,6 @@ namespace Amara {
                     }
                     start = end;
                 }
-                else if (StringParser::isPunctuation(c)) end += seqlen;
                 else if (StringParser::isCJKCharacter(c) || (!lastCheck && !StringParser::isSameLanguage(c, lastC))) {
                     pText = fText;
                     for (const char* p = start; p < end; ++p) pText += *p;
@@ -283,6 +282,7 @@ namespace Amara {
         }
 
         static bool isSameLanguage(unsigned long c1, unsigned long c2) {
+            if (isPunctuation(c1) || isPunctuation(c2)) return true;
             if (isLatinCharacter(c1) && isLatinCharacter(c2)) return true;
             if (isJapaneseCharacter(c1) && isJapaneseCharacter(c2)) return true;
             if (isCJKCharacter(c1) && isCJKCharacter(c2)) return true;
