@@ -22,6 +22,7 @@ namespace Amara {
 
             std::deque<Amara::LoadTask> tasks;
 
+            using Loader::Loader;
             LoadManager(Amara::GameProperties* gameProperties): Amara::Loader(gameProperties) {
                 load = properties->loader;
                 reset();

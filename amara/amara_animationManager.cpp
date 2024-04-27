@@ -29,7 +29,7 @@ namespace Amara {
                 }
                 if (anim != currentAnim || (anim != nullptr && isFinished)) {
 					if (currentAnim != nullptr && currentAnim != anim && currentAnim->deleteOnFinish) {
-                        properties->taskManager->queueDeletion(currentAnim);
+                        properties->taskManager->queueObject(currentAnim);
                     }
                     currentAnim = anim;
 
@@ -57,7 +57,7 @@ namespace Amara {
 			void play(Amara::ImageTexture* texture, Amara::Animation* anim) {
 				if (anim != currentAnim || (anim != nullptr && isFinished)) {
 					if (currentAnim != nullptr && currentAnim != anim && currentAnim->deleteOnFinish && currentAnim != anim) {
-                        properties->taskManager->queueDeletion(currentAnim);
+                        properties->taskManager->queueObject(currentAnim);
                     }
                     currentAnim = anim;
 
@@ -99,7 +99,7 @@ namespace Amara {
 
             void stop() {
 				if (currentAnim != nullptr && currentAnim->deleteOnFinish) {
-                    properties->taskManager->queueDeletion(currentAnim);
+                    properties->taskManager->queueObject(currentAnim);
                 }
                 currentAnim = nullptr;
 				isFinished = true;
@@ -162,7 +162,7 @@ namespace Amara {
                         else {
                             currentFrame = currentAnim->frameAt(currentAnim->length() - 1);
 							if (currentAnim != nullptr && currentAnim->deleteOnFinish) {
-                                properties->taskManager->queueDeletion(currentAnim);
+                                properties->taskManager->queueObject(currentAnim);
                             }
                             currentAnim = nullptr;
 							isFinished = true;

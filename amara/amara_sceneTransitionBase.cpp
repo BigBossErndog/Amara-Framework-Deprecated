@@ -85,7 +85,7 @@ namespace Amara {
             virtual void complete() {
                 if (isDestroyed) return;
                 isDestroyed = true;
-                Amara::Actor::properties->taskManager->queueDeletion(this);
+                Amara::Actor::properties->taskManager->queueTransition(this);
 				destroyEntities();
             }
 
@@ -96,4 +96,10 @@ namespace Amara {
                 stopList.insert(stopList.end(), list.begin(), list.end());
             }
     };
+
+    void Amara::TaskManager::queueTransition(Amara::SceneTransitionBase* transition) {
+        if (transition == nullptr) return;
+        transition->isDestroyed = true;
+        transitionBuffer.push_back(transition);
+    }
 }

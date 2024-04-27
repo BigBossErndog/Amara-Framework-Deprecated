@@ -289,7 +289,8 @@ namespace Amara {
 		virtual void draw(int vx, int vy, int vw, int vh) {
 			if (properties->quit) return;
 			if (physics) {
-				physics->checkActiveCollisionTargets();
+				if (physics->isDestroyed) physics = nullptr;
+				else physics->checkActiveCollisionTargets();
 			}
 
 			if (alpha < 0) alpha = 0;
@@ -396,7 +397,7 @@ namespace Amara {
 			Amara::Interactable::run();
 			if (isInteractable && interact.isDraggable && interact.isDown) {
 				interact.isBeingDragged = true;
-				if (physics) {
+				if (physics && !physics->isDestroyed) {
 					physics->velocityX = interact.movementX;
 					physics->velocityY = interact.movementY;
 				}
@@ -626,7 +627,7 @@ namespace Amara {
 			destroyEntities(recursiveDestroy);
 			isDestroyed = true;
 			isActive = false;
-			properties->taskManager->queueDeletion(this);
+			properties->taskManager->queueEntity(this);
 			if (physics) {
 				physics->destroy();
 				physics = nullptr;
@@ -816,7 +817,7 @@ namespace Amara {
 	};
 	bool Amara::Entity::debuggingDefault = false;
 
-	void TaskManager::queueDeletion(Amara::Entity* entity) {
+	void TaskManager::queueEntity(Amara::Entity* entity) {
 		if (entity == nullptr) return;
 		entity->isDestroyed = true;
 		entityBuffer.push_back(entity);

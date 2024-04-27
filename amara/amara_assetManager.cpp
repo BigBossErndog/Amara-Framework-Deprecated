@@ -40,6 +40,10 @@ namespace Amara {
 				return loader->getSurface(key);
 			}
 
+            Amara::ImageTexture* getImageTexture(std::string key) {
+                return (Amara::ImageTexture*)loader->get(key);
+            }
+
 			bool remove(std::string key) {
 				return loader->remove(key);
 			}

@@ -400,7 +400,7 @@ namespace Amara {
                 recWidth = width;
                 recHeight = height;
                 if (canvas != nullptr) {
-                    tasks->queueDeletion(canvas);
+                    tasks->queueTexture(canvas);
                 }
                 canvas = SDL_CreateTexture(
                     properties->gRenderer,
@@ -465,7 +465,7 @@ namespace Amara {
             void removeTexture() {
                 textureKey.clear();
                 if (texture && texture->temp) {
-                    properties->taskManager->queueDeletion(texture);
+                    properties->taskManager->queueObject(texture);
                 }
                 texture = nullptr;
             }
@@ -719,7 +719,7 @@ namespace Amara {
             using Amara::Actor::destroy;
             virtual void destroy(bool recursive) {
                 if (canvas) {
-                    tasks->queueDeletion(canvas);
+                    tasks->queueTexture(canvas);
                     canvas = nullptr;
                 }
                 Amara::Actor::destroy(recursive);

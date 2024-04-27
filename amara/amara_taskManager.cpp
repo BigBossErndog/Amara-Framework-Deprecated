@@ -1,5 +1,7 @@
 namespace Amara {
     class Entity;
+    class Script;
+    class PhysicsBase;
     class SceneTransitionBase;
     
     class TaskManager {
@@ -16,6 +18,12 @@ namespace Amara {
 
             std::vector<Amara::Script*> scriptQueue;
             std::vector<Amara::Script*> scriptBuffer;
+
+            std::vector<Amara::PhysicsBase*> physicsQueue;
+            std::vector<Amara::PhysicsBase*> physicsBuffer;
+
+            std::vector<Amara::SceneTransitionBase*> transitionQueue;
+            std::vector<Amara::SceneTransitionBase*> transitionBuffer;
 
             bool automaticGarbageClearing = true;
             bool pleaseClear = false;
@@ -39,17 +47,25 @@ namespace Amara {
 
                 textureQueue.clear();
                 textureBuffer.clear();
+
+                physicsQueue.clear();
+                physicsBuffer.clear();
+
+                transitionQueue.clear();
+                transitionBuffer.clear();
             }
 
-            void queueDeletion(Amara::Entity* entity);
-            void queueDeletion(Amara::Script* script);
+            void queueEntity(Amara::Entity* entity);
+            void queueScript(Amara::Script* script);
+            void queuePhysics(Amara::PhysicsBase* body);
+            void queueTransition(Amara::SceneTransitionBase* transition);
 
-            void queueDeletion(SDL_Texture* tx) {
+            void queueTexture(SDL_Texture* tx) {
                 if (tx == nullptr) return;
                 textureBuffer.push_back(tx);
             }
 
-            void queueDeletion(void* obj) {
+            void queueObject(void* obj) {
                 if (obj == nullptr) return;
                 garbageBuffer.push_back(obj);
             }
@@ -96,7 +112,7 @@ namespace Amara {
                 if (properties->testing && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d entities.", size);
                 }
-                for (void* entity: entityQueue) {
+                for (Amara::Entity* entity: entityQueue) {
                     delete entity;
                 }
                 entityQueue = entityBuffer;
@@ -106,7 +122,7 @@ namespace Amara {
                 if (properties->testing && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d scripts.", size);
                 }
-                for (void* script: scriptQueue) {
+                for (Amara::Script* script: scriptQueue) {
                     delete script;
                 }
                 scriptQueue = scriptBuffer;
@@ -121,6 +137,26 @@ namespace Amara {
                 }
                 textureQueue = textureBuffer;
                 textureBuffer.clear();
+
+                size = physicsQueue.size();
+                if (properties->testing && size > 0) {
+                    SDL_Log("\tAmara TaskManager: Deleting %d physics bodies.", size);
+                }
+                for (Amara::PhysicsBase* body: physicsQueue) {
+                    delete body;
+                }
+                physicsQueue = physicsBuffer;
+                physicsBuffer.clear();
+
+                size = transitionQueue.size();
+                if (properties->testing && size > 0) {
+                    SDL_Log("\tAmara TaskManager: Deleting %d transitions.", size);
+                }
+                for (Amara::SceneTransitionBase* tx: transitionQueue) {
+                    delete tx;
+                }
+                transitionQueue = transitionBuffer;
+                transitionBuffer.clear();
             }
     };
 }

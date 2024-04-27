@@ -94,7 +94,7 @@ namespace Amara {
             }
 
             void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
-                tasks->queueDeletion(Amara::ImageTexture::asset);
+                tasks->queueTexture(Amara::ImageTexture::asset);
                 Amara::ImageTexture::asset = createRadialGradientTexture(gRenderer, width, height, innerColor, outerColor, fadeStart);
             }
     };
@@ -114,7 +114,7 @@ namespace Amara {
 			}
 
 			void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
-				tasks->queueDeletion(Amara::ImageTexture::asset);
+				tasks->queueTexture(Amara::ImageTexture::asset);
 				Amara::ImageTexture::asset = createCircleTexture(gRenderer, radius, color);
 			}
 	};
@@ -136,7 +136,7 @@ namespace Amara {
 			}
 
 			void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
-				tasks->queueDeletion(Amara::ImageTexture::asset);
+				tasks->queueTexture(Amara::ImageTexture::asset);
 				Amara::ImageTexture::asset = createGradientTexture(gRenderer, width, height, dir, colorIn, colorOut);
 			}
 	};

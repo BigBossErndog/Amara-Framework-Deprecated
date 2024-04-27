@@ -143,14 +143,17 @@ namespace Amara {
 				return nullptr;
 			}
 
-			virtual bool remove(std::string key) {
+			virtual bool remove(std::string key, bool andDelete) {
 				Amara::Asset* asset = get(key);
 				if (asset != nullptr) {
 					assets.erase(key);
-					properties->taskManager->queueDeletion(asset);
+					if (andDelete) properties->taskManager->queueObject(asset);
 					return true;
 				}
 				return false;
+			}
+			bool remove(std::string key) {
+				return remove(key, true);
 			}
 
 			virtual bool removePseudonym(std::string key) {
@@ -231,7 +234,7 @@ namespace Amara {
 
 			virtual void clearAssets() {
 				for (auto it = assets.begin(); it != assets.end(); it++) {
-					properties->taskManager->queueDeletion(it->second);
+					properties->taskManager->queueObject(it->second);
 				}
 				assets.clear();
 			}

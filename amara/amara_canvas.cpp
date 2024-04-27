@@ -1,5 +1,5 @@
 namespace Amara {
-    class Canvas: public Actor {
+    class Canvas: public Amara::Actor {
         public:
             SDL_Texture* canvas = nullptr;
             SDL_Texture* recTarget = NULL;
@@ -95,7 +95,7 @@ namespace Amara {
 
             void createNewCanvasTexture() {
                 if (canvas != nullptr) {
-                    tasks->queueDeletion(canvas);
+                    tasks->queueTexture(canvas);
                 }
                 canvas = SDL_CreateTexture(
                     properties->gRenderer,
@@ -276,8 +276,12 @@ namespace Amara {
                 if (clearEveryFrame) clear();
             }
 
-            virtual ~Canvas() {
-                if (tasks) tasks->queueDeletion(canvas);
+            void destroy(bool recursive) {
+                Amara::Actor::destroy(recursive);
+                if (tasks && canvas) { 
+                    tasks->queueTexture(canvas);
+                    canvas = nullptr;
+                }
             }
     };
 }

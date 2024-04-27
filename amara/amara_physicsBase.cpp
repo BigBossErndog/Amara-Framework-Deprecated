@@ -226,7 +226,7 @@ namespace Amara {
 				if (isDestroyed) return;
 				isActive = false;
 				isDestroyed = true;
-				gameProperties->taskManager->queueDeletion(this);
+				gameProperties->taskManager->queuePhysics(this);
 			}
 
 			void setBounds(int gx, int gy, int gw, int gh) {
@@ -250,4 +250,10 @@ namespace Amara {
 				pause(false);
 			}
 	};
+
+	void Amara::TaskManager::queuePhysics(Amara::PhysicsBase* body) {
+		if (body == nullptr) return;
+		body->isDestroyed = true;
+		physicsBuffer.push_back(body);
+	}
 }

@@ -426,7 +426,7 @@ namespace Amara {
             }
 
             void createDrawTexture() {
-                if (drawTexture) tasks->queueDeletion(drawTexture);
+                if (drawTexture) tasks->queueTexture(drawTexture);
                 drawTexture = SDL_CreateTexture(
                     properties->gRenderer,
                     SDL_PIXELFORMAT_RGBA8888,
@@ -751,7 +751,7 @@ namespace Amara {
             void draw(int vx, int vy, int vw, int vh) {
                 if (merged && !merged->isDestroyed) {
                     if (drawTexture) {
-                        tasks->queueDeletion(drawTexture);
+                        tasks->queueTexture(drawTexture);
                         drawTexture = nullptr;
                     }
                     return;
@@ -1311,7 +1311,8 @@ namespace Amara {
             }
         }
 
-        if (drawTexture) tasks->queueDeletion(drawTexture);
+        if (drawTexture) tasks->queueTexture(drawTexture);
+        drawTexture = nullptr;
         
         Amara::Actor::destroy();
     }
