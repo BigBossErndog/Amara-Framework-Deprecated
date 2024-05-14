@@ -74,13 +74,15 @@ namespace Amara {
 				interact.interactScaleX = properties->interactScaleX;
 				interact.interactScaleY = properties->interactScaleY;
 				
-				if (overlapping(mouse->dx, mouse->dy, &interact.hitbox)) {
-					mouseHovered = true;
-				}
-				for (TouchPointer& finger: fingers) {
-					if ((finger.isDown || finger.tapped || finger.justUp) && overlapping(finger.dx, finger.dy, &interact.hitbox)) {
-						touchHovered = true;
-						interact.finger = &finger;
+				if (input->lastMode & (InputMode_Mouse | InputMode_Touch)) {
+					if (overlapping(mouse->dx, mouse->dy, &interact.hitbox)) {
+						mouseHovered = true;
+					}
+					for (TouchPointer& finger: fingers) {
+						if ((finger.isDown || finger.tapped || finger.justUp) && overlapping(finger.dx, finger.dy, &interact.hitbox)) {
+							touchHovered = true;
+							interact.finger = &finger;
+						}
 					}
 				}
 

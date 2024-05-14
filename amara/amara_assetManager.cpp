@@ -6,6 +6,8 @@ namespace Amara {
 
             std::unordered_map<std::string, std::vector<std::string>> textureGroups;
 
+            std::unordered_map<std::string, std::unordered_map<std::string, Animation>> animations;
+
             AssetManager() {}
             AssetManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -69,41 +71,63 @@ namespace Amara {
                 return loader->add(key, newAsset, false);
             }
 
-            Amara::Animation* addAnim(std::string textureKey, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
-                Amara::Asset* asset = get(textureKey);
-                if (asset == nullptr) {
-                    SDL_Log("Couldn't find texture \"%s\" for animation \"%s\".", textureKey.c_str(), animKey.c_str());
-                    return nullptr;
+            Amara::Animation* addAnimation(std::string textureKey, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
+                auto tx = animations.find(textureKey);
+                if (tx == animations.end()) {
+                    animations[textureKey] = std::unordered_map<std::string, Animation>();
+                    tx = animations.find(textureKey);
                 }
-                if (asset->type == SPRITESHEET) {
-                    return ((Amara::Spritesheet*)asset)->addAnim(animKey, frames, frameRate, loop);
+                auto got = tx->second.find(animKey);
+                if (got != tx->second.end()) {
+                    Amara::Animation& anim = got->second;
+                    anim.frames = frames;
+                    anim.frameRate = frameRate;
+                    anim.loop = loop;
+                    return &anim;
+                }
+                tx->second[animKey] = Amara::Animation(textureKey, animKey, frames, frameRate, loop);
+                return &tx->second[animKey];
+            }
+            Amara::Animation* addAnimation(std::string textureKey, std::string animKey, int frame) {
+                return addAnimation(textureKey, animKey, {frame}, 1, false);
+            }
+
+            Amara::Animation* getAnimation(std::string textureKey, std::string animKey) {
+                auto tx = animations.find(textureKey);
+                if (tx != animations.end()) {
+                    if (tx->second.find(animKey) != tx->second.end()) return &tx->second[animKey];
+                }
+                return nullptr;
+            }
+
+            void removeAnimation(std::string textureKey, std::string animKey) {
+                auto tx = animations.find(textureKey);
+                if (tx != animations.end()) {
+                    auto got = tx->second.find(animKey);
+                    if (got != tx->second.end()) tx->second.erase(animKey);
                 }
             }
 
-            Amara::Animation* addAnim(std::string textureKey, std::string animKey, int frame) {
-                return addAnim(textureKey, animKey, {frame}, 1, false);
-            }
-
-            void addAnim(std::vector<std::string> textureKeys, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
+            void addAnimation(std::vector<std::string> textureKeys, std::string animKey, std::vector<int> frames, int frameRate, bool loop) {
                 for (std::string tKey : textureKeys) {
-                    addAnim(tKey, animKey, frames, frameRate, loop);
+                    addAnimation(tKey, animKey, frames, frameRate, loop);
                 }
             }
 
-            void addAnim(std::vector<std::string> textureKeys, std::string animKey, int frame) {
-                addAnim(textureKeys, animKey, {frame}, 1, false);
+            void addAnimation(std::vector<std::string> textureKeys, std::string animKey, int frame) {
+                addAnimation(textureKeys, animKey, {frame}, 1, false);
             }
 
-            void addAnim(std::string textureKey, std::string animKey, int startFrame, int numFrames, int frameRate, bool loop) {
+            void addAnimation(std::string textureKey, std::string animKey, int startFrame, int numFrames, int frameRate, bool loop) {
                 std::vector<int> frames;
                 frames.clear();
                 for (int i = 0; i < numFrames; i++) {
                     frames.push_back(startFrame + i);
                 }
-                addAnim(textureKey, animKey, frames, frameRate, loop);
+                addAnimation(textureKey, animKey, frames, frameRate, loop);
             }
 
-            void configureAnim(nlohmann::json& config) {
+            void configureAnimation(nlohmann::json& config) {
                 std::string animKey = config["key"];
                 bool loop = false;
 
@@ -118,11 +142,11 @@ namespace Amara {
                     if (config.find("frames") != config.end()) {
                         std::vector<int> frames = config["frames"];
                         int frameRate = config["frameRate"];
-                        addAnim(textureKeys, animKey, frames, frameRate, loop);
+                        addAnimation(textureKeys, animKey, frames, frameRate, loop);
                     }
                     else if (config.find("frame") != config.end()) {
                         int frame = config["frame"];
-                        addAnim(textureKeys, animKey, frame);
+                        addAnimation(textureKeys, animKey, frame);
                     }
                     else if (config.find("startFrame") != config.end()) {
                         if (config.find("numFrames") != config.end()) {
@@ -134,7 +158,7 @@ namespace Amara {
                             for (int i = 0; i < numFrames; i++) {
                                 frames.push_back(startFrame + i);
                             }
-                            addAnim(textureKeys, animKey, frames, frameRate, loop);
+                            addAnimation(textureKeys, animKey, frames, frameRate, loop);
                         }
                         else {
                             SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
@@ -146,11 +170,11 @@ namespace Amara {
                     if (config.find("frames") != config.end()) {
                         std::vector<int> frames = config["frames"];
                         int frameRate = config["frameRate"];
-                        addAnim(textureKey, animKey, frames, frameRate, loop);
+                        addAnimation(textureKey, animKey, frames, frameRate, loop);
                     }
                     else if (config.find("frame") != config.end()) {
                         int frame = config["frame"];
-                        addAnim(textureKey, animKey, frame);
+                        addAnimation(textureKey, animKey, frame);
                     }
                     else if (config.find("startFrame") != config.end()) {
                         if (config.find("numFrames") != config.end()) {
@@ -162,7 +186,7 @@ namespace Amara {
                             for (int i = 0; i < numFrames; i++) {
                                 frames.push_back(startFrame + i);
                             }
-                            addAnim(textureKey, animKey, frames, frameRate, loop);
+                            addAnimation(textureKey, animKey, frames, frameRate, loop);
                         }
                         else {
                             SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
@@ -177,11 +201,11 @@ namespace Amara {
                         if (config.find("frames") != config.end()) {
                             std::vector<int> frames = config["frames"];
                             int frameRate = config["frameRate"];
-                            addAnim(textureKeys, animKey, frames, frameRate, loop);
+                            addAnimation(textureKeys, animKey, frames, frameRate, loop);
                         }
                         else if (config.find("frame") != config.end()) {
                             int frame = config["frame"];
-                            addAnim(textureKeys, animKey, frame);
+                            addAnimation(textureKeys, animKey, frame);
                         }
                         else if (config.find("startFrame") != config.end()) {
                             if (config.find("numFrames") != config.end()) {
@@ -193,7 +217,7 @@ namespace Amara {
                                 for (int i = 0; i < numFrames; i++) {
                                     frames.push_back(startFrame + i);
                                 }
-                                addAnim(textureKeys, animKey, frames, frameRate, loop);
+                                addAnimation(textureKeys, animKey, frames, frameRate, loop);
                             }
                             else {
                                 SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
@@ -210,11 +234,11 @@ namespace Amara {
                             if (config.find("frames") != config.end()) {
                                 std::vector<int> frames = config["frames"];
                                 int frameRate = config["frameRate"];
-                                addAnim(textureKeys, animKey, frames, frameRate, loop);
+                                addAnimation(textureKeys, animKey, frames, frameRate, loop);
                             }
                             else if (config.find("frame") != config.end()) {
                                 int frame = config["frame"];
-                                addAnim(textureKeys, animKey, frame);
+                                addAnimation(textureKeys, animKey, frame);
                             }
                             else if (config.find("startFrame") != config.end()) {
                                 if (config.find("numFrames") != config.end()) {
@@ -226,7 +250,7 @@ namespace Amara {
                                     for (int i = 0; i < numFrames; i++) {
                                         frames.push_back(startFrame + i);
                                     }
-                                    addAnim(textureKeys, animKey, frames, frameRate, loop);
+                                    addAnimation(textureKeys, animKey, frames, frameRate, loop);
                                 }
                                 else {
                                     SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
@@ -251,12 +275,12 @@ namespace Amara {
                     nlohmann::json& anims = config["animations"];
                     if (anims.is_array()) {
                         for (nlohmann::json& anim: anims) {
-                            configureAnim(anim);
+                            configureAnimation(anim);
                         }
                     }
                 }
                 else {
-                    configureAnim(config);
+                    configureAnimation(config);
                 }
             }
 

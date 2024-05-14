@@ -36,6 +36,8 @@ namespace Amara {
             bool intervalClearing = 0;
             bool intervalCounter = 0;
 
+            bool killLog = false;
+
             TaskManager() {}
             TaskManager(Amara::GameProperties* gameProperties) {
                 properties = gameProperties;
@@ -105,9 +107,9 @@ namespace Amara {
                 int totalGarbage = 0;
 
                 int size = garbageQueue.size();
-                if (properties->testing && size > 0) {
+                if (properties->testing && !killLog && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d objects.", size);
-                    totalGarbage += 1;
+                    totalGarbage += size;
                 }
                 for (void* obj: garbageQueue) {
                     delete obj;
@@ -116,9 +118,9 @@ namespace Amara {
                 garbageBuffer.clear();
 
                 size = entityQueue.size();
-                if (properties->testing && size > 0) {
+                if (properties->testing && !killLog && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d entities.", size);
-                    totalGarbage += 1;
+                    totalGarbage += size;
                 }
                 for (Amara::Entity* entity: entityQueue) {
                     delete entity;
@@ -127,9 +129,9 @@ namespace Amara {
                 entityBuffer.clear();
 
                 size = scriptQueue.size();
-                if (properties->testing && size > 0) {
+                if (properties->testing && !killLog && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d scripts.", size);
-                    totalGarbage += 1;
+                    totalGarbage += size;
                 }
                 for (Amara::Script* script: scriptQueue) {
                     delete script;
@@ -138,9 +140,9 @@ namespace Amara {
                 scriptBuffer.clear();
 
                 size = textureQueue.size();
-                if (properties->testing && size > 0) {
+                if (properties->testing && !killLog && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d textures.", size);
-                    totalGarbage += 1;
+                    totalGarbage += size;
                 }
                 for (SDL_Texture* tx: textureQueue) {
                     SDL_DestroyTexture(tx);
@@ -149,9 +151,9 @@ namespace Amara {
                 textureBuffer.clear();
 
                 size = physicsQueue.size();
-                if (properties->testing && size > 0) {
+                if (properties->testing && !killLog && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d physics bodies.", size);
-                    totalGarbage += 1;
+                    totalGarbage += size;
                 }
                 for (Amara::PhysicsBase* body: physicsQueue) {
                     delete body;
@@ -160,9 +162,9 @@ namespace Amara {
                 physicsBuffer.clear();
 
                 size = transitionQueue.size();
-                if (properties->testing && size > 0) {
+                if (properties->testing && !killLog && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d transitions.", size);
-                    totalGarbage += 1;
+                    totalGarbage += size;
                 }
                 for (Amara::SceneTransitionBase* transition: transitionQueue) {
                     delete transition;
@@ -171,9 +173,9 @@ namespace Amara {
                 transitionBuffer.clear();
 
                 size = assetQueue.size();
-                if (properties->testing && size > 0) {
+                if (properties->testing && !killLog && size > 0) {
                     SDL_Log("\tAmara TaskManager: Deleting %d assets.", size);
-                    totalGarbage += 1;
+                    totalGarbage += size;
                 }
                 for (Amara::Asset* asset: assetQueue) {
                     delete asset;
@@ -181,7 +183,7 @@ namespace Amara {
                 assetQueue = assetBuffer;
                 assetBuffer.clear();
 
-                if (totalGarbage > 0) {
+                if (properties->testing && !killLog && totalGarbage > 0) {
                     SDL_Log("Amara TaskManager: Total garbage: %d", totalGarbage);
                 }
             }

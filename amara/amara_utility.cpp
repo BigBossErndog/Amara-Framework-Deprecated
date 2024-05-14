@@ -64,4 +64,7 @@ namespace Amara {
         SDL_BLENDFACTOR_SRC_ALPHA,
         SDL_BLENDOPERATION_ADD
     );
+
+    SDL_Color AMARA_BLACK = { 0, 0, 0, 255 };
+    SDL_Color AMARA_WHITE = { 255, 255, 255, 255 };
 }

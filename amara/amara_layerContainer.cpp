@@ -190,6 +190,8 @@ namespace Amara {
         bool textureLocked = false;
 		bool pleaseUpdate = false;
 
+        SDL_Color fillColor = { 0, 0, 0, 0 };
+
         TextureLayer(): Layer() {}
         TextureLayer(float gx, float gy): Layer(gx, gy) {}
 
@@ -230,7 +232,7 @@ namespace Amara {
         void clearTexture() {
             recTarget = SDL_GetRenderTarget(properties->gRenderer);
             SDL_SetRenderTarget(properties->gRenderer, tx);
-            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+            SDL_SetRenderDrawColor(properties->gRenderer, fillColor.r, fillColor.g, fillColor.b, fillColor.a);
             SDL_RenderClear(properties->gRenderer);
 
             SDL_SetRenderTarget(properties->gRenderer, recTarget);
@@ -262,7 +264,7 @@ namespace Amara {
 
                 recTarget = SDL_GetRenderTarget(properties->gRenderer);
                 SDL_SetRenderTarget(properties->gRenderer, tx);
-                SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+                SDL_SetRenderDrawColor(properties->gRenderer, fillColor.r, fillColor.g, fillColor.b, fillColor.a);
                 SDL_RenderClear(properties->gRenderer);
                 SDL_RenderSetViewport(properties->gRenderer, nullptr);
 
@@ -419,6 +421,8 @@ namespace Amara {
         bool textureLocked = false;
 		bool pleaseUpdate = false;
 
+        SDL_Color fillColor = { 0, 0, 0, 0 };
+
         TextureContainer(): Layer() {}
         TextureContainer(float gw, float gh) {
             width = gw;
@@ -491,7 +495,7 @@ namespace Amara {
         void clearTexture() {
             recTarget = SDL_GetRenderTarget(properties->gRenderer);
             SDL_SetRenderTarget(properties->gRenderer, tx);
-            SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
+            SDL_SetRenderDrawColor(properties->gRenderer, fillColor.r, fillColor.g, fillColor.b, fillColor.a);
             SDL_RenderClear(properties->gRenderer);
 
             SDL_SetRenderTarget(properties->gRenderer, recTarget);
@@ -580,8 +584,8 @@ namespace Amara {
 
                     recTarget = SDL_GetRenderTarget(properties->gRenderer);
                     SDL_SetRenderTarget(properties->gRenderer, tx);
-                    SDL_SetRenderDrawColor(properties->gRenderer, 0, 0, 0, 0);
-                    SDL_RenderClear(properties->gRenderer); 
+                    SDL_SetRenderDrawColor(properties->gRenderer, fillColor.r, fillColor.g, fillColor.b, fillColor.a);
+                    SDL_RenderClear(properties->gRenderer);
                     SDL_RenderSetViewport(properties->gRenderer, nullptr);
 
                     drawContent();

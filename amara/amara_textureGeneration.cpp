@@ -53,7 +53,7 @@ namespace Amara {
     SDL_Texture* createRadialGradientTexture(SDL_Renderer* gRenderer, int width, int height, SDL_Color innerColor, SDL_Color outerColor, float fadeStart) {
         SDL_Texture* texture = SDL_CreateTexture(
                                     gRenderer,
-                                    SDL_PIXELFORMAT_RGBA8888,
+                                    SDL_PIXELFORMAT_ARGB8888,
                                     SDL_TEXTUREACCESS_TARGET,
                                     width,
                                     height
@@ -193,7 +193,7 @@ namespace Amara {
 	SDL_Texture* createGradientTexture(SDL_Renderer* gRenderer, int width, int height, Amara::Direction dir, SDL_Color colorIn, SDL_Color colorOut) {
 		SDL_Texture* texture = SDL_CreateTexture(
                                     gRenderer,
-                                    SDL_PIXELFORMAT_RGBA8888,
+                                    SDL_PIXELFORMAT_ARGB8888,
                                     SDL_TEXTUREACCESS_TARGET,
                                     width,
                                     height

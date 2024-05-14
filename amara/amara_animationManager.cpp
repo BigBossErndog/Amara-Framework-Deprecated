@@ -2,6 +2,7 @@ namespace Amara {
     class AnimationManager {
         public:
             Amara::GameProperties* properties = nullptr;
+            Amara::AssetManager* assets = nullptr;
             Amara::Image* parent = nullptr;
 
             Amara::Animation* currentAnim = nullptr;
@@ -17,13 +18,14 @@ namespace Amara {
             AnimationManager(Amara::GameProperties* gameProperties, Amara::Image* givenParent) {
                 properties = gameProperties;
                 parent = givenParent;
+                assets = properties->assets;
             }
 
             bool play(Amara::ImageTexture* texture, std::string animKey) {
                 if (texture == nullptr || texture->type != SPRITESHEET) {
                     return false;
                 }
-                Amara::Animation* anim = ((Amara::Spritesheet*)texture)->getAnim(animKey);
+                Amara::Animation* anim = assets->getAnimation(parent->texture->key, animKey);
                 if (anim == nullptr) {
                     SDL_Log("Spritesheet \"%s\" does not have the animation \"%s\".", texture->key.c_str(), animKey.c_str());
                 }
@@ -83,7 +85,7 @@ namespace Amara {
 
             Amara::Animation* get(std::string animKey) {
                 if (parent && parent->texture && parent->texture->type == SPRITESHEET) {
-                    return ((Amara::Spritesheet*)parent->texture)->getAnim(animKey);
+                    return assets->getAnimation(parent->texture->key, animKey);
                 }
                 return nullptr;
             }
