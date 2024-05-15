@@ -91,6 +91,16 @@ namespace Amara {
 			}
 		}
 
+        Amara::FloatRect getRect() {
+			// Doesn't take into account scrollFactor or zoomFactor.
+			return { 
+				(x + properties->offsetX - (originX * width * scaleX)),
+				(y-z + properties->offsetY - (originY * height * scaleY)),
+				(width * scaleX),
+				(height * scaleY)
+			};
+		}
+
         virtual void draw(int vx, int vy, int vw, int vh) override {
             float dx = 0, dy = 0, dw = 0, dh = 0, ox = 0, oy = 0;
 
@@ -410,6 +420,9 @@ namespace Amara {
         float originX = 0;
         float originY = 0;
 
+        float renderOffsetX = 0;
+		float renderOffsetY = 0;
+
         SDL_Texture* recTarget;
         SDL_Rect viewport;
         SDL_Rect srcRect;
@@ -523,6 +536,22 @@ namespace Amara {
             return setOriginPosition(g, g);
         }
 
+        Amara::TextureContainer* setRenderOffset(float gx, float gy) {
+			renderOffsetX = gx;
+			renderOffsetY = gy;
+			return this;
+		}
+
+        Amara::FloatRect getRect() {
+			// Doesn't take into account scrollFactor or zoomFactor.
+			return { 
+				(x+renderOffsetX + properties->offsetX - (originX * width * scaleX)),
+				(y-z+renderOffsetY + properties->offsetY - (originY * height * scaleY)),
+				(width * scaleX),
+				(height * scaleY)
+			};
+		}
+
         void draw(int vx, int vy, int vw, int vh) {
             float recAlpha = properties->alpha;
             bool skipDrawing = false;
@@ -554,8 +583,8 @@ namespace Amara {
                 scaleY = abs(scaleY);
             }
 
-            destRect.x = ((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
-            destRect.y = ((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
+            destRect.x = ((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
+            destRect.y = ((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
             destRect.w = ((width * scaleX) * nzoomX);
             destRect.h = ((height * scaleY) * nzoomY);
 

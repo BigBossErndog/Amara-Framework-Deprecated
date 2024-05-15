@@ -128,10 +128,12 @@ namespace Amara {
             virtual void finish() {
                 isFinished = true;
             }
-            void finishEvt() {
+            bool finishEvt() {
                 if (evt()) {
                     finish();
+                    return true;
                 }
+                return false;
             }
 
             virtual void prepare() {}

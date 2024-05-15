@@ -423,5 +423,15 @@ namespace Amara {
                 removeTexture();
                 Amara::Actor::destroy(recursive);
             }
+
+            Amara::FloatRect getRect() {
+                // Doesn't take into account scrollFactor or zoomFactor.
+                return { 
+                    (x+renderOffsetX+cropLeft + properties->offsetX - (originX * imageWidth * scaleX)),
+                    (y-z+renderOffsetY+cropTop + properties->offsetY - (originY * imageHeight * scaleY)),
+                    ((imageWidth-cropLeft-cropRight) * scaleX),
+                    ((imageHeight-cropTop-cropBottom) * scaleY)
+                 };
+            }
     };
 }

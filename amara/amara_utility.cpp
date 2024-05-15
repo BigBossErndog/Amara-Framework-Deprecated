@@ -17,6 +17,18 @@ namespace Amara {
         return json_has(data, key) && data[key].is_boolean() && data[key];
     }
 
+    bool json_erase(nlohmann::json& data, std::string key) {
+        if (json_has(data, key)) {
+            data.erase(key);
+            return true;
+        }
+        return false;
+    }
+
+    bool string_equal(std::string str1, std::string str2) {
+        return (str1.compare(str2) == 0) ? true : false;
+    }
+
     SDL_Color getPixelFromSurface(SDL_Surface* gSurface, int gx, int gy) {
         int bpp = gSurface->format->BytesPerPixel;
         Uint8* p = (Uint8*)gSurface->pixels + gy*gSurface->pitch + gx*bpp;

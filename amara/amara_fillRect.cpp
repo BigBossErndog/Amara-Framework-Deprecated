@@ -105,6 +105,16 @@ namespace Amara {
 			return setSize(gs, gs);
 		}
 
+		Amara::FloatRect getRect() {
+			// Doesn't take into account scrollFactor or zoomFactor.
+			return { 
+				(x+renderOffsetX + properties->offsetX - (originX * width * scaleX)),
+				(y-z+renderOffsetY + properties->offsetY - (originY * height * scaleY)),
+				(width * scaleX),
+				(height * scaleY)
+			};
+		}
+
 		void draw(int vx, int vy, int vw, int vh) {
 			if (!isVisible) return;
 			bool skipDrawing = false;

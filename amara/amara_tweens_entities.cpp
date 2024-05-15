@@ -679,4 +679,35 @@ namespace Amara {
             finishEvt();
         }
     };
+
+    class Script_PlayAudio: public Script {
+    public:
+        float delay = 0;
+        std::string audioKey;
+
+        Script_PlayAudio(std::string gKey) {
+            audioKey = gKey;
+        }
+        Script_PlayAudio(std::string gKey, float gDelay): Script_PlayAudio(gKey) {
+            delay = gDelay;
+        }
+
+        void prepare() {}
+
+        void script() {
+            start();
+            if (delay == 0) {
+                finish();
+                return;
+            }
+
+            wait(delay);
+            finishEvt();
+        }
+
+        void finish() {
+            audio->play(audioKey);
+            Script::finish();
+        }
+    };
 }

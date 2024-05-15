@@ -20,7 +20,7 @@ namespace Amara {
             int eventLooker = 0;
 
             int waitCounter = 0;
-            float waitTimeElapsed = 0;
+            double waitTimeElapsed = 0;
 
             bool skipEvent = false;
             bool killLog = false;
@@ -245,7 +245,7 @@ namespace Amara {
                 return false;
             }
 
-            bool wait(float time, bool skip) {
+            bool wait(double time, bool skip) {
                 if (stateCopy) return stateCopy->wait(time, skip);
 
                 bool ret = false;
@@ -257,7 +257,7 @@ namespace Amara {
                 }
 
                 if (evt()) {
-                    float t;
+                    double t;
                     if (properties != nullptr) {
                         t = properties->lps * time;
                     }
