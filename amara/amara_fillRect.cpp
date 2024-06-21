@@ -20,6 +20,7 @@ namespace Amara {
 		float renderOffsetX = 0;
 		float renderOffsetY = 0;
 
+		using Amara::Actor::Actor;
 		FillRect(float gx, float gy, float gw, float gh, Amara::Color gColor) {
 			x = gx;
 			y = gy;
@@ -29,6 +30,7 @@ namespace Amara {
 		}
 		FillRect(float gx, float gy, float gw, float gh): FillRect(gx, gy, gw, gh, {0, 0, 0, 255}) {}
 
+		using Amara::Actor::init;
 		void init() {
 			Amara::Actor::init();
 			entityType = "actor";
@@ -131,10 +133,29 @@ namespace Amara {
 			float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
 			float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
+			bool scaleFlipHorizontal = false;
+			bool scaleFlipVertical = false;
+			float recScaleX = scaleX;
+			float recScaleY = scaleY;
+
+			if (scaleX < 0) {
+				scaleFlipHorizontal = true;
+				scaleX = abs(scaleX);
+			}
+			if (scaleY < 0) {
+				scaleFlipVertical = true;
+				scaleY = abs(scaleY);
+			}
+			scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
+			scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
+
 			destRect.x = ((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
 			destRect.y = ((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);
 			destRect.w = ((width * scaleX) * nzoomX);
 			destRect.h = ((height * scaleY) * nzoomY);
+
+			scaleX = recScaleX;
+			scaleY = recScaleY;
 
 			origin.x = destRect.w * originX;
 			origin.y = destRect.h * originY;

@@ -179,6 +179,7 @@
     #include "amara_controlScheme.cpp"
 
     #include "amara_fillRect.cpp"
+    #include "amara_fillLine.cpp"
 
     #include "amara_tintImage.cpp"
 

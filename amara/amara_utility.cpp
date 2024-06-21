@@ -25,7 +25,7 @@ namespace Amara {
         return false;
     }
 
-    bool string_equal(std::string str1, std::string str2) {
+    bool string_compare(std::string str1, std::string str2) {
         return (str1.compare(str2) == 0) ? true : false;
     }
 
@@ -76,6 +76,9 @@ namespace Amara {
         SDL_BLENDFACTOR_SRC_ALPHA,
         SDL_BLENDOPERATION_ADD
     );
+
+    SDL_BlendMode AMARA_BLENDMODE_NONE = SDL_BLENDMODE_NONE;
+    SDL_BlendMode AMARA_BLENDMODE_BLEND = SDL_BLENDMODE_BLEND;
 
     SDL_Color AMARA_BLACK = { 0, 0, 0, 255 };
     SDL_Color AMARA_WHITE = { 255, 255, 255, 255 };

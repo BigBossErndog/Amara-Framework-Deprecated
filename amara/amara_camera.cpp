@@ -22,8 +22,11 @@ namespace Amara {
             float zoomY = 1;
             float zoomScale = 1;
 
-            float oldCenterX = 0;
-            float oldCenterY = 0;
+            float oldFocusX = 0;
+            float oldFocusY = 0;
+            float focusX = 0;
+            float focusY = 0;
+
             float centerX = 0;
             float centerY = 0;
 
@@ -101,7 +104,7 @@ namespace Amara {
                     y = 0;
 
                     if (width != properties->resolution->width || height != properties->resolution->height) {
-                        centerOn(centerX, centerY);
+                        centerOn(focusX, focusY);
                     }
 
                     width = properties->resolution->width;
@@ -119,8 +122,8 @@ namespace Amara {
                         float tx = followTarget->x + followTarget->cameraOffsetX;
                         float ty = followTarget->y + followTarget->cameraOffsetY;
 
-                        float nx = (oldCenterX - tx) * (1 - lerpX) + tx;
-                        float ny = (oldCenterY - ty) * (1 - lerpY) + ty;
+                        float nx = (oldFocusX - tx) * (1 - lerpX) + tx;
+                        float ny = (oldFocusY - ty) * (1 - lerpY) + ty;
                         centerOn(nx, ny);
                     }
                 }
@@ -133,8 +136,10 @@ namespace Amara {
 
             void updateValues() {
                 fixValues();
-                centerX = scrollX + (width/(zoomX*zoomScale))/2;
-                centerY = scrollY + (height/(zoomY*zoomScale))/2;
+                centerX = (width/(zoomX*zoomScale))/2.0;
+                centerY = (height/(zoomY*zoomScale))/2.0;
+                focusX = scrollX + (width/(zoomX*zoomScale))/2.0;
+                focusY = scrollY + (height/(zoomY*zoomScale))/2.0;
             }
 
             void recordValues() {
@@ -144,8 +149,8 @@ namespace Amara {
                 oldZoomX = zoomX;
                 oldZoomY = zoomY;
 
-                oldCenterX = centerX;
-                oldCenterY = centerY;
+                oldFocusX = focusX;
+                oldFocusY = focusY;
             }
 
             void fixValues() {
@@ -246,11 +251,6 @@ namespace Amara {
                 followTarget = nullptr;
             }
 
-            void centerOn(Amara::Entity* entity) {
-                scrollX = entity->x - (width/(zoomX*zoomScale))/2;
-                scrollY = entity->y - (height/(zoomY*zoomScale))/2;
-                updateValues();
-            }
             void centerOn(float gx, float gy) {
                 scrollX = gx - (width/(zoomX*zoomScale))/2;
                 scrollY = gy - (height/(zoomY*zoomScale))/2;
@@ -258,6 +258,10 @@ namespace Amara {
             }
             void centerOn(float gi) {
                 centerOn(gi, gi);
+            }
+            void centerOn(Amara::Entity* entity) {
+                centerOn(entity->x + entity->cameraOffsetX, entity->y + entity->cameraOffsetY);
+                updateValues();
             }
 
             void setScroll(float gx, float gy) {
@@ -283,8 +287,8 @@ namespace Amara {
             }
 
             void setZoom(float gx, float gy, float gZoomScale) {
-                float cx = centerX;
-                float cy = centerY;
+                float cx = focusX;
+                float cy = focusY;
 
                 setZoomScale(gZoomScale);
                 zoomX = gx;

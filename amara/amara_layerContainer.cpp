@@ -313,8 +313,6 @@ namespace Amara {
             
             if (destRect.x + destRect.w <= 0) skipDrawing = true;
             if (destRect.y + destRect.h <= 0) skipDrawing = true;
-            if (destRect.x >= properties->currentCamera->width) skipDrawing = true;
-            if (destRect.y >= properties->currentCamera->height) skipDrawing = true;
             if (destRect.w <= 0) skipDrawing = true;
             if (destRect.h <= 0) skipDrawing = true;
 
@@ -582,6 +580,8 @@ namespace Amara {
                 scaleFlipVertical = true;
                 scaleY = abs(scaleY);
             }
+            scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
+            scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
 
             destRect.x = ((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
             destRect.y = ((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);

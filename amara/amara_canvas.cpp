@@ -24,6 +24,9 @@ namespace Amara {
             float originX = 0;
             float originY = 0;
 
+            bool flipHorizontal = false;
+            bool flipVertical = false;
+
             Canvas(): Actor() {
                 getLogicalDimensions = true;
             }
@@ -235,10 +238,30 @@ namespace Amara {
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY; 
+
+                bool scaleFlipHorizontal = false;
+                bool scaleFlipVertical = false;
+                float recScaleX = scaleX;
+                float recScaleY = scaleY;
+
+                if (scaleX < 0) {
+                    scaleFlipHorizontal = true;
+                    scaleX = abs(scaleX);
+                }
+                if (scaleY < 0) {
+                    scaleFlipVertical = true;
+                    scaleY = abs(scaleY);
+                }
+                scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
+                scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
+
                 destRect.x = ((x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX)) * nzoomX);
                 destRect.y = ((y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY)) * nzoomY);
                 destRect.w = ((imageWidth * scaleX) * properties->zoomX);
                 destRect.h = ((imageHeight * scaleY) * properties->zoomY);
+
+                scaleX = recScaleX;
+                scaleY = recScaleY;
                 
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
@@ -257,6 +280,14 @@ namespace Amara {
                         SDL_SetTextureBlendMode(canvas, blendMode);
 				        SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);
 
+                        SDL_RendererFlip flipVal = SDL_FLIP_NONE;
+                        if (!flipHorizontal != !scaleFlipHorizontal) {
+                            flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_HORIZONTAL);
+                        }
+                        if (!flipVertical != !scaleFlipVertical) {
+                            flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
+                        }
+                        
                         SDL_RenderCopyExF(
                             properties->gRenderer,
                             canvas,
@@ -264,7 +295,7 @@ namespace Amara {
                             &destRect,
                             angle + properties->angle,
                             &origin,
-                            SDL_FLIP_NONE
+                            flipVal
                         );
                     }
                 }

@@ -138,6 +138,9 @@ namespace Amara {
                     if (success) {
                         tasks.pop_front();
                     }
+                    else if (load->has(task.key) && !task.replace) {
+                        tasks.pop_front();
+                    }
 					else {
 						if (task.tries < numberOfTries) {
 							task.tries += 1;

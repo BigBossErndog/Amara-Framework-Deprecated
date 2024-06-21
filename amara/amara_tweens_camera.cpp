@@ -29,8 +29,8 @@ namespace Amara {
 				cam->stopFollow();
 
                 if (center) {
-                    startX = cam->centerX;
-                    startY = cam->centerY;
+                    startX = cam->focusX;
+                    startY = cam->focusY;
 
                     if (cam->lockedToBounds) {
                         targetRect = {

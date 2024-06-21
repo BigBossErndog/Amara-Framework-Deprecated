@@ -52,6 +52,8 @@ namespace Amara {
 		float scrollFactorY = 1;
 		float zoomFactorX = 1;
 		float zoomFactorY = 1;
+		float zoomScaleX = 0;
+		float zoomScaleY = 0;
 
 		double angle = 0; // Using Degrees
 		float alpha = 1;
@@ -180,6 +182,16 @@ namespace Amara {
 			}
 			if (config.find("zoomFactorY") != config.end()) {
 				zoomFactorY = config["zoomFactorY"];
+			}
+			if (config.find("zoomScaleX") != config.end()) {
+				zoomScaleX = config["zoomScaleX"];
+			}
+			if (config.find("zoomScaleY") != config.end()) {
+				zoomScaleY = config["zoomScaleY"];
+			}
+			if (config.find("zoomScale") != config.end()) {
+				zoomScaleX = config["zoomScale"];
+				zoomScaleY = zoomScaleX;
 			}
 			if (config.find("zoomFactor") != config.end()) {
 				zoomFactorX = config["zoomFactor"];
@@ -709,6 +721,15 @@ namespace Amara {
 			setScrollFactor(0);
 			setZoomFactor(0);
 			return this;
+		}
+
+		Amara::Entity* setZoomScale(float gx, float gy) {
+			zoomScaleX = gx;
+			zoomScaleY = gy;
+			return this;
+		} 
+		Amara::Entity* setZoomScale(float gi) {
+			return setZoomScale(gi, gi);
 		}
 
 		void resetPassOnProperties() {

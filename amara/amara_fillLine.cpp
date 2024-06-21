@@ -5,10 +5,14 @@ namespace Amara {
 
         std::vector<FloatVector2> points;
 
+        float renderOffsetX = 0;
+        float renderOffsetY = 0;
+
         FillLine(std::vector<FloatVector2> gPoints) {
             points = gPoints;
         }
-        FillLine(FloatVector2 p1, FloatVector2 p2): FillLine({ p1, p2 }) {}
+        FillLine(FloatVector2 p1, FloatVector2 p2): FillLine((std::vector<FloatVector2>){ p1, p2 }) {}
+        FillLine(float p1x, float p1y, float p2x, float p2y): FillLine({ p1x, p1y }, { p2x, p2y }) {}
         FillLine(Amara::Color gColor, std::vector<FloatVector2> gPoints): FillLine(gPoints) {
             color = gColor;
         }
@@ -16,40 +20,40 @@ namespace Amara {
 
         void init() {
             Amara::Actor::init();
-            entityType = "fillLine";
+            entityType = "FillLine";
         }
 
         void configure(nlohmann::json config) {
             if (config.find("points") != config.end() && config["points"].is_array()) {
                 nlohmann::json pointsData = config["points"];
-                for (json point: pointsData) {
+                for (nlohmann::json point: pointsData) {
                     points.push_back({ point["x"], point["y"] });
                 }
             }
         }
 
-        Amara::FillRect* setColor(int r, int g, int b, int a) {
+        Amara::FillLine* setColor(int r, int g, int b, int a) {
 			color.r = r;
 			color.g = g;
 			color.b = b;
 			color.a = a;
 			return this;
 		}
-		Amara::FillRect* setColor(int r, int g, int b) {
+		Amara::FillLine* setColor(int r, int g, int b) {
 			return setColor(r, g, b, 255);
 		}
-		Amara::FillRect* setColor(Amara::Color gColor) {
+		Amara::FillLine* setColor(Amara::Color gColor) {
 			color = gColor;
 			return this;
 		}
 
-		Amara::FillRect* setRenderOffset(float gx, float gy) {
+		Amara::FillLine* setRenderOffset(float gx, float gy) {
 			renderOffsetX = gx;
 			renderOffsetY = gy;
 			return this;
 		}
 
-		Amara::FillRect* setRenderOffset(float gi) {
+		Amara::FillLine* setRenderOffset(float gi) {
 			return setRenderOffset(gi, gi);
 		}
 

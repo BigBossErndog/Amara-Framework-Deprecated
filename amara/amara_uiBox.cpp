@@ -38,6 +38,9 @@ namespace Amara {
             int imageWidth = 0;
             int imageHeight = 0;
 
+            bool flipHorizontal = false;
+            bool flipVertical = false;
+
             int partitionTop = 0;
             int partitionBottom = 0;
             int partitionLeft = 0;
@@ -125,11 +128,11 @@ namespace Amara {
 				}
 				if (config.find("relativeXFromCenter") != config.end()) {
 					float relativeX = config["relativeXFromCenter"];
-					x = scene->mainCamera->width/2.0 + scene->mainCamera->width*relativeX/2.0 - width/2.0;
+					x = scene->mainCamera->centerX + scene->mainCamera->width*scene->mainCamera->zoomX*relativeX/2.0 - width/2.0;
 				}
 				if (config.find("relativeYFromCenter") != config.end()) {
 					float relativeY = config["relativeYFromCenter"];
-					y = scene->mainCamera->height/2.0 + scene->mainCamera->height*relativeY/2.0 - height/2.0;
+					y = scene->mainCamera->centerY + scene->mainCamera->height*scene->mainCamera->zoomY*relativeY/2.0 - height/2.0;
 				}
                 if (config.find("minWidth") != config.end()) {
                     minWidth = config["minWidth"];
@@ -354,6 +357,22 @@ namespace Amara {
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 
+                bool scaleFlipHorizontal = false;
+                bool scaleFlipVertical = false;
+                float recScaleX = scaleX;
+                float recScaleY = scaleY;
+
+                if (scaleX < 0) {
+                    scaleFlipHorizontal = true;
+                    scaleX = abs(scaleX);
+                }
+                if (scaleY < 0) {
+                    scaleFlipVertical = true;
+                    scaleY = abs(scaleY);
+                }
+                scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
+                scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
+
                 float rotatedX = (x - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX));
                 float rotatedY = (y-z - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY));
 
@@ -361,7 +380,7 @@ namespace Amara {
                 destRect.y = (rotatedY * nzoomY);
                 destRect.w = ((width * scaleX) * nzoomX);
                 destRect.h = ((height * scaleY) * nzoomY);
-
+                
                 origin.x = destRect.w * originX;
                 origin.y = destRect.h * originY;
 
@@ -377,6 +396,14 @@ namespace Amara {
                         SDL_SetTextureBlendMode(canvas, blendMode);
 				        SDL_SetTextureAlphaMod(canvas, alpha * properties->alpha * 255);
 
+                        SDL_RendererFlip flipVal = SDL_FLIP_NONE;
+                        if (!flipHorizontal != !scaleFlipHorizontal) {
+                            flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_HORIZONTAL);
+                        }
+                        if (!flipVertical != !scaleFlipVertical) {
+                            flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
+                        }
+
                         SDL_RenderCopyExF(
                             properties->gRenderer,
                             canvas,
@@ -384,7 +411,7 @@ namespace Amara {
                             &destRect,
                             angle + properties->angle,
                             &origin,
-                            SDL_FLIP_NONE
+                            flipVal
                         );
 
 						checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);

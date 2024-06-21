@@ -178,6 +178,8 @@ namespace Amara {
                     scaleFlipVertical = true;
                     scaleY = abs(scaleY);
                 }
+                scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
+                scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
 
                 float rotatedX = (x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX));
                 float rotatedY = (y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY));

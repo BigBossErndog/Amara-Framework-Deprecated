@@ -60,6 +60,9 @@ namespace Amara {
             int widthInPixels = 0;
             int heightInPixels = 0;
 
+            bool flipHorizontal = false;
+            bool flipVertical = false;
+
             bool pleaseUpdate = true;
             bool textureLocked = false;
 
@@ -793,6 +796,22 @@ namespace Amara {
 
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
+                
+                bool scaleFlipHorizontal = false;
+                bool scaleFlipVertical = false;
+                float recScaleX = scaleX;
+                float recScaleY = scaleY;
+
+                if (scaleX < 0) {
+                    scaleFlipHorizontal = true;
+                    scaleX = abs(scaleX);
+                }
+                if (scaleY < 0) {
+                    scaleFlipVertical = true;
+                    scaleY = abs(scaleY);
+                }
+                scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
+                scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
 
                 viewport.x = vx;
                 viewport.y = vy;
@@ -805,11 +824,22 @@ namespace Amara {
                 destRectF.w = (widthInPixels*scaleX*nzoomX);
                 destRectF.h = (heightInPixels*scaleY*nzoomY);
 
+                scaleX = recScaleX;
+                scaleY = recScaleY;
+
                 origin.x = destRectF.w * originX;
                 origin.y = destRectF.h * originY;
 				
                 SDL_SetTextureBlendMode(drawTexture, blendMode);
                 SDL_SetTextureAlphaMod(drawTexture, properties->alpha * alpha * 255);
+
+                SDL_RendererFlip flipVal = SDL_FLIP_NONE;
+                if (!flipHorizontal != !scaleFlipHorizontal) {
+                    flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_HORIZONTAL);
+                }
+                if (!flipVertical != !scaleFlipVertical) {
+                    flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
+                }
 
                 SDL_RenderCopyExF(
                     properties->gRenderer,
@@ -818,7 +848,7 @@ namespace Amara {
                     &destRectF,
                     0,
                     &origin,
-                    SDL_FLIP_NONE
+                    flipVal
                 );
 
 				checkHover(vx, vy, vw, vh, destRectF.x, destRectF.y, destRectF.w, destRectF.h);
@@ -1167,6 +1197,7 @@ namespace Amara {
                 if (layers.find(layerKey) != layers.end()) {
                     return layers[layerKey];
                 }
+                if (properties->testing) SDL_Log("Tilemap: TilemapLayer \"%s\" was not found.", layerKey.c_str());
                 return nullptr;
             }
 
@@ -1176,6 +1207,10 @@ namespace Amara {
                     layers.erase(layerKey);
                     layer->destroy();
                 }
+            }
+
+            void mergeTilemapLayers(std::string layer1, std::string layer2) {
+                getTilemapLayer(layer1)->mergeInto(getTilemapLayer(layer2));
             }
 
             std::vector<Amara::TilemapLayer*> setWalls(std::vector<std::string> wallKeys) {
