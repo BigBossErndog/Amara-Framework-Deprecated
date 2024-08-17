@@ -21,6 +21,11 @@ namespace Amara {
 			float movementX = 0;
 			float movementY = 0;
 			float moveDistance = 0;
+			
+			float pointOffsetX = 0;
+			float pointOffsetY = 0;
+			float pointPercentX = 0;
+			float pointPercentY = 0;
 
 			FloatVector2 firstPoint;
 

@@ -810,8 +810,8 @@ namespace Amara {
                     scaleFlipVertical = true;
                     scaleY = abs(scaleY);
                 }
-                scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
-                scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
+                scaleX = scaleX * (1 + (nzoomX - 1)*(zoomScaleX - 1));
+                scaleY = scaleY * (1 + (nzoomY - 1)*(zoomScaleY - 1));
 
                 viewport.x = vx;
                 viewport.y = vy;

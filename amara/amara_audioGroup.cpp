@@ -53,6 +53,12 @@ namespace Amara {
                 return nullptr;
             }
 
+            Amara::AudioBase* remove(std::string fKey) {
+                for (auto it = groups.begin(); it != groups.end();) {
+
+                } 
+            }
+
             Amara::AudioGroup* getGroup(std::string fKey) {
                 for (Amara::AudioGroup* group : groups) {
                     if (group->key.compare(fKey) == 0) {
@@ -192,12 +198,12 @@ namespace Amara {
                 Amara::AudioBase::run(parentVolume);
 
                 for (Amara::AudioBase* audio : sounds) {
-                    audio->run(volume * masterVolume * parentVolume);
+                    audio->run(calculatedVolume);
 					if (audio->isPlaying) currentlyPlaying = audio;
                 }
 
                 for (Amara::AudioGroup* audio : groups) {
-                    audio->run(volume * masterVolume * parentVolume);
+                    audio->run(calculatedVolume);
                 }
 
                 if (currentlyPlaying != nullptr) {

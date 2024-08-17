@@ -19,7 +19,7 @@ namespace Amara {
             int currentEvent = 1;
             int eventLooker = 0;
 
-            int waitCounter = 0;
+            double waitCounter = 0;
             double waitTimeElapsed = 0;
 
             bool skipEvent = false;
@@ -247,7 +247,7 @@ namespace Amara {
 
             bool wait(double time, bool skip) {
                 if (stateCopy) return stateCopy->wait(time, skip);
-
+                
                 bool ret = false;
 
                 if (once()) {
@@ -267,6 +267,7 @@ namespace Amara {
 
                     waitCounter += 1;
                     if (waitCounter >= t || skip) {
+                        waitCounter = 0;
                         nextEvt();
                     }
 

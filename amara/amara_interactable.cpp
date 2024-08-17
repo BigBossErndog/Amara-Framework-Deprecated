@@ -33,7 +33,7 @@ namespace Amara {
 				if (!isInteractable) return;
 				if (gx > vw || gy > vh) return;
 				if (gx + gw < 0 || gy + gw < 0) return;
-
+				
 				if (gx < 0) {
 					gw += gx;
 					gx = 0;
@@ -69,10 +69,22 @@ namespace Amara {
 				bool mouseHovered = false;
 
 				interact.mouse = mouse;
-				interact.finger = nullptr;
 
 				interact.interactScaleX = properties->interactScaleX;
 				interact.interactScaleY = properties->interactScaleY;
+
+				if (input->lastMode == InputMode_Mouse) {
+					interact.pointOffsetX = mouse->dx - interact.hitbox.x;
+					interact.pointOffsetY = mouse->dy - interact.hitbox.y;
+					interact.pointPercentX = interact.pointOffsetX/(float)interact.hitbox.width;
+					interact.pointPercentY = interact.pointOffsetY/(float)interact.hitbox.height;
+				}
+				if (input->lastMode == InputMode_Touch && interact.finger) {
+					interact.pointOffsetX = interact.finger->dx - interact.hitbox.x;
+					interact.pointOffsetY = interact.finger->dy - interact.hitbox.y;
+					interact.pointPercentX = interact.pointOffsetX/(float)interact.hitbox.width;
+					interact.pointPercentY = interact.pointOffsetY/(float)interact.hitbox.height;
+				}
 				
 				if (input->lastMode & (InputMode_Mouse | InputMode_Touch)) {
 					if (overlapping(mouse->dx, mouse->dy, &interact.hitbox)) {

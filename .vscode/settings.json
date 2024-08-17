@@ -55,6 +55,7 @@
         "cinttypes": "cpp",
         "sstream": "cpp",
         "regex": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "sdl_fontcache.c": "cpp"
     }
 }

@@ -540,6 +540,36 @@ namespace Amara {
 			return this;
 		}
 
+        Amara::TextureContainer* scaleTo(float gw, float gh) {
+            scaleX = gw/width;
+            scaleY = gh/height;
+            return this;
+        }
+
+        Amara::TextureContainer* scaleToWidth(float gw) { 
+            scaleX = gw/width;
+            scaleY = scaleX;
+            return this;
+        }
+        Amara::TextureContainer* scaleToHeight(float gh) {
+            scaleY = gh/height;
+            scaleX = scaleY;
+            return this;
+        }
+
+        Amara::TextureContainer* scaleToFit(float gw, float gh) {
+            // maintains aspect ratio
+            float asp1 = width/(float)height;
+            float asp2 = gw/gh;
+            if (asp1 > asp2) {
+                scaleToWidth(gw);
+            }
+            else {
+                scaleToHeight(gh);
+            }
+            return this;
+        }
+
         Amara::FloatRect getRect() {
 			// Doesn't take into account scrollFactor or zoomFactor.
 			return { 
@@ -580,8 +610,8 @@ namespace Amara {
                 scaleFlipVertical = true;
                 scaleY = abs(scaleY);
             }
-            scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
-            scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
+            scaleX = scaleX * (1 + (nzoomX - 1)*(zoomScaleX - 1));
+            scaleY = scaleY * (1 + (nzoomY - 1)*(zoomScaleY - 1));
 
             destRect.x = ((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
             destRect.y = ((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);

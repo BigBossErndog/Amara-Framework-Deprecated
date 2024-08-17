@@ -548,6 +548,10 @@ namespace Amara {
 						input.mouse.x = input.mouse.dx;
 						input.mouse.y = input.mouse.dy;
 
+						if (e.type == SDL_MOUSEMOTION) {
+							input.mouse.moved = true;
+						}
+
 						float offset, upScale;
 						int vx, vy = 0;
 						float ratioRes = ((float)resolution.width / (float)resolution.height);

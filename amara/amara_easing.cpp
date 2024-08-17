@@ -14,19 +14,19 @@ namespace Amara {
     }   
 
     double sineInOutEase(float startVal, float endVal, double progress) {
-        return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI) + 1)/2;
+        return startVal + (endVal - startVal)*(sin(-M_PI/2.0 + progress*M_PI) + 1.0)/2.0;
     }
 
     double sineOutEase(float startVal, float endVal, double progress) {
-        return startVal + (endVal - startVal)*(sin(progress*M_PI/2));
+        return startVal + (endVal - startVal)*(sin(progress*M_PI/2.0));
     }
 
     double sineInEase(float startVal, float endVal, double progress) {
-        return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI/2) + 1);
+        return startVal + (endVal - startVal)*(sin(-M_PI/2.0 + progress*M_PI/2.0) + 1.0);
     }
 
     double sineInThenOutEase(float startVal, float endVal, double progress) {
-        return startVal + (endVal - startVal)*(sin(-M_PI/2 + progress*M_PI*2) + 1)/2;
+        return startVal + (endVal - startVal)*(sin(-M_PI/2.0 + progress*M_PI*2.0) + 1.0)/2.0;
     }
 
     double circularEase(float startVal, float endVal, double progress) {

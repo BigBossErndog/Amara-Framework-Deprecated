@@ -178,8 +178,8 @@ namespace Amara {
                     scaleFlipVertical = true;
                     scaleY = abs(scaleY);
                 }
-                scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
-                scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
+                scaleX = scaleX * (1 + (nzoomX - 1)*(zoomScaleX - 1));
+                scaleY = scaleY * (1 + (nzoomY - 1)*(zoomScaleY - 1));
 
                 float rotatedX = (x+renderOffsetX+cropLeft - properties->scrollX*scrollFactorX + properties->offsetX - (originX * imageWidth * scaleX));
                 float rotatedY = (y-z+renderOffsetY+cropTop - properties->scrollY*scrollFactorY + properties->offsetY - (originY * imageHeight * scaleY));
@@ -409,6 +409,19 @@ namespace Amara {
             Amara::Image* scaleToHeight(float gh) {
                 scaleY = gh/imageHeight;
                 scaleX = scaleY;
+                return this;
+            }
+
+            Amara::Image* scaleToFit(float gw, float gh) {
+                // maintains aspect ratio
+                float asp1 = imageWidth/(float)imageHeight;
+                float asp2 = gw/gh;
+                if (asp1 > asp2) {
+                    scaleToWidth(gw);
+                }
+                else {
+                    scaleToHeight(gh);
+                }
                 return this;
             }
 

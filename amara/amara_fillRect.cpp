@@ -146,8 +146,8 @@ namespace Amara {
 				scaleFlipVertical = true;
 				scaleY = abs(scaleY);
 			}
-			scaleX = scaleX * (1 + (nzoomX - 1)*zoomScaleX);
-			scaleY = scaleY * (1 + (nzoomY - 1)*zoomScaleY);
+			scaleX = scaleX * (1 + (nzoomX - 1)*(zoomScaleX - 1));
+			scaleY = scaleY * (1 + (nzoomY - 1)*(zoomScaleY - 1));
 
 			destRect.x = ((x+renderOffsetX - properties->scrollX*scrollFactorX + properties->offsetX - (originX * width * scaleX)) * nzoomX);
 			destRect.y = ((y-z+renderOffsetY - properties->scrollY*scrollFactorY + properties->offsetY - (originY * height * scaleY)) * nzoomY);

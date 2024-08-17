@@ -36,6 +36,7 @@
     #ifndef AMARA_WEB
         #include <SDL_net.h>
     #endif
+    #include <sdlogv.h>
 #endif
 
 #ifndef AMARA_DIRECTIONS
@@ -184,6 +185,8 @@
     #include "amara_tintImage.cpp"
 
     #include "amara_freeWalker.cpp"
+
+    #include "amara_video.cpp"
 
     #include "amara_tween.cpp"
     #include "amara_tweens_camera.cpp"

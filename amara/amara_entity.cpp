@@ -52,8 +52,8 @@ namespace Amara {
 		float scrollFactorY = 1;
 		float zoomFactorX = 1;
 		float zoomFactorY = 1;
-		float zoomScaleX = 0;
-		float zoomScaleY = 0;
+		float zoomScaleX = 1;
+		float zoomScaleY = 1;
 
 		double angle = 0; // Using Degrees
 		float alpha = 1;

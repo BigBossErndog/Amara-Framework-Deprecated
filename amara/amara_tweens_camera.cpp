@@ -92,7 +92,7 @@ namespace Amara {
                 }
 
                 if (center) {
-                    cam->centerOn(nx, ny);
+                    cam->focusOn(nx, ny);
                 }
                 else {
                     cam->setScroll(nx, ny);
@@ -101,7 +101,7 @@ namespace Amara {
 
 			void finish() {
 				if (center) {
-                    cam->centerOn(targetX, targetY);
+                    cam->focusOn(targetX, targetY);
                 }
                 else {
                     cam->setScroll(targetX, targetY);

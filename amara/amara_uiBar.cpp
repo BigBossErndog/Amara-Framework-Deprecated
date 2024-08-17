@@ -23,6 +23,7 @@ namespace Amara {
         int frontPaddingBottom = 0;
 
         bool isBarHeld = false;
+        bool hasValueChanged = false;
         
         Amara::Direction drainDirection = Left; 
 
@@ -96,9 +97,12 @@ namespace Amara {
         }
 
         void setValue(float gVal) {
+            float recVal = value;
             value = gVal;
-            if (value > maxValue) maxValue = maxValue;
+            if (value > maxValue) maxValue = value;
             if (value < minValue) minValue = value;
+
+            if (value != recVal) hasValueChanged = true;
         }
         void setValueInstantly(float gVal) {
             displayValue = gVal;
@@ -136,13 +140,21 @@ namespace Amara {
         }
 
         void run() {
+            hasValueChanged = false;
+            if (isBarHeld) {
+                isBarHeld = false;
+                if (isInteractable) {
+                    if (input->lastMode == InputMode_Touch && backBar->interact.finger && backBar->interact.finger->isDown) isBarHeld = true;
+                    if (input->lastMode == InputMode_Mouse && backBar->interact.mouse && backBar->interact.mouse->isDown) isBarHeld = true; 
+                }
+            }
             if (isInteractable) {
                 if (backBar->interact.isDown) isBarHeld = true;
-                if (input->lastMode == InputMode_Mouse && !input->mouse.isDown) isBarHeld = false;
-                if (input->lastMode == InputMode_Touch && backBar->interact.finger == nullptr) isBarHeld = false;
                 if (isBarHeld) {
-                    float unitsByPixels = maxValue/(float)frontBar->width;
-                    fixSetValue(value + unitsByPixels*backBar->interact.movementX);
+                    float pixelWidth = frontBar->imageWidth - frontPaddingLeft - frontPaddingRight;
+                    float pixelOffset = backBar->interact.pointOffsetX - frontPaddingLeft;
+                    float newValue = maxValue*(pixelOffset/pixelWidth);
+                    fixSetValue(newValue);
                 }
             }
 

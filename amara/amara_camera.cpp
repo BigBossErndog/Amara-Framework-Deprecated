@@ -104,7 +104,7 @@ namespace Amara {
                     y = 0;
 
                     if (width != properties->resolution->width || height != properties->resolution->height) {
-                        centerOn(focusX, focusY);
+                        focusOn(focusX, focusY);
                     }
 
                     width = properties->resolution->width;
@@ -124,7 +124,7 @@ namespace Amara {
 
                         float nx = (oldFocusX - tx) * (1 - lerpX) + tx;
                         float ny = (oldFocusY - ty) * (1 - lerpY) + ty;
-                        centerOn(nx, ny);
+                        focusOn(nx, ny);
                     }
                 }
 
@@ -136,8 +136,8 @@ namespace Amara {
 
             void updateValues() {
                 fixValues();
-                centerX = (width/(zoomX*zoomScale))/2.0;
-                centerY = (height/(zoomY*zoomScale))/2.0;
+                centerX = width/2.0;
+                centerY = height/2.0;
                 focusX = scrollX + (width/(zoomX*zoomScale))/2.0;
                 focusY = scrollY + (height/(zoomY*zoomScale))/2.0;
             }
@@ -251,16 +251,16 @@ namespace Amara {
                 followTarget = nullptr;
             }
 
-            void centerOn(float gx, float gy) {
+            void focusOn(float gx, float gy) {
                 scrollX = gx - (width/(zoomX*zoomScale))/2;
                 scrollY = gy - (height/(zoomY*zoomScale))/2;
                 updateValues();
             }
-            void centerOn(float gi) {
-                centerOn(gi, gi);
+            void focusOn(float gi) {
+                focusOn(gi, gi);
             }
-            void centerOn(Amara::Entity* entity) {
-                centerOn(entity->x + entity->cameraOffsetX, entity->y + entity->cameraOffsetY);
+            void focusOn(Amara::Entity* entity) {
+                focusOn(entity->x + entity->cameraOffsetX, entity->y + entity->cameraOffsetY);
                 updateValues();
             }
 
@@ -293,7 +293,7 @@ namespace Amara {
                 setZoomScale(gZoomScale);
                 zoomX = gx;
                 zoomY = gy;
-                centerOn(cx, cy);
+                focusOn(cx, cy);
 
                 updateValues();
             }

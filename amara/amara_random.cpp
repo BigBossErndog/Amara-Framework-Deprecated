@@ -66,6 +66,18 @@ namespace Amara {
 				return list;
 			}
 
+            SDL_Color randomColor(int alpha) {
+                return {
+                    intBetween(0, 255),
+                    intBetween(0, 255),
+                    intBetween(0, 255),
+                    alpha
+                };
+            }
+            SDL_Color randomColor() {
+                return randomColor(255);
+            }
+
             std::vector<nlohmann::json> randomItems(nlohmann::json list, int numItems, bool useItemOnce) {
                 std::vector<nlohmann::json> newList;
                 int index;
