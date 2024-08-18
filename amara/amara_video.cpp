@@ -1,82 +1,194 @@
 namespace Amara {
     theora_t video_ctx = { 0 };
 
-    class Video: public Amara::TextureContainer, Amara::Sound {
+    class Video;
+    typedef struct VideoData {
+        Amara::Video* video = nullptr;
+        Amara::Sound* audio = nullptr;
+    } VideoData;
+
+    VideoData current_video_data;
+
+    void videoAudioCallback(int gChannel);
+
+    /*
+    *   Note: Do not attempt to play more than one video at a time.
+    */
+    class Video: public Amara::TextureContainer, public Amara::Sound {
     public:
         std::string videoSrc;
         FILE* videoFile = nullptr;
 
-        bool isPlaying = false;
+        SDL_Texture* videoStream = nullptr;
 
         SDL_Rect intDest = { 0, 0, 0, 0 };
 
-        int imageWidth = 0;
-        int imageHeight = 0;
+        bool audioEnabled = true;
 
-        bool autoSize = false;
-        bool maintainAspectRatio = false;
+        uint64_t length = 0;
 
-        Video(std::string path, int gx, int gy, int gw, int gh): Amara::TextureContainer(), Amara::Sound() {
+        using Amara::TextureContainer::TextureContainer;
+        using Amara::Sound::Sound;
+        
+        Video(): Amara::Sound() {}
+
+        Video(float gx, float gy): Video() {
+            x = gx;
+            y = gy;
+        }
+        Video(std::string path): Video() {
+            videoSrc = path;
+        }
+        Video(float gx, float gy, std::string path): Video(gx, gy) {
             videoSrc = path;
         }
 
         void init(Amara::GameProperties* gProps, Amara::Scene* gScene, Amara::Entity* gParent) {
             Amara::TextureContainer::init(gProps, gScene, gParent);
+            entityType = "video";
         }
 
-        void setAudioGroup(std::string key) {
-            Amara::Sound::parent = audio->getGroup(key);
+        Amara::Video* setAudioGroup(Amara::AudioGroup* group) {
+            Amara::Sound::parent = group;
+            return this;
         }
 
-        void run() {
-            if (videoFile) {
-                if (Amara::Sound::parent) Amara::Sound::run(Amara::Sound::parent->calculatedVolume);
-                if (video_ctx.hasVideo && theora_playing(&video_ctx)) {
-
-                }
-                else {
-                    isPlaying = false;
-                    stop();
-                }
-            }
+        Amara::Video* setAudioGroup(std::string key) {
+            return setAudioGroup(audio->getGroup(key));
         }
 
-        void drawContent(int vx, int vy, int vw, int vh) {
-            if (video_ctx.hasVideo && theora_playing(&video_ctx)) {
+        virtual void createTexture() {
+            Amara::TextureContainer::createTexture();
 
+            if (videoStream) {
+                tasks->queueTexture(videoStream);
             }
-            else {
-                isPlaying = false;
-                stop();
-            }
-            Amara::TextureContainer::drawContent();
+            videoStream = SDL_CreateTexture(
+                properties->gRenderer,
+                SDL_PIXELFORMAT_IYUV,
+                SDL_TEXTUREACCESS_STREAMING,
+                width,
+                height
+            );
         }
 
         bool playVideo() {
+            if (videoFile) stopVideo();
+
             videoFile = fopen(videoSrc.c_str(), "rb");
             if (videoFile) {
-                theora_start(&video_ctx, videoFile);
-                imageWidth = video_ctx.w;
-                imageHeight = video_ctx.h;
+                current_video_data.video = this;
 
-                isPlaying = true;
+                theora_start(&video_ctx, videoFile);
+                if (video_ctx.hasVideo) {
+                    width = video_ctx.w;
+                    height = video_ctx.h;
+
+                    isPlaying = true;
+
+                    if (audioEnabled) {
+                        sound = nullptr;
+                        if (video_ctx.hasAudio) {
+                            current_video_data.audio = this;
+                            sound = theora_audio(&video_ctx);
+                            if (sound) {
+                                Mix_ChannelFinished(videoAudioCallback);
+                                videoAudioCallback(-1);
+                            }
+                        }
+                        if (!sound) {
+                            SDL_Log("Video Error: Unable to start sound on video \"%s\".", videoSrc.c_str());
+                        }
+                    }
+                    SDL_Log("Video Started: \"%s\".", videoSrc.c_str());
+                    return true;
+                }
+                else {
+                    SDL_Log("Video Error: Could not play video file \"%s\".", videoSrc.c_str());
+                }
             }
+            else {
+                SDL_Log("Video Error: Could not open video file \"%s\".", videoSrc.c_str());
+            }
+            stopVideo();
+            return false;
         }
 
         bool playVideo(std::string path) {
             videoSrc = path;
-            playVideo();
+            return playVideo();
+        }
+
+        bool playVideo(bool withSound) {
+            audioEnabled = withSound;
+            return playVideo();
+        }
+
+        bool playVideo(std::string path, bool withSound) {
+            audioEnabled = withSound;
+            return playVideo(path);
         }
 
         void stopVideo() {
             if (videoFile) {
-                if (Amara::Sound::parent && Amara::Sound::parent->currentlyPlaying == this) {
-                    Amara::Sound::parent->currentlyPlaying = nullptr;
-                } 
                 theora_stop(&video_ctx);
                 fclose(videoFile);
             }
+            if (Amara::Sound::parent && Amara::Sound::parent->currentlyPlaying == this) {
+                Amara::Sound::parent->currentlyPlaying = nullptr;
+            }
+            if (channel != -1) {
+                Mix_ChannelFinished(NULL);
+                Amara::Sound::stop();
+            }
+
+            SDL_Log("Video Stopped: \"%s\"", videoSrc.c_str());
+            
+            videoFile = nullptr;
+            sound = nullptr;
             isPlaying = false;
+        }
+
+        void run() {
+            if (Amara::Sound::parent) {
+                Amara::AudioBase::run(Amara::Sound::parent->calculatedVolume);
+            }
+            else {
+                Amara::AudioBase::run(1);
+            }
+            if (videoFile) {
+                if (!properties->quit && video_ctx.hasVideo && theora_playing(&video_ctx)) {
+                    if (channel != -1) {
+                        if (Mix_Playing(channel)) {
+                            Mix_Volume(channel, floor(calculatedVolume * MIX_MAX_VOLUME));
+                        }
+                    }
+                }
+                else {
+                    isPlaying = false;
+                    stopVideo();
+                }
+            }
+        }
+
+        void draw(int vx, int vy, int vw, int vh) {
+            if (videoFile == nullptr) return;
+
+            Amara::TextureContainer::draw(vx, vy, vw, vh);
+        } 
+
+        void drawContent() {
+            if (videoFile) {
+                if (!properties->quit && video_ctx.hasVideo && theora_playing(&video_ctx)) {
+                    theora_video(&video_ctx, videoStream);
+                    SDL_RenderCopy(properties->gRenderer, videoStream, NULL, NULL);
+                }
+                else {
+                    isPlaying = false;
+                    stopVideo();
+                }
+            }
+            Amara::TextureContainer::drawContent();
         }
 
         bool isFinished() {
@@ -84,8 +196,21 @@ namespace Amara {
         }
 
         void destroy() {
-            stop();
+            stopVideo();
+            if (videoStream) {
+                tasks->queueTexture(videoStream);
+                videoStream = nullptr;
+            }
             Amara::TextureContainer::destroy();
+        }
+    };
+
+    void videoAudioCallback(int gChannel) {
+        Amara::Sound* audio = current_video_data.audio;
+        
+        audio->sound = theora_audio(&video_ctx);
+        if (audio->sound) {
+            audio->channel = Mix_PlayChannel(gChannel, audio->sound, 0);
         }
     };
 }

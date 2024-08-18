@@ -56,6 +56,11 @@
         "sstream": "cpp",
         "regex": "cpp",
         "optional": "cpp",
-        "sdl_fontcache.c": "cpp"
+        "sdl_fontcache.c": "cpp",
+        "charconv": "cpp",
+        "format": "cpp",
+        "span": "cpp",
+        "text_encoding": "cpp",
+        "variant": "cpp"
     }
 }

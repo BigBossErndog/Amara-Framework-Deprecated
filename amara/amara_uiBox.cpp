@@ -1,5 +1,5 @@
 namespace Amara {
-    class UIBox: public Amara::Actor {
+    class UIBox: public Amara::Actor, public Amara::MakeRect {
         public:
             SDL_Renderer* gRenderer = nullptr;
             SDL_Texture* canvas = nullptr;
@@ -16,8 +16,6 @@ namespace Amara {
 
             float recWidth = -1;
             float recHeight = -1;
-            int width = 0;
-            int height = 0;
 
             int minWidth = 0;
             int minHeight = 0;
@@ -47,9 +45,6 @@ namespace Amara {
             int partitionRight = 0;
 
             int frame = 0;
-
-            float originX = 0;
-            float originY = 0;
 
             bool textureLocked = true;
             bool pleaseUpdate = false;
@@ -87,6 +82,7 @@ namespace Amara {
                 properties = gameProperties;
                 load = properties->loader;
                 gRenderer = properties->gRenderer;
+                rectInit(this);
 
                 if (!textureKey.empty()) {
                     setTexture(textureKey);
@@ -101,13 +97,12 @@ namespace Amara {
 
             virtual void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
+                rectConfigure(config);
 
                 if (config.find("width") != config.end()) {
-                    width = config["width"];
                     openWidth = width;
                 }
                 if (config.find("height") != config.end()) {
-                    height = config["height"];
                     openHeight = height;
                 }
                 if (config.find("xFromRight") != config.end()) {

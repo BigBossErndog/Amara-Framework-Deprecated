@@ -1,11 +1,9 @@
 namespace Amara {
-    class Canvas: public Amara::Actor {
+    class Canvas: public Amara::Actor, public Amara::MakeRect {
         public:
             SDL_Texture* canvas = nullptr;
             SDL_Texture* recTarget = NULL;
             
-            float width = 0;
-            float height = 0;
             int imageWidth = 0;
             int imageHeight = 0;
             bool getLogicalDimensions = false;
@@ -20,9 +18,6 @@ namespace Amara {
             SDL_Rect viewport;
             SDL_FPoint origin;
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
-
-            float originX = 0;
-            float originY = 0;
 
             bool flipHorizontal = false;
             bool flipVertical = false;
@@ -44,6 +39,7 @@ namespace Amara {
                 if (canvas == nullptr) {
                     createNewCanvasTexture();
                 }
+                rectInit(this);
                 Amara::Actor::init(gameProperties, gScene, gParent);
                 if (getLogicalDimensions) {
                     width = properties->resolution->width;
@@ -51,6 +47,11 @@ namespace Amara {
                 }
 
                 entityType = "canvas";
+            }
+
+            void configure(nlohmann::json config) {
+                Amara::Actor::configure(config);
+                rectConfigure(config);
             }
 
             void beginFill(Uint8 r, Uint8 g, Uint8 b, Uint8 a, SDL_BlendMode gBlendMode) {
@@ -203,21 +204,6 @@ namespace Amara {
                     createNewCanvasTexture();
                 }
                 Amara::Actor::run();
-            }
-
-            void setOrigin(float gx, float gy) {
-                originX = gx;
-                originY = gy;
-            }
-            void setOrigin(float go) {
-                setOrigin(go, go);
-            }
-            void setOriginPosition(float gx, float gy) {
-                originX = gx/imageWidth;
-                originY = gy/imageHeight;
-            }
-            void setOriginPosition(float g) {
-                setOriginPosition(g, g);
             }
 
             virtual void draw(int vx, int vy, int vw, int vh) override {

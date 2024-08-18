@@ -1,5 +1,5 @@
 namespace Amara {
-	class Game: public Amara::DataObject {
+	class Game: public Amara::DataObject, public Amara::MakeRect {
 		public:
 			SDL_version compiledVersion;
             SDL_version linkedVersion;
@@ -15,9 +15,6 @@ namespace Amara {
 
 			SDL_Window* gWindow = NULL;
 			SDL_Renderer* gRenderer = NULL;
-
-			int width = 0;
-			int height = 0;
 
 			int displayIndex = 0;
 			Amara::IntRect display;
@@ -161,7 +158,8 @@ namespace Amara {
 				}
 
 				//Initialize SDL_mixer
-				if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0 ) {
+				Mix_Init(MIX_INIT_OGG);
+				if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0 ) {
 					SDL_Log("Game Error: SDL_mixer could not initialize. SDL_mixer Error: %s\n", Mix_GetError());
 					return false;
 				}

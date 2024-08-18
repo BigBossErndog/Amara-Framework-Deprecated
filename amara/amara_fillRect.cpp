@@ -1,5 +1,5 @@
 namespace Amara {
-	class FillRect: public Amara::Actor {
+	class FillRect: public Amara::Actor, public Amara::MakeRect {
 	public:
 		Amara::Color color = {0, 0, 0, 255};
 		Amara::Color recColor;
@@ -10,12 +10,6 @@ namespace Amara {
 		SDL_Point origin;
 
 		SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
-
-		float width = 0;
-		float height = 0;
-
-		float originX = 0;
-		float originY = 0;
 
 		float renderOffsetX = 0;
 		float renderOffsetY = 0;
@@ -32,28 +26,14 @@ namespace Amara {
 
 		using Amara::Actor::init;
 		void init() {
+			rectInit(this);
 			Amara::Actor::init();
 			entityType = "actor";
 		}
 
 		void configure(nlohmann::json config) {
 			Amara::Actor::configure(config);
-			if (config.find("width") != config.end()) {
-				width = config["width"];
-			}
-			if (config.find("height") != config.end()) {
-				height = config["height"];
-			}
-			if (config.find("originX") != config.end()) {
-				originX = config["originX"];
-			}
-			if (config.find("originY") != config.end()) {
-				originY = config["originY"];
-			}
-			if (config.find("origin") != config.end()) {
-				originX = config["origin"];
-				originY = config["origin"];
-			}
+			rectConfigure(config);
 		}
 
 		Amara::FillRect* setColor(int r, int g, int b, int a) {
@@ -107,7 +87,7 @@ namespace Amara {
 			return setSize(gs, gs);
 		}
 
-		Amara::FloatRect getRect() {
+		Amara::FloatRect calculateRect() {
 			// Doesn't take into account scrollFactor or zoomFactor.
 			return { 
 				(x+renderOffsetX + properties->offsetX - (originX * width * scaleX)),

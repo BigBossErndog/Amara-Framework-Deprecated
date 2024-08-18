@@ -18,208 +18,207 @@ namespace Amara {
     };
 
     class Asset {
-        public:
-            AssetType type;
-            std::string key;
+    public:
+        AssetType type;
+        std::string key;
 
-            bool toRegenerate = false;
+        bool toRegenerate = false;
 
-            Asset() {}
+        Asset() {}
 
-            Asset(std::string givenKey, AssetType givenType) {
-                key = givenKey;
-                type = givenType;
-            }
+        Asset(std::string givenKey, AssetType givenType) {
+            key = givenKey;
+            type = givenType;
+        }
 
-            virtual void regenerate(SDL_Renderer*, Amara::TaskManager*) {}
+        virtual void regenerate(SDL_Renderer*, Amara::TaskManager*) {}
 
-            virtual ~Asset() {};
+        virtual ~Asset() {};
     };
 
     class SurfaceAsset: public Amara::Asset {
-        public:
-            SDL_Surface* asset = nullptr;
+    public:
+        SDL_Surface* asset = nullptr;
 
-            SurfaceAsset(std::string givenKey, AssetType givenType, SDL_Surface* surface): Amara::Asset(givenKey, givenType) {
-                asset = surface;
-            }
+        SurfaceAsset(std::string givenKey, AssetType givenType, SDL_Surface* surface): Amara::Asset(givenKey, givenType) {
+            asset = surface;
+        }
 
-            virtual ~SurfaceAsset() {
-                SDL_FreeSurface(asset);
-            }
+        virtual ~SurfaceAsset() {
+            SDL_FreeSurface(asset);
+        }
     };
 
     class ImageTexture : public Amara::Asset {
-        public:
-            int width = 0;
-            int height = 0;
+    public:
+        int width = 0;
+        int height = 0;
+        bool temp = false;
 
-            bool temp = false;
+        SDL_Texture* asset = nullptr;
 
-            SDL_Texture* asset = nullptr;
+        ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType) {
+            setTexture(givenAsset);
+        }
 
-            ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType) {
-                setTexture(givenAsset);
-            }
+        void removeTexture() {
+            if (asset) SDL_DestroyTexture(asset);
+            asset = nullptr;
+        }
 
-            void removeTexture() {
-                if (asset) SDL_DestroyTexture(asset);
-                asset = nullptr;
-            }
+        void setTexture(SDL_Texture* givenAsset) {
+            if (givenAsset == nullptr) return;
+            removeTexture();
+            SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
+            asset = givenAsset;
+        }
 
-            void setTexture(SDL_Texture* givenAsset) {
-                if (givenAsset == nullptr) return;
-                removeTexture();
-                SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
-                asset = givenAsset;
-            }
-
-            virtual ~ImageTexture() {
-                removeTexture();
-            }
+        virtual ~ImageTexture() {
+            removeTexture();
+        }
     };
 
     class RadialGradientTexture: public Amara::ImageTexture {
-        public:
-            SDL_Color innerColor;
-            SDL_Color outerColor;
-            float fadeStart;
-            
-            RadialGradientTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
+    public:
+        SDL_Color innerColor;
+        SDL_Color outerColor;
+        float fadeStart;
+        
+        RadialGradientTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
 
-            void configure(SDL_Color gInnerColor, SDL_Color gOuterColor, float gFadeStart) {
-                innerColor = gInnerColor;
-                outerColor = gOuterColor;
-                fadeStart = gFadeStart;
+        void configure(SDL_Color gInnerColor, SDL_Color gOuterColor, float gFadeStart) {
+            innerColor = gInnerColor;
+            outerColor = gOuterColor;
+            fadeStart = gFadeStart;
 
-                toRegenerate = true;
-            }
+            toRegenerate = true;
+        }
 
-            void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
-                tasks->queueTexture(Amara::ImageTexture::asset);
-                Amara::ImageTexture::asset = createRadialGradientTexture(gRenderer, width, height, innerColor, outerColor, fadeStart);
-            }
+        void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
+            tasks->queueTexture(Amara::ImageTexture::asset);
+            Amara::ImageTexture::asset = createRadialGradientTexture(gRenderer, width, height, innerColor, outerColor, fadeStart);
+        }
     };
 
 	class CircleTexture: public Amara::ImageTexture {
-		public:
-			SDL_Color color;
-			float radius;
+    public:
+        SDL_Color color;
+        float radius;
 
-			CircleTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
+        CircleTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
 
-			void configure(float gRadius, SDL_Color gColor) {
-				color = gColor;
-				radius = gRadius;
+        void configure(float gRadius, SDL_Color gColor) {
+            color = gColor;
+            radius = gRadius;
 
-				toRegenerate = true;
-			}
+            toRegenerate = true;
+        }
 
-			void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
-				tasks->queueTexture(Amara::ImageTexture::asset);
-				Amara::ImageTexture::asset = createCircleTexture(gRenderer, radius, color);
-			}
+        void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
+            tasks->queueTexture(Amara::ImageTexture::asset);
+            Amara::ImageTexture::asset = createCircleTexture(gRenderer, radius, color);
+        }
 	};
 
 	class GradientTexture: public Amara::ImageTexture {
-		public:
-			Amara::Direction dir = NoDir;
-			SDL_Color colorIn;
-			SDL_Color colorOut;
+    public:
+        Amara::Direction dir = NoDir;
+        SDL_Color colorIn;
+        SDL_Color colorOut;
 
-			GradientTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
+        GradientTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::ImageTexture(key, givenType, givenAsset) {}
 
-			void configure(Amara::Direction gDir, SDL_Color gColorIn, SDL_Color gColorOut) {
-				dir = gDir;
-				colorIn = gColorIn;
-				colorOut = gColorOut;
+        void configure(Amara::Direction gDir, SDL_Color gColorIn, SDL_Color gColorOut) {
+            dir = gDir;
+            colorIn = gColorIn;
+            colorOut = gColorOut;
 
-				toRegenerate = true;
-			}
+            toRegenerate = true;
+        }
 
-			void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
-				tasks->queueTexture(Amara::ImageTexture::asset);
-				Amara::ImageTexture::asset = createGradientTexture(gRenderer, width, height, dir, colorIn, colorOut);
-			}
+        void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
+            tasks->queueTexture(Amara::ImageTexture::asset);
+            Amara::ImageTexture::asset = createGradientTexture(gRenderer, width, height, dir, colorIn, colorOut);
+        }
 	};
 
     class Spritesheet: public Amara::ImageTexture {
-        public:
-            int frameWidth = 0;
-            int frameHeight = 0;
+    public:
+        int frameWidth = 0;
+        int frameHeight = 0;
 
-            Spritesheet(std::string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, nullptr) {
-                setTexture(newtexture, newwidth, newheight);
+        Spritesheet(std::string key, AssetType givenType, SDL_Texture* newtexture, int newwidth, int newheight): Amara::ImageTexture(key, givenType, nullptr) {
+            setTexture(newtexture, newwidth, newheight);
+        }
+
+        using Amara::ImageTexture::setTexture;
+        void setTexture(SDL_Texture* newtexture, int newwidth, int newheight) {
+            setTexture(newtexture);
+
+            frameWidth = newwidth;
+            frameHeight = newheight;
+            if (frameWidth > width) {
+                frameWidth = width;
             }
-
-            using Amara::ImageTexture::setTexture;
-            void setTexture(SDL_Texture* newtexture, int newwidth, int newheight) {
-                setTexture(newtexture);
-
-                frameWidth = newwidth;
-                frameHeight = newheight;
-                if (frameWidth > width) {
-                    frameWidth = width;
-                }
-                if (frameHeight > height) {
-                    frameHeight = height;
-                }
+            if (frameHeight > height) {
+                frameHeight = height;
             }
+        }
     };
 
     class StringFile: public Amara::Asset {
-        public:
-            std::string contents;
+    public:
+        std::string contents;
 
-            StringFile(std::string givenKey, AssetType givenType, std::string gContents): Amara::Asset(givenKey, STRINGFILE) {
-                contents = gContents;
-            }
-            
-            std::string getString() {
-                return contents;
-            }
+        StringFile(std::string givenKey, AssetType givenType, std::string gContents): Amara::Asset(givenKey, STRINGFILE) {
+            contents = gContents;
+        }
+        
+        std::string getString() {
+            return contents;
+        }
 
-            std::string toString() {
-                return getString();
-            }
+        std::string toString() {
+            return getString();
+        }
     };
 
 	class JsonFile: public Amara::Asset {
-		public:
-            nlohmann::json jsonObj;
+    public:
+        nlohmann::json jsonObj;
 
-			JsonFile(std::string givenKey, AssetType givenType, nlohmann::json gJson): Amara::Asset(givenKey, JSONFILE) {
-                jsonObj = gJson;
-            }
+        JsonFile(std::string givenKey, AssetType givenType, nlohmann::json gJson): Amara::Asset(givenKey, JSONFILE) {
+            jsonObj = gJson;
+        }
 
-            nlohmann::json& getJSON() {
-                return jsonObj;
-            }
+        nlohmann::json& getJSON() {
+            return jsonObj;
+        }
 	};
 
     class TTFAsset: public Amara::Asset {
-        public:
-            FC_Font* font = nullptr;
-            std::string path;
-            int size;
-            SDL_Color color;
-            int style;
+    public:
+        FC_Font* font = nullptr;
+        std::string path;
+        int size;
+        SDL_Color color;
+        int style;
 
-            bool recFullscreen = false;
+        bool recFullscreen = false;
 
-            TTFAsset(std::string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF) {
-                font = gFont;
-                toRegenerate = true;
-            }
+        TTFAsset(std::string givenKey, AssetType givenType, FC_Font* gFont): Amara::Asset(givenKey, TTF) {
+            font = gFont;
+            toRegenerate = true;
+        }
 
-            void reloadFontCache(SDL_Renderer* gRenderer) {
-                FC_ClearFont(font);
-                FC_LoadFont(font, gRenderer, path.c_str(), size, color, style);
-            }
+        void reloadFontCache(SDL_Renderer* gRenderer) {
+            FC_ClearFont(font);
+            FC_LoadFont(font, gRenderer, path.c_str(), size, color, style);
+        }
 
-            void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
-                reloadFontCache(gRenderer);
-            }
+        void regenerate(SDL_Renderer* gRenderer, Amara::TaskManager* tasks) {
+            reloadFontCache(gRenderer);
+        }
     };
 
     class LineByLine: public Amara::Asset {

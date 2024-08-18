@@ -1,5 +1,5 @@
 namespace Amara {
-    class Image: public Amara::Actor {
+    class Image: public Amara::Actor, public Amara::MakeRect {
         public:
             SDL_Renderer* gRenderer = nullptr;
 
@@ -13,8 +13,6 @@ namespace Amara {
 
             SDL_BlendMode blendMode = SDL_BLENDMODE_BLEND;
 
-            int width = 0;
-            int height = 0;
             int imageWidth = 0;
             int imageHeight = 0;
 
@@ -25,9 +23,6 @@ namespace Amara {
 
             int frame = 0;
             int maxFrame = 0;
-
-            float originX = 0;
-            float originY = 0;
 
             float renderOffsetX = 0;
             float renderOffsetY = 0;
@@ -71,6 +66,8 @@ namespace Amara {
                     setTexture(textureKey);
                 }
 
+                rectInit(this);
+
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
 
                 entityType = "image";
@@ -78,33 +75,12 @@ namespace Amara {
 
             virtual void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
+                rectConfigure(config);
                 if (config.find("texture") != config.end()) {
                     setTexture(config["texture"]);
                 }
                 if (config.find("frame") != config.end()) {
                     frame = config["frame"];
-                }
-                if (config.find("originX") != config.end()) {
-                    originX = config["originX"];
-                }
-                if (config.find("originY") != config.end()) {
-                    originY = config["originY"];
-                }
-                if (config.find("origin") != config.end()) {
-                    originX = config["origin"];
-                    originY = config["origin"];
-                }
-                if (config.find("originPositionX") != config.end()) {
-                    originX = config["originPositionX"];
-                    originX = originX/imageWidth;
-                }
-                if (config.find("originPositionY") != config.end()) {
-                    originY = config["originPositionY"];
-                    originY = originY/imageHeight;
-                }
-                if (config.find("originPosition") != config.end()) {
-                    originX = config["originPosition"];
-                    setOriginPosition(originX, originX);
                 }
                 if (config.find("flipHorizontal") != config.end()) {
                     flipHorizontal = config["flipHorizontal"];
@@ -361,23 +337,6 @@ namespace Amara {
                 texture = nullptr;
                 return this;
             }
-            
-            Amara::Image* setOrigin(float gx, float gy) {
-                originX = gx;
-                originY = gy;
-                return this;
-            }
-            Amara::Image* setOrigin(float g) {
-                return setOrigin(g, g);
-            }
-            Amara::Image* setOriginPosition(float gx, float gy) {
-                originX = gx/imageWidth;
-                originY = gy/imageHeight;
-                return this;
-            }
-            Amara::Image* setOriginPosition(float g) {
-                return setOriginPosition(g, g);
-            }
 
             Amara::Image* setRenderOffset(float gx, float gy) {
                 renderOffsetX = gx;
@@ -395,36 +354,6 @@ namespace Amara {
                 return this;
             }
 
-            Amara::Image* scaleTo(float gw, float gh) {
-                scaleX = gw/imageWidth;
-                scaleY = gh/imageHeight;
-                return this;
-            }
-
-            Amara::Image* scaleToWidth(float gw) { 
-                scaleX = gw/imageWidth;
-                scaleY = scaleX;
-                return this;
-            }
-            Amara::Image* scaleToHeight(float gh) {
-                scaleY = gh/imageHeight;
-                scaleX = scaleY;
-                return this;
-            }
-
-            Amara::Image* scaleToFit(float gw, float gh) {
-                // maintains aspect ratio
-                float asp1 = imageWidth/(float)imageHeight;
-                float asp2 = gw/gh;
-                if (asp1 > asp2) {
-                    scaleToWidth(gw);
-                }
-                else {
-                    scaleToHeight(gh);
-                }
-                return this;
-            }
-
             Amara::Image* cropToSection(int gx, int gy, int gw, int gh) {
                 cropLeft = gx;
                 cropTop = gy;
@@ -439,7 +368,7 @@ namespace Amara {
                 Amara::Actor::destroy(recursive);
             }
 
-            Amara::FloatRect getRect() {
+            Amara::FloatRect calculateRect() {
                 // Doesn't take into account scrollFactor or zoomFactor.
                 return { 
                     (x+renderOffsetX+cropLeft + properties->offsetX - (originX * imageWidth * scaleX)),

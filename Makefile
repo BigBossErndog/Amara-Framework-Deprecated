@@ -19,14 +19,14 @@ SDL_LIBRARY_PATHS_WIN32 = -L ext_lib/SDL2/win32/lib -L ext_lib/SDL2_image/win32/
 SDL_INCLUDE_PATHS_LINUX = `sdl2-config --cflags` -I ext_lib/SDL_FontCache
 
 LINKER_FLAGS = -l SDL2main -l SDL2 -l SDL2_image -l SDL2_ttf -l SDL2_mixer -l SDL2_net
+THEORA_LINKER_FLAGS =  -ltheora -lvorbisenc -lvorbisfile -lvorbis -logg
 
-THEORA_INCLUDE_PATHS = -I ext_lib/ogg/include -I ext_lib/vorbis/include -I ext_lib/theora/include -I ext_lib/sdlogv
-THEORA_LIBRARY_PATHS = -L ext_lib/ogg/lib -L ext_lib/vorbis/lib
-THEORA_LINKER_FLAGS =  -l vorbisenc -l vorbisfile -l vorbis -l ogg
+THEORA_INCLUDE_PATHS_WIN = -I ext_lib/ogg/include -I ext_lib/vorbis/include -I ext_lib/theora/include -I ext_lib/sdlogv
+THEORA_LIBRARY_PATHS_WIN = -L ext_lib/ogg/lib -L ext_lib/vorbis/lib -L ext_lib/theora/lib
 
-THEORA = $(THEORA_INCLUDE_PATHS) $(THEORA_LIBRARY_PATHS) $(THEORA_LINKER_FLAGS)
+THEORA_WIN = $(THEORA_INCLUDE_PATHS_WIN) $(THEORA_LIBRARY_PATHS_WIN) $(THEORA_LINKER_FLAGS)
 
-OTHER_LIB_PATHS = -I ext_lib/nlohmann/include -I ./src -I ext_lib/murmurhash3 $(THEORA)
+OTHER_LIB_PATHS = -I ext_lib/nlohmann/include -I ./src -I ext_lib/murmurhash3
 
 AMARA_PATH = -I ./amara
 
@@ -43,18 +43,11 @@ all:
 clean:
 	rm -rf $(BUILD_PATH)/*
 
-wsl:
-	rm -rf build/*.dll
-	rm -rf build/assets/*
-	cp -R assets/ build/
-	$(WSL_COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_WIN64) $(SDL_LIBRARY_PATHS_WIN64) $(COMPILER_FLAGS) -l mingw32 -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_WIN)
-	cp dlls/win64/* $(BUILD_PATH)/
-
 win64: $(SRC_FILES)
 	rm -rf build/*.dll
 	rm -rf build/assets/*
 	cp -R assets/ build/
-	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_WIN64) $(SDL_LIBRARY_PATHS_WIN64) $(COMPILER_FLAGS) -l mingw32 -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_WIN)
+	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(THEORA_WIN) $(SDL_INCLUDE_PATHS_WIN64) $(SDL_LIBRARY_PATHS_WIN64) $(COMPILER_FLAGS) -l mingw32 -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_WIN)
 	cp dlls/win64/* $(BUILD_PATH)/
 
 
@@ -62,7 +55,7 @@ win32: $(SRC_FILES)
 	rm -rf build/*.dll
 	rm -rf build/assets/*
 	cp -R assets/ build/
-	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_WIN32) $(SDL_LIBRARY_PATHS_WIN32) $(COMPILER_FLAGS) -l mingw32 -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic $(LINKER_FLAGS) -I ext_lib/SDL2-32/bin -o $(BUILD_EXECUTABLE_WIN)
+	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(THEORA_WIN) $(SDL_INCLUDE_PATHS_WIN32) $(SDL_LIBRARY_PATHS_WIN32) $(COMPILER_FLAGS) -l mingw32 -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic $(LINKER_FLAGS) -I ext_lib/SDL2-32/bin -o $(BUILD_EXECUTABLE_WIN)
 	cp dlls/win32/* $(BUILD_PATH)/
 
 linux:
@@ -105,6 +98,7 @@ setup-apt64:
 	sudo apt-get install libsdl2-ttf-dev
 	sudo apt-get install libsdl2-mixer-dev
 	sudo apt-get install libsdl2-net-dev
+	sudo apt install libtheora-dev libogg-dev libvorbis-dev
 
 setup-yum64:
 	sudo yum install SDL2
@@ -123,3 +117,4 @@ setup-pacman64:
 	sudo pacman -S sdl2_ttf
 	sudo pacman -S sdl2_mixer
 	sudo pacman -S sdl2_net
+	sudo pacman -S libtheora libogg libvorbis

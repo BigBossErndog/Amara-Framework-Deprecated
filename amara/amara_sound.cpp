@@ -10,6 +10,7 @@ namespace Amara {
 			defaultLoops = 0;
 		}
 
+		using Amara::AudioBase::play;
 		virtual Amara::AudioBase* play(int loops) {
 			channel = Mix_PlayChannel(-1, sound, loops);
 			if (channel == -1) {
@@ -22,7 +23,7 @@ namespace Amara {
 
 			return this;
 		}
-
+		
 		virtual Amara::AudioBase* stop() {
 			if (isPlaying && channel != -1) {
 				Mix_HaltChannel(channel);
@@ -47,7 +48,9 @@ namespace Amara {
 			Amara::AudioBase::run(parentVolume);
 
 			if (channel != -1) {
-				if (Mix_Playing(channel)) Mix_Volume(channel, floor(calculatedVolume * parentVolume * MIX_MAX_VOLUME));
+				if (Mix_Playing(channel)) {
+					Mix_Volume(channel, floor(calculatedVolume * MIX_MAX_VOLUME));
+				}
 				else {
 					isPlaying = false;
 					channel = -1;
@@ -61,7 +64,6 @@ namespace Amara {
 			}
 			else {
 				isPlaying = false;
-				channel = -1;
 				if (parent && parent->currentlyPlaying == this) {
 					parent->currentlyPlaying = nullptr;
 				}
@@ -87,6 +89,7 @@ namespace Amara {
 			music = givenAsset;
 		}
 
+		using Amara::AudioBase::play;
 		Amara::AudioBase* play(int gLoops) {
 			loops = gLoops;
 			if (Mix_PlayingMusic()) {

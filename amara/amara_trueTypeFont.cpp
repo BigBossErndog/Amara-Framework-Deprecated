@@ -7,7 +7,7 @@ namespace Amara {
         ALIGN_BOTTOM
     };
 
-    class TrueTypeFont: public Amara::Actor {
+    class TrueTypeFont: public Amara::Actor, public Amara::MakeRect {
         public:
             SDL_Renderer* gRenderer = nullptr;
             Amara::TTFAsset* fontAsset = nullptr;
@@ -18,15 +18,6 @@ namespace Amara {
             Amara::Color color = FC_MakeColor(0, 0, 0, 255);
             Amara::Alignment alignment = ALIGN_LEFT;
             FC_Effect effect;
-
-            float originX = 0;
-            float originY = 0;
-
-            float scaleX = 1;
-            float scaleY = 1;
-
-            int width = 0;
-            int height = 0;
 
             float renderOffsetX = 0;
             float renderOffsetY = 0;
@@ -66,6 +57,7 @@ namespace Amara {
 				properties = gameProperties;
                 load = properties->loader;
                 gRenderer = properties->gRenderer;
+                rectInit(this);
 
                 if (!fontKey.empty()) {
                     setFont(fontKey);
@@ -78,6 +70,8 @@ namespace Amara {
 
             virtual void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
+                rectConfigure(config);
+
                 if (config.find("text") != config.end()) {
                     setText(config["text"]);
                 }
@@ -185,36 +179,6 @@ namespace Amara {
                 return setOutlineColor(gColor);
             }
 
-            Amara::TrueTypeFont* setOrigin(float gx, float gy) {
-                originX = gx;
-                originY = gy;
-                findDimensions();
-                return this;
-            }
-            Amara::TrueTypeFont* setOrigin(float g) {
-                return setOrigin(g, g);
-            }
-            
-            Amara::TrueTypeFont* setScale(float gx, float gy) {
-                scaleX = gx;
-                scaleY = gy;
-                findDimensions();
-                return this;
-            }
-            Amara::TrueTypeFont* setScale(float g) {
-                return setScale(g, g);
-            }
-
-            Amara::TrueTypeFont* changeScale(float gx, float gy) {
-                scaleX += gx;
-                scaleY += gy;
-                findDimensions();
-                return this;
-            }
-            Amara::TrueTypeFont* changeScale(float gi) {
-                return changeScale(gi, gi);
-            }
-
             void setWordWrap() {
                 wordWrap = true;
                 findDimensions();
@@ -234,12 +198,12 @@ namespace Amara {
                 if (fontAsset == nullptr) return;
 
                 if (wordWrap) {
-                    width = wordWrapWidth * scaleX;
-                    height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt) * scaleY;
+                    width = wordWrapWidth;
+                    height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt);
                 }
                 else {
-                    width = FC_GetWidth(fontAsset->font, txt) * scaleX;
-                    height = FC_GetHeight(fontAsset->font, txt) * scaleY;
+                    width = FC_GetWidth(fontAsset->font, txt);
+                    height = FC_GetHeight(fontAsset->font, txt);
                 }
             }
 

@@ -17,7 +17,7 @@ namespace Amara {
     class MessageQueue;
     class RNG;
 
-    class GameProperties {
+    class GameProperties: public Amara::MakeRect {
         public:
             Amara::Game* game = nullptr;
             bool quit = false;
@@ -32,9 +32,6 @@ namespace Amara {
             bool testing = true;
 
             int entityDepth = 0;
-
-            int width = 0;
-            int height = 0;
 
             float scrollX = 0;
             float scrollY = 0;

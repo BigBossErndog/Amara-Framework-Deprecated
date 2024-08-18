@@ -12,7 +12,7 @@ namespace Amara {
         return tileId;
     }
 
-    class TilemapLayer: public Amara::Actor {
+    class TilemapLayer: public Amara::Actor, public Amara::MakeRect {
         public:
             SDL_Renderer* gRenderer = nullptr;
             Amara::ImageTexture* texture = nullptr;
@@ -31,15 +31,6 @@ namespace Amara {
 
             Amara::Tilemap* tilemap = nullptr;
             Amara::Entity* tilemapEntity = nullptr;
-            
-            int width = 0;
-            int height = 0;
-
-            float originX = 0;
-            float originY = 0;
-
-            float scaleX = 1;
-            float scaleY = 1;
 
             SDL_Rect viewport;
             SDL_Rect srcRect;
@@ -88,7 +79,7 @@ namespace Amara {
                 tiles.resize(width*height, tile);
                 for (int t = 0; t < tiles.size(); t++) {
                     Tile& tile = tiles[t];
-                    tile.x = (t % width);
+                    tile.x = (t % (int)width);
                     tile.y = floor(((float)t) / (float)width);
                 }
             }
@@ -104,6 +95,7 @@ namespace Amara {
 
             void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
                 textureLocked = textureLockDefault;
+                rectInit(this);
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
                 gRenderer = properties->gRenderer;
@@ -126,6 +118,7 @@ namespace Amara {
 
             void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
+                rectConfigure(config);
 
                 if (config.find("texture") != config.end()) {
                     setTexture(config["texture"]);
@@ -236,7 +229,7 @@ namespace Amara {
                         Amara::Tile& tile = tiles.at(t);
                         tileId = tileId & ~(Amara::TILED_FLIPPEDHORIZONTALLY | Amara::TILED_FLIPPEDVERTICALLY | Amara::TILED_FLIPPEDANTIDIAGONALLY);
                         tile.id = (int)(tileId - firstgid);
-                        tile.x = (t % width);
+                        tile.x = (t % (int)width);
                         tile.y = floor(((float)t) / (float)width);
                         tile.fhorizontal = fhorizontal;
                         tile.fvertical = fvertical;
@@ -897,14 +890,11 @@ namespace Amara {
     };
     bool TilemapLayer::textureLockDefault = true;
     
-    class Tilemap: public Amara::Actor, public Amara::WallFinder {
+    class Tilemap: public Amara::Actor, public Amara::WallFinder, public Amara::MakeRect {
         public:
             std::string textureKey;
             std::string tiledJsonKey;
             nlohmann::json tiledJson;
-
-            int width = 0;
-            int height = 0;
             
             int widthInPixels = 0;
             int heightInPixels = 0;
@@ -984,6 +974,7 @@ namespace Amara {
             }
 
             virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) {
+                rectInit(this);
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
                 if (!tiledJsonKey.empty()) {
                     tiledJson = ((Amara::JsonFile*)load->get(tiledJsonKey))->jsonObj;

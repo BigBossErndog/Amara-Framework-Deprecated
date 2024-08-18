@@ -3,7 +3,7 @@ namespace Amara {
     class ScenePlugin;
     class AssetManager;
 
-    class Scene: public Amara::Actor {
+    class Scene: public Amara::Actor, public MakeRect {
         public:
             std::string key;
             Amara::LoadManager loadManager;
@@ -52,6 +52,9 @@ namespace Amara {
                 mainCamera = nullptr;
 
                 add(mainCamera = new Amara::Camera());
+                width = mainCamera->width;
+                height = mainCamera->height;
+                
                 preload();
                 SDL_Log("START LOADING TASKS: %d loading tasks.", load->numberOfTasks);
 
@@ -127,6 +130,10 @@ namespace Amara {
             virtual void run() {
                 properties->currentScene = this;
 				properties->currentCamera = mainCamera;
+                if (mainCamera) {
+                    width = mainCamera->width;
+                    height = mainCamera->height;
+                }
 
                 manageScene();
             }

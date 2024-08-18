@@ -1,15 +1,12 @@
 namespace Amara {
     class Scene;
 
-    class Camera : public Amara::Actor {
+    class Camera : public Amara::Actor, public Amara::MakeRect {
         public:
             std::list<Amara::Camera*>* sceneCameras = nullptr;
             Amara::SceneTransitionBase* transition = nullptr;
 
             bool definedDimensions = false;
-
-            float width = 0;
-            float height = 0;
 
             float oldScrollX = 0;
             float oldScrollY = 0;
@@ -84,14 +81,14 @@ namespace Amara {
                 parent = gParent;
                 scene = givenScene;
 
-                updateValues();
-                recordValues();
+                rectInit(this);
 
                 if (!definedDimensions) {
                     width = properties->resolution->width;
                     height = properties->resolution->height;
                 }
 
+                updateValues();
                 recordValues();
                 entityType = "camera";
                 

@@ -38,6 +38,7 @@ namespace Amara {
         virtual void init(Amara::GameProperties* gameProperties, Amara::Scene* givenScene, Amara::Entity* givenParent) override {
             Amara::Sprite::init(gameProperties, givenScene, givenParent);
             entityType = "repeatedSprite";
+            rectInit(this);
         }
 
         void configure(nlohmann::json config) {
@@ -77,8 +78,8 @@ namespace Amara {
             int cy = floor(patternBaseY + patternOffsetY);
             while (cy < 0) cy += Amara::Sprite::height;
 
-            int ix = cx%Amara::Sprite::width - Amara::Sprite::width;
-            int iy = cy%Amara::Sprite::height - Amara::Sprite::height;
+            int ix = cx%Amara::Sprite::imageWidth - Amara::Sprite::imageWidth;
+            int iy = cy%Amara::Sprite::imageHeight - Amara::Sprite::imageHeight;
             int pw = floor(width/Amara::Sprite::width)+2;
             int ph = floor(height/Amara::Sprite::height)+2;
 

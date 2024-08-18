@@ -9,6 +9,7 @@ using namespace std;
 class TestScene: public Scene, public StateManager {
     public:
 		TextBox* box = nullptr;
+		Video* video = nullptr;
 
 		nlohmann::json testText;
 
@@ -38,24 +39,27 @@ class TestScene: public Scene, public StateManager {
 				{ "yFromCenter", -34 }
 			});
 			box->registerStateManager(this);
+
+			add(video = new Video(scene->width/2.0, scene->height/2.0, "assets/pitv_trailer.ogv"));
+			video->setOrigin(0.5);
+			cout << video->x << ", " << video->y << endl;
+			cout << scene->width/2.0 << ", " << scene->height/2.0 << endl;
 		}
 
         void update() {
 			if (state("1")) {
-				for (int i = 0; i < testText.size(); i++) {
-					box->say(testText[i]);
-				}
-				switchStateEvt("2");
-			}
-			else if (state("2")) {
 				if (once()) {
-					box->recite(new Tween_Alpha(0, 1))->chain(new Tween_Alpha(1, 1));
+					if (video->playVideo()) {
+						cout << "Video should be successfully playing." << endl;
+					}
+					video->scaleToFit(scene);
 				}
-				wait(0.5);
-				if (once()) {
-					box->chain(new Tween_Alpha(0, 1))->chain(new Script_Destroy());
-					box = nullptr;
+
+				if (evt()) {
+					nextEvtOn(video->isFinished());
 				}
+
+				resetEvt();
 			}
         }
 };
