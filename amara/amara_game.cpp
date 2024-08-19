@@ -159,7 +159,7 @@ namespace Amara {
 
 				//Initialize SDL_mixer
 				Mix_Init(MIX_INIT_OGG);
-				if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0 ) {
+				if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0 ) {
 					SDL_Log("Game Error: SDL_mixer could not initialize. SDL_mixer Error: %s\n", Mix_GetError());
 					return false;
 				}

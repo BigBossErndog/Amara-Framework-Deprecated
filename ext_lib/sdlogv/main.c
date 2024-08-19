@@ -30,7 +30,7 @@
 #include <signal.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#include "theora.h"
+#include <sdlogv.h>
 
 /**
  * The decoder context. Must be global because SDL mixer callbacks know no better
@@ -65,14 +65,10 @@ int main(int argc, char **argv)
     SDL_DisplayMode dm;
     SDL_Rect rect;                  /* the rectangle where we want to display the video */
 
-    /* check arguments */
-    if(argc < 2) {
-        printf("./sdlogv <ogg/ogv file>\n");
-        exit(0);
-    }
+    char* path = "assets/pitv_trailer.ogv";
 
     /* open the video file */
-    f = fopen(argv[1], "rb");
+    f = fopen(path, "rb");
     if(!f) {
         fprintf(stderr, "unable to open file\n");
         exit(1);

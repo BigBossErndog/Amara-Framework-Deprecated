@@ -29,10 +29,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL.h>
-#include <SDL_mixer.h>                           /* Mix_Chunk only */
+#include <SDL_mixer.h>                             /* Mix_Chunk only */
 #include <SDL_thread.h>
-#include <theora/theora.h>
-#include <theora/theoraenc.h>
 #include <theora/theoradec.h>
 #include <vorbis/codec.h>
 
@@ -366,10 +364,10 @@ Mix_Chunk *theora_audio(theora_t *ctx)
  */
 void theora_video(theora_t *ctx, SDL_Texture *texture)
 {
-    // SDL_Log("2");
-    int i, pitch;
-    Uint8 *y, *u, *v, *dst;
+    int i, pitch = 0;
+    Uint8 *y, *u, *v, *dst = NULL;
     Uint32 now;
+
     /* here it is not a problem if the queue is temporarily empty, since we're not running inside SDL mixer callbacks */
     if(!ctx || !texture || !ctx->hasVideo || ctx->stop || ctx->vtail == ctx->vhead) return;
     now = SDL_GetTicks() - ctx->baseticks;
@@ -381,14 +379,16 @@ void theora_video(theora_t *ctx, SDL_Texture *texture)
     /* update the texture with the current frame */
     i = ctx->vtail; ctx->vtail = (ctx->vtail + 1) % THEORA_QUEUE_SIZE;
     SDL_LockTexture(texture, NULL, (void**)&dst, &pitch);
-    y = ctx->frame[i].vbuf;
-    u = y + (ctx->w * ctx->h);
-    v = u + ((ctx->w / 2) * (ctx->h / 2));
-    for (i = 0; i < ctx->h; i++, y += ctx->w, dst += pitch) memcpy(dst, y, ctx->w);
-    for (i = 0; i < ctx->h / 2; i++, u += ctx->w / 2, dst += pitch / 2) memcpy(dst, u, ctx->w / 2);
-    for (i = 0; i < ctx->h / 2; i++, v += ctx->w / 2, dst += pitch / 2) memcpy(dst, v, ctx->w / 2);
+    /* failsafe if SDL failed to lock the texture */
+    if(dst && pitch > 0) {
+        y = ctx->frame[i].vbuf;
+        u = y + (ctx->w * ctx->h);
+        v = u + ((ctx->w / 2) * (ctx->h / 2));
+        for (i = 0; i < ctx->h; i++, y += ctx->w, dst += pitch) memcpy(dst, y, ctx->w);
+        for (i = 0; i < ctx->h / 2; i++, u += ctx->w / 2, dst += pitch / 2) memcpy(dst, u, ctx->w / 2);
+        for (i = 0; i < ctx->h / 2; i++, v += ctx->w / 2, dst += pitch / 2) memcpy(dst, v, ctx->w / 2);
+    }
     SDL_UnlockTexture(texture);
-    // SDL_Log("3");
 }
 
 /**

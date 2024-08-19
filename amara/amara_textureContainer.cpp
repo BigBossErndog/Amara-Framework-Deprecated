@@ -176,7 +176,7 @@ namespace Amara {
                     
                     properties->interactOffsetX -= vx + destRect.x;
                     properties->interactOffsetY -= vy + destRect.y;
-
+                    
                     properties->interactScaleX /= scaleX;
                     properties->interactScaleY /= scaleY;
                     
