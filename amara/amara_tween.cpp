@@ -70,7 +70,7 @@ namespace Amara {
 
         void script() {
             progressFurther();
-            *num = floor(ease(startNum, targetNum, progress, easing));
+            *num = ease(startNum, targetNum, progress, easing);
         }
 
         void finish() {
