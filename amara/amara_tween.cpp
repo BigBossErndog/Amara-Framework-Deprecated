@@ -55,6 +55,7 @@ namespace Amara {
         float targetNum = 0;
         float* num = nullptr;
 
+        Tween_Float() {}
         Tween_Float(float& gNum, float gTarget, double gTime, Amara::Easing gEasing) {
             num = &gNum;
             targetNum = gTarget;

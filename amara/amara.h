@@ -194,6 +194,7 @@
     #include "amara_tween.cpp"
     #include "amara_tweens_camera.cpp"
     #include "amara_tweens_entities.cpp"
+    #include "amara_tweens_audio.cpp"
 
     #include "amara_physics.cpp"
 

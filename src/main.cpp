@@ -42,7 +42,7 @@ class TestScene: public Scene, public StateManager {
 
 			add(video = new Video(scene->width/2.0, scene->height/2.0, "assets/pitv_trailer.ogv"));
 			video->setOrigin(0.5);
-			game->setFPS(30);
+			video->fps = 30;
 		}
 
         void update() {
@@ -60,7 +60,7 @@ class TestScene: public Scene, public StateManager {
 
 				if (evt()) {
 					if (nextEvtOn(video->isFinished() || controls->isDown("confirm"))) {
-						video->recite(new Tween_Float(video->masterVolume, 0, 1));
+						video->recite(new Tween_Volume(video, 0, 1));
 						video->recite(new Tween_Alpha(0, 1));
 					}
 				}
