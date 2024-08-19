@@ -239,20 +239,16 @@ namespace Amara {
             }
 
             virtual Amara::SceneTransitionBase* startTransition(Amara::SceneTransitionBase* gTransition) {
-                if (transition != nullptr) {
-                    return nullptr;
-                }
+                removeTransition();
                 transition = gTransition;
                 transition->init(properties, this);
                 return transition;
             }
 
             virtual void removeTransition() {
-                if (transition != nullptr && !initialLoaded && !load->stillLoading && transition->permissionGranted) {
-                    transition->finish();
+                if (transition != nullptr) {
                     transition->complete();
                     transition = nullptr;
-                    initialLoaded = true;
                 }
             }
 

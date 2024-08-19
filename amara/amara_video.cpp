@@ -18,10 +18,9 @@ namespace Amara {
     public:
         std::string videoSrc;
         FILE* videoFile = nullptr;
-
         SDL_Texture* videoStream = nullptr;
 
-        SDL_Rect intDest = { 0, 0, 0, 0 };
+        uint64_t duration = 0;
 
         bool audioEnabled = true;
 
@@ -32,6 +31,8 @@ namespace Amara {
 
         int frameSkip = 0;
         int frameSkipCount = 0;
+        
+        bool startedStreaming = false;
         
         Video(): Amara::Sound() {}
 
@@ -82,8 +83,10 @@ namespace Amara {
             videoFile = fopen(videoSrc.c_str(), "rb");
             if (videoFile) {
                 current_video_data.video = this;
+                startedStreaming = false;
                 clearTexture();
 
+                duration = theora_getduration(videoFile);
                 theora_start(&video_ctx, videoFile);
 
                 if (video_ctx.hasVideo) {
@@ -98,14 +101,17 @@ namespace Amara {
                             current_video_data.audio = this;
                             sound = theora_audio(&video_ctx);
                             if (sound) {
-                                Mix_ChannelFinished(videoAudioCallback);
-                                videoAudioCallback(-1);
+                                SDL_LockAudio();
+                                    Mix_ChannelFinished(videoAudioCallback);
+                                SDL_UnlockAudio();
+                                videoAudioCallback(0);
                             }
                         }
                         if (!sound) {
                             SDL_Log("Video Error: Unable to start sound on video \"%s\".", videoSrc.c_str());
                         }
                     }
+                    
                     SDL_Log("Video Started: \"%s\".", videoSrc.c_str());
                     return true;
                 }
@@ -135,23 +141,32 @@ namespace Amara {
             return playVideo(path);
         }
 
+        double getProgress() {
+            if (!isPlaying) return 0;
+            return (SDL_GetTicks() - video_ctx.baseticks)/(double)duration;
+        }
+
         void stopVideo() {
             if (videoFile) {
                 theora_stop(&video_ctx);
                 fclose(videoFile);
+                videoFile = nullptr;
             }
             if (Amara::Sound::parent && Amara::Sound::parent->currentlyPlaying == this) {
                 Amara::Sound::parent->currentlyPlaying = nullptr;
             }
+            
             if (channel != -1) {
-                Mix_ChannelFinished(NULL);
+                SDL_LockAudio();
+                    Mix_ChannelFinished(NULL);
+                SDL_UnlockAudio();
                 Amara::Sound::stop();
             }
-            clearTexture();
+
+            duration = 0;
 
             SDL_Log("Video Stopped: \"%s\"", videoSrc.c_str());
             
-            videoFile = nullptr;
             sound = nullptr;
             isPlaying = false;
         }
@@ -166,14 +181,11 @@ namespace Amara {
 
             if (videoFile) {
                 if (!properties->quit && video_ctx.hasVideo && theora_playing(&video_ctx)) {
-                    if (channel != -1) {
-                        if (Mix_Playing(channel)) {
-                            Mix_Volume(channel, floor(calculatedVolume * MIX_MAX_VOLUME));
-                        }
+                    if (channel != -1 && Mix_Playing(channel)) {
+                        Mix_Volume(channel, floor(calculatedVolume * MIX_MAX_VOLUME));
                     }
                 }
                 else {
-                    isPlaying = false;
                     stopVideo();
                 }
             }
@@ -244,9 +256,6 @@ namespace Amara {
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(properties->gRenderer, &viewport);
-                
-                SDL_SetTextureBlendMode(tx, blendMode);
-                SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
 
                 SDL_RendererFlip flipVal = SDL_FLIP_NONE;
                 if (!flipHorizontal != !scaleFlipHorizontal) {
@@ -256,15 +265,20 @@ namespace Amara {
                     flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
                 }
 
-                SDL_RenderCopyExF(
-                    properties->gRenderer,
-                    tx,
-                    NULL,
-                    &destRect,
-                    0,
-                    &origin,
-                    flipVal
-                );
+                if (startedStreaming) {
+                    SDL_SetTextureBlendMode(tx, blendMode);
+                    SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
+
+                    SDL_RenderCopyExF(
+                        properties->gRenderer,
+                        tx,
+                        NULL,
+                        &destRect,
+                        0,
+                        &origin,
+                        flipVal
+                    );
+                }
 
                 checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
             }
@@ -274,17 +288,16 @@ namespace Amara {
             if (videoFile) {
                 if (!properties->quit && video_ctx.hasVideo && theora_playing(&video_ctx)) {
                     if (frameSkipCount % (frameSkip + 1) == 0) {
+                        startedStreaming = true;
                         theora_video(&video_ctx, videoStream);
                         frameSkipCount = 0;
                     }
                     frameSkipCount += 1;
                 }
                 else {
-                    isPlaying = false;
                     stopVideo();
                 }
             }
-            Amara::TextureContainer::drawContent();
         }
 
         bool isFinished() {

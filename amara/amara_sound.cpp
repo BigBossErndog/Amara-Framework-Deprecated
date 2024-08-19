@@ -25,12 +25,12 @@ namespace Amara {
 		}
 		
 		virtual Amara::AudioBase* stop() {
-			if (isPlaying && channel != -1) {
-				Mix_HaltChannel(channel);
+			if (channel != -1) {
+				if (Mix_Playing(channel)) Mix_HaltChannel(channel);
 				channel = -1;
 				isPlaying = false;
 				isPaused = false;
-
+				
 				if (parent && parent->currentlyPlaying == this) {
 					parent->currentlyPlaying = nullptr;
 				}
