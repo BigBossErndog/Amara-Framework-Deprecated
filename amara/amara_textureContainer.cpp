@@ -74,6 +74,8 @@ namespace Amara {
         }
 
         void clearTexture() {
+            if (tx == nullptr) return;
+            
             recTarget = SDL_GetRenderTarget(properties->gRenderer);
             SDL_SetRenderTarget(properties->gRenderer, tx);
             SDL_SetRenderDrawColor(properties->gRenderer, fillColor.r, fillColor.g, fillColor.b, fillColor.a);

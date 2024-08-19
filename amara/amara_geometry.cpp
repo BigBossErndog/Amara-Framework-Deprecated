@@ -71,6 +71,7 @@ namespace Amara {
         }
         
         FloatRect toRect();
+        FloatRect fixedRect() { return { 0, 0, width, height }; }
         MakeRect* setRect(FloatRect rect);
 
         Amara::MakeRect* scaleTo(float gw, float gh);
@@ -100,10 +101,11 @@ namespace Amara {
             return setOriginPosition(g, g);
         }
 
-        float top();
-        float bottom();
-        float left();
-        float right();
+        FloatVector2 top();
+        FloatVector2 bottom();
+        FloatVector2 left();
+        FloatVector2 right();
+        FloatVector2 center();
     };
 
     typedef struct FloatCircle: public FloatVector2 {

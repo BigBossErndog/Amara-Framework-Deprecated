@@ -78,6 +78,7 @@ namespace Amara {
             videoFile = fopen(videoSrc.c_str(), "rb");
             if (videoFile) {
                 current_video_data.video = this;
+                clearTexture();
 
                 theora_start(&video_ctx, videoFile);
                 if (video_ctx.hasVideo) {
@@ -141,6 +142,7 @@ namespace Amara {
                 Mix_ChannelFinished(NULL);
                 Amara::Sound::stop();
             }
+            clearTexture();
 
             SDL_Log("Video Stopped: \"%s\"", videoSrc.c_str());
             
@@ -156,6 +158,7 @@ namespace Amara {
             else {
                 Amara::AudioBase::run(1);
             }
+            SDL_Log("a2");
             if (videoFile) {
                 if (!properties->quit && video_ctx.hasVideo && theora_playing(&video_ctx)) {
                     if (channel != -1) {
@@ -169,6 +172,7 @@ namespace Amara {
                     stopVideo();
                 }
             }
+            Amara::TextureContainer::run();
         }
 
         void draw(int vx, int vy, int vw, int vh) {

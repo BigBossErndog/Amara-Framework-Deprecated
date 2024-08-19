@@ -42,21 +42,33 @@ class TestScene: public Scene, public StateManager {
 
 			add(video = new Video(scene->width/2.0, scene->height/2.0, "assets/pitv_trailer.ogv"));
 			video->setOrigin(0.5);
-			cout << video->x << ", " << video->y << endl;
-			cout << scene->width/2.0 << ", " << scene->height/2.0 << endl;
+			game->setFPS(30);
 		}
 
         void update() {
 			if (state("1")) {
 				if (once()) {
+					video->setAlpha(1);
+					video->setMasterVolume(1);
 					if (video->playVideo()) {
 						cout << "Video should be successfully playing." << endl;
 					}
 					video->scaleToFit(scene);
 				}
 
+				wait(2);
+
 				if (evt()) {
-					nextEvtOn(video->isFinished());
+					if (nextEvtOn(video->isFinished() || controls->isDown("confirm"))) {
+						video->recite(new Tween_Float(video->masterVolume, 0, 1));
+						video->recite(new Tween_Alpha(0, 1));
+					}
+				}
+
+				if (evt()) {
+					if (nextEvtOn(video->isFinished() || video->notActing())) {
+						video->stopVideo();
+					}
 				}
 
 				resetEvt();

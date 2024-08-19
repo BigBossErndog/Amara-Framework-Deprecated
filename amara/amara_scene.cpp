@@ -130,10 +130,8 @@ namespace Amara {
             virtual void run() {
                 properties->currentScene = this;
 				properties->currentCamera = mainCamera;
-                if (mainCamera) {
-                    width = mainCamera->width;
-                    height = mainCamera->height;
-                }
+                width = properties->resolution->width;
+                height = properties->resolution->height;
 
                 manageScene();
             }

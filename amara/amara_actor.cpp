@@ -232,7 +232,7 @@ namespace Amara {
             if (isDestroyed) return;
 
             runChildren();
-
+            
             if (debugging) SDL_Log("%s (%s): Finished Running.", debugCopy.c_str(), entityType.c_str());
         }
 

@@ -95,6 +95,11 @@ namespace Amara {
                 run();
             }
 
+            void configure(nlohmann::json config) {
+                Amara::Actor::configure(config);
+                rectConfigure(config);
+            }
+
             virtual void run() {
 				if (!definedDimensions) {
                     x = 0;

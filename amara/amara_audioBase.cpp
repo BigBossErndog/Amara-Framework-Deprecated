@@ -105,6 +105,10 @@ namespace Amara {
             return this;
         }
 
+        void calculateVol(float parentVolume) {
+            calculatedVolume = volume * masterVolume * parentVolume;
+        }
+
         virtual void run(float parentVolume) {
             switch (fadeDirection) {
                 case AudioFade_FADEIN:
@@ -144,7 +148,7 @@ namespace Amara {
                 volume = 1;
             }
             
-            calculatedVolume = volume * masterVolume * parentVolume;
+            calculateVol(parentVolume);
         }
     };
 }

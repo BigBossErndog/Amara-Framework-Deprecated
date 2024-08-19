@@ -10,9 +10,9 @@ namespace Amara {
 
         using Amara::Actor::init;
         void init() {
-                Amara::Actor::init();
-                entityType = "layer";
-            }
+            Amara::Actor::init();
+            entityType = "layer";
+        }
 
         virtual void draw(int vx, int vy, int vw, int vh) {
             Amara::Actor::draw(vx, vy, vw, vh);
