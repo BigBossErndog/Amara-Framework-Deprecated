@@ -43,17 +43,22 @@ all:
 clean:
 	rm -rf $(BUILD_PATH)/*
 
-win64: $(SRC_FILES)
+clearBuild:
+	rm -rf build/*exe
+	rm -rf build/*game
+	rm -rf build/*html
 	rm -rf build/*.dll
 	rm -rf build/assets/*
+
+win64: $(SRC_FILES)
+	make clearBuild
 	cp -R assets/ build/
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(THEORA_WIN) $(SDL_INCLUDE_PATHS_WIN64) $(SDL_LIBRARY_PATHS_WIN64) $(COMPILER_FLAGS) -l mingw32 -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_WIN)
 	cp dlls/win64/* $(BUILD_PATH)/
 
 
 win32: $(SRC_FILES)
-	rm -rf build/*.dll
-	rm -rf build/assets/*
+	rmake clearBuild
 	cp -R assets/ build/
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(THEORA_WIN) $(SDL_INCLUDE_PATHS_WIN32) $(SDL_LIBRARY_PATHS_WIN32) $(COMPILER_FLAGS) -l mingw32 -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic $(LINKER_FLAGS) -I ext_lib/SDL2-32/bin -o $(BUILD_EXECUTABLE_WIN)
 	cp dlls/win32/* $(BUILD_PATH)/
@@ -66,9 +71,7 @@ linux:
 	$(COMPILER) $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(SDL_INCLUDE_PATHS_LINUX) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(BUILD_EXECUTABLE_LINUX)
 
 web:
-	cls
-	rm -rf build/*.dll
-	rm -rf build/assets/*
+	make clearBuild
 	cp -R assets/ build/
 	emcc $(SRC_FILES) $(AMARA_PATH) $(OTHER_LIB_PATHS) $(WEB_FLAGS) -o $(BUILD_HTML)
 
