@@ -1,4 +1,31 @@
 namespace Amara {
+    void MakeRect::rectConfigure(nlohmann::json config) {
+        if (config.find("width") != config.end()) width = config["width"];
+        if (config.find("height") != config.end()) height = config["height"];
+        if (config.find("originX") != config.end()) {
+            originX = config["originX"];
+        }
+        if (config.find("originY") != config.end()) {
+            originY = config["originY"];
+        }
+        if (config.find("origin") != config.end()) {
+            originX = config["origin"];
+            originY = config["origin"];
+        }
+        if (config.find("originPositionX") != config.end()) {
+            originX = config["originPositionX"];
+            originX = originX/width;
+        }
+        if (config.find("originPositionY") != config.end()) {
+            originY = config["originPositionY"];
+            originY = originY/height;
+        }
+        if (config.find("originPosition") != config.end()) {
+            originX = config["originPosition"];
+            setOriginPosition(originX, originX);
+        }
+    }
+    
     FloatRect MakeRect::toRect() {
         if (rectEntity) return { left().x, top().y, width*rectEntity->scaleX, height*rectEntity->scaleY };
         return fixedRect();

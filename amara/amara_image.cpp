@@ -75,10 +75,10 @@ namespace Amara {
 
             virtual void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
+                
+                if (config.find("texture") != config.end()) setTexture(config["texture"]);
                 rectConfigure(config);
-                if (config.find("texture") != config.end()) {
-                    setTexture(config["texture"]);
-                }
+
                 if (config.find("frame") != config.end()) {
                     frame = config["frame"];
                 }
@@ -106,6 +106,7 @@ namespace Amara {
                 if (config.find("cropBottom") != config.end()) {
                     cropBottom = config["cropBottom"];
                 }
+                rectConfigure(config);
             }
 
             virtual nlohmann::json toData() {
