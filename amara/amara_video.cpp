@@ -33,6 +33,9 @@ namespace Amara {
         int frameSkipCount = 0;
         
         bool startedStreaming = false;
+
+        double renderDelayTime = 0;
+        int renderDelayCounter = 0;
         
         Video(): Amara::Sound() {}
 
@@ -50,6 +53,7 @@ namespace Amara {
         void init(Amara::GameProperties* gProps, Amara::Scene* gScene, Amara::Entity* gParent) {
             Amara::TextureContainer::init(gProps, gScene, gParent);
             entityType = "video";
+            renderDelayTime = 1/60;
         }
 
         Amara::Video* setAudioGroup(Amara::AudioGroup* group) {
@@ -94,6 +98,7 @@ namespace Amara {
                     height = video_ctx.h;
 
                     isPlaying = true;
+                    renderDelayCounter = 0;
 
                     if (audioEnabled) {
                         sound = nullptr;
@@ -145,6 +150,16 @@ namespace Amara {
             if (!isPlaying) return 0;
             return (SDL_GetTicks() - video_ctx.baseticks)/(double)duration;
         }
+
+        bool renderDelayed() {
+            if (isPlaying && renderDelayCounter < renderDelayTime*properties->fps) return true;
+            else return false;
+        }
+
+        Video* setRenderDelay(double amount) {
+            renderDelayTime = amount;
+            return this;
+        } 
 
         void stopVideo() {
             if (videoFile) {
@@ -200,7 +215,6 @@ namespace Amara {
 
             if (alpha < 0) {
                 alpha = 0;
-                return;
             }
             if (alpha > 1) alpha = 1;
 
@@ -265,7 +279,7 @@ namespace Amara {
                     flipVal = (SDL_RendererFlip)(flipVal | SDL_FLIP_VERTICAL);
                 }
 
-                if (startedStreaming) {
+                if (startedStreaming && !renderDelayed()) {
                     SDL_SetTextureBlendMode(tx, blendMode);
                     SDL_SetTextureAlphaMod(tx, alpha * recAlpha * 255);
 
@@ -281,6 +295,9 @@ namespace Amara {
                 }
 
                 checkHover(vx, vy, vw, vh, destRect.x, destRect.y, destRect.w, destRect.h);
+            }
+            if (isPlaying && renderDelayCounter < renderDelayTime*properties->lps) {
+                renderDelayCounter += 1;
             }
         }
 
