@@ -258,6 +258,11 @@ namespace Amara {
 				SDL_Quit();
 			}
 
+			void quitGame() {
+				quit = true;
+				properties.quit = true;
+			}
+
 			void start() {
 				// Game Loop
 				while (!quit) {
@@ -444,10 +449,10 @@ namespace Amara {
 
 			void update() {
 				if (debugGameLoop) SDL_Log("Amara Game: Update");
-				if (quit) return;
+				if (quit || properties.quit) return;
 				handleEvents();
 				writeProperties();
-				if (quit) return;
+				if (quit || properties.quit) return;
 				messages.update();
 				events.manage();
 				scenes.run();
@@ -461,7 +466,7 @@ namespace Amara {
 				SDL_SetRenderDrawColor(gRenderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 				SDL_RenderClear(gRenderer);
 				if (debugGameLoop) SDL_Log("Amara Game: Draw Scenes");
-				if (isWindowed || windowFocused) scenes.draw();
+				scenes.draw();
 				if (debugGameLoop) SDL_Log("Amara Game: Manage Interacts");
 				events.manageInteracts();
 				if (debugGameLoop) SDL_Log("Amara Game Render Present");
@@ -494,7 +499,7 @@ namespace Amara {
 
 			void manageFPSEnd() {
 				// Check if frame finished early
-				if (quit) return;
+				if (quit || properties.quit) return;
 				int totalWait = 0;
 				lagging = false;
 

@@ -149,6 +149,7 @@ namespace Amara {
                             SDL_Log("Gave up on load task: %s", task.key.c_str());
                             tasks.pop_front();
                             failedTasks += 1;
+                            if (crashOnRepeatedFail) properties->quit = true;
 						}
 					}
                 }

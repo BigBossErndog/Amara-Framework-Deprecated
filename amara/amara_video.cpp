@@ -166,12 +166,13 @@ namespace Amara {
                 Amara::Sound::parent->currentlyPlaying = nullptr;
             }
             
-            if (channel != -1) {
+            if (Mix_Playing(channel)) {
                 SDL_LockAudio();
                     Mix_ChannelFinished(NULL);
                 SDL_UnlockAudio();
                 Amara::Sound::stop();
             }
+            channel = -1;
 
             if (videoFile) {
                 theora_stop(&video_ctx);
@@ -185,6 +186,8 @@ namespace Amara {
             
             sound = nullptr;
             isPlaying = false;
+            Amara::Sound::isPaused = false;
+            Amara::Entity::isPaused = false;
         }
 
         void run() {

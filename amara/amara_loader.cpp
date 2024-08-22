@@ -17,6 +17,7 @@ namespace Amara {
 			float progress = 1;
 			int failedTasks = 0;
 			int numberOfTasks = 0;
+			bool crashOnRepeatedFail = false;
 
 			std::string currentBasePath = "";
 			std::string fixedPath = "";
