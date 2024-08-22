@@ -39,10 +39,7 @@ namespace Amara {
             float lerpY = 1;
 
             bool lockedToBounds = false;
-            float boundX = 0;
-            float boundY = 0;
-            float boundW = 0;
-            float boundH = 0;
+            FloatRect bounds = { 0, 0, 0, 0 };
 
             Camera() {
                 definedDimensions = false;
@@ -160,25 +157,25 @@ namespace Amara {
                 if (zoomY < 0) zoomY = 0.00001;
 
                 if (lockedToBounds) {
-                    if (width/(zoomX*zoomScale) > boundW) {
-                        scrollX = boundX - ((width/(zoomX*zoomScale)) - (boundW))/2;
+                    if (width/(zoomX*zoomScale) > bounds.width) {
+                        scrollX = bounds.x - ((width/(zoomX*zoomScale)) - (bounds.width))/2;
                     }
-                    else if (scrollX < boundX) {
-                        scrollX = boundX;
+                    else if (scrollX < bounds.x) {
+                        scrollX = bounds.x;
                     }
-                    else if (scrollX + width/(zoomX*zoomScale) > boundX + boundW) {
-                        scrollX = (boundX + boundW) - (width/(zoomX*zoomScale));
+                    else if (scrollX + width/(zoomX*zoomScale) > bounds.x + bounds.width) {
+                        scrollX = (bounds.x + bounds.width) - (width/(zoomX*zoomScale));
                     }
 
 
-                    if (height/(zoomY*zoomScale) > boundH) {
-                        scrollY = boundY - ((height/(zoomY*zoomScale)) - (boundH))/2;
+                    if (height/(zoomY*zoomScale) > bounds.height) {
+                        scrollY = bounds.y - ((height/(zoomY*zoomScale)) - (bounds.height))/2;
                     }
-                    else if (scrollY < boundY) {
-                        scrollY = boundY;
+                    else if (scrollY < bounds.y) {
+                        scrollY = bounds.y;
                     }
-                    else if (scrollY + height/(zoomY*zoomScale) > boundY + boundH) {
-                        scrollY = (boundY + boundH) - (height/(zoomY*zoomScale));
+                    else if (scrollY + height/(zoomY*zoomScale) > bounds.y + bounds.height) {
+                        scrollY = (bounds.y + bounds.height) - (height/(zoomY*zoomScale));
                     }
                 }
             }
@@ -316,10 +313,10 @@ namespace Amara {
 
             void setBounds(float gx, float gy, float gw, float gh) {
                 lockedToBounds = true;
-                boundX = gx;
-                boundY = gy;
-                boundW = gw;
-                boundH = gh;
+                bounds.x = gx;
+                bounds.y = gy;
+                bounds.width = gw;
+                bounds.height = gh;
             }
 
             void removeBounds() {
@@ -348,24 +345,24 @@ namespace Amara {
 				}
 
 				if (lockedToBounds) {
-                    if (width/(zoomX*zoomScale) > boundW) {
-                        tx = boundX - ((width/(zoomX*zoomScale)) - (boundW))/2;
+                    if (width/(zoomX*zoomScale) > bounds.width) {
+                        tx = bounds.x - ((width/(zoomX*zoomScale)) - (bounds.width))/2;
                     }
-                    else if (tx < boundX) {
-                        tx = boundX;
+                    else if (tx < bounds.x) {
+                        tx = bounds.x;
                     }
-                    else if (tx + width/(zoomX*zoomScale) > boundX + boundW) {
-                        tx = (boundX + boundW) - (width/(zoomX*zoomScale));
+                    else if (tx + width/(zoomX*zoomScale) > bounds.x + bounds.width) {
+                        tx = (bounds.x + bounds.width) - (width/(zoomX*zoomScale));
                     }
 
-                    if (height/(zoomY*zoomScale) > boundH) {
-                        ty = boundY - ((height/(zoomY*zoomScale)) - (boundH))/2;
+                    if (height/(zoomY*zoomScale) > bounds.height) {
+                        ty = bounds.y - ((height/(zoomY*zoomScale)) - (bounds.height))/2;
                     }
-                    else if (ty < boundY) {
-                        ty = boundY;
+                    else if (ty < bounds.y) {
+                        ty = bounds.y;
                     }
-                    else if (ty + height/(zoomY*zoomScale) > boundY + boundH) {
-                        ty = (boundY + boundH) - (height/(zoomY*zoomScale));
+                    else if (ty + height/(zoomY*zoomScale) > bounds.y + bounds.height) {
+                        ty = (bounds.y + bounds.height) - (height/(zoomY*zoomScale));
                     }
                 }
 

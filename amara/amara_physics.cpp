@@ -35,8 +35,8 @@ namespace Amara {
         bool willCollideWith(Amara::PhysicsBase* other) {
             bool collided = false;
 
-            float recVelX = velocityX + accelerationX;
-            float recVelY = velocityY + accelerationY;
+            float recVelX = velocity.x + acceleration.x;
+            float recVelY = velocity.y + acceleration.y;
 
             float recX = (parent) ? parent->x : x;
             float recY = (parent) ? parent->y : y;
@@ -101,8 +101,8 @@ namespace Amara {
                 else if (collidesWith(body)) {
                     bumped = body;
                     if (body->isPushable) {
-                        if (pushingX) body->velocityX += velocityX * body->pushFrictionX;
-                        if (pushingY) body->velocityY += velocityY * body->pushFrictionY;
+                        if (pushingX) body->velocity.x += velocity.x * body->pushFriction.x;
+                        if (pushingY) body->velocity.y += velocity.y * body->pushFriction.y;
                     }
                     if (pushingX || pushingY) {
                         if (body->isPushable) isPushing = true;
@@ -129,19 +129,19 @@ namespace Amara {
                 return;
             }
 
-            velocityX += accelerationX;
-            velocityY += accelerationY;
+            velocity.x += acceleration.x;
+            velocity.y += acceleration.y;
             float recX = (parent) ? parent->x : x;
             float recY = (parent) ? parent->y : y;
 			double correctionTotal, correctionChange;
 
             if (!hasCollided() || outOfBounds()) {
-				if (abs(velocityX) > 0) {
+				if (abs(velocity.x) > 0) {
 					correctionTotal = 0;
-					correctionChange = correctionRate * (velocityX/abs(velocityX));
-					while (abs(correctionTotal) < abs(velocityX)) {
+					correctionChange = correctionRate * (velocity.x/abs(velocity.x));
+					while (abs(correctionTotal) < abs(velocity.x)) {
 						correctionTotal += correctionChange;
-						if (abs(correctionTotal) > abs(velocityX)) correctionTotal = velocityX;
+						if (abs(correctionTotal) > abs(velocity.x)) correctionTotal = velocity.x;
 						if (parent) parent->x = recX + correctionTotal;
 						else x = recX + correctionTotal;
 						updateProperties();
@@ -154,7 +154,7 @@ namespace Amara {
 							else if (correctionTotal < 0) bumpDirections += Left;
 							else bumpDirections += Left + Right;
 
-							velocityX = -velocityX * bounceX;
+							velocity.x = -velocity.x * bounce.x;
 							break;
 						}
 					}
@@ -163,12 +163,12 @@ namespace Amara {
 					updateProperties();
 				}
 
-				if (abs(velocityY) > 0) {
+				if (abs(velocity.y) > 0) {
 					correctionTotal = 0;
-					correctionChange = correctionRate * (velocityY/abs(velocityY));
-					while (abs(correctionTotal) < abs(velocityY)) {
+					correctionChange = correctionRate * (velocity.y/abs(velocity.y));
+					while (abs(correctionTotal) < abs(velocity.y)) {
 						correctionTotal += correctionChange;
-						if (abs(correctionTotal) > abs(velocityY)) correctionTotal = velocityY;
+						if (abs(correctionTotal) > abs(velocity.y)) correctionTotal = velocity.y;
 						if (parent) parent->y = recY + correctionTotal;
 						else y = recY + correctionTotal;
 						updateProperties();
@@ -181,7 +181,7 @@ namespace Amara {
 							else if (correctionTotal < 0) bumpDirections += Up;
 							else bumpDirections += Down + Up;
 
-							velocityY = -velocityY * bounceY;
+							velocity.y = -velocity.y * bounce.y;
 							break;
 						}
 					}
@@ -199,8 +199,8 @@ namespace Amara {
                     if (bumpDirections & Right) bumpDirections += DownRight;
                 }
 
-                velocityX = velocityX * frictionX;
-                velocityY = velocityY * frictionY;
+                velocity.x = velocity.x * friction.x;
+                velocity.y = velocity.y * friction.y;
             }
 		}
 
@@ -260,10 +260,10 @@ namespace Amara {
 
         bool outOfBounds() {
             if (lockedToBounds) {
-                if (properties.rect.x < boundX) return true;
-                if (properties.rect.y < boundY) return true;
-                if (properties.rect.x + properties.rect.width > boundX + boundW) return true;
-                if (properties.rect.y + properties.rect.height > boundY + boundH) return true; 
+                if (properties.rect.x < bounds.x) return true;
+                if (properties.rect.y < bounds.y) return true;
+                if (properties.rect.x + properties.rect.width > bounds.x + bounds.width) return true;
+                if (properties.rect.y + properties.rect.height > bounds.y + bounds.height) return true; 
             }
             return false;
         }
@@ -313,10 +313,10 @@ namespace Amara {
 
         bool outOfBounds() {
             if (lockedToBounds) {
-                if (properties.circle.x - properties.circle.radius < boundX) return true;
-                if (properties.circle.y - properties.circle.radius < boundY) return true;
-                if (properties.circle.x + properties.circle.radius > boundX + boundW) return true;
-                if (properties.circle.y + properties.circle.radius > boundY + boundH) return true;
+                if (properties.circle.x - properties.circle.radius < bounds.x) return true;
+                if (properties.circle.y - properties.circle.radius < bounds.y) return true;
+                if (properties.circle.x + properties.circle.radius > bounds.x + bounds.width) return true;
+                if (properties.circle.y + properties.circle.radius > bounds.y + bounds.height) return true;
             }
             return false;
         }
@@ -365,15 +365,15 @@ namespace Amara {
 
         bool outOfBounds() {
             if (lockedToBounds) {
-                if (properties.line.p1.x < boundX) return true;
-                if (properties.line.p1.x > boundX + boundW) return true;
-                if (properties.line.p1.y < boundY) return true;
-                if (properties.line.p1.y > boundY + boundH) return true;
+                if (properties.line.p1.x < bounds.x) return true;
+                if (properties.line.p1.x > bounds.x + bounds.width) return true;
+                if (properties.line.p1.y < bounds.y) return true;
+                if (properties.line.p1.y > bounds.y + bounds.height) return true;
 
-                if (properties.line.p2.x < boundX) return true;
-                if (properties.line.p2.x > boundX + boundW) return true;
-                if (properties.line.p2.y < boundY) return true;
-                if (properties.line.p2.y > boundY + boundH) return true;
+                if (properties.line.p2.x < bounds.x) return true;
+                if (properties.line.p2.x > bounds.x + bounds.width) return true;
+                if (properties.line.p2.y < bounds.y) return true;
+                if (properties.line.p2.y > bounds.y + bounds.height) return true;
             }
             return true;
         }

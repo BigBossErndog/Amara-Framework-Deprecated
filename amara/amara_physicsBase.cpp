@@ -74,7 +74,7 @@ namespace Amara {
 		}
 	};
 
-	class PhysicsBase {
+	class PhysicsBase: public FloatVector2 {
 		public:
 			Amara::GameProperties* gameProperties = nullptr;
 			Entity* parent = nullptr;
@@ -89,22 +89,13 @@ namespace Amara {
 
 			PhysicsProperties properties;
 
-			float x = 0;
-			float y = 0;
-			float accelerationX = 0;
-			float accelerationY = 0;
-			float velocityX = 0;
-			float velocityY = 0;
-			float frictionX = 0;
-			float frictionY = 0;
-			float bounceX = 0;
-			float bounceY = 0;
+			FloatVector2 acceleration = { 0, 0 };
+			FloatVector2 velocity = { 0, 0 };
+			FloatVector2 friction = { 0, 0 };
+			FloatVector2 bounce = { 0, 0 };
 
 			bool lockedToBounds = false;
-			int boundX = 0;
-			int boundY = 0;
-			int boundW = 0;
-			int boundH = 0;
+			IntRect bounds = { 0, 0, 0, 0 };
 			
 			float correctionRate = 0.1;
 
@@ -116,8 +107,7 @@ namespace Amara {
 			bool isPushable = false;
 			bool isPushing = false;
 
-			float pushFrictionX = 1;
-			float pushFrictionY = 1;
+			FloatVector2 pushFriction = { 1, 1 };
 
 			virtual void create() {}
 			virtual void run() {}
@@ -152,32 +142,32 @@ namespace Amara {
 			}
 
 			void setVelocity(float gx, float gy) {
-				velocityX = gx;
-				velocityY = gy;
+				velocity.x = gx;
+				velocity.y = gy;
 			}
 			void setVelocity(float gv) {
 				setVelocity(gv, gv);
 			}
 
 			void setAcceleration(float gx, float gy) {
-				accelerationX = gx;
-				accelerationY = gy;
+				acceleration.x = gx;
+				acceleration.y = gy;
 			}
 			void setAcceleration(float ga) {
 				setAcceleration(ga, ga);
 			} 
 			
 			void setFriction(float gx, float gy) {
-				frictionX = gx;
-				frictionY = gy;
+				friction.x = gx;
+				friction.y = gy;
 			}
 			void setFriction(float gf) {
 				setFriction(gf, gf);
 			}
 
 			void setBounce(float gx, float gy) {
-				bounceX = gx;
-				bounceY = gy;
+				bounce.x = gx;
+				bounce.y = gy;
 			}
 			void setBounce(float gb) {
 				setBounce(gb, gb);
@@ -192,8 +182,8 @@ namespace Amara {
 					return;
 				}
 				makePushable();
-				pushFrictionX = pfx;
-				pushFrictionY = pfy;
+				pushFriction.x = pfx;
+				pushFriction.y = pfy;
 			}
 			void makePushable(float pf) {
 				makePushable(pf, pf);
@@ -231,10 +221,10 @@ namespace Amara {
 
 			void setBounds(int gx, int gy, int gw, int gh) {
 				lockedToBounds = true;
-				boundX = gx;
-				boundY = gy;
-				boundW = gw;
-				boundH = gh;
+				bounds.x = gx;
+				bounds.y = gy;
+				bounds.width = gw;
+				bounds.height = gh;
 			}
 			void removeBounds() {
 				lockedToBounds = false;

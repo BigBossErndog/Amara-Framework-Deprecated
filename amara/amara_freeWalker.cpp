@@ -110,12 +110,12 @@ namespace Amara {
             
             if (physics) {
 				if (accumulative) {
-					physics->velocityX += ox;
-					physics->velocityY += oy;
+					physics->velocity.x += ox;
+					physics->velocity.y += oy;
 				}
 				else {
-					physics->velocityX = ox;
-					physics->velocityY = oy;
+					physics->velocity.x = ox;
+					physics->velocity.y = oy;
 				}
             }
             else {

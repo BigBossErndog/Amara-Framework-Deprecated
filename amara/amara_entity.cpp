@@ -410,8 +410,8 @@ namespace Amara {
 			if (isInteractable && interact.isDraggable && interact.isDown) {
 				interact.isBeingDragged = true;
 				if (physics && !physics->isDestroyed) {
-					physics->velocityX = interact.movementX;
-					physics->velocityY = interact.movementY;
+					physics->velocity.x = interact.movementX;
+					physics->velocity.y = interact.movementY;
 				}
 				else {
 					x += interact.movementX;

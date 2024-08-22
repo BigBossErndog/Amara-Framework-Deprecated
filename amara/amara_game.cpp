@@ -49,7 +49,7 @@ namespace Amara {
 			Amara::FileManager files;
 			
 			int fps = 60;
-			int tps = 1000 / fps;
+			float tps = 1000 / fps;
 			int lps = fps;
 			double realFPS = fps;
 			double deltaTime = 1;
@@ -501,7 +501,7 @@ namespace Amara {
 				int frameTicks = capTimer.getTicks();
 				if (frameTicks < tps) {
 					// Wait remaining time
-					totalWait += (tps - frameTicks);
+					totalWait += floor(tps - frameTicks);
 				}
 				realFPS = fps / (frameTicks / 1000.f);
 				deltaTime = fps / realFPS;

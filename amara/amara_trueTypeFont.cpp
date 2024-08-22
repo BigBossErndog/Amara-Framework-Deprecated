@@ -28,9 +28,7 @@ namespace Amara {
             int outline = 0;
             bool outlineCorners = true;
             Amara::Color outlineColor = FC_MakeColor(255, 255, 255, 255);
-			float outlineAlpha = 1;
-			bool outlineAlphaLocked = 1;
-			float outlineAlphaPow = 1;
+			float outlineAlphaRate = 1;
 
 			IntRect viewbox;
 
@@ -305,7 +303,7 @@ namespace Amara {
 
                     if (outline) {
                         effect.color = outlineColor;
-                        effect.color.a = outlineColor.a * pow(alpha, 1) * outlineAlpha;
+                        effect.color.a = outlineColor.a * pow(alpha, outlineAlphaRate);
                         for (int i = 0; i < outline+1; i++) {
                             drawText(dx+i,dy, false);
                             drawText(dx-i,dy, false);

@@ -41,7 +41,7 @@ class TestScene: public Scene, public StateManager {
 			box->registerStateManager(this);
 
 			add(video = new Video(scene->width/2.0, scene->height/2.0, "assets/pitv_trailer.ogv"));
-			video->setOrigin(0.5);
+			video->setRenderDelay(0.1)->setOrigin(0.5);
 			video->frameSkip = 1;
 		}
 

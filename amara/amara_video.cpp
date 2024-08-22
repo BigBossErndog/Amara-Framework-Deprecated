@@ -162,11 +162,6 @@ namespace Amara {
         } 
 
         void stopVideo() {
-            if (videoFile) {
-                theora_stop(&video_ctx);
-                fclose(videoFile);
-                videoFile = nullptr;
-            }
             if (Amara::Sound::parent && Amara::Sound::parent->currentlyPlaying == this) {
                 Amara::Sound::parent->currentlyPlaying = nullptr;
             }
@@ -176,6 +171,12 @@ namespace Amara {
                     Mix_ChannelFinished(NULL);
                 SDL_UnlockAudio();
                 Amara::Sound::stop();
+            }
+
+            if (videoFile) {
+                theora_stop(&video_ctx);
+                fclose(videoFile);
+                videoFile = nullptr;
             }
 
             duration = 0;

@@ -39,10 +39,10 @@ namespace Amara {
                             cam->width/cam->zoomX,
                             cam->height/cam->zoomY
                         };
-                        if (targetRect.x < cam->boundX) targetRect.x = cam->boundX;
-                        else if (targetRect.x + targetRect.width > cam->boundX + cam->boundW) targetRect.x = cam->boundX + cam->boundW - targetRect.width;
-                        if (targetRect.y < cam->boundY) targetRect.y = cam->boundY;
-                        else if (targetRect.y + targetRect.height > cam->boundY + cam->boundH) targetRect.y = cam->boundY + cam->boundW - targetRect.height;
+                        if (targetRect.x < cam->bounds.x) targetRect.x = cam->bounds.x;
+                        else if (targetRect.x + targetRect.width > cam->bounds.x + cam->bounds.width) targetRect.x = cam->bounds.x + cam->bounds.width - targetRect.width;
+                        if (targetRect.y < cam->bounds.y) targetRect.y = cam->bounds.y;
+                        else if (targetRect.y + targetRect.height > cam->bounds.y + cam->bounds.height) targetRect.y = cam->bounds.y + cam->bounds.width - targetRect.height;
                         targetX = targetRect.x + targetRect.width/2.0;
                         targetY = targetRect.y + targetRect.height/2.0;
                     }
@@ -58,10 +58,10 @@ namespace Amara {
                             cam->width/cam->zoomX,
                             cam->height/cam->zoomY
                         };
-                        if (targetRect.x < cam->boundX) targetRect.x = cam->boundX;
-                        else if (targetRect.x + targetRect.width > cam->boundX + cam->boundW) targetRect.x = cam->boundX + cam->boundW - targetRect.width;
-                        if (targetRect.y < cam->boundY) targetRect.y = cam->boundY;
-                        else if (targetRect.y + targetRect.height > cam->boundY + cam->boundH) targetRect.y = cam->boundY + cam->boundW - targetRect.height;
+                        if (targetRect.x < cam->bounds.x) targetRect.x = cam->bounds.x;
+                        else if (targetRect.x + targetRect.width > cam->bounds.x + cam->bounds.width) targetRect.x = cam->bounds.x + cam->bounds.width - targetRect.width;
+                        if (targetRect.y < cam->bounds.y) targetRect.y = cam->bounds.y;
+                        else if (targetRect.y + targetRect.height > cam->bounds.y + cam->bounds.height) targetRect.y = cam->bounds.y + cam->bounds.width - targetRect.height;
                         targetX = targetRect.x;
                         targetY = targetRect.y;
                     }

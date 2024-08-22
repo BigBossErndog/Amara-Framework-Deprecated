@@ -48,6 +48,9 @@ namespace Amara {
         FloatRect toRect();
         FloatRect fixedRect() { return { 0, 0, width, height }; }
         MakeRect* setRect(FloatRect rect);
+        MakeRect* setRect(MakeRect* other) {
+            return setRect(other->toRect());
+        }
 
         Amara::MakeRect* scaleTo(float gw, float gh);
         Amara::MakeRect* scaleToWidth(float gw);

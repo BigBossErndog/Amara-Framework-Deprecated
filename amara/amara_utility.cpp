@@ -82,4 +82,6 @@ namespace Amara {
 
     SDL_Color AMARA_BLACK = { 0, 0, 0, 255 };
     SDL_Color AMARA_WHITE = { 255, 255, 255, 255 };
+
+    FloatVector2 OriginVector = { 0, 0 };
 }
