@@ -289,7 +289,7 @@ namespace Amara {
 				if (debugGameLoop) SDL_Log("Amara Game: End Logic");
 				// Draw Screen
 				if (debugGameLoop) SDL_Log("Amara Game: Start Drawing");
-				draw();
+				if (isWindowed || windowFocused) draw();
 				if (debugGameLoop) SDL_Log("Amara Game: End Drawing");
 				// Manage frame catch up and slow down
 				if (debugGameLoop) SDL_Log("Amara Game: Manage FPS");
@@ -706,7 +706,7 @@ namespace Amara {
 				}
 
 				Uint32 winFlags = SDL_GetWindowFlags(gWindow);
-				if (winFlags & SDL_WINDOW_MOUSE_FOCUS) {
+				if (winFlags & SDL_WINDOW_INPUT_FOCUS) {
 					windowFocused = true;
 				}
 				else windowFocused = false;

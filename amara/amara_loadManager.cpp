@@ -146,10 +146,13 @@ namespace Amara {
 							task.tries += 1;
 						}
 						else {
-                            SDL_Log("Gave up on load task: %s", task.key.c_str());
+                            SDL_Log("Loader Error: Gave up on load task: %s", task.key.c_str());
                             tasks.pop_front();
                             failedTasks += 1;
-                            if (crashOnRepeatedFail) properties->quit = true;
+                            if (crashOnRepeatedFail) {
+                                SDL_Log("Loader Error: crashOnRepeatedFail is on. Exiting game.");
+                                properties->quit = true;
+                            }
 						}
 					}
                 }
