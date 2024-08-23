@@ -13,6 +13,7 @@ namespace Amara {
 
     /*
     *   Note: Do not attempt to play more than one video at a time.
+    *   Do not play any other audio while video is playing is audioPlayback either.
     */
     class Video: public Amara::TextureContainer, public Amara::Sound {
     public:
@@ -36,6 +37,8 @@ namespace Amara {
 
         double renderDelayTime = 0;
         int renderDelayCounter = 0;
+
+        bool audioPlayback = true;
         
         Video(): Amara::Sound() {}
 
@@ -81,6 +84,11 @@ namespace Amara {
             textureHeight = height;
         }
 
+        Video* setAudioPlayback(bool gPlayback) {
+            audioPlayback = gPlayback;
+            return this;
+        }
+
         bool playVideo() {
             if (videoFile) stopVideo();
 
@@ -102,7 +110,7 @@ namespace Amara {
 
                     if (audioEnabled) {
                         sound = nullptr;
-                        if (video_ctx.hasAudio) {
+                        if (audioPlayback && video_ctx.hasAudio) {
                             current_video_data.audio = this;
                             sound = theora_audio(&video_ctx);
                             if (sound) {
@@ -110,6 +118,7 @@ namespace Amara {
                                     Mix_ChannelFinished(videoAudioCallback);
                                 SDL_UnlockAudio();
                                 videoAudioCallback(0);
+                                Amara::Sound::isPlaying = true;
                             }
                         }
                         if (!sound) {
@@ -166,11 +175,11 @@ namespace Amara {
                 Amara::Sound::parent->currentlyPlaying = nullptr;
             }
             
-            if (Mix_Playing(channel)) {
+            if (Amara::Sound::isPlaying && Mix_Playing(-1)) {
                 SDL_LockAudio();
                     Mix_ChannelFinished(NULL);
+                    Mix_HaltChannel(-1);
                 SDL_UnlockAudio();
-                Amara::Sound::stop();
             }
             channel = -1;
 
@@ -185,7 +194,7 @@ namespace Amara {
             SDL_Log("Video Stopped: \"%s\"", videoSrc.c_str());
             
             sound = nullptr;
-            isPlaying = false;
+            Amara::Sound::isPlaying = false;
             Amara::Sound::isPaused = false;
             Amara::Entity::isPaused = false;
         }
