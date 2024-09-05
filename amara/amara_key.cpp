@@ -16,7 +16,7 @@ namespace Amara {
             Key() {
                 downTime = 0;
             }
-
+			
             Key(SDL_Keycode givenKeyCode): Key() {
                 keyCode = givenKeyCode;
             }

@@ -207,7 +207,8 @@ namespace Amara {
                 for (auto it = parent->children.begin(); it != parent->children.end();) {
                     entity = *it;
                     if (entity == nullptr || entity->isDestroyed || entity->scene != scene) {
-                        ++it;
+                        if (properties->inSceneDrawing) it = parent->children.erase(it);
+					    else ++it;
                         continue;
                     }
                     if (entity->isVisible) {

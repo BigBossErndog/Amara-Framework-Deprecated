@@ -9,7 +9,6 @@ using namespace std;
 class TestScene: public Scene, public StateManager {
     public:
 		TextBox* box = nullptr;
-		Video* video = nullptr;
 
 		nlohmann::json testText;
 
@@ -39,41 +38,15 @@ class TestScene: public Scene, public StateManager {
 				{ "yFromCenter", -34 }
 			});
 			box->registerStateManager(this);
-
-			add(video = new Video(scene->width/2.0, scene->height/2.0, "assets/pitv_trailer.ogv"));
-			video->setRenderDelay(0.1)->setOrigin(0.5);
-			video->frameSkip = 1;
 		}
 
         void update() {
-			if (state("1")) {
-				if (once()) {
-					video->setAlpha(1);
-					video->setMasterVolume(1);
-					if (video->playVideo()) {
-						cout << "Video should be successfully playing." << endl;
-					}
-					video->scaleToFit(scene);
-				}
-
-				wait(2);
-
-				if (evt()) {
-					if (nextEvtOn(video->isFinished() || controls->isDown("confirm"))) {
-						if (!video->isFinished()) {
-							video->recite(new Tween_MasterVolume(video, 0, 1));
-							video->recite(new Tween_Alpha(0, 1));
-						}
-					}
-				}
-
-				if (evt()) {
-					if (nextEvtOn(video->isFinished() || video->notActing())) {
-						video->stopVideo();
-					}
-				}
-
-				resetEvt();
+			start();
+			for (int i = 0; i < testText.size(); i++) {
+				box->say(testText[i]);
+			}
+			if (once()) {
+				startTransition(new FillTransition("test", 0.01, 0.01));
 			}
         }
 };
@@ -87,9 +60,6 @@ int main(int argc, char** args) {
     game.init(480, 360);
     game.setWindowSize(960, 720);
 	game.setWindowPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-	
-	// game.debugGameLoop = true;
-	// Amara::Entity::debuggingDefault = true;
 
     game.scenes.add("test", new TestScene());
     game.start("test");

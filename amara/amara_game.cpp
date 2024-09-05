@@ -281,6 +281,7 @@ namespace Amara {
 				if (debugGameLoop) SDL_Log("Amara Game: Start Game Loop");
 				renderTargetsReset = false;
 				renderDeviceReset = false;
+				
 				manageFPSStart();
 				writeProperties();
 				// Run game logic
@@ -294,7 +295,7 @@ namespace Amara {
 				// Manage frame catch up and slow down
 				if (debugGameLoop) SDL_Log("Amara Game: Manage FPS");
 				manageFPSEnd();
-				
+
 				if (renderTargetsReset || renderDeviceReset) {
 					properties.reloadAssets = true;
 				}
@@ -304,6 +305,7 @@ namespace Amara {
 					load.regenerateAssets();
 					if (debugGameLoop) SDL_Log("Amara Game: End Reload Assets");
 				}
+
 				if (debugGameLoop) SDL_Log("Amara Game: Run Tasks");
 				taskManager.run();
 				if (debugGameLoop) SDL_Log("Amara Game: End Game Loop");

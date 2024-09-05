@@ -1,12 +1,9 @@
 namespace Amara {
     class Tween;
     class Actor: public Amara::Entity {
-    private:
-        bool inRecital = false;
-        std::vector<Amara::Script*> scriptBuffer;
-        
     public:
-        std::list<Amara::Script*> scripts;
+        std::vector<Amara::Script*> scripts;
+        std::vector<Amara::Script*> scriptCopyList;
         bool actingPaused = false;
         bool scriptsCanceled = false;
 
@@ -15,7 +12,6 @@ namespace Amara {
         using Amara::Entity::init;
         void init() {
             scripts.clear();
-            scriptBuffer.clear();
             Amara::Entity::init();
             entityType = "actor";
         }
@@ -44,13 +40,8 @@ namespace Amara {
                 SDL_Log("Amara Actor: A dead actor cannot recite scripts.");
                 return script;
             }
-            if (!inRecital) {
-                scripts.push_back(script);
-                script->prepare();
-            }
-            else {
-                scriptBuffer.push_back(script);
-            }
+            scripts.push_back(script);
+            script->prepare();
             script->inQueue = true;
             return script;
         }
@@ -59,10 +50,6 @@ namespace Amara {
             if (script == nullptr) {
                 SDL_Log("Amara Actor: Null script was given to actor chain.");
                 return nullptr;
-            }
-            if (scriptBuffer.size() > 0) {
-                Amara::Script* lastScript = scriptBuffer.back();
-                return lastScript->chain(script);
             }
             if (scripts.size() > 0) {
                 Amara::Script* lastScript = scripts.back();
@@ -87,8 +74,9 @@ namespace Amara {
             Amara::Script* script = nullptr;
             scriptsCanceled = false;
             
-            inRecital = true;
-            for (auto it = scripts.begin(); it != scripts.end();) {
+            scriptCopyList = scripts;
+
+            for (auto it = scriptCopyList.begin(); it != scriptCopyList.end();) {
                 script = *it;
                 if (script->isDestroyed) {
                     ++it;
@@ -105,7 +93,6 @@ namespace Amara {
             }
 
             if (isDestroyed || scriptsCanceled) {
-                inRecital = false;
                 return;
             }
 
@@ -136,7 +123,6 @@ namespace Amara {
             }
 
             if (isDestroyed || scriptsCanceled) {
-                inRecital = false;
                 return;
             }
 
@@ -144,22 +130,10 @@ namespace Amara {
                 recite(chain);
                 if (isDestroyed || scriptsCanceled) break;
             }
-
-            inRecital = false;
-            pipeScriptBuffer();
-        }
-
-        void pipeScriptBuffer() {
-            for (Amara::Script* script: scriptBuffer) {
-                if (script->isDestroyed || script->isFinished) continue;
-                scripts.push_back(script);
-                script->prepare();
-            }
-            scriptBuffer.clear();
         }
 
         bool stillActing() {
-            return (scripts.size() > 0 || scriptBuffer.size() > 0);
+            return (scripts.size() > 0);
         }
         
         bool isActing() { return stillActing(); }
@@ -170,9 +144,6 @@ namespace Amara {
 
         bool isReciting(Amara::Script* script) {
             for (Amara::Script* check: scripts) {
-                if (check == script) return true;
-            }
-            for (Amara::Script* check: scriptBuffer) {
                 if (check == script) return true;
             }
             return false;
@@ -259,12 +230,6 @@ namespace Amara {
                 if (!script->manualDeletion) script->destroyScript();
             }
             scripts.clear();
-            for (Amara::Script* script: scriptBuffer) {
-                script->inQueue = false;
-                if (!script->manualDeletion) script->destroyScript();
-            }
-            scriptBuffer.clear();
-
             scriptsCanceled = true;
             return this;
         }
@@ -276,17 +241,11 @@ namespace Amara {
                 if (!script->manualDeletion) script->destroyScript();
             }
             scripts.clear();
-            for (Amara::Script* script: scriptBuffer) {
-                script->cancel();
-                script->inQueue = false;
-                if (!script->manualDeletion) script->destroyScript();
-            }
-            scriptBuffer.clear();
-
             scriptsCanceled = true;
-
             return this;
         }
+
+
 
         Amara::Actor* pauseActing() {
             actingPaused = true;

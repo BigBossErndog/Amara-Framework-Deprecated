@@ -145,11 +145,11 @@ namespace Amara {
 			}
 
 			virtual bool remove(std::string key, bool andDelete) {
-				Amara::Asset* asset = get(key);
+				Amara::Asset* asset = get(key, false);
 				if (asset != nullptr) {
 					assets.erase(key);
 					if (andDelete) properties->taskManager->queueAsset(asset);
-					return true;
+					return true; 
 				}
 				return false;
 			}
@@ -587,8 +587,6 @@ namespace Amara {
 				// Load image
 				SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 
-
-
 				if (loadedSurface == NULL && !replace) {
 					std::cout << "Unable to load image " << path << ". Error: " << IMG_GetError() << std::endl;
 					success = false;
@@ -603,7 +601,6 @@ namespace Amara {
 					//Get rid of old loaded surface
 					SDL_FreeSurface(loadedSurface);
 				}
-
 
 				if (success) {
 					std::cout << "Loaded: " << key << std::endl;

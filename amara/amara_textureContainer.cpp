@@ -218,7 +218,7 @@ namespace Amara {
             drawEntities(0, 0, width, height);
 		}
 
-        void drawEntities(int vx, int vy, int vw, int vh) {
+        virtual void drawEntities(int vx, int vy, int vw, int vh) {
             if (properties->quit) return;
             
             if (physics) {

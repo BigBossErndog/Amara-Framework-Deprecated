@@ -14,6 +14,7 @@ namespace Amara {
             std::string fontKey;
 
             std::string text;
+            std::string displayText;
             SDL_Rect viewport;
             Amara::Color color = FC_MakeColor(0, 0, 0, 255);
             Amara::Alignment alignment = ALIGN_LEFT;
@@ -60,6 +61,7 @@ namespace Amara {
                 if (!fontKey.empty()) {
                     setFont(fontKey);
                 }
+                if (!text.empty()) setText(text);
 
                 Amara::Actor::init(gameProperties, givenScene, givenParent);
 
@@ -130,7 +132,10 @@ namespace Amara {
 
             Amara::TrueTypeFont* setText(std::string newTxt) {
                 text = newTxt;
-                const char* txt = text.c_str();
+                if (wordWrap) {
+                    displayText = StringParser::wrapString(fontAsset->font, text, wordWrapWidth);
+                }
+                else displayText = text;
                 findDimensions();
                 return this;
             }
@@ -179,7 +184,7 @@ namespace Amara {
 
             void setWordWrap() {
                 wordWrap = true;
-                findDimensions();
+                setText(text);
             }
             void setWordWrap(int w) {
                 wordWrapWidth = w;
@@ -188,21 +193,15 @@ namespace Amara {
                     wordWrapWidth = 0;
                     wordWrap = false;
                 }
-                findDimensions();
+                setWordWrap();
             }
 
             void findDimensions() {
-                const char* txt = text.c_str();
                 if (fontAsset == nullptr) return;
+                const char* txt = displayText.c_str();
 
-                if (wordWrap) {
-                    width = wordWrapWidth;
-                    height = FC_GetColumnHeight(fontAsset->font, wordWrapWidth, txt);
-                }
-                else {
-                    width = FC_GetWidth(fontAsset->font, txt);
-                    height = FC_GetHeight(fontAsset->font, txt);
-                }
+                width = FC_GetWidth(fontAsset->font, txt);
+                height = FC_GetHeight(fontAsset->font, txt);
             }
 
             void drawText(float dx, float dy, bool middle) {
@@ -226,7 +225,7 @@ namespace Amara {
                 effect.scale.x = scaleX * nzoomX;
                 effect.scale.y = scaleY * nzoomY;
 
-				const char* txt = text.c_str();
+				const char* txt = displayText.c_str();
 
 				int txtWidth, txtHeight;
 				if (wordWrap) {

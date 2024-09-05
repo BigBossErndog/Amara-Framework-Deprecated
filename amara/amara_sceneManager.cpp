@@ -42,10 +42,14 @@ namespace Amara {
 			void run() {
 				Amara::Scene* scene;
 				Amara::ScenePlugin* scenePlugin;
-				
+
 				for (auto it = sceneList.begin(); it != sceneList.end();) {
 					scene = *it;
 					scenePlugin = scene->scenes;
+
+					if (properties->reloadAssets) {
+						scenePlugin->reloadAssets = true;
+					}
 
 					if (!scenePlugin->isActive || scenePlugin->isPaused || scenePlugin->isSleeping) {
 						++it;
@@ -63,6 +67,7 @@ namespace Amara {
 				sceneList.sort(sortEntitiesByDepth());
 
 				properties->inSceneDrawing = true;
+				bool recReloadAssets = properties->reloadAssets;
 				for (auto it = sceneList.begin(); it != sceneList.end();) {
 					scene = *it;
 					scenePlugin = scene->scenes;
@@ -71,7 +76,10 @@ namespace Amara {
 						++it;
 						continue;
 					}
+					properties->reloadAssets = recReloadAssets || scenePlugin->reloadAssets;
 					scene->draw();
+					scenePlugin->reloadAssets = false;
+					properties->reloadAssets = recReloadAssets;
 					++it;
 				}
 				properties->inSceneDrawing = false;

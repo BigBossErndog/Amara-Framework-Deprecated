@@ -443,12 +443,6 @@ namespace Amara {
                         targetDepth = entity->depth + 0.1;
                     }
                 }
-                for (auto it = parent->entityBuffer.begin(); it != parent->entityBuffer.end();) {
-                    entity = *it;
-                    if (entity->depth > targetDepth) {
-                        targetDepth = entity->depth + 0.1;
-                    }
-                }
             }
         }
 
@@ -726,6 +720,25 @@ namespace Amara {
         void finish() {
             audio->play(audioKey);
             Script::finish();
+        }
+    };
+
+    class Script_BringToFront: public Script {
+    public:
+        Amara::Entity* target = nullptr;
+
+        Script_BringToFront() {}
+        Script_BringToFront(Amara::Entity* gEntity) {
+            target = gEntity;
+        }
+
+        void prepare() {
+            if (target == nullptr) target = parent;
+        }
+
+        void script() {
+            target->bringToFront();
+            finish();
         }
     };
 }
