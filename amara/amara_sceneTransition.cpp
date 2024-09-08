@@ -12,10 +12,6 @@ namespace Amara {
                     else {
                         startScene->scenes->stop();
                     }
-
-                    if (startScene != endScene) {
-                        startScene->transition = nullptr;
-                    }
     
                     if (endScene != nullptr) {
                         endScene->transition = this;
@@ -70,4 +66,14 @@ namespace Amara {
                 create();
             }
     };
+
+    void Amara::TaskManager::queueTransition(Amara::SceneTransitionBase* transition) {
+        if (transition == nullptr) return;
+        Amara::Scene* startScene = transition->startScene;
+        Amara::Scene* endScene = transition->endScene;
+        if (startScene && startScene->transition == transition) startScene->transition = nullptr;
+        if (endScene && endScene->transition == transition) endScene->transition = nullptr;
+        transition->isDestroyed = true;
+        transitionBuffer.push_back(transition);
+    }
 }

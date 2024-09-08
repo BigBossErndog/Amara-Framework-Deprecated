@@ -12,7 +12,7 @@ namespace Amara {
             Amara::SceneTransitionBase* transition = nullptr;
 
             Amara::Camera* mainCamera = nullptr;
-            std::list<Amara::Camera*> cameras;
+            std::vector<Amara::Camera*> cameras;
 
             bool initialLoaded = false;
 
@@ -173,8 +173,9 @@ namespace Amara {
                 runChildren();
                 if (isDestroyed) return;
                 
+                std::vector<Amara::Camera*> copyCameras = cameras;
                 Amara::Camera* cam;
-                for (auto it = cameras.begin(); it != cameras.end();) {
+                for (auto it = copyCameras.begin(); it != copyCameras.end();) {
                     cam = *it;
                     if (cam == nullptr || cam->isDestroyed || cam->parent != this) {
                         ++it;
@@ -195,7 +196,7 @@ namespace Amara {
 				properties->scrollX = 0;
 				properties->scrollY = 0;
 
-                if (sortCameras) cameras.sort(sortEntitiesByDepth());
+                if (sortCameras) stable_sort(cameras.begin(), cameras.end(), sortEntitiesByDepth());
 
                 if (shouldSortChildren || sortChildrenOnce) {
                     sortChildrenOnce = false;

@@ -457,8 +457,8 @@ namespace Amara {
 				if (quit || properties.quit) return;
 				messages.update();
 				events.manage();
-				scenes.run();
 				scenes.manageTasks();
+				scenes.run();
 				audio.run(1);
 				if (debugGameLoop) SDL_Log("Amara Game: End Update");
 			}

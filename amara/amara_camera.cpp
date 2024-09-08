@@ -3,7 +3,7 @@ namespace Amara {
 
     class Camera : public Amara::Actor, public Amara::MakeRect {
         public:
-            std::list<Amara::Camera*>* sceneCameras = nullptr;
+            std::vector<Amara::Camera*>* sceneCameras = nullptr;
             Amara::SceneTransitionBase* transition = nullptr;
 
             bool definedDimensions = false;
@@ -326,7 +326,7 @@ namespace Amara {
 
             virtual void bringToFront() {
                 if (sceneCameras == nullptr) return;
-                std::list<Amara::Camera*>& rSceneCameras = *sceneCameras;
+                std::vector<Amara::Camera*>& rSceneCameras = *sceneCameras;
 				for (Amara::Camera* cam: rSceneCameras) {
 					if (depth <= cam->depth) {
 						depth = cam->depth + 1;

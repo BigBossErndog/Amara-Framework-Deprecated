@@ -600,7 +600,6 @@ namespace Amara {
 				}
 				++it;
 			}
-			children.clear();
 		}
 
 		virtual void destroyEntities() {
@@ -610,7 +609,10 @@ namespace Amara {
 		virtual void destroy(bool recursiveDestroy) {
 			if (isDestroyed) return;
 			parent = nullptr;
+			
 			destroyEntities(recursiveDestroy);
+			children.clear();
+
 			isDestroyed = true;
 			isActive = false;
 			properties->taskManager->queueEntity(this);

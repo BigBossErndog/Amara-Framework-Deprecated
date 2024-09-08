@@ -71,6 +71,7 @@ namespace Amara {
                 }
                 SDL_Log("%s (%s): Reciting %d Scripts.", debugCopy.c_str(), entityType.c_str(), scripts.size());
             }
+            
             Amara::Script* script = nullptr;
             scriptsCanceled = false;
             

@@ -96,10 +96,4 @@ namespace Amara {
                 stopList.insert(stopList.end(), list.begin(), list.end());
             }
     };
-
-    void Amara::TaskManager::queueTransition(Amara::SceneTransitionBase* transition) {
-        if (transition == nullptr) return;
-        transition->isDestroyed = true;
-        transitionBuffer.push_back(transition);
-    }
 }
