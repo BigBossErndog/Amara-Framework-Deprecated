@@ -77,8 +77,7 @@ namespace Amara {
                 Amara::Actor::configure(config);
                 
                 if (config.find("texture") != config.end()) setTexture(config["texture"]);
-                rectConfigure(config);
-
+                
                 if (config.find("frame") != config.end()) {
                     frame = config["frame"];
                 }
@@ -106,6 +105,7 @@ namespace Amara {
                 if (config.find("cropBottom") != config.end()) {
                     cropBottom = config["cropBottom"];
                 }
+
                 rectConfigure(config);
             }
 
@@ -138,7 +138,7 @@ namespace Amara {
                 viewport.w = vw;
                 viewport.h = vh;
                 SDL_RenderSetViewport(gRenderer, &viewport);
-
+                
                 float nzoomX = 1 + (properties->zoomX-1)*zoomFactorX*properties->zoomFactorX;
                 float nzoomY = 1 + (properties->zoomY-1)*zoomFactorY*properties->zoomFactorY;
 

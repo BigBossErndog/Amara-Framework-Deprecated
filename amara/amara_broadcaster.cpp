@@ -8,7 +8,7 @@ namespace Amara {
             if (pushedMessages) {
                 pushedMessages = false;
                 for (auto it = messages->begin(); it != messages->end();) {
-                    Amara::Message msg = *it;
+                    Amara::Message& msg = *it;
                     if (msg.parent == this) {
                         if (msg.skip) {
                             msg.skip = false;

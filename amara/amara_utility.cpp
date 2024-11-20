@@ -29,6 +29,12 @@ namespace Amara {
         return (str1.compare(str2) == 0) ? true : false;
     }
 
+    float fixed_range(float num, float min, float max) {
+        if (num < min) return min;
+        if (num > max) return max;
+        return num;
+    }
+
     SDL_Color getPixelFromSurface(SDL_Surface* gSurface, int gx, int gy) {
         int bpp = gSurface->format->BytesPerPixel;
         Uint8* p = (Uint8*)gSurface->pixels + gy*gSurface->pitch + gx*bpp;

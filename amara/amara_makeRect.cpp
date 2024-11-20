@@ -24,6 +24,13 @@ namespace Amara {
             originX = config["originPosition"];
             setOriginPosition(originX, originX);
         }
+        
+        if (config.find("scaledWidth") != config.end()) {
+            if (rectEntity) rectEntity->scaleX = ((float)config["scaledWidth"])/width;
+        }
+        if (config.find("scaledHeight") != config.end()) {
+            if (rectEntity) rectEntity->scaleY = ((float)config["scaledHeight"])/height;
+        }
     }
     
     FloatRect MakeRect::toRect() {

@@ -1,15 +1,17 @@
 namespace Amara {
     class Entity;
     class Scene;
+    class Broadcaster;
 
     typedef struct Message {
-        void* parent = nullptr;
+        Amara::Broadcaster* parent = nullptr;
         Amara::Scene* scene = nullptr;
         std::string key;
         nlohmann::json data;
         bool isActive = true;
         bool isNull = false;
         bool skip = false;
+        bool forceRemove = false;
 
         bool is(std::string check) {
             if (key.compare(check) == 0) return true;
@@ -33,7 +35,7 @@ namespace Amara {
         void update() {
             for (auto it = queue.begin(); it != queue.end();) {
                 Message msg = *it;
-                if (msg.parent == nullptr || !msg.isActive) {
+                if (msg.parent == nullptr || !msg.isActive || msg.forceRemove) {
                     if (msg.skip) msg.skip = false;
                     else {
                         it = queue.erase(it);
@@ -78,7 +80,7 @@ namespace Amara {
             return queue.back();
         }
 
-        Message& broadcast(void* gParent, std::string key, nlohmann::json gData) {
+        Message& broadcast(Amara::Broadcaster* gParent, std::string key, nlohmann::json gData) {
             queue.push_back({ gParent, properties->currentScene, key, gData });
             return queue.back();
         }
