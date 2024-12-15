@@ -97,10 +97,11 @@ namespace Amara {
 			bool lockedToBounds = false;
 			IntRect bounds = { 0, 0, 0, 0 };
 			
-			float correctionRate = 0.1;
+			float correctionRate = 0.2;
+			int correctionTries = 500;
 
 			bool useDeltaTime = true;
-
+			
 			int bumpDirections = 0;
 			Amara::PhysicsBase* bumped = nullptr;
 
@@ -239,6 +240,8 @@ namespace Amara {
 			void unpause() {
 				pause(false);
 			}
+
+			virtual void correctCollision() {}
 	};
 
 	void Amara::TaskManager::queuePhysics(Amara::PhysicsBase* body) {

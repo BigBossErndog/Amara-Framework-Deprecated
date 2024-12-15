@@ -1,4 +1,4 @@
-namespace Amara {
+ namespace Amara {
     void Amara::PhysicsBase::checkActiveCollisionTargets() {
         Amara::PhysicsBase* other;
         for (auto it = collisionTargets.begin(); it != collisionTargets.end();) {
@@ -203,6 +203,40 @@ namespace Amara {
                 velocity.y = velocity.y * friction.y;
             }
 		}
+
+        void correctCollision() {
+            if (!hasCollided()) return;
+            int count = 0;
+            float recX = (parent) ? parent->x : x;
+            float recY = (parent) ? parent->y : y;
+            float correctionTotal = 0;
+            while (count < correctionTries) {
+                correctionTotal += correctionRate;
+                for (Direction dir: CardinalDirections) {
+                    if (parent) {
+                        parent->x = recX + correctionTotal*getOffsetX(dir);
+                        parent->y = recY + correctionTotal*getOffsetY(dir);
+                    }
+                    else {
+                        x = recX + correctionTotal*getOffsetX(dir);
+                        y = recY + correctionTotal*getOffsetY(dir);
+                    }
+                    if (!hasCollided()) return;
+                }
+                for (Direction dir: OrdinalDirections) {
+                    if (parent) {
+                        parent->x = recX + correctionTotal*getOffsetX(dir);
+                        parent->y = recY + correctionTotal*getOffsetY(dir);
+                    }
+                    else {
+                        x = recX + correctionTotal*getOffsetX(dir);
+                        y = recY + correctionTotal*getOffsetY(dir);
+                    }
+                    if (!hasCollided()) return;
+                }
+                count += 1;
+            }
+        }
 
         void destroy() {
             Amara::PhysicsBase::destroy();
