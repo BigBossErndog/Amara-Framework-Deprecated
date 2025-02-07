@@ -364,6 +364,31 @@ namespace Amara {
             return substr(s, 0, numCharacters);
         }
 
+        static std::string concat(std::vector<std::string> list) {
+            std::string result = "";
+            for (std::string str: list) {
+                result += str;
+            }
+            return result;
+        }
+
+        static bool startsWith(std::string s, std::string check) {
+            for (int i = 0; i < check.size(); i++) {
+                if (i >= s.size()) return false;
+                if (s[i] != check[i]) return false;
+            }
+            return true;
+        }
+        static bool endsWith(std::string s, std::string check) {
+            for (int i = 0; i < check.size(); i--) {
+                if (i >= s.size()) return false;
+                if (s[s.size() - i] != check[check.size()-1]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         // Real number of characetrs per string with respect to Unicode 16 wide characters.
         static int realSize(std::string s) {
             int count = 0;

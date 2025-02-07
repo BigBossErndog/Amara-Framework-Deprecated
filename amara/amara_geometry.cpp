@@ -150,10 +150,10 @@ namespace Amara {
     float angleBetween(float p1x, float p1y, float p2x, float p2y) {
         // Angle in Radians
         float angle = -atan2(p2y-p1y, p2x-p1x) + M_PI/2.0;
-        angle = fmod(angle, 2*M_PI);
         while (angle < 0) {
             angle += 2*M_PI;
         }
+        angle = fmod(angle, 2*M_PI);
         return angle;
     }
     float angleBetween(FloatVector2* p1, FloatVector2* p2) {

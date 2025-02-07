@@ -94,7 +94,7 @@ namespace Amara {
 
                 entityType = "uiBox";
             }
-
+            
             virtual void configure(nlohmann::json config) {
                 Amara::Actor::configure(config);
                 rectConfigure(config);
@@ -521,10 +521,12 @@ namespace Amara {
 			void snapClosed(bool hor, bool ver) {
 				if (hor) openWidth = minWidth;
 				if (ver) openHeight = minHeight;
+                if (content) content->setVisible(false);
 			}
 			void snapOpen(bool hor, bool ver) {
 				if (hor) openWidth = width;
 				if (ver) openHeight = height;
+                if (content) content->setVisible(true);
 			} 
 
             Amara::UIBox* setOrigin(float gx, float gy) {
@@ -562,6 +564,7 @@ namespace Amara {
                 Amara::StateManager& sm = checkSm();
                 if (sm.once()) {
                     setVisible(true);
+                    if (content) content->setVisible(true);
                     return true;
                 }
                 return false;
@@ -571,6 +574,7 @@ namespace Amara {
                 Amara::StateManager& sm = checkSm();
                 if (sm.once()) {
                     setVisible(false);
+                    if (content) content->setVisible(false);
                     return true;
                 }
                 return false;
