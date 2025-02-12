@@ -28,7 +28,7 @@ namespace Amara {
 		void init() {
 			rectInit(this);
 			Amara::Actor::init();
-			entityType = "actor";
+			entityType = "fillRect";
 		}
 
 		void configure(nlohmann::json config) {

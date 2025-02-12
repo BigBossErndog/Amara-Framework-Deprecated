@@ -165,18 +165,13 @@ namespace Amara {
 
     bool StateManager::waitOnScript(Amara::Script* script) {
         if (evt()) {
-            if (script == nullptr || script->notActing())  {
-                if (script && script->manualDeletion) {
-                    script->destroyScript();
-                }
-                nextEvt();
-            }
-            else {
+            if (script) {
                 script->manualDeletion = true;
                 if (nextEvtOn(script->notActing())) {
                     script->destroyScript();
                 }
             }
+            else nextEvt();
             return true;
         }
         return false;

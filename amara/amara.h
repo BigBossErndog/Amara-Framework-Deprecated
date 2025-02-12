@@ -36,7 +36,9 @@
     #ifndef AMARA_WEB
         #include <SDL_net.h>
     #endif
-    #include <sdlogv.h>
+    #ifndef AMARA_NOVIDEO
+        #include <sdlogv.h>
+    #endif
 #endif
 
 #ifndef AMARA_DIRECTIONS

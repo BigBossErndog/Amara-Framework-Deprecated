@@ -138,7 +138,7 @@ namespace Amara {
 
             virtual void updateScene() {
                 debugID = id;
-                std::string debugCopy;
+                debugCopy = "";
                 if (debugging) {
                     debugID = "";
                     for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
@@ -166,7 +166,6 @@ namespace Amara {
                 update();
                 if (isDestroyed) return;
 
-                if (debugging) SDL_Log("%s (%s): Reciting Scripts (%d).", debugCopy.c_str(), entityType.c_str(), scripts.size());
                 reciteScripts();
                 if (isDestroyed) return;
                 

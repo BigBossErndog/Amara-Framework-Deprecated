@@ -60,15 +60,13 @@ namespace Amara {
 
         virtual void reciteScripts() {
             if (scripts.size() == 0 || isDestroyed || actingPaused) return;
+            debugCopy = "";
             if (debugging) {
-                debugID = id;
-                std::string debugCopy;
-                if (debugging) {
-                    debugID = "";
-                    for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
-                    debugID += id;
-                    debugCopy = debugID;
-                }
+                debugID = "";
+                for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
+                debugID += id;
+                debugCopy = debugID;
+                SDL_Log("wtf");
                 SDL_Log("%s (%s): Reciting %d Scripts.", debugCopy.c_str(), entityType.c_str(), scripts.size());
             }
             
@@ -86,8 +84,9 @@ namespace Amara {
                 if (!script->isFinished) {
                     script->receiveMessages();
                     script->updateMessages();
-                    if (debugging) SDL_Log("script recital");
+                    if (debugging) SDL_Log("%s (%s): enter script recital", debugCopy.c_str(), entityType.c_str());
                     script->script();
+                    if (debugging) SDL_Log("%s (%s): exit script recital", debugCopy.c_str(), entityType.c_str());
                 }
                 if (isDestroyed || scriptsCanceled) break;
                 ++it;
@@ -116,7 +115,10 @@ namespace Amara {
                         script->chainedScripts.clear();
                     }
                     script->inQueue = false;
-                    if (!script->manualDeletion) script->destroyScript();
+                    if (!script->manualDeletion) {
+                        if (debugging) SDL_Log("%s (%s): deleting script", debugCopy.c_str(), entityType.c_str());
+                        script->destroyScript();
+                    }
                     it = scripts.erase(it);
                     continue;
                 }
@@ -127,10 +129,13 @@ namespace Amara {
                 return;
             }
 
+            if (debugging && chained.size() > 0) SDL_Log("%s (%s): reciting %d chained scripts", debugCopy.c_str(), entityType.c_str(), chained.size());
             for (Amara::Script* chain: chained) {
                 recite(chain);
                 if (isDestroyed || scriptsCanceled) break;
             }
+
+            if (debugging) if (debugging) SDL_Log("%s (%s): end reciting scripts", debugCopy.c_str(), entityType.c_str());
         }
 
         bool stillActing() {
@@ -152,7 +157,7 @@ namespace Amara {
 
         void run() {
 			debugID = id;
-			std::string debugCopy;
+			debugCopy = "";
 			if (debugging) {
 				debugID = "";
 				for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
@@ -202,7 +207,7 @@ namespace Amara {
             
             reciteScripts();
             if (isDestroyed) return;
-
+            
             runChildren();
             
             if (debugging) SDL_Log("%s (%s): Finished Running.", debugCopy.c_str(), entityType.c_str());

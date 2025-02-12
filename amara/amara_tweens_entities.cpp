@@ -493,6 +493,49 @@ namespace Amara {
         }
     };
 
+    class Tween_WH: public Tween {
+    public:
+        MakeRect* rect = nullptr;
+
+        float targetW = 0;
+        float targetH = 0;
+        float startW = 0;
+        float startH = 0;
+
+        Tween_WH(MakeRect* gRect) {
+            rect = gRect;
+        }
+
+        Tween_WH(MakeRect* gRect, float tw, float th, float tt, Amara::Easing gEasing): Tween_WH(gRect) {
+            targetW = tw;
+            targetH = th;
+            time = tt;
+            easing = gEasing;
+        }
+        Tween_WH(MakeRect* gRect, float tw, float th, float tt): Tween_WH(gRect, tw, th, tt, LINEAR) {}
+
+        Tween_WH(float tw, float th, float tt, Amara::Easing gEasing): Tween_WH(nullptr, tw, th, tt, gEasing) {}
+        Tween_WH(float tw, float th, float tt): Tween_WH(nullptr, tw, th, tt) {}
+
+        void prepare() {
+            if (rect == nullptr) rect = (MakeRect*)parent;
+            startW = rect->width;
+            startH = rect->height;
+        }
+
+        void script() {
+            Amara::Tween::progressFurther();
+            rect->width = ease(startW, targetW, progress, easing);
+            rect->height = ease(startH, targetH, progress, easing);
+        }
+
+        void finish() {
+            Tween::finish();
+            rect->width = targetW;
+            rect->height = targetH;
+        }
+    };
+
     class Tween_Color: public Tween {
     public:
         SDL_Color startColor;

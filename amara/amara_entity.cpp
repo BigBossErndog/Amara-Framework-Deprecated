@@ -73,6 +73,7 @@ namespace Amara {
 
 		static bool debuggingDefault;
 		std::string debugID;
+		std::string debugCopy = "";
 		bool debugging = debuggingDefault;
 
 		Entity() {}
@@ -392,7 +393,7 @@ namespace Amara {
 
 		virtual void run() {
 			debugID = id;
-			std::string debugCopy;
+			debugCopy = "";
 			if (debugging) {
 				debugID = "";
 				for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
@@ -449,11 +450,13 @@ namespace Amara {
 			if (isDestroyed || noChildrenLogic) return;
 			Amara::Entity* entity;
 			properties->entityDepth += 1;
-
 			if (debugging) {
 				debugID = "";
 				for (int i = 0; i < properties->entityDepth; i++) debugID += "\t";
 				debugID += id;
+				debugCopy = debugID;
+
+				SDL_Log("%s (%s): Running (%d) children...", debugCopy.c_str(), entityType.c_str(), children.size());
 			}
 
 			childCopyList = children;

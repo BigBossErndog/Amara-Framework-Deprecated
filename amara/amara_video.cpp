@@ -1,3 +1,5 @@
+#ifndef AMARA_NOVIDEO
+
 namespace Amara {
     theora_t video_ctx = { 0 };
 
@@ -350,3 +352,5 @@ namespace Amara {
         }
     };
 }
+
+#endif
