@@ -194,6 +194,7 @@
     #include "amara_video.cpp"
 
     #include "amara_tween.cpp"
+    #include "amara_tweens_utility.cpp"
     #include "amara_tweens_camera.cpp"
     #include "amara_tweens_entities.cpp"
     #include "amara_tweens_audio.cpp"
@@ -206,6 +207,8 @@
 
     #include "amara_uiBox.cpp"
     #include "amara_textBox.cpp"
+
+    #include "amara_manyDrawer.cpp"
 
     #include "amara_sceneTransition.cpp"
     #include "amara_sceneTransitions.cpp"

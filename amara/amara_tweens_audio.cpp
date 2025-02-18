@@ -1,11 +1,42 @@
 namespace Amara {
+    class Script_PlayAudio: public Script {
+    public:
+        float delay = 0;
+        std::string audioKey;
+
+        Script_PlayAudio(std::string gKey) {
+            audioKey = gKey;
+        }
+        Script_PlayAudio(std::string gKey, float gDelay): Script_PlayAudio(gKey) {
+            delay = gDelay;
+        }
+
+        void prepare() {}
+
+        void script() {
+            start();
+            if (delay == 0) {
+                finish();
+                return;
+            }
+
+            wait(delay);
+            finishEvt();
+        }
+
+        void finish() {
+            audio->play(audioKey);
+            Script::finish();
+        }
+    };
+
     class Tween_Volume: public Amara::Tween_Float {
     public:
         std::string audioKey;
         Amara::AudioBase* audioObj = nullptr;
         
         Tween_Volume(float gTarget, double gTime, Amara::Easing gEasing): Tween_Float() {
-            targetNum = gTarget;
+            target = gTarget;
             time = gTime;
             easing = gEasing;
         }
@@ -23,7 +54,7 @@ namespace Amara {
 
         void prepare() {
             if (!audioObj && !audioKey.empty()) audioObj = audio->get(audioKey);
-            num = &audioObj->volume;
+            number = &audioObj->volume;
             Tween_Float::prepare();
         }
     };
@@ -34,7 +65,7 @@ namespace Amara {
 
         void prepare() {
             if (!audioObj && !audioKey.empty()) audioObj = audio->get(audioKey);
-            num = &audioObj->masterVolume;
+            number = &audioObj->masterVolume;
             Tween_Float::prepare();
         }
     };

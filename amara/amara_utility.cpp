@@ -35,6 +35,12 @@ namespace Amara {
         return num;
     }
 
+    float abs_mod(float num, float den) {
+        while (num < 0) num += den;
+        float result = fmod(num, den);
+        return result;
+    }
+
     SDL_Color getPixelFromSurface(SDL_Surface* gSurface, int gx, int gy) {
         int bpp = gSurface->format->BytesPerPixel;
         Uint8* p = (Uint8*)gSurface->pixels + gy*gSurface->pitch + gx*bpp;
