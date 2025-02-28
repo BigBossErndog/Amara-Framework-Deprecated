@@ -42,6 +42,10 @@ namespace Amara {
 				return loader->getSurface(key);
 			}
 
+            SDL_Surface* getCachedSurface(std::string key) {
+                return loader->getCachedSurface(key);
+            }
+
             Amara::ImageTexture* getImageTexture(std::string key) {
                 return (Amara::ImageTexture*)loader->get(key);
             }

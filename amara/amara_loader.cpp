@@ -19,6 +19,8 @@ namespace Amara {
 			int numberOfTasks = 0;
 			bool crashOnRepeatedFail = false;
 
+			bool cacheSurfaces = false;
+
 			std::string currentBasePath = "";
 			std::string fixedPath = "";
 
@@ -144,6 +146,15 @@ namespace Amara {
 				return nullptr;
 			}
 
+			SDL_Surface* getCachedSurface(std::string key) {
+				Amara::ImageTexture* tx = (Amara::ImageTexture*)(get(key));
+				if (tx != nullptr) {
+					return tx->cachedSurface;
+				}
+				std::cout << "Texture asset \"" << key << "\" not found." << std::endl;
+				return nullptr;
+			}
+
 			virtual bool remove(std::string key, bool andDelete) {
 				Amara::Asset* asset = get(key, false);
 				if (asset != nullptr) {
@@ -258,14 +269,17 @@ namespace Amara {
 				std::string key;
 				std::string path;
 				bool replace = replacementDefault;
+				bool recCacheSurfaces = cacheSurfaces;
 				for (nlohmann::json& asset: config) {
 					key = asset["key"];
 					path = asset["path"];
+					if (json_is(asset, "cacheSurface")) cacheSurfaces = true;
 					replace = replacementDefault;
 					if (asset.find("replace") != asset.end()) {
 						replace = asset["replace"];
 					}
 					image(key, path, replace);
+					cacheSurfaces = recCacheSurfaces;
 				}
 			}
 			void loadSpritesheetsFromJSON(nlohmann::json& config) {
@@ -273,9 +287,11 @@ namespace Amara {
 				std::string path;
 				int frameWidth, frameHeight;
 				bool replace = replacementDefault;
+				bool recCacheSurfaces = cacheSurfaces;
 				for (nlohmann::json& asset: config) {
 					key = asset["key"];
 					path = asset["path"];
+					if (json_is(asset, "cacheSurface")) cacheSurfaces = true;
 					replace = replacementDefault;
 					if (asset.find("replace") != asset.end()) {
 						replace = asset["replace"];
@@ -283,6 +299,7 @@ namespace Amara {
 					frameWidth = asset["frameWidth"];
 					frameHeight = asset["frameHeight"];
 					spritesheet(key, path, frameWidth, frameHeight, replace);
+					cacheSurfaces = recCacheSurfaces;
 				}
 			}
 			void loadTTFsFromJSON(nlohmann::json& config) {
@@ -599,12 +616,13 @@ namespace Amara {
 					}
 
 					//Get rid of old loaded surface
-					SDL_FreeSurface(loadedSurface);
+					if (!cacheSurfaces) SDL_FreeSurface(loadedSurface);
 				}
 
 				if (success) {
 					std::cout << "Loaded: " << key << std::endl;
-					Amara::Asset* newAsset = new Amara::ImageTexture(key, IMAGE, newTexture);
+					Amara::ImageTexture* newAsset = new Amara::ImageTexture(key, IMAGE, newTexture);
+					if (cacheSurfaces) newAsset->cachedSurface = loadedSurface;
 					assets[key] = newAsset;
 				}
 
@@ -644,12 +662,13 @@ namespace Amara {
 					}
 
 					//Get rid of old loaded surface
-					SDL_FreeSurface(loadedSurface);
+					if (!cacheSurfaces) SDL_FreeSurface(loadedSurface);
 				}
 
 				if (success) {
 					std::cout << "Loaded: " << key << std::endl;
 					Amara::Spritesheet* newAsset = new Amara::Spritesheet(key, SPRITESHEET, newTexture, frwidth, frheight);
+					if (cacheSurfaces) newAsset->cachedSurface = loadedSurface;
 					assets[key] = newAsset;
 				}
 

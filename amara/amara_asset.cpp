@@ -56,6 +56,7 @@ namespace Amara {
         bool temp = false;
 
         SDL_Texture* asset = nullptr;
+        SDL_Surface* cachedSurface = nullptr;
 
         ImageTexture(std::string key, AssetType givenType, SDL_Texture* givenAsset): Amara::Asset(key, givenType) {
             setTexture(givenAsset);
@@ -71,6 +72,15 @@ namespace Amara {
             removeTexture();
             SDL_QueryTexture(givenAsset, NULL, NULL, &width, &height);
             asset = givenAsset;
+        }
+
+        SDL_Texture* createTextureFromCachedSurface(SDL_Renderer* gRenderer) {
+            return SDL_CreateTextureFromSurface(gRenderer, cachedSurface);
+        }
+        SDL_Texture* setTextureFromCachedSurface(SDL_Renderer* gRenderer) {
+            SDL_Texture* tx = createTextureFromCachedSurface(gRenderer);
+            setTexture(tx);
+            return tx;
         }
 
         virtual ~ImageTexture() {

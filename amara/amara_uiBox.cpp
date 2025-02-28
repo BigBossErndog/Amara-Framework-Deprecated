@@ -307,8 +307,6 @@ namespace Amara {
                 if (alpha > 1) alpha = 1;
 
                 if (recWidth != width || recHeight != height) {
-                    if (openWidth > width) openWidth = width;
-                    if (openHeight > height) openHeight = height;
                     createTexture();
                 }
 				else if (properties->reloadAssets) {
@@ -319,6 +317,9 @@ namespace Amara {
                     openWidth = width;
                     openHeight = height;
                 }
+                if (openWidth > width) openWidth = width;
+                if (openHeight > height) openHeight = height;
+                
                 if (recOpenWidth != openWidth || recOpenHeight != openHeight) {
                     pleaseUpdate = true;
                     recOpenWidth = openWidth;

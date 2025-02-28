@@ -63,6 +63,10 @@ namespace Amara {
                 stateRecords.clear();
             }
 
+            void clearStateRecord() {
+                stateRecords.clear();
+            }
+
             bool resetEvt() {
                 if (stateCopy) return stateCopy->resetEvt();
 

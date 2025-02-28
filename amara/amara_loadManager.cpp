@@ -14,6 +14,8 @@ namespace Amara {
         Amara::Color color;
 
 		int tries = 0;
+
+        bool cacheSurfaces = false;
     };
 
     class LoadManager: public Loader {
@@ -90,10 +92,12 @@ namespace Amara {
                 Amara::LoadTask task;
                 int count = 0;
                 bool success = false;
+                bool recCacheSurfaces = load->cacheSurfaces;
                 while (tasks.size() > 0 && count < load->loadSpeed) {
                     task = tasks.front();
                     success = false;
                     stillLoading  = true;
+                    load->cacheSurfaces = task.cacheSurfaces;
 
                     switch (task.type) {
                         case ASSETPATH:
@@ -156,6 +160,7 @@ namespace Amara {
 						}
 					}
                 }
+                load->cacheSurfaces = recCacheSurfaces;
             }
 
             void setLoadSpeed(int speed) {
@@ -164,6 +169,7 @@ namespace Amara {
 
             void pushTask(std::string key, Amara::LoadTask asset) {
                 asset.key = key;
+                asset.cacheSurfaces = cacheSurfaces;
                 tasks.push_back(asset);
                 numberOfTasks += 1;
             }

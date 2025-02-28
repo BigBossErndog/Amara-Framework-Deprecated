@@ -71,6 +71,30 @@ namespace Amara {
         return rgba;
     }
 
+    SDL_Surface* duplicate_surface(SDL_Surface* original) {
+        if (!original) {
+            return NULL; // Handle null input
+        }
+    
+        // Create a new surface with the same format, width, height, and depth
+        SDL_Surface* duplicate = SDL_CreateRGBSurfaceWithFormat(
+            0, original->w, original->h, original->format->BitsPerPixel, original->format->format);
+    
+        if (!duplicate) {
+            SDL_Log("Failed to create duplicate surface: %s\n", SDL_GetError());
+            return NULL;
+        }
+    
+        // Copy pixel data from the original surface to the new one
+        if (SDL_BlitSurface(original, NULL, duplicate, NULL) < 0) {
+            SDL_Log("Failed to blit surface: %s\n", SDL_GetError());
+            SDL_FreeSurface(duplicate);
+            return NULL;
+        }
+    
+        return duplicate;
+    }
+
     SDL_BlendMode AMARA_BLENDMODE_MASK = SDL_ComposeCustomBlendMode(
         SDL_BLENDFACTOR_ZERO,
         SDL_BLENDFACTOR_ONE,
@@ -80,12 +104,12 @@ namespace Amara {
         SDL_BLENDOPERATION_ADD
     );
 
-    SDL_BlendMode AMARA_BLENDMODE_UNDERMASK = SDL_ComposeCustomBlendMode(
-        SDL_BLENDFACTOR_ONE,
+    SDL_BlendMode AMARA_BLENDMODE_ERASER = SDL_ComposeCustomBlendMode(
         SDL_BLENDFACTOR_ZERO,
+        SDL_BLENDFACTOR_ONE,
         SDL_BLENDOPERATION_ADD,
         SDL_BLENDFACTOR_ZERO,
-        SDL_BLENDFACTOR_SRC_ALPHA,
+        SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
         SDL_BLENDOPERATION_ADD
     );
 
