@@ -1226,7 +1226,7 @@ class basic_json
 
     @param[in] val the value to be forwarded to the respective constructor
 
-    @complexity Usually linear in the size of the passed @a val, also
+    @complexity Usually EASE_LINEAR in the size of the passed @a val, also
                 depending on the implementation of the called `to_json()`
                 method.
 
@@ -1267,7 +1267,7 @@ class basic_json
 
     @param[in] val the @ref basic_json value to be converted.
 
-    @complexity Usually linear in the size of the passed @a val, also
+    @complexity Usually EASE_LINEAR in the size of the passed @a val, also
                 depending on the implementation of the called `to_json()`
                 method.
 
@@ -1383,7 +1383,7 @@ class basic_json
     would have been created. See @ref object(initializer_list_t)
     for an example.
 
-    @complexity Linear in the size of the initializer list @a init.
+    @complexity EASE_LINEAR in the size of the initializer list @a init.
 
     @exceptionsafety Strong guarantee: if an exception is thrown, there are no
     changes to any JSON value.
@@ -1472,7 +1472,7 @@ class basic_json
 
     @return JSON array value
 
-    @complexity Linear in the size of @a init.
+    @complexity EASE_LINEAR in the size of @a init.
 
     @exceptionsafety Strong guarantee: if an exception is thrown, there are no
     changes to any JSON value.
@@ -1515,7 +1515,7 @@ class basic_json
     an array would have been created from the passed initializer list @a init.
     See example below.
 
-    @complexity Linear in the size of @a init.
+    @complexity EASE_LINEAR in the size of @a init.
 
     @exceptionsafety Strong guarantee: if an exception is thrown, there are no
     changes to any JSON value.
@@ -1546,7 +1546,7 @@ class basic_json
 
     @post `std::distance(begin(),end()) == cnt` holds.
 
-    @complexity Linear in @a cnt.
+    @complexity EASE_LINEAR in @a cnt.
 
     @exceptionsafety Strong guarantee: if an exception is thrown, there are no
     changes to any JSON value.
@@ -1609,7 +1609,7 @@ class basic_json
     @throw invalid_iterator.206 if iterators @a first and @a last belong to a
     null value. In this case, the range `[first, last)` is undefined.
 
-    @complexity Linear in distance between @a first and @a last.
+    @complexity EASE_LINEAR in distance between @a first and @a last.
 
     @exceptionsafety Strong guarantee: if an exception is thrown, there are no
     changes to any JSON value.
@@ -1730,7 +1730,7 @@ class basic_json
 
     @post `*this == other`
 
-    @complexity Linear in the size of @a other.
+    @complexity EASE_LINEAR in the size of @a other.
 
     @exceptionsafety Strong guarantee: if an exception is thrown, there are no
     changes to any JSON value.
@@ -1738,7 +1738,7 @@ class basic_json
     @requirement This function helps `basic_json` satisfying the
     [Container](https://en.cppreference.com/w/cpp/named_req/Container)
     requirements:
-    - The complexity is linear.
+    - The complexity is EASE_LINEAR.
     - As postcondition, it holds: `other == basic_json(other)`.
 
     @liveexample{The following code shows an example for the copy
@@ -1852,12 +1852,12 @@ class basic_json
 
     @param[in] other  value to copy from
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @requirement This function helps `basic_json` satisfying the
     [Container](https://en.cppreference.com/w/cpp/named_req/Container)
     requirements:
-    - The complexity is linear.
+    - The complexity is EASE_LINEAR.
 
     @liveexample{The code below shows and example for the copy assignment. It
     creates a copy of value `a` which is then swapped with `b`. Finally\, the
@@ -1889,12 +1889,12 @@ class basic_json
 
     Destroys the JSON value and frees all allocated memory.
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @requirement This function helps `basic_json` satisfying the
     [Container](https://en.cppreference.com/w/cpp/named_req/Container)
     requirements:
-    - The complexity is linear.
+    - The complexity is EASE_LINEAR.
     - All stored elements are destroyed and all memory is freed.
 
     @since version 1.0.0
@@ -1938,7 +1938,7 @@ class basic_json
     @throw type_error.316 if a string stored inside the JSON value is not
                           UTF-8 encoded
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @exceptionsafety Strong guarantee: if an exception is thrown, there are no
     changes in the JSON value.
@@ -2828,7 +2828,7 @@ class basic_json
     to the JSON value type (e.g., the JSON value is of type boolean, but a
     string is requested); see example below
 
-    @complexity Linear in the size of the JSON value.
+    @complexity EASE_LINEAR in the size of the JSON value.
 
     @liveexample{The example below shows several conversions from JSON values
     to other types. There a few things to note: (1) Floating-point numbers can
@@ -3083,7 +3083,7 @@ class basic_json
     cases, using the [] operator with an index makes no sense.
 
     @complexity Constant if @a idx is in the range of the array. Otherwise
-    linear in `idx - size()`.
+    EASE_LINEAR in `idx - size()`.
 
     @liveexample{The example below shows how array elements can be read and
     written using `[]` operator. Note the addition of `null`
@@ -3590,8 +3590,8 @@ class basic_json
 
     @complexity The complexity depends on the type:
     - objects: amortized constant
-    - arrays: linear in distance between @a pos and the end of the container
-    - strings: linear in the length of the string
+    - arrays: EASE_LINEAR in distance between @a pos and the end of the container
+    - strings: EASE_LINEAR in the length of the string
     - other types: constant
 
     @liveexample{The example shows the result of `erase()` for different JSON
@@ -3695,9 +3695,9 @@ class basic_json
 
     @complexity The complexity depends on the type:
     - objects: `log(size()) + std::distance(first, last)`
-    - arrays: linear in the distance between @a first and @a last, plus linear
+    - arrays: EASE_LINEAR in the distance between @a first and @a last, plus EASE_LINEAR
       in the distance between @a last and end of the container
-    - strings: linear in the length of the string
+    - strings: EASE_LINEAR in the length of the string
     - other types: constant
 
     @liveexample{The example shows the result of `erase()` for different JSON
@@ -3825,7 +3825,7 @@ class basic_json
     @throw out_of_range.401 when `idx >= size()`; example: `"array index 17
     is out of range"`
 
-    @complexity Linear in distance between @a idx and the end of the container.
+    @complexity EASE_LINEAR in distance between @a idx and the end of the container.
 
     @liveexample{The example shows the effect of `erase()`.,erase__size_type}
 
@@ -4617,7 +4617,7 @@ class basic_json
     @liveexample{The example below shows the effect of `clear()` to different
     JSON types.,clear}
 
-    @complexity Linear in the size of the JSON value.
+    @complexity EASE_LINEAR in the size of the JSON value.
 
     @iterators All iterators, pointers and references related to this container
                are invalidated.
@@ -4831,7 +4831,7 @@ class basic_json
 
     @param[in] init  an initializer list
 
-    @complexity Linear in the size of the initializer list @a init.
+    @complexity EASE_LINEAR in the size of the initializer list @a init.
 
     @note This function is required to resolve an ambiguous overload error,
           because pairs like `{"key", "value"}` can be both interpreted as
@@ -4996,7 +4996,7 @@ class basic_json
     @throw invalid_iterator.202 if @a pos is not an iterator of *this;
     example: `"iterator does not fit current value"`
 
-    @complexity Constant plus linear in the distance between @a pos and end of
+    @complexity Constant plus EASE_LINEAR in the distance between @a pos and end of
     the container.
 
     @liveexample{The example shows how `insert()` is used.,insert}
@@ -5047,7 +5047,7 @@ class basic_json
     @throw invalid_iterator.202 if @a pos is not an iterator of *this;
     example: `"iterator does not fit current value"`
 
-    @complexity Linear in @a cnt plus linear in the distance between @a pos
+    @complexity EASE_LINEAR in @a cnt plus EASE_LINEAR in the distance between @a pos
     and end of the container.
 
     @liveexample{The example shows how `insert()` is used.,insert__count}
@@ -5095,7 +5095,7 @@ class basic_json
     @return iterator pointing to the first element inserted, or @a pos if
     `first==last`
 
-    @complexity Linear in `std::distance(first, last)` plus linear in the
+    @complexity EASE_LINEAR in `std::distance(first, last)` plus EASE_LINEAR in the
     distance between @a pos and end of the container.
 
     @liveexample{The example shows how `insert()` is used.,insert__range}
@@ -5148,7 +5148,7 @@ class basic_json
     @return iterator pointing to the first element inserted, or @a pos if
     `ilist` is empty
 
-    @complexity Linear in `ilist.size()` plus linear in the distance between
+    @complexity EASE_LINEAR in `ilist.size()` plus EASE_LINEAR in the distance between
     @a pos and end of the container.
 
     @liveexample{The example shows how `insert()` is used.,insert__ilist}
@@ -5493,7 +5493,7 @@ class basic_json
 
     @exceptionsafety No-throw guarantee: this function never throws exceptions.
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @liveexample{The example demonstrates comparing several JSON
     types.,operator__equal}
@@ -5596,7 +5596,7 @@ class basic_json
     @param[in] rhs  second JSON value to consider
     @return whether the values @a lhs and @a rhs are not equal
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @exceptionsafety No-throw guarantee: this function never throws exceptions.
 
@@ -5649,7 +5649,7 @@ class basic_json
     @param[in] rhs  second JSON value to consider
     @return whether @a lhs is less than @a rhs
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @exceptionsafety No-throw guarantee: this function never throws exceptions.
 
@@ -5758,7 +5758,7 @@ class basic_json
     @param[in] rhs  second JSON value to consider
     @return whether @a lhs is less than or equal to @a rhs
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @exceptionsafety No-throw guarantee: this function never throws exceptions.
 
@@ -5804,7 +5804,7 @@ class basic_json
     @param[in] rhs  second JSON value to consider
     @return whether @a lhs is greater than to @a rhs
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @exceptionsafety No-throw guarantee: this function never throws exceptions.
 
@@ -5850,7 +5850,7 @@ class basic_json
     @param[in] rhs  second JSON value to consider
     @return whether @a lhs is greater than or equal to @a rhs
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @exceptionsafety No-throw guarantee: this function never throws exceptions.
 
@@ -5919,7 +5919,7 @@ class basic_json
     @throw type_error.316 if a string stored inside the JSON value is not
                           UTF-8 encoded
 
-    @complexity Linear.
+    @complexity EASE_LINEAR.
 
     @liveexample{The example below shows the serialization with different
     parameters to `width` to adjust the indentation level.,operator_serialize}
@@ -6007,9 +6007,9 @@ class basic_json
     @throw parse_error.102 if to_unicode fails or surrogate error
     @throw parse_error.103 if to_unicode fails
 
-    @complexity Linear in the length of the input. The parser is a predictive
+    @complexity EASE_LINEAR in the length of the input. The parser is a predictive
     LL(1) parser. The complexity can be higher if the parser callback function
-    @a cb has a super-linear complexity.
+    @a cb has a super-EASE_LINEAR complexity.
 
     @note A UTF-8 byte order mark is silently ignored.
 
@@ -6085,9 +6085,9 @@ class basic_json
     @throw parse_error.102 if to_unicode fails or surrogate error
     @throw parse_error.103 if to_unicode fails
 
-    @complexity Linear in the length of the input. The parser is a predictive
+    @complexity EASE_LINEAR in the length of the input. The parser is a predictive
     LL(1) parser. The complexity can be higher if the SAX consumer @a sax has
-    a super-linear complexity.
+    a super-EASE_LINEAR complexity.
 
     @note A UTF-8 byte order mark is silently ignored.
 
@@ -6148,9 +6148,9 @@ class basic_json
     @throw parse_error.102 if to_unicode fails or surrogate error
     @throw parse_error.103 if to_unicode fails
 
-    @complexity Linear in the length of the input. The parser is a predictive
+    @complexity EASE_LINEAR in the length of the input. The parser is a predictive
     LL(1) parser. The complexity can be higher if the parser callback function
-    @a cb has a super-linear complexity.
+    @a cb has a super-EASE_LINEAR complexity.
 
     @note A UTF-8 byte order mark is silently ignored.
 
@@ -6216,7 +6216,7 @@ class basic_json
     @throw parse_error.102 if to_unicode fails or surrogate error
     @throw parse_error.103 if to_unicode fails
 
-    @complexity Linear in the length of the input. The parser is a predictive
+    @complexity EASE_LINEAR in the length of the input. The parser is a predictive
     LL(1) parser.
 
     @note A UTF-8 byte order mark is silently ignored.
@@ -6388,7 +6388,7 @@ class basic_json
     @param[in] j  JSON value to serialize
     @return MessagePack serialization as byte vector
 
-    @complexity Linear in the size of the JSON value @a j.
+    @complexity EASE_LINEAR in the size of the JSON value @a j.
 
     @liveexample{The example shows the serialization of a JSON value to a byte
     vector in CBOR format.,to_cbor}
@@ -6485,7 +6485,7 @@ class basic_json
     @param[in] j  JSON value to serialize
     @return MessagePack serialization as byte vector
 
-    @complexity Linear in the size of the JSON value @a j.
+    @complexity EASE_LINEAR in the size of the JSON value @a j.
 
     @liveexample{The example shows the serialization of a JSON value to a byte
     vector in MessagePack format.,to_msgpack}
@@ -6583,7 +6583,7 @@ class basic_json
                          (must be combined with @a use_size = true)
     @return UBJSON serialization as byte vector
 
-    @complexity Linear in the size of the JSON value @a j.
+    @complexity EASE_LINEAR in the size of the JSON value @a j.
 
     @liveexample{The example shows the serialization of a JSON value to a byte
     vector in UBJSON format.,to_ubjson}
@@ -6697,7 +6697,7 @@ class basic_json
     used in the given input @a v or if the input is not valid CBOR
     @throw parse_error.113 if a string was expected as map key, but not found
 
-    @complexity Linear in the size of the input @a i.
+    @complexity EASE_LINEAR in the size of the input @a i.
 
     @liveexample{The example shows the deserialization of a byte vector in CBOR
     format to a JSON value.,from_cbor}
@@ -6800,7 +6800,7 @@ class basic_json
     used in the given input @a i or if the input is not valid MessagePack
     @throw parse_error.113 if a string was expected as map key, but not found
 
-    @complexity Linear in the size of the input @a i.
+    @complexity EASE_LINEAR in the size of the input @a i.
 
     @liveexample{The example shows the deserialization of a byte vector in
     MessagePack format to a JSON value.,from_msgpack}
@@ -6884,7 +6884,7 @@ class basic_json
     @throw parse_error.112 if a parse error occurs
     @throw parse_error.113 if a string could not be parsed successfully
 
-    @complexity Linear in the size of the input @a i.
+    @complexity EASE_LINEAR in the size of the input @a i.
 
     @liveexample{The example shows the deserialization of a byte vector in
     UBJSON format to a JSON value.,from_ubjson}
@@ -7098,7 +7098,7 @@ class basic_json
     @note Empty objects and arrays are flattened to `null` and will not be
           reconstructed correctly by the @ref unflatten() function.
 
-    @complexity Linear in the size the JSON value.
+    @complexity EASE_LINEAR in the size the JSON value.
 
     @liveexample{The following code shows how a JSON object is flattened to an
     object whose keys consist of JSON pointers.,flatten}
@@ -7132,7 +7132,7 @@ class basic_json
           this example, for a JSON value `j`, the following is always true:
           `j == j.flatten().unflatten()`.
 
-    @complexity Linear in the size the JSON value.
+    @complexity EASE_LINEAR in the size the JSON value.
 
     @throw type_error.314  if value is not an object
     @throw type_error.315  if object values are not primitive
@@ -7191,7 +7191,7 @@ class basic_json
 
     @throw other_error.501 if "test" operation was unsuccessful
 
-    @complexity Linear in the size of the JSON value and the length of the
+    @complexity EASE_LINEAR in the size of the JSON value and the length of the
     JSON patch. As usually only a fraction of the JSON value is affected by
     the patch, the complexity can usually be neglected.
 
@@ -7493,7 +7493,7 @@ class basic_json
 
     @return a JSON patch to convert the @a source to @a target
 
-    @complexity Linear in the lengths of @a source and @a target.
+    @complexity EASE_LINEAR in the lengths of @a source and @a target.
 
     @liveexample{The following code shows how a JSON patch is created as a
     diff for two JSON values.,diff}
@@ -7671,7 +7671,7 @@ class basic_json
 
     @param[in] patch  the patch to apply
 
-    @complexity Linear in the lengths of @a patch.
+    @complexity EASE_LINEAR in the lengths of @a patch.
 
     @liveexample{The following code shows how a JSON Merge Patch is applied to
     a JSON document.,merge_patch}

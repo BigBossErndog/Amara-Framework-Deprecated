@@ -41,7 +41,7 @@ namespace Amara {
                 return between(0, 1);
             }
 
-            int intBetween(int min, int max) {
+            int intBetween(int min, int max) { // ends inclusive
                 return floor(between(min, max+1));
             }
 
@@ -68,10 +68,10 @@ namespace Amara {
 
             SDL_Color randomColor(int alpha) {
                 return {
-                    intBetween(0, 255),
-                    intBetween(0, 255),
-                    intBetween(0, 255),
-                    alpha
+                    (Uint8)intBetween(0, 255),
+                    (Uint8)intBetween(0, 255),
+                    (Uint8)intBetween(0, 255),
+                    (Uint8)alpha
                 };
             }
             SDL_Color randomColor() {
@@ -103,14 +103,14 @@ namespace Amara {
 
             IntVector2 spotWithin(IntRect rect) {
                 return {
-                    rect.x + floor(random()*rect.width),
-                    rect.y + floor(random()*rect.height)
+                    (int)(rect.x + floor(random()*rect.width)),
+                    (int)(rect.y + floor(random()*rect.height))
                 };
             }
             FloatVector2 spotWithin(FloatRect rect) {
                 return {
-                    rect.x + random()*rect.width,
-                    rect.y + random()* rect.height
+                    (float)(rect.x + random()*rect.width),
+                    (float)(rect.y + random()* rect.height)
                 };
             }
 

@@ -15,7 +15,7 @@ namespace Amara {
             std::string lastState;
 
             std::vector<StateRecord> stateRecords;
-
+            
             int currentEvent = 1;
             int eventLooker = 0;
 

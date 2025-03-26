@@ -12,7 +12,7 @@ namespace Amara {
                 time = tt;
                 easing = gEasing;
             }
-            Tween_XY(float tx, float ty, double tt): Tween_XY(tx, ty, tt, LINEAR) {}
+            Tween_XY(float tx, float ty, double tt): Tween_XY(tx, ty, tt, EASE_LINEAR) {}
 
             void prepare() {
                 startX = parent->x;
@@ -22,19 +22,19 @@ namespace Amara {
             void script() {
                 Amara::Tween::progressFurther();
                 switch (easing) {
-                    case LINEAR:
+                    case EASE_LINEAR:
                         parent->x = linearEase(startX, targetX, progress);
                         parent->y = linearEase(startY, targetY, progress);
                         break;
-                    case SINE_INOUT:
+                    case EASE_SINE_INOUT:
                         parent->x = sineInOutEase(startX, targetX, progress);
                         parent->y = sineInOutEase(startY, targetY, progress);
                         break;
-                    case SINE_IN:
+                    case EASE_SINE_IN:
                         parent->x = sineInEase(startX, targetX, progress);
                         parent->y = sineInEase(startY, targetY, progress);
                         break;
-                    case SINE_OUT:
+                    case EASE_SINE_OUT:
                         parent->x = sineOutEase(startX, targetX, progress);
                         parent->y = sineOutEase(startY, targetY, progress);
                         break;
@@ -52,7 +52,7 @@ namespace Amara {
             time = tt;
             easing = gEasing;
         }
-        Tween_X(float tx, double tt): Tween_X(tx, tt, LINEAR) {}
+        Tween_X(float tx, double tt): Tween_X(tx, tt, EASE_LINEAR) {}
 
         void prepare() {
             startX = parent->x;
@@ -74,7 +74,7 @@ namespace Amara {
             time = tt;
             easing = gEasing;
         }
-        Tween_Y(float ty, double tt): Tween_Y(ty, tt, LINEAR) {}
+        Tween_Y(float ty, double tt): Tween_Y(ty, tt, EASE_LINEAR) {}
 
         void prepare() {
             startY = parent->y;
@@ -99,7 +99,7 @@ namespace Amara {
                 time = tt;
                 easing = gEasing;
             }
-            Tween_RelativeXY(float tx, float ty, double tt): Tween_RelativeXY(tx, ty, tt, LINEAR) {}
+            Tween_RelativeXY(float tx, float ty, double tt): Tween_RelativeXY(tx, ty, tt, EASE_LINEAR) {}
 
             void prepare() {
                 startX = parent->x;
@@ -131,7 +131,7 @@ namespace Amara {
                 time = tt;
                 easing = gEasing;
             }
-            Tween_XYZ(float tx, float ty, float tz, double tt): Tween_XYZ(tx, ty, tz, tt, LINEAR) {}
+            Tween_XYZ(float tx, float ty, float tz, double tt): Tween_XYZ(tx, ty, tz, tt, EASE_LINEAR) {}
 
             void prepare() {
                 startX = parent->x;
@@ -161,7 +161,7 @@ namespace Amara {
                 easing = gEasing;
             }
 			Tween_ScaleXY(float ts, double tt, Amara::Easing gEasing): Tween_ScaleXY(ts, ts, tt, gEasing) {}
-            Tween_ScaleXY(float ts, double tt): Tween_ScaleXY(ts, tt, LINEAR) {}
+            Tween_ScaleXY(float ts, double tt): Tween_ScaleXY(ts, tt, EASE_LINEAR) {}
 
             void prepare() {
                 startScaleX = parent->scaleX;
@@ -207,7 +207,7 @@ namespace Amara {
             time = tt;
             easing = gEasing;
         }
-        Tween_Rotate(double amount, double tt): Tween_Rotate(amount, tt, LINEAR) {}
+        Tween_Rotate(double amount, double tt): Tween_Rotate(amount, tt, EASE_LINEAR) {}
 
         void prepare() {
             startAngle = parent->angle;
@@ -245,8 +245,8 @@ namespace Amara {
 			}
             Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float tt, Amara::Easing gEasing): Tween_ShakeXY(gMaxShakeX, gMaxShakeY, 0, 0, tt, gEasing)  {}
             Tween_ShakeXY(float gMaxShake, float tt, Amara::Easing gEasing): Tween_ShakeXY(gMaxShake, gMaxShake, tt, gEasing) {}
-            Tween_ShakeXY(float gMaxShake, float tt): Tween_ShakeXY(gMaxShake, tt, LINEAR) {}
-			Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float gTargetX, float gTargetY, float tt): Tween_ShakeXY(gMaxShakeX, gMaxShakeY, gTargetX, gTargetY, tt, LINEAR) {}
+            Tween_ShakeXY(float gMaxShake, float tt): Tween_ShakeXY(gMaxShake, tt, EASE_LINEAR) {}
+			Tween_ShakeXY(float gMaxShakeX, float gMaxShakeY, float gTargetX, float gTargetY, float tt): Tween_ShakeXY(gMaxShakeX, gMaxShakeY, gTargetX, gTargetY, tt, EASE_LINEAR) {}
 
             void prepare() {
                 startX = parent->x;
@@ -298,7 +298,7 @@ namespace Amara {
                 easing = gEasing;
             }
             Tween_ReverseShakeXY(float gMaxShake, float tt, Amara::Easing gEasing): Tween_ReverseShakeXY(gMaxShake, gMaxShake, tt, gEasing) {}
-            Tween_ReverseShakeXY(float gMaxShake, float tt): Tween_ReverseShakeXY(gMaxShake, tt, LINEAR) {}
+            Tween_ReverseShakeXY(float gMaxShake, float tt): Tween_ReverseShakeXY(gMaxShake, tt, EASE_LINEAR) {}
 
             void prepare() {
                 startX = parent->x;
@@ -338,14 +338,14 @@ namespace Amara {
                 time = gTime;
                 easing = gEasing;
             }
-            Tween_Alpha(float gTarget, float gTime): Tween_Alpha(gTarget, gTime, LINEAR) {}
+            Tween_Alpha(float gTarget, float gTime): Tween_Alpha(gTarget, gTime, EASE_LINEAR) {}
             Tween_Alpha(float gTime): Tween_Alpha(0, gTime) {}
 
 
             Tween_Alpha(float gStart, float gTarget, float gTime, Amara::Easing gEasing): Tween_Alpha(gTarget, gTime, gEasing) {
                 startAlpha = gStart;
             }
-            Tween_Alpha(float gStart, float gTarget, float gTime): Tween_Alpha(gStart, gTarget, gTime, LINEAR) {}
+            Tween_Alpha(float gStart, float gTarget, float gTime): Tween_Alpha(gStart, gTarget, gTime, EASE_LINEAR) {}
 
             void prepare() {
                 if (startAlpha == -1) startAlpha = parent->alpha;
@@ -429,7 +429,7 @@ namespace Amara {
             time = gTime;
             easing = gEasing;
         }
-        Tween_Depth(float gTarget, float gTime): Tween_Depth(gTarget, gTime, LINEAR) {}
+        Tween_Depth(float gTarget, float gTime): Tween_Depth(gTarget, gTime, EASE_LINEAR) {}
         Tween_Depth(float gTime): Tween_Depth(-1, gTime) {}
         Tween_Depth(): Tween_Depth(0) {}
 
@@ -472,7 +472,7 @@ namespace Amara {
             time = tt;
             easing = gEasing;
         }
-        Tween_FillRectWH(float tw, float th, float tt): Tween_FillRectWH(tw, th, tt, LINEAR) {}
+        Tween_FillRectWH(float tw, float th, float tt): Tween_FillRectWH(tw, th, tt, EASE_LINEAR) {}
 
         void prepare() {
             if (rect == nullptr) rect = (FillRect*)parent;
@@ -512,7 +512,7 @@ namespace Amara {
             time = tt;
             easing = gEasing;
         }
-        Tween_WH(MakeRect* gRect, float tw, float th, float tt): Tween_WH(gRect, tw, th, tt, LINEAR) {}
+        Tween_WH(MakeRect* gRect, float tw, float th, float tt): Tween_WH(gRect, tw, th, tt, EASE_LINEAR) {}
 
         Tween_WH(float tw, float th, float tt, Amara::Easing gEasing): Tween_WH(nullptr, tw, th, tt, gEasing) {}
         Tween_WH(float tw, float th, float tt): Tween_WH(nullptr, tw, th, tt) {}
@@ -533,42 +533,6 @@ namespace Amara {
             Tween::finish();
             rect->width = targetW;
             rect->height = targetH;
-        }
-    };
-
-    class Tween_Color: public Tween {
-    public:
-        SDL_Color startColor;
-        SDL_Color endColor;
-
-        SDL_Color* affectColor;
-
-        Tween_Color(SDL_Color* gAffect, SDL_Color gEnd, float tt, Amara::Easing gEasing) {
-            startColor = *gAffect;
-            affectColor = gAffect;
-            endColor = gEnd;
-            time = tt;
-            easing = gEasing;
-        }
-        Tween_Color(SDL_Color& gAffect, SDL_Color gEnd, float tt, Amara::Easing gEasing): Tween_Color(&gAffect, gEnd, tt, gEasing) {}
-        Tween_Color(SDL_Color& gAffect, SDL_Color gEnd, float tt): Tween_Color(gAffect, gEnd, tt, LINEAR) {}
-        Tween_Color(FillRect* rect, SDL_Color gEnd, float tt, Amara::Easing gEasing): Tween_Color(rect->color,gEnd, tt, gEasing) {}
-        Tween_Color(FillRect* rect, SDL_Color gEnd, float tt): Tween_Color(rect, gEnd, tt, LINEAR) {}
-
-        void script() {
-            Amara::Tween::progressFurther();
-            affectColor->r = ease(startColor.r, endColor.r, progress, easing);
-            affectColor->g = ease(startColor.g, endColor.g, progress, easing);
-            affectColor->b = ease(startColor.b, endColor.b, progress, easing);
-            affectColor->a = ease(startColor.a, endColor.a, progress, easing);
-        }
-
-        void finish() {
-            Tween::finish();
-            affectColor->r = endColor.r;
-            affectColor->g = endColor.g;
-            affectColor->b = endColor.b;
-            affectColor->a = endColor.a;
         }
     };
 

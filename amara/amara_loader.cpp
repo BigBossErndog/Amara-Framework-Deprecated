@@ -616,7 +616,7 @@ namespace Amara {
 					}
 
 					//Get rid of old loaded surface
-					if (!cacheSurfaces) SDL_FreeSurface(loadedSurface);
+					if (newTexture == nullptr || !cacheSurfaces) SDL_FreeSurface(loadedSurface);
 				}
 
 				if (success) {
@@ -660,9 +660,9 @@ namespace Amara {
 					if (newTexture == NULL) {
 						std::cout << "Unable to create texture from " << path << ". SDL Error: " << SDL_GetError() << std::endl;
 					}
-
+					
 					//Get rid of old loaded surface
-					if (!cacheSurfaces) SDL_FreeSurface(loadedSurface);
+					if (newTexture == nullptr || !cacheSurfaces) SDL_FreeSurface(loadedSurface);
 				}
 
 				if (success) {

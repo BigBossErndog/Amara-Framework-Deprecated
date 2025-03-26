@@ -276,7 +276,7 @@ class serializer
     @param[in] ensure_ascii  whether to escape non-ASCII characters with
                              \uXXXX sequences
 
-    @complexity Linear in the length of string @a s.
+    @complexity EASE_LINEAR in the length of string @a s.
     */
     void dump_escaped(const string_t& s, const bool ensure_ascii)
     {

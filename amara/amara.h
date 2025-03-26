@@ -22,6 +22,22 @@
     #include <math.h>
     #include <regex>
     #include <random>
+    #include <iomanip>
+#endif
+
+#ifndef AMARA_EXTLIB
+    #if defined(_WIN32)
+    #include <windows.h>
+    #elif defined(__linux__)
+    #elif defined(__ANDROID__)
+    #elif defined(__APPLE__)
+        #include <TargetConditionals.h>
+        #if TARGET_OS_IPHONE
+        #else
+        #endif
+        #else
+    #endif
+
     #include <nlohmann/json.hpp>
     #include <MurmurHash3.cpp>
 #endif
@@ -33,7 +49,7 @@
     #include <SDL_ttf.h>
     #include <SDL_mixer.h>
     #include <SDL_FontCache.c>
-    #ifndef AMARA_WEB
+    #ifdef AMARA_WEB
         #include <SDL_net.h>
     #endif
     #ifndef AMARA_NOVIDEO
@@ -88,6 +104,10 @@
 
 #ifndef AMARA_LIBRARY
 #define AMARA_LIBRARY
+    #ifndef M_PI
+        #define M_PI 3.14159265358979323846264338327950288
+    #endif
+
     #include "amara_math.cpp"
     #include "amara_geometry.cpp"
     #include "amara_easing.cpp"

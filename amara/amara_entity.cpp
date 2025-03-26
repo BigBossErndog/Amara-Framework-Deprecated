@@ -728,7 +728,7 @@ namespace Amara {
 			if (parent) {
 				for (Amara::Entity* entity: parent->children) {
 					if (entity != this && entity->parent == parent && !entity->isDestroyed && depth <= entity->depth) {
-						depth = entity->depth + 0.1;
+						depth = entity->depth + 0.01;
 					}
 				}
 				parent->sortChildrenOnce = true;
@@ -739,7 +739,7 @@ namespace Amara {
 		Amara::Entity* sendToBack() {
 			for (Amara::Entity* entity: parent->children) {
 				if (entity != this && !entity->isDestroyed && depth >= entity->depth) {
-					depth = entity->depth - 1;
+					depth = entity->depth - 0.01;
 				}
 				parent->sortChildrenOnce = true;
 			}

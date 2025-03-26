@@ -638,9 +638,9 @@ typedef struct SDL_HapticCondition
  *  This struct is exclusively for the ::SDL_HAPTIC_RAMP effect.
  *
  *  The ramp effect starts at start strength and ends at end strength.
- *  It augments in linear fashion.  If you use attack and fade with a ramp
+ *  It augments in EASE_LINEAR fashion.  If you use attack and fade with a ramp
  *  the effects get added to the ramp effect making the effect become
- *  quadratic instead of linear.
+ *  quadratic instead of EASE_LINEAR.
  *
  *  \sa SDL_HAPTIC_RAMP
  *  \sa SDL_HapticEffect

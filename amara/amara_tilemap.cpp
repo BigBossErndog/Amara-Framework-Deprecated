@@ -257,7 +257,7 @@ namespace Amara {
                     return true;
                 }
                 else {
-                    SDL_Log("Texture with key: \"%s\" was not found.", gTextureKey);
+                    SDL_Log("Texture with key: \"%s\" was not found.", gTextureKey.c_str());
                 }
                 return false;
             }

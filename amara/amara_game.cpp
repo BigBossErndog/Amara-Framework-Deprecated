@@ -179,10 +179,10 @@ namespace Amara {
 				display = Amara::IntRect{ displayRect.x, displayRect.y, displayRect.w, displayRect.h };
 				properties.display = &display;
 
-				resolution = Amara::IntRect{ 0, 0, width, height };
+				resolution = Amara::IntRect{ 0, 0, (int)width, (int)height };
 				properties.resolution = &resolution;
 
-				window = Amara::IntRect{ 0, 0, width, height };
+				window = Amara::IntRect{ 0, 0, (int)width, (int)height };
 				properties.window = &window;
 
 				// Update window position.
@@ -511,7 +511,7 @@ namespace Amara {
 					totalWait += floor(tps - frameTicks);
 				}
 				realFPS = fps / (frameTicks / 1000.f);
-				deltaTime = fps / realFPS;
+				deltaTime = (tps - frameTicks) / 1000.f;
 				
 				if (debugGameLoop) SDL_Log("Amara Game: Delay");
 				// Delay if game has not caught up

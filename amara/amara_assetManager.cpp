@@ -165,7 +165,7 @@ namespace Amara {
                             addAnimation(textureKeys, animKey, frames, frameRate, loop);
                         }
                         else {
-                            SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                            SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey.c_str());
                         }
                     }
                 }
@@ -193,7 +193,7 @@ namespace Amara {
                             addAnimation(textureKey, animKey, frames, frameRate, loop);
                         }
                         else {
-                            SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                            SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey.c_str());
                         }
                     }
                 }
@@ -224,7 +224,7 @@ namespace Amara {
                                 addAnimation(textureKeys, animKey, frames, frameRate, loop);
                             }
                             else {
-                                SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                                SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey.c_str());
                             }
                         }
                     }
@@ -257,7 +257,7 @@ namespace Amara {
                                     addAnimation(textureKeys, animKey, frames, frameRate, loop);
                                 }
                                 else {
-                                    SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey);
+                                    SDL_Log("Number of frames for animation \"%s\" is not specified.", animKey.c_str());
                                 }
                             }
                         }

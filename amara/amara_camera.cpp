@@ -378,7 +378,7 @@ namespace Amara {
                 return scrollTo(tx, ty, tt, gEasing, true);
             }
             Amara::Script* scrollTo(float tx, float ty, double tt) {
-                return scrollTo(tx, ty, tt, LINEAR);
+                return scrollTo(tx, ty, tt, EASE_LINEAR);
             }
 			Amara::Script* scrollTo(Entity* target, double tt, Amara::Easing gEasing, bool center) {
 				return scrollTo(
@@ -391,14 +391,14 @@ namespace Amara {
 				return scrollTo(target, tt, gEasing, true);
 			}
 			Amara::Script* scrollTo(Entity* target, double tt) {
-				return scrollTo(target, tt, LINEAR);
+				return scrollTo(target, tt, EASE_LINEAR);
 			}
 
             Amara::Script* zoomTo(float zt, float tt, Amara::Easing gEasing) {
                 return recite(createTween_CameraZoom(zt, tt, gEasing));
             }
             Amara::Script* zoomTo(float zt, float tt) {
-                return zoomTo(zt, tt, LINEAR);
+                return zoomTo(zt, tt, EASE_LINEAR);
             }
 
             float getXAfterScrolling(float gx) {

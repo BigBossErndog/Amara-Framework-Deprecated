@@ -21,7 +21,7 @@ namespace Amara {
             }
 
             Tween_ScrollCamera(float tx, float ty, float tt, Amara::Easing gEasing): Tween_ScrollCamera(tx, ty, tt, gEasing, true) {}
-            Tween_ScrollCamera(float tx, float ty, float tt): Tween_ScrollCamera(tx, ty, tt, LINEAR) {}
+            Tween_ScrollCamera(float tx, float ty, float tt): Tween_ScrollCamera(tx, ty, tt, EASE_LINEAR) {}
             Tween_ScrollCamera(float tx, float ty): Tween_ScrollCamera(tx, ty, 1) {}
 
             void prepare() {
@@ -34,10 +34,10 @@ namespace Amara {
 
                     if (cam->lockedToBounds) {
                         targetRect = {
-                            targetX - (cam->width/cam->zoomX)/2.0,
-                            targetY - (cam->height/cam->zoomY)/2.0,
-                            cam->width/cam->zoomX,
-                            cam->height/cam->zoomY
+                            (float)(targetX - (cam->width/cam->zoomX)/2.0),
+                            (float)(targetY - (cam->height/cam->zoomY)/2.0),
+                            (float)(cam->width/cam->zoomX),
+                            (float)(cam->height/cam->zoomY)
                         };
                         if (targetRect.x < cam->bounds.x) targetRect.x = cam->bounds.x;
                         else if (targetRect.x + targetRect.width > cam->bounds.x + cam->bounds.width) targetRect.x = cam->bounds.x + cam->bounds.width - targetRect.width;
@@ -73,19 +73,19 @@ namespace Amara {
                 float nx = 0, ny = 0;
 
                 switch (easing) {
-                    case LINEAR:
+                    case EASE_LINEAR:
                         nx = linearEase(startX, targetX, progress);
                         ny = linearEase(startY, targetY, progress);
                         break;
-                    case SINE_INOUT:
+                    case EASE_SINE_INOUT:
                         nx = sineInOutEase(startX, targetX, progress);
                         ny = sineInOutEase(startY, targetY, progress);
                         break;
-                    case SINE_IN:
+                    case EASE_SINE_IN:
                         nx = sineInEase(startX, targetX, progress);
                         ny = sineInEase(startY, targetY, progress);
                         break;
-                    case SINE_OUT:
+                    case EASE_SINE_OUT:
                         nx = sineOutEase(startX, targetX, progress);
                         ny = sineOutEase(startY, targetY, progress);
                         break;
@@ -122,7 +122,7 @@ namespace Amara {
                 time = tt;
                 easing = gEasing;
             }
-            Tween_CameraZoom(float gTarget, double tt): Tween_CameraZoom(gTarget, tt, LINEAR) {}
+            Tween_CameraZoom(float gTarget, double tt): Tween_CameraZoom(gTarget, tt, EASE_LINEAR) {}
 
             void prepare() {
                 cam = (Amara::Camera*)parent;
@@ -134,19 +134,19 @@ namespace Amara {
                 Amara::Tween::progressFurther();
                 float nzx = 0, nzy = 0;
                 switch (easing) {
-                    case LINEAR:
+                    case EASE_LINEAR:
                         nzx = linearEase(zStartX, zTarget, progress);
                         nzy = linearEase(zStartY, zTarget, progress);
                         break;
-                    case SINE_INOUT:
+                    case EASE_SINE_INOUT:
                         nzx = sineInOutEase(zStartX, zTarget, progress);
                         nzy = sineInOutEase(zStartY, zTarget, progress);
                         break;
-                    case SINE_IN:
+                    case EASE_SINE_IN:
                         nzx = sineInEase(zStartX, zTarget, progress);
                         nzy = sineInEase(zStartY, zTarget, progress);
                         break;
-                    case SINE_OUT:
+                    case EASE_SINE_OUT:
                         nzx = sineOutEase(zStartX, zTarget, progress);
                         nzy = sineOutEase(zStartY, zTarget, progress);
                         break;
@@ -183,10 +183,10 @@ namespace Amara {
 			time = tt;
 			easing = gEasing;
 		}
-		Tween_ShakeCamera(float sx, float sy, float ex, float ey, float tt): Tween_ShakeCamera(sx, sy, ex, ey, tt, LINEAR) {}
+		Tween_ShakeCamera(float sx, float sy, float ex, float ey, float tt): Tween_ShakeCamera(sx, sy, ex, ey, tt, EASE_LINEAR) {}
 
 		Tween_ShakeCamera(float tx, float ty, float tt, Amara::Easing gEasing): Tween_ShakeCamera(tx, ty, 0, 0, tt, gEasing) {}
-		Tween_ShakeCamera(float tx, float ty, float tt): Tween_ShakeCamera(tx, ty, tt, LINEAR) {}
+		Tween_ShakeCamera(float tx, float ty, float tt): Tween_ShakeCamera(tx, ty, tt, EASE_LINEAR) {}
 		Tween_ShakeCamera(float tx, float ty): Tween_ShakeCamera(tx, ty, 1) {}
 
 		void prepare() {
@@ -203,19 +203,19 @@ namespace Amara {
 			float nx = 0, ny = 0;
 
 			switch (easing) {
-				case LINEAR:
+				case EASE_LINEAR:
 					nx = linearEase(shakeStartX, shakeEndX, progress);
 					ny = linearEase(shakeStartY, shakeEndY, progress);
 					break;
-				case SINE_INOUT:
+				case EASE_SINE_INOUT:
 					nx = sineInOutEase(shakeStartX, shakeEndX, progress);
 					ny = sineInOutEase(shakeStartY, shakeEndY, progress);
 					break;
-				case SINE_IN:
+				case EASE_SINE_IN:
 					nx = sineInEase(shakeStartX, shakeEndX, progress);
 					ny = sineInEase(shakeStartY, shakeEndY, progress);
 					break;
-				case SINE_OUT:
+				case EASE_SINE_OUT:
 					nx = sineOutEase(shakeStartX, shakeEndX, progress);
 					ny = sineOutEase(shakeStartY, shakeEndY, progress);
 					break;
@@ -250,7 +250,7 @@ namespace Amara {
         void prepare() {
             if (cam == nullptr) cam = (Amara::Camera*)parent;
 
-            startRect = { cam->x, cam->y, cam->width, cam->height };
+            startRect = { (int)cam->x, (int)cam->y, (int)cam->width, (int)cam->height };
         }
 
         void script() {

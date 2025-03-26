@@ -196,6 +196,10 @@ namespace Amara {
                 setWordWrap();
             }
 
+            void align(Amara::Alignment gAlign) {
+                alignment = gAlign;
+            }
+
             void findDimensions() {
                 if (fontAsset == nullptr) return;
                 const char* txt = displayText.c_str();

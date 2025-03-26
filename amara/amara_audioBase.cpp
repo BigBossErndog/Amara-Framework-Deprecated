@@ -21,7 +21,7 @@ namespace Amara {
 
         bool isPlaying = false;
         bool isPaused = false;
-
+        
         int defaultLoops = -1;
 
         Amara::AudioGroup* group = nullptr;

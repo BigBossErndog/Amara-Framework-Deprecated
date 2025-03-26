@@ -102,23 +102,23 @@ namespace Amara {
     } FloatTriangle;
 
     IntVector2 floorVector(Amara::FloatVector2 v2) {
-        return { floor(v2.x), floor(v2.y) };
+        return { (int)floor(v2.x), (int)floor(v2.y) };
     }
     IntVector2 ceilVector(Amara::FloatVector2 v2) {
-        return { ceil(v2.x), ceil(v2.y) };
+        return { (int)ceil(v2.x), (int)ceil(v2.y) };
     }
     IntVector2 roundVector(Amara::FloatVector2 v2) {
-        return { round(v2.x), round(v2.y) };
+        return { (int)round(v2.x), (int)round(v2.y) };
     }
 
     IntRect floorRect(Amara::FloatRect rect) {
-        return { floor(rect.x), floor(rect.y), floor(rect.width), floor(rect.height) };
+        return { (int)floor(rect.x), (int)floor(rect.y), (int)floor(rect.width), (int)floor(rect.height) };
     }
     IntRect ceilRect(Amara::FloatRect rect) {
-        return { ceil(rect.x), ceil(rect.y), ceil(rect.width), ceil(rect.height) };
+        return { (int)ceil(rect.x), (int)ceil(rect.y), (int)ceil(rect.width), (int)ceil(rect.height) };
     }
     IntRect roundRect(Amara::FloatRect rect) {
-        return { round(rect.x), round(rect.y), round(rect.width), round(rect.height) };
+        return { (int)round(rect.x), (int)round(rect.y), (int)round(rect.width), (int)round(rect.height) };
     }
 
     float distanceBetween(float sx, float sy, float ex, float ey) {

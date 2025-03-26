@@ -51,18 +51,36 @@ class TestScene: public Scene, public StateManager {
         }
 };
 
-int main(int argc, char** args) {
-    #ifndef AMARA_WEB
-        Game game = Game("Amara Game", false);
-    #else
-        WebGame game = WebGame("Amara Game");
-    #endif
-    game.init(480, 360);
-    game.setWindowSize(960, 720);
-	game.setWindowPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+#if defined(_WIN32)
+	int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+		#ifndef AMARA_WEB
+			Game game = Game("Amara Game", false);
+		#else
+			WebGame game = WebGame("Amara Game");
+		#endif
+		game.init(480, 360);
+		game.setWindowSize(960, 720);
+		game.setWindowPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
-    game.scenes.add("test", new TestScene());
-    game.start("test");
+		game.scenes.add("test", new TestScene());
+		game.start("test");
 
-    return 0;
-}
+		return 0;
+	}
+#else
+	int main(int argc, char** argv) {
+		#ifndef AMARA_WEB
+			Game game = Game("Amara Game", false);
+		#else
+			WebGame game = WebGame("Amara Game");
+		#endif
+		game.init(480, 360);
+		game.setWindowSize(960, 720);
+		game.setWindowPosition(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+		game.scenes.add("test", new TestScene());
+		game.start("test");
+
+		return 0;
+	}
+#endif

@@ -34,7 +34,7 @@
  *
  *  The texture images may be drawn in opaque, blended, or additive modes.
  *  They can have an additional color tint or alpha modulation applied to
- *  them, and may also be stretched with linear interpolation.
+ *  them, and may also be stretched with EASE_LINEAR interpolation.
  *
  *  This API is designed to accelerate simple 2D operations. You may
  *  want more functionality such as polygons and particle effects and
@@ -101,7 +101,7 @@ typedef struct SDL_Vertex
 typedef enum
 {
     SDL_ScaleModeNearest, /**< nearest pixel sampling */
-    SDL_ScaleModeLinear,  /**< linear filtering */
+    SDL_ScaleModeLinear,  /**< EASE_LINEAR filtering */
     SDL_ScaleModeBest     /**< anisotropic filtering */
 } SDL_ScaleMode;
 

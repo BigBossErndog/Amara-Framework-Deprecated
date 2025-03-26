@@ -40,17 +40,17 @@ namespace Amara {
             time = gTime;
             easing = gEasing;
         }
-        Tween_Volume(float gTarget, double gTime): Tween_Volume(gTarget, gTime, LINEAR) {}
+        Tween_Volume(float gTarget, double gTime): Tween_Volume(gTarget, gTime, EASE_LINEAR) {}
         
         Tween_Volume(std::string gKey, float gTarget, double gTime, Amara::Easing gEasing): Tween_Volume(gTarget, gTime, gEasing) {
             audioKey = gKey;
         }
-        Tween_Volume(std::string gKey, float gTarget, double gTime): Tween_Volume(gKey, gTarget, gTime, LINEAR) {}
+        Tween_Volume(std::string gKey, float gTarget, double gTime): Tween_Volume(gKey, gTarget, gTime, EASE_LINEAR) {}
 
         Tween_Volume(Amara::AudioBase* gAudio, float gTarget, double gTime, Amara::Easing gEasing): Tween_Volume(gTarget, gTime, gEasing) {
             audioObj = gAudio;
         }
-        Tween_Volume(Amara::AudioBase* gAudio, float gTarget, double gTime): Tween_Volume(gAudio, gTarget, gTime, LINEAR) {}
+        Tween_Volume(Amara::AudioBase* gAudio, float gTarget, double gTime): Tween_Volume(gAudio, gTarget, gTime, EASE_LINEAR) {}
 
         void prepare() {
             if (!audioObj && !audioKey.empty()) audioObj = audio->get(audioKey);

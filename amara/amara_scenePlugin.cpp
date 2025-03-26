@@ -66,7 +66,7 @@ namespace Amara {
                     got->second->scenes->run();
                 }
                 else {
-					SDL_Log("Scene with key \"%s\" not found. Could not be run.", key);
+					SDL_Log("Scene with key \"%s\" not found. Could not be run.", key.c_str());
 				}
             }
 
@@ -97,7 +97,7 @@ namespace Amara {
                     got->second->scenes->pause();
                 }
 				else {
-					SDL_Log("Scene with key \"%s\" not found. Could not be paused.", key);
+					SDL_Log("Scene with key \"%s\" not found. Could not be paused.", key.c_str());
 				}
             }
 
@@ -107,7 +107,7 @@ namespace Amara {
                     got->second->scenes->resume();
                 }
 				else {
-					SDL_Log("Scene with key \"%s\" not found. Could not be resumed.", key);
+					SDL_Log("Scene with key \"%s\" not found. Could not be resumed.", key.c_str());
 				}
             }
 
@@ -117,7 +117,7 @@ namespace Amara {
                     got->second->scenes->restart();
                 }
 				else {
-					SDL_Log("Scene with key \"%s\" not found. Could not be restarted.", key);
+					SDL_Log("Scene with key \"%s\" not found. Could not be restarted.", key.c_str());
 				}
             }
 
@@ -127,7 +127,7 @@ namespace Amara {
                     got->second->scenes->sleep();
                 }
 				else {
-					SDL_Log("Scene with key \"%s\" not found. Could not be snoozed.", key);
+					SDL_Log("Scene with key \"%s\" not found. Could not be snoozed.", key.c_str());
 				}
             }
 
@@ -137,7 +137,7 @@ namespace Amara {
                     got->second->scenes->wake();
                 }
 				else {
-					SDL_Log("Scene with key \"%s\" not found. Could not be woken.", key);
+					SDL_Log("Scene with key \"%s\" not found. Could not be woken.", key.c_str());
 				}
             }
 
@@ -147,7 +147,7 @@ namespace Amara {
                     got->second->scenes->bringToFront();
                 }
 				else {
-					SDL_Log("Scene with key \"%s\" not found. Could not be brought to front.", key);
+					SDL_Log("Scene with key \"%s\" not found. Could not be brought to front.", key.c_str());
 				}
             }
 

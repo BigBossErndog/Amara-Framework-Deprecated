@@ -815,19 +815,19 @@ namespace Amara {
 			time = tt;
 			easing = gEasing;
 		}
-		UIBox_Timed(float tw, float th, float tt): UIBox_Timed(tw, th, tt, LINEAR) {}
+		UIBox_Timed(float tw, float th, float tt): UIBox_Timed(tw, th, tt, EASE_LINEAR) {}
 		UIBox_Timed(float tt, Easing gEasing) {
             targetWidth = -1;
             targetHeight = -1;
             time = tt;
             easing = gEasing;
         }
-        UIBox_Timed(float tt): UIBox_Timed(tt, LINEAR) {}
+        UIBox_Timed(float tt): UIBox_Timed(tt, EASE_LINEAR) {}
         
         UIBox_Timed(UIBox* gBox, float tw, float th, float tt, Easing gEasing): UIBox_Timed(tw, th, tt, gEasing) {
 			box = gBox;
 		}
-		UIBox_Timed(UIBox* gBox, float tw, float th, float tt): UIBox_Timed(gBox, tw, th, tt, LINEAR) {}
+		UIBox_Timed(UIBox* gBox, float tw, float th, float tt): UIBox_Timed(gBox, tw, th, tt, EASE_LINEAR) {}
 
 		void prepare() {
 			if (box == nullptr) box = (UIBox*)parent;
@@ -845,19 +845,19 @@ namespace Amara {
 		void script() {
 			progressFurther();
 			switch (easing) {
-				case LINEAR:
+				case EASE_LINEAR:
 					box->openWidth = linearEase(startWidth, targetWidth, progress);
 					box->openHeight = linearEase(startHeight, targetHeight, progress);
 					break;
-				case SINE_INOUT:
+				case EASE_SINE_INOUT:
 					box->openWidth = sineInOutEase(startWidth, targetWidth, progress);
 					box->openHeight = sineInOutEase(startHeight, targetHeight, progress);
 					break;
-				case SINE_IN:
+				case EASE_SINE_IN:
 					box->openWidth = sineInEase(startWidth, targetWidth, progress);
 					box->openHeight = sineInEase(startHeight, targetHeight, progress);
 					break;
-				case SINE_OUT:
+				case EASE_SINE_OUT:
 					box->openWidth = sineOutEase(startWidth, targetWidth, progress);
 					box->openHeight = sineOutEase(startHeight, targetHeight, progress);
 					break;

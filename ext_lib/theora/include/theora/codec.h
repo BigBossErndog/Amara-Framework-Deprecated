@@ -166,7 +166,7 @@ typedef struct{
  *  many contexts the U and V channels actually have opposite meanings.
  * To avoid this confusion, we are explicit: the name of the color
  *  channels are Y'CbCr, and they appear in that order, always.
- * The prime symbol denotes that the Y channel is non-linear.
+ * The prime symbol denotes that the Y channel is non-EASE_LINEAR.
  * Cb and Cr stand for "Chroma blue" and "Chroma red", respectively.*/
 typedef th_img_plane th_ycbcr_buffer[3];
 

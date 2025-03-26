@@ -1,16 +1,16 @@
 namespace Amara {
-    class ManyDrawer: public Amara::Actor {
+    class ManyDrawer: public Amara::Layer {
     public:
         int drawRepetitions = 1;
-        bool skipDraw = false;
 
-        virtual bool drawUpdate() { return true; }
+        using Amara::Layer::Layer;
 
+        virtual bool drawUpdate(int index) { return true; }
+        
         virtual void draw(int vx, int vy, int vw, int vh) {
             if (!isVisible) return;
             for (int i = 0; i < drawRepetitions; i++) {
-                skipDraw = false;
-                if (drawUpdate()) Amara::Actor::draw(vx, vy, vw, vh);
+                if (drawUpdate(i)) Amara::Layer::draw(vx, vy, vw, vh);
             }
         }
     };

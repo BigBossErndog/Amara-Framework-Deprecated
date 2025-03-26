@@ -114,40 +114,40 @@ namespace Amara {
 
     FloatVector2 MakeRect::top() {
         if (rectEntity) return {
-            rectEntity->x + (0.5 - originX)*width*rectEntity->scaleX,
-            rectEntity->y - height*originY*rectEntity->scaleY
+            (float)(rectEntity->x + (0.5 - originX)*width*rectEntity->scaleX),
+            (float)(rectEntity->y - height*originY*rectEntity->scaleY)
         };
-        return { width/2.0, 0 };
+        return { (float)(width/2.0), 0 };
     }
     FloatVector2 MakeRect::bottom() {
         if (rectEntity) return {
-            rectEntity->x + (0.5 - originX)*width*rectEntity->scaleX,
-            rectEntity->y + height*(1-originY)*rectEntity->scaleY
+            (float)(rectEntity->x + (0.5 - originX)*width*rectEntity->scaleX),
+            (float)(rectEntity->y + height*(1-originY)*rectEntity->scaleY)
         };
         return {
-            width/2.0,
-            height*rectEntity->scaleY
+            (float)(width/2.0),
+            (float)(height*rectEntity->scaleY)
         };
     }
     FloatVector2 MakeRect::left() {
         if (rectEntity) return {
-            rectEntity->x - width*originX*rectEntity->scaleX,
-            rectEntity->y + (0.5 - originY)*height*rectEntity->scaleY
+            (float)(rectEntity->x - width*originX*rectEntity->scaleX),
+            (float)(rectEntity->y + (0.5 - originY)*height*rectEntity->scaleY)
         };
-        return { 0, height/2.0 };
+        return { 0, (float)(height/2.0) };
     }
     FloatVector2 MakeRect::right() {
         if (rectEntity) return {
-            rectEntity->x + width*(1-originX)*rectEntity->scaleX,
-            rectEntity->y + (0.5 - originY)*height*rectEntity->scaleY
+            (float)(rectEntity->x + width*(1-originX)*rectEntity->scaleX),
+            (float)(rectEntity->y + (0.5 - originY)*height*rectEntity->scaleY)
         };
-        return { width*rectEntity->scaleX, height/2.0 };
+        return { (float)(width*rectEntity->scaleX), (float)(height/2.0) };
     }
     FloatVector2 MakeRect::center() {
         if (rectEntity) return {
-            rectEntity->x + (0.5 - originX)*width*rectEntity->scaleX,
-            rectEntity->y + (0.5 - originY)*height*rectEntity->scaleY
+            (float)(rectEntity->x + (0.5 - originX)*width*rectEntity->scaleX),
+            (float)(rectEntity->y + (0.5 - originY)*height*rectEntity->scaleY)
         };
-        return { width/2.0, height/2.0 };
+        return { (float)(width/2.0), (float)(height/2.0) };
     }
 }

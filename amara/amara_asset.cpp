@@ -393,7 +393,13 @@ namespace Amara {
             }
         }
 
+        Amara::CSVLine& getUpcomingLine() {
+            if (index >= lines.size()) return invalidLine;
+            return lines[index];
+        }
+
         Amara::CSVLine& getLine(int i) {
+            if (i < 0 || index >= lines.size()) return invalidLine;
             return lines[i];
         }
 
