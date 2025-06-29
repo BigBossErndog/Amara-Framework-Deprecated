@@ -1,4 +1,8 @@
 # Amara
+Note: This framework is now deprecated for the new game engine Amara2
+
+https://github.com/BigBossErndog/Amara2
+
 A cross platform C++ game framework built on top of SDL2. Revolves around Actors reciting Scripts, with a flow inspired by the Phaser.io JS framework.
 
 Being used to make the games for Project: Retched Garden.  
