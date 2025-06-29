@@ -1,5 +1,5 @@
 # Amara
-Note: This framework is now deprecated for the new game engine Amara2
+*Note: This framework is now deprecated for the new game engine Amara2*
 
 https://github.com/BigBossErndog/Amara2
 
