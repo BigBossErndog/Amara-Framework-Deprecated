@@ -8,7 +8,7 @@ A cross platform C++ game framework built on top of SDL2. Revolves around Actors
 Being used to make the games for Project: Retched Garden.  
 https://twitter.com/RetchedGarden
 
-Currently being used to make Pry Into The Void, coming to PC and consoles:  
+Currently being used to make Pry Into The Void.
 https://store.steampowered.com/app/1234990/Pry_Into_The_Void/
 
 ## State of the project
